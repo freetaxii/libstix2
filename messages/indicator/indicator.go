@@ -38,8 +38,8 @@ type IndicatorType struct {
 func New() IndicatorType {
 	var obj IndicatorType
 	obj.MessageType = "indicator"
-	obj.Id = stix.CreateId("indicator")
-	obj.Created = stix.GetCurrentTime()
+	obj.Id = stix.NewId("indicator")
+	obj.Created = stix.GetCurrentTime().UTC().Format(defs.TIME_RFC_3339)
 	obj.Modified = obj.Created
 	obj.Version = 1
 	return obj
@@ -49,39 +49,143 @@ func New() IndicatorType {
 // Public Methods - Common Properties
 // ----------------------------------------------------------------------
 
+func (this *IndicatorType) SetCreatedBy(s string) {
+	this.Created_by_ref = s
+}
+
 func (this *IndicatorType) SetModified(d time.Time) {
 	this.Modified = d.UTC().Format(defs.TIME_RFC_3339)
 }
 
 func (this *IndicatorType) SetVersion(i int) error {
-	if i <= this.Version {
-		return errors.New("No change made, new version is not larger than original")
+	if i < defs.MIN_VERSION_SIZE {
+		return errors.New("No change made, new version is smaller than min size")
 	}
 
 	if i > defs.MAX_VERSION_SIZE {
 		return errors.New("No change made, new version is larger than max size")
 	}
 
+	if i <= this.Version {
+		return errors.New("No change made, new version is not larger than original")
+	}
+
 	this.Version = i
 	return nil
+}
+
+func (this *IndicatorType) SetRevoked() {
+	this.Revoked = true
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - IndicatorType
 // ----------------------------------------------------------------------
 
-func (this *IndicatorType) SetName(t string) {
-	this.Name = t
+func (this *IndicatorType) SetName(s string) {
+	this.Name = s
 }
 
-func (this *IndicatorType) SetDescription(t string) {
-	this.Description = t
+func (this *IndicatorType) SetDescription(s string) {
+	this.Description = s
 }
 
-func (this *IndicatorType) SetPatternLang(t string) {
-	this.Pattern_lang = t
+func (this *IndicatorType) SetPatternLang(s string) {
+	this.Pattern_lang = s
+}
+
+func (this *IndicatorType) SetPatternLangVersion(s string) {
+	this.Pattern_lang_version = s
+}
+
+func (this *IndicatorType) SetValidFrom(d time.Time) {
+	this.Valid_from = d.UTC().Format(defs.TIME_RFC_3339)
+}
+
+func (this *IndicatorType) SetValidFromText(s string) {
+	this.Valid_from = s
+}
+
+func (this *IndicatorType) SetValidUntil(d time.Time) {
+	this.Valid_until = d.UTC().Format(defs.TIME_RFC_3339)
+}
+
+func (this *IndicatorType) SetValidUntilText(s string) {
+	this.Valid_until = s
+}
+
+func (this *IndicatorType) NewKillChainPhase() *stix.KillChainPhaseType {
+	var s stix.KillChainPhaseType
+	slicePosition := this.addKillChainPhase(s)
+	return &this.Kill_chain_phases[slicePosition]
+}
+
+func (this *IndicatorType) AddKillChainPhase(name, phase string) {
+	k := this.NewKillChainPhase()
+	k.AddName(name)
+	k.AddPhase(phase)
+}
+
+// ----------------------------------------------------------------------
+
+func (this *IndicatorType) SetPrecisionYear(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "year"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "year"
+	}
+}
+
+func (this *IndicatorType) SetPrecisionMonth(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "month"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "month"
+	}
+}
+
+func (this *IndicatorType) SetPrecisionDay(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "day"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "day"
+	}
+}
+
+func (this *IndicatorType) SetPrecisionHour(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "hour"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "hour"
+	}
+}
+
+func (this *IndicatorType) SetPrecisionMinute(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "minute"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "minute"
+	}
+}
+
+func (this *IndicatorType) SetPrecisionFull(s string) {
+	if s == "valid_from" {
+		this.Valid_from_precision = "full"
+	} else if s == "valid_until" {
+		this.Valid_until_precision = "full"
+	}
 }
 
 // ----------------------------------------------------------------------
 // Private Methods - IndicatorType
 // ----------------------------------------------------------------------
+
+func (this *IndicatorType) addKillChainPhase(s stix.KillChainPhaseType) int {
+	if this.Kill_chain_phases == nil {
+		a := make([]stix.KillChainPhaseType, 0)
+		this.Kill_chain_phases = a
+	}
+	positionThatAppendWillUse := len(this.Kill_chain_phases)
+	this.Kill_chain_phases = append(this.Kill_chain_phases, s)
+	return positionThatAppendWillUse
+}

@@ -10,7 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/freetaxii/libstix2/messages/indicator"
-	"log"
+	//"log"
 	"time"
 )
 
@@ -20,13 +20,18 @@ func main() {
 	i.SetName("Malware C2 Indicator 2016")
 
 	// Set modified time to be one hour from now
-	modifiedTime := time.Now().Add(time.Hour)
-	i.SetModified(modifiedTime)
+	//modifiedTime := time.Now().Add(time.Hour)
+	//i.SetModified(modifiedTime)
 
-	err := i.SetVersion(1000000000)
-	if err != nil {
-		log.Fatal(err)
-	}
+	validFrom := time.Now()
+	i.SetValidFrom(validFrom)
+	i.SetPrecisionYear("valid_from")
+	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
+
+	// err := i.SetVersion(2)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	var data []byte
 	data, _ = json.MarshalIndent(i, "", "    ")

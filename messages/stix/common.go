@@ -42,16 +42,32 @@ type CommonProperties struct {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods
+// Public Methods - KillChainPhaseType
 // ----------------------------------------------------------------------
 
-func CreateId(t string) string {
+func (this *KillChainPhaseType) AddName(s string) {
+	this.Kill_chain_name = s
+}
+
+func (this *KillChainPhaseType) AddPhase(s string) {
+	this.Phase_name = s
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - CommonProperties
+// ----------------------------------------------------------------------
+
+func NewId(s string) string {
 	// TODO Add check to validate input value
-	id := t + "--" + uuid.New()
+	id := s + "--" + uuid.New()
 	return id
 }
 
-func GetCurrentTime() string {
+func GetCurrentTime() time.Time {
+	return time.Now()
+}
+
+func GetCurrentTimeText() string {
 	t := time.Now().UTC().Format(defs.TIME_RFC_3339)
 	return t
 }
