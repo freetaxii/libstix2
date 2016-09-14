@@ -50,6 +50,7 @@ func main() {
 	m2.AddFilename("build_1_.exe")
 	m2.AddHash("md5", "84714c100d2dfc88629531f6456b8276")
 	m2.AddHash("sha256", "861aa9c5ddcb5284e1ba4e5d7ebacfa297567c353446506ee4b4e39c84454b09")
+	m2.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "command-and-control")
 
 	// Define some scan data for the malware sample
 	m2s1 := m2.NewScanData()

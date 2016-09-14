@@ -11,6 +11,7 @@ import (
 	"github.com/freetaxii/libstix2/messages/indicator"
 	"github.com/freetaxii/libstix2/messages/infrastructure"
 	"github.com/freetaxii/libstix2/messages/malware"
+	"github.com/freetaxii/libstix2/messages/observed_data"
 	"github.com/freetaxii/libstix2/messages/relationship"
 	"github.com/freetaxii/libstix2/messages/sighting"
 	"github.com/freetaxii/libstix2/messages/stix"
@@ -28,6 +29,7 @@ type BundleType struct {
 	Indicators      []indicator.IndicatorType           `json:"indicators,omitempty"`
 	Infrastructures []infrastructure.InfrastructureType `json:"infrastructures,omitempty"`
 	Malware         []malware.MalwareType               `json:"malware,omitempty"`
+	ObservedData    []observed_data.ObservedDataType    `json:"observed-data,omitempty"`
 	Relationships   []relationship.RelationshipType     `json:"relationships,omitempty"`
 	Sightings       []sighting.SightingType             `json:"sightings,omitempty"`
 }
@@ -77,6 +79,12 @@ func (this *BundleType) NewMalware() *malware.MalwareType {
 	i := malware.New()
 	slicePosition := this.addMalware(i)
 	return &this.Malware[slicePosition]
+}
+
+func (this *BundleType) NewObservedData() *observed_data.ObservedDataType {
+	i := observed_data.New()
+	slicePosition := this.addObservedData(i)
+	return &this.ObservedData[slicePosition]
 }
 
 func (this *BundleType) NewRelationship() *relationship.RelationshipType {
@@ -132,6 +140,16 @@ func (this *BundleType) addMalware(o malware.MalwareType) int {
 	}
 	positionThatAppendWillUse := len(this.Malware)
 	this.Malware = append(this.Malware, o)
+	return positionThatAppendWillUse
+}
+
+func (this *BundleType) addObservedData(o observed_data.ObservedDataType) int {
+	if this.ObservedData == nil {
+		a := make([]observed_data.ObservedDataType, 0)
+		this.ObservedData = a
+	}
+	positionThatAppendWillUse := len(this.ObservedData)
+	this.ObservedData = append(this.ObservedData, o)
 	return positionThatAppendWillUse
 }
 
