@@ -95,3 +95,10 @@ func (this *RelationshipType) SetSourceRef(s string) {
 func (this *RelationshipType) SetTargetRef(s string) {
 	this.Target_ref = s
 }
+
+// This function is a convenience function for setting both ends of the
+// relationship at the same time.
+func (this *RelationshipType) SetSourceTarget(s, t string) {
+	this.Source_ref = s
+	this.Target_ref = t
+}

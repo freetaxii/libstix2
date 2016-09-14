@@ -9,6 +9,7 @@ package bundle
 import (
 	"github.com/freetaxii/libstix2/messages/campaign"
 	"github.com/freetaxii/libstix2/messages/indicator"
+	"github.com/freetaxii/libstix2/messages/infrastructure"
 	"github.com/freetaxii/libstix2/messages/malware"
 	"github.com/freetaxii/libstix2/messages/relationship"
 	"github.com/freetaxii/libstix2/messages/sighting"
@@ -20,14 +21,15 @@ import (
 // ----------------------------------------------------------------------
 
 type BundleType struct {
-	MessageType   string                          `json:"type,omitempty"`
-	Id            string                          `json:"id,omitempty"`
-	Spec_version  string                          `json:"spec_version,omitempty"`
-	Campaigns     []campaign.CampaignType         `json:"campaigns,omitempty"`
-	Indicators    []indicator.IndicatorType       `json:"indicators,omitempty"`
-	Malware       []malware.MalwareType           `json:"malware,omitempty"`
-	Relationships []relationship.RelationshipType `json:"relationships,omitempty"`
-	Sightings     []sighting.SightingType         `json:"sightings,omitempty"`
+	MessageType     string                              `json:"type,omitempty"`
+	Id              string                              `json:"id,omitempty"`
+	Spec_version    string                              `json:"spec_version,omitempty"`
+	Campaigns       []campaign.CampaignType             `json:"campaigns,omitempty"`
+	Indicators      []indicator.IndicatorType           `json:"indicators,omitempty"`
+	Infrastructures []infrastructure.InfrastructureType `json:"infrastructures,omitempty"`
+	Malware         []malware.MalwareType               `json:"malware,omitempty"`
+	Relationships   []relationship.RelationshipType     `json:"relationships,omitempty"`
+	Sightings       []sighting.SightingType             `json:"sightings,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -46,7 +48,7 @@ func New() BundleType {
 // Public Methods - Common Properties
 // ----------------------------------------------------------------------
 func (this *BundleType) SetSpecVersion20() {
-	this.Spec_version = "stix-2.0"
+	this.Spec_version = "2.0"
 }
 
 // ----------------------------------------------------------------------
@@ -63,6 +65,12 @@ func (this *BundleType) NewIndicator() *indicator.IndicatorType {
 	i := indicator.New()
 	slicePosition := this.addIndicator(i)
 	return &this.Indicators[slicePosition]
+}
+
+func (this *BundleType) NewInfrastructure() *infrastructure.InfrastructureType {
+	i := infrastructure.New()
+	slicePosition := this.addInfrastructure(i)
+	return &this.Infrastructures[slicePosition]
 }
 
 func (this *BundleType) NewMalware() *malware.MalwareType {
@@ -104,6 +112,16 @@ func (this *BundleType) addIndicator(o indicator.IndicatorType) int {
 	}
 	positionThatAppendWillUse := len(this.Indicators)
 	this.Indicators = append(this.Indicators, o)
+	return positionThatAppendWillUse
+}
+
+func (this *BundleType) addInfrastructure(o infrastructure.InfrastructureType) int {
+	if this.Infrastructures == nil {
+		a := make([]infrastructure.InfrastructureType, 0)
+		this.Infrastructures = a
+	}
+	positionThatAppendWillUse := len(this.Infrastructures)
+	this.Infrastructures = append(this.Infrastructures, o)
 	return positionThatAppendWillUse
 }
 

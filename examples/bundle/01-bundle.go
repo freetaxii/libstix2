@@ -23,7 +23,17 @@ func main() {
 	// Create an indicator
 	i := sm.NewIndicator()
 	i.SetName("Malware C2 Indicator 2016")
+	i.SetDescription("This indicator should detect the SpyEye malware by looking for this MD5 hash")
 	i.SetPattern("file-object:hashes.md5 = 84714c100d2dfc88629531f6456b8276")
+
+	// Define some infrastructure as used by this campaign and malware.
+	infra := sm.NewInfrastructure()
+	infra.SetName("SpyEye Command and Control Servers")
+	infra.SetDescription("These servers are located in a datacenter in the Netherlands and the IPs change on a weekly basis")
+	infra.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "command-and-control")
+	infra.SetFirstSeenText("2016-09-01T00:00:01Z")
+	infra.SetRegion("Europe")
+	infra.SetCountry("NL")
 
 	// Define a family of malware
 	m1 := sm.NewMalware()
@@ -55,27 +65,41 @@ func main() {
 	// Connect the malware sample to a malware family
 	r1 := sm.NewRelationship()
 	r1.SetRelationshipType("member-of")
-	r1.SetSourceRef(m1.GetId())
-	r1.SetTargetRef(m2.GetId())
+	r1.SetSourceTarget(m1.GetId(), m2.GetId())
 
 	// Identify that this campaign uses this piece of malware
 	r2 := sm.NewRelationship()
 	r2.SetRelationshipType("uses")
-	r2.SetSourceRef(c.GetId())
-	r2.SetTargetRef(m2.GetId())
+	r2.SetSourceTarget(c.GetId(), m2.GetId())
+
+	// Identify that this campaign uses this infrastructure
+	r3 := sm.NewRelationship()
+	r3.SetRelationshipType("uses")
+	r3.SetSourceTarget(c.GetId(), infra.GetId())
+
+	// Identify that this malware uses this infrastructure
+	r4 := sm.NewRelationship()
+	r4.SetRelationshipType("uses")
+	r4.SetSourceTarget(m2.GetId(), infra.GetId())
 
 	// Identify that this indicator can indicate the presence of this malware
-	r3 := sm.NewRelationship()
-	r3.SetRelationshipType("indicates")
-	r3.SetSourceRef(i.GetId())
-	r3.SetTargetRef(m2.GetId())
+	r5 := sm.NewRelationship()
+	r5.SetRelationshipType("indicates")
+	r5.SetSourceTarget(i.GetId(), m2.GetId())
 
 	// Add a sighting for the malware
 	s1 := sm.NewSighting()
-	s1.SetFirstSeenText("2016-09-01T00:00:00Z")
+	s1.SetFirstSeenText("2016-09-01T00:00:01Z")
 	s1.SetLastSeenText("2016-09-01T10:30:00Z")
 	s1.SetCount(3)
 	s1.SetSightingOfRef(m2.GetId())
+
+	// Add a sighting for the infrastructure
+	s2 := sm.NewSighting()
+	s2.SetFirstSeenText("2016-09-01T00:00:01Z")
+	s2.SetLastSeenText("2016-09-01T10:30:00Z")
+	s2.SetCount(10)
+	s2.SetSightingOfRef(infra.GetId())
 
 	var data []byte
 	data, _ = json.MarshalIndent(sm, "", "    ")
