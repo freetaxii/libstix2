@@ -23,15 +23,15 @@ func main() {
 	//modifiedTime := time.Now().Add(time.Hour)
 	//i.SetModified(modifiedTime)
 
-	validFrom := time.Now()
-	i.SetValidFrom(validFrom)
-	i.SetPrecisionYear("valid_from")
-	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
-
 	// err := i.SetVersion(2)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+
+	validFrom := time.Now()
+	i.SetValidFrom(validFrom)
+	i.SetPrecisionYear("valid_from")
+	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
 	var data []byte
 	data, _ = json.MarshalIndent(i, "", "    ")

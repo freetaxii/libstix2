@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package relationship
+package campaign
 
 import (
 	"errors"
@@ -17,22 +17,24 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-type RelationshipType struct {
+type CampaignType struct {
 	stix.CommonProperties
-	Relationship_type string `json:"relationship_type,omitempty"`
-	Description       string `json:"description,omitempty"`
-	Source_ref        string `json:"source_ref,omitempty"`
-	Target_ref        string `json:"target_ref,omitempty"`
+	Name                 string   `json:"name,omitempty"`
+	Description          string   `json:"description,omitempty"`
+	Aliases              []string `json:"aliases,omitempty"`
+	First_seen           string   `json:"first_seen,omitempty"`
+	First_seen_precision string   `json:"first_seen_precision,omitempty"`
+	Objective            string   `json:"objective,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-func New() RelationshipType {
-	var obj RelationshipType
-	obj.MessageType = "relationship"
-	obj.Id = stix.NewId("relationship")
+func New() CampaignType {
+	var obj CampaignType
+	obj.MessageType = "campaign"
+	obj.Id = stix.NewId("campaign")
 	obj.Created = stix.GetCurrentTime().UTC().Format(defs.TIME_RFC_3339)
 	obj.Modified = obj.Created
 	obj.Version = 1
@@ -43,15 +45,15 @@ func New() RelationshipType {
 // Public Methods - Common Properties
 // ----------------------------------------------------------------------
 
-func (this *RelationshipType) SetCreatedBy(s string) {
+func (this *CampaignType) SetCreatedBy(s string) {
 	this.Created_by_ref = s
 }
 
-func (this *RelationshipType) SetModified(d time.Time) {
+func (this *CampaignType) SetModified(d time.Time) {
 	this.Modified = d.UTC().Format(defs.TIME_RFC_3339)
 }
 
-func (this *RelationshipType) SetVersion(i int) error {
+func (this *CampaignType) SetVersion(i int) error {
 	if i < defs.MIN_VERSION_SIZE {
 		return errors.New("No change made, new version is smaller than min size")
 	}
@@ -68,30 +70,54 @@ func (this *RelationshipType) SetVersion(i int) error {
 	return nil
 }
 
-func (this *RelationshipType) SetRevoked() {
+func (this *CampaignType) SetRevoked() {
 	this.Revoked = true
 }
 
-func (this *RelationshipType) GetId() string {
+func (this *CampaignType) AddLabel(value string) {
+	if this.Labels == nil {
+		a := make([]string, 0)
+		this.Labels = a
+	}
+	this.Labels = append(this.Labels, value)
+}
+
+func (this *CampaignType) GetId() string {
 	return this.Id
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - RelationshipType
+// Public Methods - CampaignType
 // ----------------------------------------------------------------------
 
-func (this *RelationshipType) SetRelationshipType(s string) {
-	this.Relationship_type = s
+func (this *CampaignType) SetName(s string) {
+	this.Name = s
 }
 
-func (this *RelationshipType) SetDescription(s string) {
+func (this *CampaignType) SetDescription(s string) {
 	this.Description = s
 }
 
-func (this *RelationshipType) SetSourceRef(s string) {
-	this.Source_ref = s
+func (this *CampaignType) AddAlias(value string) {
+	if this.Aliases == nil {
+		a := make([]string, 0)
+		this.Aliases = a
+	}
+	this.Aliases = append(this.Aliases, value)
 }
 
-func (this *RelationshipType) SetTargetRef(s string) {
-	this.Target_ref = s
+func (this *CampaignType) SetFirstSeen(d time.Time) {
+	this.First_seen = d.UTC().Format(defs.TIME_RFC_3339)
+}
+
+// This function will allow you to assign the time as a string instead of using
+// a time.Time object
+func (this *CampaignType) SetFirstSeenText(s string) {
+	this.First_seen = s
+}
+
+// TODO Add precision functions
+
+func (this *CampaignType) SetObjective(s string) {
+	this.Objective = s
 }

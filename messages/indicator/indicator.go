@@ -78,6 +78,18 @@ func (this *IndicatorType) SetRevoked() {
 	this.Revoked = true
 }
 
+func (this *IndicatorType) AddLabel(value string) {
+	if this.Labels == nil {
+		a := make([]string, 0)
+		this.Labels = a
+	}
+	this.Labels = append(this.Labels, value)
+}
+
+func (this *IndicatorType) GetId() string {
+	return this.Id
+}
+
 // ----------------------------------------------------------------------
 // Public Methods - IndicatorType
 // ----------------------------------------------------------------------
@@ -98,10 +110,16 @@ func (this *IndicatorType) SetPatternLangVersion(s string) {
 	this.Pattern_lang_version = s
 }
 
+func (this *IndicatorType) SetPattern(s string) {
+	this.Pattern = s
+}
+
 func (this *IndicatorType) SetValidFrom(d time.Time) {
 	this.Valid_from = d.UTC().Format(defs.TIME_RFC_3339)
 }
 
+// This function will allow you to assign the time as a string instead of using
+// a time.Time object
 func (this *IndicatorType) SetValidFromText(s string) {
 	this.Valid_from = s
 }
@@ -110,18 +128,14 @@ func (this *IndicatorType) SetValidUntil(d time.Time) {
 	this.Valid_until = d.UTC().Format(defs.TIME_RFC_3339)
 }
 
+// This function will allow you to assign the time as a string instead of using
+// a time.Time object
 func (this *IndicatorType) SetValidUntilText(s string) {
 	this.Valid_until = s
 }
 
-func (this *IndicatorType) NewKillChainPhase() *stix.KillChainPhaseType {
-	var s stix.KillChainPhaseType
-	slicePosition := this.addKillChainPhase(s)
-	return &this.Kill_chain_phases[slicePosition]
-}
-
 func (this *IndicatorType) AddKillChainPhase(name, phase string) {
-	k := this.NewKillChainPhase()
+	k := this.newKillChainPhase()
 	k.AddName(name)
 	k.AddPhase(phase)
 }
@@ -180,12 +194,17 @@ func (this *IndicatorType) SetPrecisionFull(s string) {
 // Private Methods - IndicatorType
 // ----------------------------------------------------------------------
 
-func (this *IndicatorType) addKillChainPhase(s stix.KillChainPhaseType) int {
+// This function will return a reference to a slice location. This
+// will enable us to update an object located at that slice location.
+func (this *IndicatorType) newKillChainPhase() *stix.KillChainPhaseType {
+	var s stix.KillChainPhaseType
+
 	if this.Kill_chain_phases == nil {
 		a := make([]stix.KillChainPhaseType, 0)
 		this.Kill_chain_phases = a
 	}
+
 	positionThatAppendWillUse := len(this.Kill_chain_phases)
 	this.Kill_chain_phases = append(this.Kill_chain_phases, s)
-	return positionThatAppendWillUse
+	return &this.Kill_chain_phases[positionThatAppendWillUse]
 }

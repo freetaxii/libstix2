@@ -67,6 +67,7 @@ func GetCurrentTime() time.Time {
 	return time.Now()
 }
 
+// This function will the time as a string instead of a time.Time object
 func GetCurrentTimeText() string {
 	t := time.Now().UTC().Format(defs.TIME_RFC_3339)
 	return t
