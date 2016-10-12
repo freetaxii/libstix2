@@ -25,8 +25,8 @@ type SightingType struct {
 	Last_seen_precision  string   `json:"last_seen_precision,omitempty"`
 	Count                int      `json:"count,omitempty"`
 	Sighting_of_ref      string   `json:"sighting_of_ref,omitempty"`
-	Observed_data_refs   []string `json:"observed_data_ref,omitempty"`
-	Where_sighted_refs   []string `json:"where_sighted_ref,omitempty"`
+	Observed_data_refs   []string `json:"observed_data_refs,omitempty"`
+	Where_sighted_refs   []string `json:"where_sighted_refs,omitempty"`
 	Summary              bool     `json:"summary,omitempty"`
 }
 
