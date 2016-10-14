@@ -19,13 +19,22 @@ func main() {
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")
-	publishedDate := time.Now()
-	r.SetPublished(publishedDate)
+	r.SetPublished(time.Now())
 
 	r.AddObject(stix.NewId("malware"))
 	r.AddObject(stix.NewId("campaign"))
+	r.AddObject(stix.NewId("sighting"))
+	r.AddObject(stix.NewId("sighting"))
 	r.AddObject(stix.NewId("threat-actor"))
 	r.AddObject(stix.NewId("threat-actor"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(stix.NewId("relationship"))
 
 	for j := 0; j <= 4; j++ {
 		r.AddObject(stix.NewId("indicator"))
