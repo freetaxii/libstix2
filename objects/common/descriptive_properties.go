@@ -16,7 +16,7 @@ type DescriptivePropertiesType struct {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - KillChainPhaseType
+// Public Methods - DescriptivePropertiesType
 // ----------------------------------------------------------------------
 
 func (this *DescriptivePropertiesType) SetName(s string) {

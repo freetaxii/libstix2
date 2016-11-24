@@ -16,3 +16,23 @@ type ExteralReferenceType struct {
 	Url         string `json:"url,omitempty"`
 	External_id string `json:"external_id,omitempty"`
 }
+
+// ----------------------------------------------------------------------
+// Public Methods - ExteralReferenceType
+// ----------------------------------------------------------------------
+
+func (this *ExteralReferenceType) SetSourceName(s string) {
+	this.Source_name = s
+}
+
+func (this *ExteralReferenceType) SetDescription(s string) {
+	this.Description = s
+}
+
+func (this *ExteralReferenceType) SetURL(s string) {
+	this.Url = s
+}
+
+func (this *ExteralReferenceType) SetExternalID(s string) {
+	this.External_id = s
+}
