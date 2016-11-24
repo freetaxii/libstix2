@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package stix
+package common
 
 import (
 	"database/sql"

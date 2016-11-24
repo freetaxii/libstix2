@@ -9,13 +9,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/indicator"
-	//"log"
+	"github.com/freetaxii/libstix2/objects"
 	"time"
 )
 
 func main() {
-	i := indicator.New()
+	var err error
+	i := messages.NewIndicator()
 
 	i.SetName("Malware C2 Indicator 2016")
 
@@ -28,9 +28,10 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	validFrom := time.Now()
-	i.SetValidFrom(validFrom)
-	i.SetPrecisionYear("valid_from")
+	err = i.SetValidFrom(time.Now(), "")
+	if err != nil {
+		fmt.Println("INFO:", err)
+	}
 	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
 	var data []byte
