@@ -7,14 +7,14 @@
 package bundle
 
 import (
-	"github.com/freetaxii/libstix2/messages/campaign"
-	"github.com/freetaxii/libstix2/messages/indicator"
-	"github.com/freetaxii/libstix2/messages/infrastructure"
-	"github.com/freetaxii/libstix2/messages/malware"
-	"github.com/freetaxii/libstix2/messages/observed_data"
-	"github.com/freetaxii/libstix2/messages/relationship"
-	"github.com/freetaxii/libstix2/messages/sighting"
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects/campaign"
+	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects/infrastructure"
+	"github.com/freetaxii/libstix2/objects/malware"
+	"github.com/freetaxii/libstix2/objects/observed_data"
+	"github.com/freetaxii/libstix2/objects/relationship"
+	"github.com/freetaxii/libstix2/objects/sighting"
 )
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ type BundleType struct {
 func New() BundleType {
 	var obj BundleType
 	obj.MessageType = "bundle"
-	obj.Id = stix.NewId("bundle")
+	obj.Id = common.NewId("bundle")
 	obj.SetSpecVersion20()
 	return obj
 }

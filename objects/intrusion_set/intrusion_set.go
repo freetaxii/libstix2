@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package threat_actor
+package intrusion_set
 
 import (
 	"github.com/freetaxii/libstix2/objects/common"
@@ -14,27 +14,26 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-type ThreatActorType struct {
+type IntrusionSetType struct {
 	common.CommonPropertiesType
 	common.DescriptivePropertiesType
 	common.AliasesType
-	Roles                 []string `json:"roles,omitempty"`
+	First_seen            string   `json:"first_seen,omitempty"`
+	First_seen_precision  string   `json:"first_seen_precision,omitempty"`
 	Goals                 []string `json:"goals,omitempty"`
-	Sophistication        string   `json:"sophistication,omitempty"`
 	Resource_level        string   `json:"resource_level,omitempty"`
 	Primary_motivation    string   `json:"primary_motivation,omitempty"`
 	Secondary_motivations []string `json:"secondary_motivations,omitempty"`
-	Personal_motivations  []string `json:"personal_motivations,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-func New() ThreatActorType {
-	var obj ThreatActorType
-	obj.MessageType = "threat-actor"
-	obj.Id = obj.NewId("threat-actor")
+func New() IntrusionSetType {
+	var obj IntrusionSetType
+	obj.MessageType = "intrusion-set"
+	obj.Id = obj.NewId("intrusion-set")
 	obj.Created = obj.GetCurrentTime()
 	obj.Modified = obj.Created
 	obj.Version = 1
@@ -42,18 +41,30 @@ func New() ThreatActorType {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ThreatActorType
+// Public Methods - IntrusionSetType
 // ----------------------------------------------------------------------
 
-func (this *ThreatActorType) AddRole(value string) {
-	if this.Roles == nil {
-		a := make([]string, 0)
-		this.Roles = a
+// SetFirstSeen takes in two parameters and returns and error if there is one
+// param: t a timestamp in either time.Time or string format
+// param: s a timestamp precision in string format
+func (this *IntrusionSetType) SetFirstSeen(t interface{}, s string) error {
+
+	ts, err := this.VerifyTimestamp(t)
+	if err != nil {
+		return err
 	}
-	this.Roles = append(this.Roles, value)
+	this.First_seen = ts
+
+	p, err := this.VerifyPrecision(s)
+	if err != nil {
+		return err
+	}
+	this.First_seen_precision = p
+
+	return nil
 }
 
-func (this *ThreatActorType) AddGoal(value string) {
+func (this *IntrusionSetType) AddGoal(value string) {
 	if this.Goals == nil {
 		a := make([]string, 0)
 		this.Goals = a
@@ -61,30 +72,18 @@ func (this *ThreatActorType) AddGoal(value string) {
 	this.Goals = append(this.Goals, value)
 }
 
-func (this *ThreatActorType) SetSophistication(s string) {
-	this.Sophistication = s
-}
-
-func (this *ThreatActorType) SetResourceLevel(s string) {
+func (this *IntrusionSetType) SetResourceLevel(s string) {
 	this.Resource_level = s
 }
 
-func (this *ThreatActorType) SetPrimaryMotivation(s string) {
+func (this *IntrusionSetType) SetPrimaryMotivation(s string) {
 	this.Primary_motivation = s
 }
 
-func (this *ThreatActorType) AddSecondaryMotivation(value string) {
+func (this *IntrusionSetType) AddSecondaryMotivation(value string) {
 	if this.Secondary_motivations == nil {
 		a := make([]string, 0)
 		this.Secondary_motivations = a
 	}
 	this.Secondary_motivations = append(this.Secondary_motivations, value)
-}
-
-func (this *ThreatActorType) AddPersonalMotivation(value string) {
-	if this.Personal_motivations == nil {
-		a := make([]string, 0)
-		this.Personal_motivations = a
-	}
-	this.Personal_motivations = append(this.Personal_motivations, value)
 }

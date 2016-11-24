@@ -7,10 +7,7 @@
 package sighting
 
 import (
-	"errors"
-	"github.com/freetaxii/libstix2/messages/defs"
-	"github.com/freetaxii/libstix2/messages/stix"
-	"time"
+	"github.com/freetaxii/libstix2/objects/common"
 )
 
 // ----------------------------------------------------------------------
@@ -18,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type SightingType struct {
-	stix.CommonProperties
+	common.CommonPropertiesType
 	First_seen           string   `json:"first_seen,omitempty"`
 	First_seen_precision string   `json:"first_seen_precision,omitempty"`
 	Last_seen            string   `json:"last_seen,omitempty"`
@@ -37,74 +34,55 @@ type SightingType struct {
 func New() SightingType {
 	var obj SightingType
 	obj.MessageType = "sighting"
-	obj.Id = stix.NewId("sighting")
-	obj.Created = stix.GetCurrentTime().UTC().Format(defs.TIME_RFC_3339)
+	obj.Id = obj.NewId("sighting")
+	obj.Created = obj.GetCurrentTime()
 	obj.Modified = obj.Created
 	obj.Version = 1
 	return obj
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - Common Properties
-// ----------------------------------------------------------------------
-
-func (this *SightingType) SetCreatedBy(s string) {
-	this.Created_by_ref = s
-}
-
-func (this *SightingType) SetModified(d time.Time) {
-	this.Modified = d.UTC().Format(defs.TIME_RFC_3339)
-}
-
-func (this *SightingType) SetVersion(i int) error {
-	if i < defs.MIN_VERSION_SIZE {
-		return errors.New("No change made, new version is smaller than min size")
-	}
-
-	if i > defs.MAX_VERSION_SIZE {
-		return errors.New("No change made, new version is larger than max size")
-	}
-
-	if i <= this.Version {
-		return errors.New("No change made, new version is not larger than original")
-	}
-
-	this.Version = i
-	return nil
-}
-
-func (this *SightingType) SetRevoked() {
-	this.Revoked = true
-}
-
-func (this *SightingType) GetId() string {
-	return this.Id
-}
-
-// ----------------------------------------------------------------------
 // Public Methods - SightingType
 // ----------------------------------------------------------------------
 
-// TODO add precision functions
+// SetFirstSeen takes in two parameters and returns and error if there is one
+// param: t a timestamp in either time.Time or string format
+// param: s a timestamp precision in string format
+func (this *SightingType) SetFirstSeen(t interface{}, s string) error {
 
-func (this *SightingType) SetFirstSeen(d time.Time) {
-	this.First_seen = d.UTC().Format(defs.TIME_RFC_3339)
+	ts, err := this.VerifyTimestamp(t)
+	if err != nil {
+		return err
+	}
+	this.First_seen = ts
+
+	p, err := this.VerifyPrecision(s)
+	if err != nil {
+		return err
+	}
+	this.First_seen_precision = p
+
+	return nil
 }
 
-// This function will allow you to assign the time as a string instead of using
-// a time.Time object
-func (this *SightingType) SetFirstSeenText(s string) {
-	this.First_seen = s
-}
+// SetLastSeen takes in two parameters and returns and error if there is one
+// param: t a timestamp in either time.Time or string format
+// param: s a timestamp precision in string format
+func (this *SightingType) SetLastSeen(t interface{}, s string) error {
 
-func (this *SightingType) SetLastSeen(d time.Time) {
-	this.Last_seen = d.UTC().Format(defs.TIME_RFC_3339)
-}
+	ts, err := this.VerifyTimestamp(t)
+	if err != nil {
+		return err
+	}
+	this.Last_seen = ts
 
-// This function will allow you to assign the time as a string instead of using
-// a time.Time object
-func (this *SightingType) SetLastSeenText(s string) {
-	this.Last_seen = s
+	p, err := this.VerifyPrecision(s)
+	if err != nil {
+		return err
+	}
+	this.Last_seen_precision = p
+
+	return nil
 }
 
 func (this *SightingType) SetCount(i int) {

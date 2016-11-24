@@ -8,8 +8,8 @@ package report
 
 import (
 	"database/sql"
-	"github.com/freetaxii/libstix2/messages/defs"
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/defs"
 	"log"
 	"time"
 )
@@ -46,7 +46,7 @@ func (this *ReportType) AddToDatabase(db *sql.DB) {
 	}
 
 	if this.Labels != nil {
-		stix.AddLabelsToDatabase(db, &parentId, &dateAdded, &this.Id, &this.Version, &this.Labels)
+		common.AddLabelsToDatabase(db, &parentId, &dateAdded, &this.Id, &this.Version, &this.Labels)
 	}
 
 	if this.Object_refs != nil {

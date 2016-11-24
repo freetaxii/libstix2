@@ -9,7 +9,7 @@ package common
 import (
 	"code.google.com/p/go-uuid/uuid"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/defs"
+	"github.com/freetaxii/libstix2/objects/defs"
 	"strings"
 	"time"
 )
@@ -29,6 +29,31 @@ type CommonPropertiesType struct {
 	Labels              []string               `json:"labels,omitempty"`
 	External_references []ExteralReferenceType `json:"external_references,omitempty"`
 	Object_marking_refs []string               `json:"object_marking_refs,omitempty"`
+}
+
+// ----------------------------------------------------------------------
+// Public Methods
+// ----------------------------------------------------------------------
+
+// VerifyTimestamp will accept a timestamp in one of the two formats
+// time.Time
+// string
+func VerifyTimestamp(t interface{}) (string, error) {
+	switch ts := t.(type) {
+	case time.Time:
+		return ts.UTC().Format(defs.TIME_RFC_3339), nil
+	case string:
+		//TODO verify format of timestamp when in string format
+		return ts, nil
+	default:
+		return "", fmt.Errorf("timestamp format of \"%s\" is not a valid format", ts)
+	}
+}
+
+func NewId(s string) string {
+	// TODO Add check to validate input value
+	id := s + "--" + uuid.New()
+	return id
 }
 
 // ----------------------------------------------------------------------

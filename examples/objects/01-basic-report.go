@@ -9,35 +9,34 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/report"
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects"
 	"time"
 )
 
 func main() {
-	r := report.New()
+	r := objects.NewReport()
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")
 	r.SetPublished(time.Now())
 
-	r.AddObject(stix.NewId("malware"))
-	r.AddObject(stix.NewId("campaign"))
-	r.AddObject(stix.NewId("sighting"))
-	r.AddObject(stix.NewId("sighting"))
-	r.AddObject(stix.NewId("threat-actor"))
-	r.AddObject(stix.NewId("threat-actor"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(r.NewId("malware"))
+	r.AddObject(r.NewId("campaign"))
+	r.AddObject(r.NewId("sighting"))
+	r.AddObject(r.NewId("sighting"))
+	r.AddObject(r.NewId("threat-actor"))
+	r.AddObject(r.NewId("threat-actor"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
 
 	for j := 0; j <= 4; j++ {
-		r.AddObject(stix.NewId("indicator"))
+		r.AddObject(r.NewId("indicator"))
 	}
 
 	var data []byte

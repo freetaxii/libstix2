@@ -7,10 +7,7 @@
 package relationship
 
 import (
-	"errors"
-	"github.com/freetaxii/libstix2/messages/defs"
-	"github.com/freetaxii/libstix2/messages/stix"
-	"time"
+	"github.com/freetaxii/libstix2/objects/common"
 )
 
 // ----------------------------------------------------------------------
@@ -18,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type RelationshipType struct {
-	stix.CommonProperties
+	common.CommonPropertiesType
 	Relationship_type string `json:"relationship_type,omitempty"`
 	Description       string `json:"description,omitempty"`
 	Source_ref        string `json:"source_ref,omitempty"`
@@ -32,48 +29,11 @@ type RelationshipType struct {
 func New() RelationshipType {
 	var obj RelationshipType
 	obj.MessageType = "relationship"
-	obj.Id = stix.NewId("relationship")
-	obj.Created = stix.GetCurrentTime().UTC().Format(defs.TIME_RFC_3339)
+	obj.Id = obj.NewId("relationship")
+	obj.Created = obj.GetCurrentTime()
 	obj.Modified = obj.Created
 	obj.Version = 1
 	return obj
-}
-
-// ----------------------------------------------------------------------
-// Public Methods - Common Properties
-// ----------------------------------------------------------------------
-
-func (this *RelationshipType) SetCreatedBy(s string) {
-	this.Created_by_ref = s
-}
-
-func (this *RelationshipType) SetModified(d time.Time) {
-	this.Modified = d.UTC().Format(defs.TIME_RFC_3339)
-}
-
-func (this *RelationshipType) SetVersion(i int) error {
-	if i < defs.MIN_VERSION_SIZE {
-		return errors.New("No change made, new version is smaller than min size")
-	}
-
-	if i > defs.MAX_VERSION_SIZE {
-		return errors.New("No change made, new version is larger than max size")
-	}
-
-	if i <= this.Version {
-		return errors.New("No change made, new version is not larger than original")
-	}
-
-	this.Version = i
-	return nil
-}
-
-func (this *RelationshipType) SetRevoked() {
-	this.Revoked = true
-}
-
-func (this *RelationshipType) GetId() string {
-	return this.Id
 }
 
 // ----------------------------------------------------------------------

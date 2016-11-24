@@ -9,7 +9,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/indicator"
+	"github.com/freetaxii/libstix2/objects/indicator"
 	"io"
 	"io/ioutil"
 	"log"

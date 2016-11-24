@@ -9,14 +9,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/campaign"
-	"github.com/freetaxii/libstix2/messages/indicator"
-	"github.com/freetaxii/libstix2/messages/malware"
-	//"github.com/freetaxii/libstix2/messages/observed_data"
-	//"github.com/freetaxii/libstix2/messages/relationship"
-	"github.com/freetaxii/libstix2/messages/report"
-	//"github.com/freetaxii/libstix2/messages/sighting"
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects"
 	"time"
 )
 
@@ -24,20 +17,20 @@ func main() {
 	container := make([]interface{}, 0)
 
 	// Create a report
-	r := report.New()
+	r := objects.NewReport()
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")
 	r.SetPublished(time.Now())
 
 	// Create a campagin
-	c := campaign.New()
+	c := objects.NewCampaign()
 	c.SetName("Bank Attack 2016")
 	c.SetObjective("Compromise SWIFT system and steal money")
 	r.AddObject(c.GetId())
 	container = append(container, c)
 
 	// Define a family of malware
-	m1 := malware.New()
+	m1 := objects.NewMalware()
 	m1.SetName("Zeus")
 	m1.AddLabel("trojan")
 	m1.AddLabel("malware-family")
@@ -45,7 +38,7 @@ func main() {
 	container = append(container, m1)
 
 	// Define a piece of malware
-	m2 := malware.New()
+	m2 := objects.NewMalware()
 	m2.SetName("SpyEye")
 	m2.AddLabel("trojan")
 	m2.AddFilename("cleansweep.exe")
@@ -58,27 +51,27 @@ func main() {
 	container = append(container, m2)
 
 	// Create an indicator
-	i := indicator.New()
+	i := objects.NewIndicator()
 	i.SetName("Malware C2 Indicator 2016")
 	i.SetDescription("This indicator should detect the SpyEye malware by looking for this MD5 hash")
 	i.SetPattern("file-object:hashes.md5 = 84714c100d2dfc88629531f6456b8276")
 	container = append(container, c)
 
-	r.AddObject(stix.NewId("sighting"))
-	r.AddObject(stix.NewId("sighting"))
-	r.AddObject(stix.NewId("threat-actor"))
-	r.AddObject(stix.NewId("threat-actor"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
-	r.AddObject(stix.NewId("relationship"))
+	r.AddObject(r.NewId("sighting"))
+	r.AddObject(r.NewId("sighting"))
+	r.AddObject(r.NewId("threat-actor"))
+	r.AddObject(r.NewId("threat-actor"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
+	r.AddObject(r.NewId("relationship"))
 
 	for j := 0; j <= 4; j++ {
-		r.AddObject(stix.NewId("indicator"))
+		r.AddObject(r.NewId("indicator"))
 	}
 
 	container = append(container, r)

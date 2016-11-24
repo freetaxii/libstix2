@@ -9,11 +9,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/bundle"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 func main() {
-	sm := bundle.New()
+	sm := objects.NewBundle()
 
 	// Create a campagin
 	c := sm.NewCampaign()

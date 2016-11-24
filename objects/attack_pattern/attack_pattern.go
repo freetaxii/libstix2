@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package report
+package attack_pattern
 
 import (
 	"github.com/freetaxii/libstix2/objects/common"
@@ -14,21 +14,20 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-type ReportType struct {
+type AttackPatternType struct {
 	common.CommonPropertiesType
 	common.DescriptivePropertiesType
-	Published   string   `json:"published,omitempty"`
-	Object_refs []string `json:"object_refs,omitempty"`
+	common.KillChainPhasesType
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-func New() ReportType {
-	var obj ReportType
-	obj.MessageType = "report"
-	obj.Id = obj.NewId("report")
+func New() AttackPatternType {
+	var obj AttackPatternType
+	obj.MessageType = "attack-pattern"
+	obj.Id = obj.NewId("attack-pattern")
 	obj.Created = obj.GetCurrentTime()
 	obj.Modified = obj.Created
 	obj.Version = 1
@@ -36,26 +35,5 @@ func New() ReportType {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ReportType
+// Public Methods - AttackPatternType
 // ----------------------------------------------------------------------
-
-// SetPublished takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-func (this *ReportType) SetPublished(t interface{}) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.Published = ts
-
-	return nil
-}
-
-func (this *ReportType) AddObject(value string) {
-	if this.Object_refs == nil {
-		a := make([]string, 0)
-		this.Object_refs = a
-	}
-	this.Object_refs = append(this.Object_refs, value)
-}

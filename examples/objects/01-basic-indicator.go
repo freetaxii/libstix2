@@ -15,7 +15,7 @@ import (
 
 func main() {
 	var err error
-	i := messages.NewIndicator()
+	i := objects.NewIndicator()
 
 	i.SetName("Malware C2 Indicator 2016")
 

@@ -7,7 +7,7 @@
 package campaign
 
 import (
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects/common"
 )
 
 // ----------------------------------------------------------------------
@@ -15,9 +15,9 @@ import (
 // ----------------------------------------------------------------------
 
 type CampaignType struct {
-	stix.CommonPropertiesType
-	stix.DescriptivePropertiesType
-	stix.AliasesType
+	common.CommonPropertiesType
+	common.DescriptivePropertiesType
+	common.AliasesType
 	First_seen           string `json:"first_seen,omitempty"`
 	First_seen_precision string `json:"first_seen_precision,omitempty"`
 	Objective            string `json:"objective,omitempty"`
@@ -41,6 +41,9 @@ func New() CampaignType {
 // Public Methods - CampaignType
 // ----------------------------------------------------------------------
 
+// SetFirstSeen takes in two parameters and returns and error if there is one
+// param: t a timestamp in either time.Time or string format
+// param: s a timestamp precision in string format
 func (this *CampaignType) SetFirstSeen(t interface{}, s string) error {
 
 	ts, err := this.VerifyTimestamp(t)

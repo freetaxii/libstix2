@@ -7,7 +7,7 @@
 package indicator
 
 import (
-	"github.com/freetaxii/libstix2/messages/common"
+	"github.com/freetaxii/libstix2/objects/common"
 )
 
 // ----------------------------------------------------------------------
