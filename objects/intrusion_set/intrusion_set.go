@@ -18,8 +18,7 @@ type IntrusionSetType struct {
 	common.CommonPropertiesType
 	common.DescriptivePropertiesType
 	common.AliasesType
-	First_seen            string   `json:"first_seen,omitempty"`
-	First_seen_precision  string   `json:"first_seen_precision,omitempty"`
+	common.FirstLastSeenType
 	Goals                 []string `json:"goals,omitempty"`
 	Resource_level        string   `json:"resource_level,omitempty"`
 	Primary_motivation    string   `json:"primary_motivation,omitempty"`
@@ -43,26 +42,6 @@ func New() IntrusionSetType {
 // ----------------------------------------------------------------------
 // Public Methods - IntrusionSetType
 // ----------------------------------------------------------------------
-
-// SetFirstSeen takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-// param: s a timestamp precision in string format
-func (this *IntrusionSetType) SetFirstSeen(t interface{}, s string) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.First_seen = ts
-
-	p, err := this.VerifyPrecision(s)
-	if err != nil {
-		return err
-	}
-	this.First_seen_precision = p
-
-	return nil
-}
 
 func (this *IntrusionSetType) AddGoal(value string) {
 	if this.Goals == nil {

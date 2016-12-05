@@ -50,6 +50,33 @@ func VerifyTimestamp(t interface{}) (string, error) {
 	}
 }
 
+// VerifyPrecision will verify the supplied precision string to make sure it
+// is valid per the STIX specification.
+func VerifyPrecision(s string) (string, error) {
+
+	if s == "" {
+		return "", nil
+	}
+
+	s = strings.ToLower(s)
+	switch s {
+	case "year":
+		return s, nil
+	case "month":
+		return s, nil
+	case "day":
+		return s, nil
+	case "hour":
+		return s, nil
+	case "minute":
+		return s, nil
+	case "full":
+		return s, nil
+	default:
+		return "", fmt.Errorf("invalid precision \"%s\", setting requested precision to \"\"", s)
+	}
+}
+
 func NewId(s string) string {
 	// TODO Add check to validate input value
 	id := s + "--" + uuid.New()
@@ -78,42 +105,13 @@ func (this *CommonPropertiesType) SetCreatedBy(s string) {
 // time.Time
 // string
 func (this *CommonPropertiesType) VerifyTimestamp(t interface{}) (string, error) {
-	switch ts := t.(type) {
-	case time.Time:
-		return ts.UTC().Format(defs.TIME_RFC_3339), nil
-	case string:
-		//TODO verify format of timestamp when in string format
-		return ts, nil
-	default:
-		return "", fmt.Errorf("timestamp format of \"%s\" is not a valid format", ts)
-	}
+	return VerifyTimestamp(t)
 }
 
 // VerifyPrecision will verify the supplied precision string to make sure it
 // is valid per the STIX specification.
 func (this *CommonPropertiesType) VerifyPrecision(s string) (string, error) {
-
-	if s == "" {
-		return "", nil
-	}
-
-	s = strings.ToLower(s)
-	switch s {
-	case "year":
-		return s, nil
-	case "month":
-		return s, nil
-	case "day":
-		return s, nil
-	case "hour":
-		return s, nil
-	case "minute":
-		return s, nil
-	case "full":
-		return s, nil
-	default:
-		return "", fmt.Errorf("invalid precision \"%s\", setting requested precision to \"\"", s)
-	}
+	return VerifyPrecision(s)
 }
 
 func (this *CommonPropertiesType) GetCurrentTime() string {

@@ -16,15 +16,12 @@ import (
 
 type SightingType struct {
 	common.CommonPropertiesType
-	First_seen           string   `json:"first_seen,omitempty"`
-	First_seen_precision string   `json:"first_seen_precision,omitempty"`
-	Last_seen            string   `json:"last_seen,omitempty"`
-	Last_seen_precision  string   `json:"last_seen_precision,omitempty"`
-	Count                int      `json:"count,omitempty"`
-	Sighting_of_ref      string   `json:"sighting_of_ref,omitempty"`
-	Observed_data_refs   []string `json:"observed_data_refs,omitempty"`
-	Where_sighted_refs   []string `json:"where_sighted_refs,omitempty"`
-	Summary              bool     `json:"summary,omitempty"`
+	common.FirstLastSeenType
+	Count              int      `json:"count,omitempty"`
+	Sighting_of_ref    string   `json:"sighting_of_ref,omitempty"`
+	Observed_data_refs []string `json:"observed_data_refs,omitempty"`
+	Where_sighted_refs []string `json:"where_sighted_refs,omitempty"`
+	Summary            bool     `json:"summary,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -44,46 +41,6 @@ func New() SightingType {
 // ----------------------------------------------------------------------
 // Public Methods - SightingType
 // ----------------------------------------------------------------------
-
-// SetFirstSeen takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-// param: s a timestamp precision in string format
-func (this *SightingType) SetFirstSeen(t interface{}, s string) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.First_seen = ts
-
-	p, err := this.VerifyPrecision(s)
-	if err != nil {
-		return err
-	}
-	this.First_seen_precision = p
-
-	return nil
-}
-
-// SetLastSeen takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-// param: s a timestamp precision in string format
-func (this *SightingType) SetLastSeen(t interface{}, s string) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.Last_seen = ts
-
-	p, err := this.VerifyPrecision(s)
-	if err != nil {
-		return err
-	}
-	this.Last_seen_precision = p
-
-	return nil
-}
 
 func (this *SightingType) SetCount(i int) {
 	this.Count = i
