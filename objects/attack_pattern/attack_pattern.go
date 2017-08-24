@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,9 +15,9 @@ import (
 // ----------------------------------------------------------------------
 
 type AttackPatternType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
-	common.KillChainPhasesType
+	common.KillChainPhasesPropertyType
 }
 
 // ----------------------------------------------------------------------
@@ -26,11 +26,7 @@ type AttackPatternType struct {
 
 func New() AttackPatternType {
 	var obj AttackPatternType
-	obj.MessageType = "attack-pattern"
-	obj.Id = obj.NewId("attack-pattern")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("atttack-pattern")
 	return obj
 }
 

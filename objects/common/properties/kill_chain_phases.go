@@ -1,16 +1,16 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package common
+package properties
 
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
 
-type KillChainPhasesType struct {
+type KillChainPhasesPropertyType struct {
 	Kill_chain_phases []KillChainPhaseType `json:"kill_chain_phases,omitempty"`
 }
 
@@ -20,22 +20,25 @@ type KillChainPhaseType struct {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - KillChainPhasesType
+// Public Methods - KillChainPhasesPropertyType
 // ----------------------------------------------------------------------
 
-func (this *KillChainPhasesType) AddKillChainPhase(name, phase string) {
+// AddKillChainPhase takes in two parameters
+// param: name - a string value representing the name of a kill chain
+// param: phase - a string value representing the phase of the kill chain
+func (this *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
 	k := this.newKillChainPhase()
-	k.AddName(name)
-	k.AddPhase(phase)
+	k.SetName(name)
+	k.SetPhase(phase)
 }
 
 // ----------------------------------------------------------------------
-// Private Methods - KillChainPhaseType
+// Private Methods - KillChainPhasesPropertyType
 // ----------------------------------------------------------------------
 
-// This method will return a reference to a slice location. This
-// will enable us to update an object located at that slice location.
-func (this *KillChainPhasesType) newKillChainPhase() *KillChainPhaseType {
+// newKillChainPhase returns a reference to a slice location. This
+// will enable the code to update an object located at that slice location.
+func (this *KillChainPhasesPropertyType) newKillChainPhase() *KillChainPhaseType {
 	var s KillChainPhaseType
 
 	if this.Kill_chain_phases == nil {
@@ -52,10 +55,14 @@ func (this *KillChainPhasesType) newKillChainPhase() *KillChainPhaseType {
 // Public Methods - KillChainPhaseType
 // ----------------------------------------------------------------------
 
-func (this *KillChainPhaseType) AddName(s string) {
+// SetName takes in one parameter
+// param: s - a string value representing the name of a kill chain
+func (this *KillChainPhaseType) SetName(s string) {
 	this.Kill_chain_name = s
 }
 
-func (this *KillChainPhaseType) AddPhase(s string) {
+// SetPhase takes in one parameter
+// param: s - a string value representing the phase of a kill chain
+func (this *KillChainPhaseType) SetPhase(s string) {
 	this.Phase_name = s
 }

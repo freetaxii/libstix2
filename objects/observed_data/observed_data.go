@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type ObservedDataType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	First_observed  string `json:"first_observed,omitempty"`
 	Last_observed   string `json:"last_observed,omitempty"`
 	Number_observed int    `json:"number_observed,omitempty"`
@@ -28,11 +28,7 @@ type ObservedDataType struct {
 
 func New() ObservedDataType {
 	var obj ObservedDataType
-	obj.MessageType = "observed-data"
-	obj.Id = obj.NewId("observed-data")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("observed-data")
 	return obj
 }
 
@@ -40,37 +36,28 @@ func New() ObservedDataType {
 // Public Methods - ObservedDataType
 // ----------------------------------------------------------------------
 
-// SetFirstObserved takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-func (this *ObservedDataType) SetFirstObserved(t interface{}) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
+// SetFirstObserved takes in one parameter
+// param: t - a timestamp in either time.Time or string format
+func (this *ObservedDataType) SetFirstObserved(t interface{}) {
+	ts := this.VerifyTimestamp(t)
 	this.First_observed = ts
-
-	return nil
 }
 
-// SetLastObserved takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-func (this *ObservedDataType) SetLastObserved(t interface{}) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
+// SetLastObserved takes in one parameter
+// param: t - a timestamp in either time.Time or string format
+func (this *ObservedDataType) SetLastObserved(t interface{}) {
+	ts := this.VerifyTimestamp(t)
 	this.Last_observed = ts
-
-	return nil
 }
 
+// SetNumberObserved takes in one parameter
+// param: i - an integer that represents the number of objects that were observed
 func (this *ObservedDataType) SetNumberObserved(i int) {
 	this.Number_observed = i
 }
 
-//TODO This will probably need to be changed either to an array or something
+// SetObjects takes in one parameter and returns
+// param: s - an string value that represents represents a cyber observable JSON object
 func (this *ObservedDataType) SetObjects(s string) {
 	this.Objects = s
 }

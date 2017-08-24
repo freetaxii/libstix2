@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -7,167 +7,129 @@
 package common
 
 import (
-	"code.google.com/p/go-uuid/uuid"
-	"fmt"
-	"github.com/freetaxii/libstix2/objects/defs"
-	"strings"
-	"time"
+	"github.com/freetaxii/libstix2/objects/common/properties"
+	"github.com/freetaxii/libstix2/objects/common/timestamp"
 )
 
 // ----------------------------------------------------------------------
-// Types
+// Common Property Types - Used to populate the common object properties
 // ----------------------------------------------------------------------
 
-type CommonPropertiesType struct {
-	MessageType         string                 `json:"type,omitempty"`
-	Id                  string                 `json:"id,omitempty"`
-	Created_by_ref      string                 `json:"created_by_ref,omitempty"`
-	Created             string                 `json:"created,omitempty"`
-	Modified            string                 `json:"modified,omitempty"`
-	Version             int                    `json:"version,omitempty"`
-	Revoked             bool                   `json:"revoked,omitempty"`
-	Labels              []string               `json:"labels,omitempty"`
-	External_references []ExteralReferenceType `json:"external_references,omitempty"`
-	Object_marking_refs []string               `json:"object_marking_refs,omitempty"`
+// This type includes all of the common properties that are used by all objects
+// The only object that uses this one by itself is the STIX Bundle
+type CommonBasePropertiesType struct {
+	properties.MessageTypePropertyType
+	properties.IdPropertyType
 }
 
-// ----------------------------------------------------------------------
-// Public Methods
-// ----------------------------------------------------------------------
-
-// VerifyTimestamp will accept a timestamp in one of the two formats
-// time.Time
-// string
-func VerifyTimestamp(t interface{}) (string, error) {
-	switch ts := t.(type) {
-	case time.Time:
-		return ts.UTC().Format(defs.TIME_RFC_3339), nil
-	case string:
-		//TODO verify format of timestamp when in string format
-		return ts, nil
-	default:
-		return "", fmt.Errorf("timestamp format of \"%s\" is not a valid format", ts)
-	}
+type CommonCreatorPropertiesType struct {
+	properties.CreatedByRefPropertyType
+	properties.CreatedPropertyType
 }
 
-// VerifyPrecision will verify the supplied precision string to make sure it
-// is valid per the STIX specification.
-func VerifyPrecision(s string) (string, error) {
-
-	if s == "" {
-		return "", nil
-	}
-
-	s = strings.ToLower(s)
-	switch s {
-	case "year":
-		return s, nil
-	case "month":
-		return s, nil
-	case "day":
-		return s, nil
-	case "hour":
-		return s, nil
-	case "minute":
-		return s, nil
-	case "full":
-		return s, nil
-	default:
-		return "", fmt.Errorf("invalid precision \"%s\", setting requested precision to \"\"", s)
-	}
+type CommonVersionPropertiesType struct {
+	properties.ModifiedPropertyType
+	properties.RevokedPropertyType
 }
 
-func NewId(s string) string {
-	// TODO Add check to validate input value
-	id := s + "--" + uuid.New()
-	return id
+// This type includes all of the common properties that are used by
+// SDOs and SROs
+type CommonObjectPropertiesType struct {
+	CommonBasePropertiesType
+	CommonCreatorPropertiesType
+	CommonVersionPropertiesType
+	properties.LabelsPropertyType
+	properties.ConfidencePropertyType
+	properties.LangPropertyType
+	properties.ExternalReferencesPropertyType
+	properties.ObjectMarkingRefsPropertyType
+	properties.GranularMarkingsPropertyType
+}
+
+// This type includes all of the common properties that are used by
+// the Marking Definition object
+type CommonMarkingDefinitionPropertiesType struct {
+	CommonBasePropertiesType
+	CommonCreatorPropertiesType
+	properties.ExternalReferencesPropertyType
+	properties.ObjectMarkingRefsPropertyType
+	properties.GranularMarkingsPropertyType
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - CommonPropertiesType
+// Property Types - Helper Functions
+// ----------------------------------------------------------------------
+// These functions are helper functions to prevent needing to import the
+// properties object locally
+
+type AliasesPropertiesType struct {
+	properties.AliasesPropertyType
+}
+
+type DescriptionPropertiesType struct {
+	properties.DescriptionPropertyType
+}
+
+type DescriptivePropertiesType struct {
+	properties.NamePropertyType
+	DescriptionPropertiesType
+}
+
+type FirstLastSeenPropertiesType struct {
+	properties.FirstSeenPropertyType
+	properties.LastSeenPropertyType
+}
+
+type GoalsPropertiesType struct {
+	properties.GoalsPropertyType
+}
+
+type KillChainPhasesPropertyType struct {
+	properties.KillChainPhasesPropertyType
+}
+
+type PrimaryMotivationPropertyType struct {
+	properties.PrimaryMotivationPropertyType
+}
+
+type ResourceLevelPropertyType struct {
+	properties.ResourceLevelPropertyType
+}
+
+type SecondaryMotivationsPropertyType struct {
+	properties.SecondaryMotivationsPropertyType
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - CommonObjectPropertiesType
 // ----------------------------------------------------------------------
 
-func (this *CommonPropertiesType) NewId(s string) string {
-	// TODO Add check to validate input value
-	id := s + "--" + uuid.New()
-	return id
+// InitNewObject is a helper function to init a new object with common elements
+// It takes in one parameter
+// param: s - a string value of the STIX object type
+func (this *CommonObjectPropertiesType) InitNewObject(s string) {
+	// TODO make sure that the value coming in a a valid STIX object type
+	this.SetMessageType(s)
+	this.CreateNewId(s)
+	this.SetCreatedToCurrentTime()
+	this.SetModifiedToCreated()
 }
 
-func (this *CommonPropertiesType) GetId() string {
-	return this.Id
+// SetModifiedToCreated sets the object modified time to be the same as the
+// created time. This has to be done at this level, since at the individual
+// properties type say "ModifiedPropertyType" this.Created does not exist.
+// But it will exist at this level of inheritance
+func (this *CommonObjectPropertiesType) SetModifiedToCreated() {
+	this.Modified = this.Created
 }
 
-func (this *CommonPropertiesType) SetCreatedBy(s string) {
-	this.Created_by_ref = s
+// VerifyTimestamp is a helper function to prevent needing to import the timestamp property object locally.
+// It takes in one parameter and returns a string version of the timestamp
+// param: t - a timestamp in either time.Time or string format
+func (this *CommonObjectPropertiesType) VerifyTimestamp(t interface{}) string {
+	return timestamp.Verify(t)
 }
 
-// VerifyTimestamp will accept a timestamp in one of the two formats
-// time.Time
-// string
-func (this *CommonPropertiesType) VerifyTimestamp(t interface{}) (string, error) {
-	return VerifyTimestamp(t)
-}
-
-// VerifyPrecision will verify the supplied precision string to make sure it
-// is valid per the STIX specification.
-func (this *CommonPropertiesType) VerifyPrecision(s string) (string, error) {
-	return VerifyPrecision(s)
-}
-
-func (this *CommonPropertiesType) GetCurrentTime() string {
-	return time.Now().UTC().Format(defs.TIME_RFC_3339)
-}
-
-func (this *CommonPropertiesType) SetCreated(t interface{}) error {
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.Created = ts
-	return nil
-}
-
-func (this *CommonPropertiesType) SetModified(t interface{}) error {
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
-	this.Modified = ts
-	return nil
-}
-
-func (this *CommonPropertiesType) VerifyVersion(newVersion, currentVersion int) error {
-	if newVersion < defs.MIN_VERSION_SIZE {
-		return fmt.Errorf("no change made, new version is smaller than min size")
-	}
-
-	if newVersion > defs.MAX_VERSION_SIZE {
-		return fmt.Errorf("no change made, new version is larger than max size")
-	}
-
-	if newVersion <= currentVersion {
-		return fmt.Errorf("no change made, new version is not larger than original")
-	}
-	return nil
-}
-
-func (this *CommonPropertiesType) SetVersion(i int) error {
-	err := this.VerifyVersion(i, this.Version)
-	if err != nil {
-		return err
-	}
-	this.Version = i
-	return nil
-}
-
-func (this *CommonPropertiesType) SetRevoked() {
-	this.Revoked = true
-}
-
-func (this *CommonPropertiesType) AddLabel(value string) {
-	if this.Labels == nil {
-		a := make([]string, 0)
-		this.Labels = a
-	}
-	this.Labels = append(this.Labels, value)
-}
+// func (this *CommonObjectPropertiesType) GetCurrentTime() string {
+// 	return timestamp.GetCurrentTime()
+// }

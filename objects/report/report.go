@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type ReportType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
 	Published   string   `json:"published,omitempty"`
 	Object_refs []string `json:"object_refs,omitempty"`
@@ -27,11 +27,7 @@ type ReportType struct {
 
 func New() ReportType {
 	var obj ReportType
-	obj.MessageType = "report"
-	obj.Id = obj.NewId("report")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("report")
 	return obj
 }
 
@@ -39,23 +35,20 @@ func New() ReportType {
 // Public Methods - ReportType
 // ----------------------------------------------------------------------
 
-// SetPublished takes in two parameters and returns and error if there is one
-// param: t a timestamp in either time.Time or string format
-func (this *ReportType) SetPublished(t interface{}) error {
+// SetPublished takes in one parameter
+// param: t - a timestamp in either time.Time or string format
+func (this *ReportType) SetPublished(t interface{}) {
 
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
+	ts := this.VerifyTimestamp(t)
 	this.Published = ts
-
-	return nil
 }
 
-func (this *ReportType) AddObject(value string) {
+// AddObject takes in one parameter
+// param: s - a string value that represents a STIX identifier
+func (this *ReportType) AddObject(s string) {
 	if this.Object_refs == nil {
 		a := make([]string, 0)
 		this.Object_refs = a
 	}
-	this.Object_refs = append(this.Object_refs, value)
+	this.Object_refs = append(this.Object_refs, s)
 }

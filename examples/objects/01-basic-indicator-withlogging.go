@@ -64,7 +64,7 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	err = i.SetValidFrom(time.Now(), "123")
+	err = i.SetValidFrom(time.Now())
 	if err != nil {
 		Info.Println(err)
 	}

@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,10 +15,10 @@ import (
 // ----------------------------------------------------------------------
 
 type CampaignType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
-	common.AliasesType
-	common.FirstLastSeenType
+	common.AliasesPropertiesType
+	common.FirstLastSeenPropertiesType
 	Objective string `json:"objective,omitempty"`
 }
 
@@ -28,11 +28,7 @@ type CampaignType struct {
 
 func New() CampaignType {
 	var obj CampaignType
-	obj.MessageType = "campaign"
-	obj.Id = obj.NewId("campaign")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("campaign")
 	return obj
 }
 
@@ -40,6 +36,8 @@ func New() CampaignType {
 // Public Methods - CampaignType
 // ----------------------------------------------------------------------
 
+// SetObjective takes in one parameter
+// param: s - a string value representing an objective, goal, desired outcome, or indended effect
 func (this *CampaignType) SetObjective(s string) {
 	this.Objective = s
 }

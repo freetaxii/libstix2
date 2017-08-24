@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,9 +15,9 @@ import (
 // ----------------------------------------------------------------------
 
 type ToolType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
-	common.KillChainPhasesType
+	common.KillChainPhasesPropertyType
 	Tool_version string `json:"tool_version,omitempty"`
 }
 
@@ -27,11 +27,7 @@ type ToolType struct {
 
 func New() ToolType {
 	var obj ToolType
-	obj.MessageType = "tool"
-	obj.Id = obj.NewId("tool")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("tool")
 	return obj
 }
 
@@ -39,6 +35,8 @@ func New() ToolType {
 // Public Methods - ToolType
 // ----------------------------------------------------------------------
 
+// SetToolVersion takes in one parameter
+// param: s - a string value representing the version of the tool
 func (this *ToolType) SetToolVersion(s string) {
 	this.Tool_version = s
 }

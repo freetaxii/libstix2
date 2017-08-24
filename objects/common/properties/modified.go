@@ -4,31 +4,31 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package vulnerability
+package properties
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/timestamp"
 )
 
 // ----------------------------------------------------------------------
-// Define Message Type
+// Types
 // ----------------------------------------------------------------------
 
-type VulnerabilityType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
+type ModifiedPropertyType struct {
+	Modified string `json:"modified,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Create Functions
+// Public Methods - ModifiedPropertyType
 // ----------------------------------------------------------------------
 
-func New() VulnerabilityType {
-	var obj VulnerabilityType
-	obj.InitNewObject("vulnerability")
-	return obj
+// SetModified takes in one parameter
+// param: t - a timestamp in either time.Time or string format
+func (this *ModifiedPropertyType) SetModified(t interface{}) {
+	ts := timestamp.Verify(t)
+	this.Modified = ts
 }
 
-// ----------------------------------------------------------------------
-// Public Methods - VulnerabilityType
-// ----------------------------------------------------------------------
+func (this *ModifiedPropertyType) GetModified() string {
+	return this.Modified
+}

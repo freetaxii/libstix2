@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-	var err error
 	i := objects.NewIndicator()
 
 	i.SetName("Malware C2 Indicator 2016")
@@ -23,15 +22,7 @@ func main() {
 	//modifiedTime := time.Now().Add(time.Hour)
 	//i.SetModified(modifiedTime)
 
-	// err := i.SetVersion(2)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	err = i.SetValidFrom(time.Now(), "")
-	if err != nil {
-		fmt.Println("INFO:", err)
-	}
+	i.SetValidFrom(time.Now())
 	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
 	var data []byte

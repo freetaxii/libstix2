@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,16 +15,16 @@ import (
 // ----------------------------------------------------------------------
 
 type ThreatActorType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
-	common.AliasesType
-	Roles                 []string `json:"roles,omitempty"`
-	Goals                 []string `json:"goals,omitempty"`
-	Sophistication        string   `json:"sophistication,omitempty"`
-	Resource_level        string   `json:"resource_level,omitempty"`
-	Primary_motivation    string   `json:"primary_motivation,omitempty"`
-	Secondary_motivations []string `json:"secondary_motivations,omitempty"`
-	Personal_motivations  []string `json:"personal_motivations,omitempty"`
+	common.AliasesPropertiesType
+	Roles []string `json:"roles,omitempty"`
+	common.GoalsPropertiesType
+	Sophistication string `json:"sophistication,omitempty"`
+	common.ResourceLevelPropertyType
+	common.PrimaryMotivationPropertyType
+	common.SecondaryMotivationsPropertyType
+	Personal_motivations []string `json:"personal_motivations,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -33,11 +33,7 @@ type ThreatActorType struct {
 
 func New() ThreatActorType {
 	var obj ThreatActorType
-	obj.MessageType = "threat-actor"
-	obj.Id = obj.NewId("threat-actor")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("threat-actor")
 	return obj
 }
 
@@ -45,46 +41,28 @@ func New() ThreatActorType {
 // Public Methods - ThreatActorType
 // ----------------------------------------------------------------------
 
-func (this *ThreatActorType) AddRole(value string) {
+// AddRole takes in one parameter
+// param: s - a string value representing a threat actor role from the threat-actor-role-ov
+func (this *ThreatActorType) AddRole(s string) {
 	if this.Roles == nil {
 		a := make([]string, 0)
 		this.Roles = a
 	}
-	this.Roles = append(this.Roles, value)
+	this.Roles = append(this.Roles, s)
 }
 
-func (this *ThreatActorType) AddGoal(value string) {
-	if this.Goals == nil {
-		a := make([]string, 0)
-		this.Goals = a
-	}
-	this.Goals = append(this.Goals, value)
-}
-
+// SetSophistication takes in one parameter
+// param: s - a string value representing the sophistication level of a threat actor from the threat-actor-sophistication-ov
 func (this *ThreatActorType) SetSophistication(s string) {
 	this.Sophistication = s
 }
 
-func (this *ThreatActorType) SetResourceLevel(s string) {
-	this.Resource_level = s
-}
-
-func (this *ThreatActorType) SetPrimaryMotivation(s string) {
-	this.Primary_motivation = s
-}
-
-func (this *ThreatActorType) AddSecondaryMotivation(value string) {
-	if this.Secondary_motivations == nil {
-		a := make([]string, 0)
-		this.Secondary_motivations = a
-	}
-	this.Secondary_motivations = append(this.Secondary_motivations, value)
-}
-
-func (this *ThreatActorType) AddPersonalMotivation(value string) {
+// AddPersonalMotivation takes in one parameter
+// param: s - a string value representing the motivation of a threat actor from the threat-actor-motivation-ov
+func (this *ThreatActorType) AddPersonalMotivation(s string) {
 	if this.Personal_motivations == nil {
 		a := make([]string, 0)
 		this.Personal_motivations = a
 	}
-	this.Personal_motivations = append(this.Personal_motivations, value)
+	this.Personal_motivations = append(this.Personal_motivations, s)
 }

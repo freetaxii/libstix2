@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -11,18 +11,16 @@ import (
 )
 
 // ----------------------------------------------------------------------
-// Define Message Type
+// Define Indicator Type
 // ----------------------------------------------------------------------
 
 type IndicatorType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
-	Pattern               string `json:"pattern,omitempty"`
-	Valid_from            string `json:"valid_from,omitempty"`
-	Valid_from_precision  string `json:"valid_from_precision,omitempty"`
-	Valid_until           string `json:"valid_until,omitempty"`
-	Valid_until_precision string `json:"valid_until_precision,omitempty"`
-	common.KillChainPhasesType
+	Pattern     string `json:"pattern,omitempty"`
+	Valid_from  string `json:"valid_from,omitempty"`
+	Valid_until string `json:"valid_until,omitempty"`
+	common.KillChainPhasesPropertyType
 }
 
 // ----------------------------------------------------------------------
@@ -31,11 +29,7 @@ type IndicatorType struct {
 
 func New() IndicatorType {
 	var obj IndicatorType
-	obj.MessageType = "indicator"
-	obj.Id = obj.NewId("indicator")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("indicator")
 	return obj
 }
 
@@ -47,42 +41,18 @@ func (this *IndicatorType) SetPattern(s string) {
 	this.Pattern = s
 }
 
-// SetValidForm takes in two parameters and returns an error if there is one
+// SetValidForm takes in one parameter
 // param: t a timestamp in either time.Time or string format
-// param: s a timestamp precision in string format
-func (this *IndicatorType) SetValidFrom(t interface{}, s string) error {
-
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
+func (this *IndicatorType) SetValidFrom(t interface{}) {
+	ts := this.VerifyTimestamp(t)
 	this.Valid_from = ts
-
-	p, err := this.VerifyPrecision(s)
-	if err != nil {
-		return err
-	}
-	this.Valid_from_precision = p
-
-	return nil
 }
 
-// SetValidUntil takes in two parameters and returns and error if there is one
+// SetValidUntil takes in one parameter
 // param: t a timestamp in either time.Time or string format
-// param: s a timestamp precision in string format
-func (this *IndicatorType) SetValidUntil(t interface{}, s string) error {
+func (this *IndicatorType) SetValidUntil(t interface{}) {
+	ts := this.VerifyTimestamp(t)
 
-	ts, err := this.VerifyTimestamp(t)
-	if err != nil {
-		return err
-	}
+	// TODO check to make sure this is later than the vaild_from
 	this.Valid_until = ts
-
-	p, err := this.VerifyPrecision(s)
-	if err != nil {
-		return err
-	}
-	this.Valid_until_precision = p
-
-	return nil
 }

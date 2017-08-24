@@ -1,4 +1,4 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
@@ -15,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type CourseOfActionType struct {
-	common.CommonPropertiesType
+	common.CommonObjectPropertiesType
 	common.DescriptivePropertiesType
 }
 
@@ -25,11 +25,7 @@ type CourseOfActionType struct {
 
 func New() CourseOfActionType {
 	var obj CourseOfActionType
-	obj.MessageType = "course-of-action"
-	obj.Id = obj.NewId("course-of-action")
-	obj.Created = obj.GetCurrentTime()
-	obj.Modified = obj.Created
-	obj.Version = 1
+	obj.InitNewObject("course-of-action")
 	return obj
 }
 

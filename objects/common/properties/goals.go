@@ -1,27 +1,29 @@
-// Copyright 2016 Bret Jordan, All rights reserved.
+// Copyright 2017 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package common
+package properties
 
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
 
-type AliasesType struct {
-	Aliases []string `json:"aliases,omitempty"`
+type GoalsPropertyType struct {
+	Goals []string `json:"goals,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - AliasesType
+// Public Methods - GoalsType
 // ----------------------------------------------------------------------
 
-func (this *AliasesType) AddAlias(value string) {
-	if this.Aliases == nil {
+// AddGoal takes in one parameter
+// param: s - a string value that represents a goal
+func (this *GoalsPropertyType) AddGoal(s string) {
+	if this.Goals == nil {
 		a := make([]string, 0)
-		this.Aliases = a
+		this.Goals = a
 	}
-	this.Aliases = append(this.Aliases, value)
+	this.Goals = append(this.Goals, s)
 }
