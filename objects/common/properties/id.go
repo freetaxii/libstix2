@@ -7,7 +7,7 @@
 package properties
 
 import (
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 )
 
 // ----------------------------------------------------------------------
