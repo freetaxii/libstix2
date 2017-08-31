@@ -29,7 +29,7 @@ type BundleType struct {
 func New() BundleType {
 	var obj BundleType
 	obj.SetMessageType("bundle")
-	obj.CreateNewId("bundle")
+	obj.CreateId("bundle")
 	obj.SetSpecVersion21()
 	return obj
 }

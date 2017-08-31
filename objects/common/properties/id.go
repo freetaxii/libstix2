@@ -26,7 +26,7 @@ type IdPropertyType struct {
 // This function will create a new ID based on the approved STIX UUIDv4 format
 // This can be called from functions that just need to make new IDs
 // param: s - a string value representing a STIX Object type
-func (this *IdPropertyType) NewId(s string) string {
+func (this *IdPropertyType) NewSTIXId(s string) string {
 	id := s + "--" + uuid.New()
 	return id
 }
@@ -34,13 +34,13 @@ func (this *IdPropertyType) NewId(s string) string {
 // CreateNewId takes in one parameter
 // This function will create a new ID based on the approved STIX UUIDv4 format
 // param: s - a string value representing a STIX Object type
-func (this *IdPropertyType) CreateNewId(s string) {
+func (this *IdPropertyType) CreateId(s string) {
 	// TODO Add check to validate input value
-	this.Id = this.NewId(s)
+	this.Id = this.NewSTIXId(s)
 }
 
 // SetId takes in one parameter
-// param: s - a string value representing a STIX Object type
+// param: s - a string value representing a STIX ID
 func (this *IdPropertyType) SetId(s string) {
 	this.Id = s
 }

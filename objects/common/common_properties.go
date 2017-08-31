@@ -110,7 +110,7 @@ type SecondaryMotivationsPropertyType struct {
 func (this *CommonObjectPropertiesType) InitNewObject(s string) {
 	// TODO make sure that the value coming in a a valid STIX object type
 	this.SetMessageType(s)
-	this.CreateNewId(s)
+	this.CreateId(s)
 	this.SetCreatedToCurrentTime()
 	this.SetModifiedToCreated()
 }

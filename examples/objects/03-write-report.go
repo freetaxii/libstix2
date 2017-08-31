@@ -10,15 +10,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/messages/report"
-	"github.com/freetaxii/libstix2/messages/stix"
+	"github.com/freetaxii/libstix2/objects"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"
 )
 
 func main() {
-	r := report.New()
+	r := objects.NewReport()
 
 	r.AddLabel("Attack Report")
 	r.SetName("Malware Foo Report 2016")
