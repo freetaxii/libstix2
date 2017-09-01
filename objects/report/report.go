@@ -38,7 +38,6 @@ func New() ReportType {
 // SetPublished takes in one parameter
 // param: t - a timestamp in either time.Time or string format
 func (this *ReportType) SetPublished(t interface{}) {
-
 	ts := this.VerifyTimestamp(t)
 	this.Published = ts
 }
@@ -46,9 +45,5 @@ func (this *ReportType) SetPublished(t interface{}) {
 // AddObject takes in one parameter
 // param: s - a string value that represents a STIX identifier
 func (this *ReportType) AddObject(s string) {
-	if this.Object_refs == nil {
-		a := make([]string, 0)
-		this.Object_refs = a
-	}
 	this.Object_refs = append(this.Object_refs, s)
 }

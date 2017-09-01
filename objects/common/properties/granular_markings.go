@@ -37,9 +37,5 @@ func (this *GranularMarkingType) GetMarkingRef() string {
 // AddSelector takes in one parameter
 // param: s - a string value representing a STIX granular marking selector
 func (this *GranularMarkingType) AddSelector(s string) {
-	if this.Selectors == nil {
-		a := make([]string, 0)
-		this.Selectors = a
-	}
 	this.Selectors = append(this.Selectors, s)
 }

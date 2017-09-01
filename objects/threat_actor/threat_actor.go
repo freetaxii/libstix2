@@ -44,10 +44,6 @@ func New() ThreatActorType {
 // AddRole takes in one parameter
 // param: s - a string value representing a threat actor role from the threat-actor-role-ov
 func (this *ThreatActorType) AddRole(s string) {
-	if this.Roles == nil {
-		a := make([]string, 0)
-		this.Roles = a
-	}
 	this.Roles = append(this.Roles, s)
 }
 
@@ -60,9 +56,5 @@ func (this *ThreatActorType) SetSophistication(s string) {
 // AddPersonalMotivation takes in one parameter
 // param: s - a string value representing the motivation of a threat actor from the threat-actor-motivation-ov
 func (this *ThreatActorType) AddPersonalMotivation(s string) {
-	if this.Personal_motivations == nil {
-		a := make([]string, 0)
-		this.Personal_motivations = a
-	}
 	this.Personal_motivations = append(this.Personal_motivations, s)
 }

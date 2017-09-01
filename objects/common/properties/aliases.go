@@ -21,9 +21,5 @@ type AliasesPropertyType struct {
 // AddAlias takes in one parameter
 // param: s - a string value that represents an alias for something in STIX
 func (this *AliasesPropertyType) AddAlias(s string) {
-	if this.Aliases == nil {
-		a := make([]string, 0)
-		this.Aliases = a
-	}
 	this.Aliases = append(this.Aliases, s)
 }

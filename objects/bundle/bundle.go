@@ -16,8 +16,8 @@ import (
 
 type BundleType struct {
 	common.CommonBasePropertiesType
-	Spec_version string   `json:"spec_version,omitempty"`
-	Objects      []string `json:"objects,omitempty"`
+	Spec_version string        `json:"spec_version,omitempty"`
+	Objects      []interface{} `json:"objects,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -45,10 +45,6 @@ func (this *BundleType) SetSpecVersion21() {
 
 // AddObject takes in one parameter
 // param: s - a string value representing a STIX Identifier
-func (this *BundleType) AddObject(s string) {
-	if this.Objects == nil {
-		a := make([]string, 0)
-		this.Objects = a
-	}
-	this.Objects = append(this.Objects, s)
+func (this *BundleType) AddObject(i interface{}) {
+	this.Objects = append(this.Objects, i)
 }

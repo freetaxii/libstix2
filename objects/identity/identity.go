@@ -45,10 +45,6 @@ func (this *IdentityType) SetIdentityClass(s string) {
 // AddSector takes in one parameter
 // param: s - a string value that represents a STIX sector from the vocab industry-sector-ov
 func (this *IdentityType) AddSector(s string) {
-	if this.Sectors == nil {
-		a := make([]string, 0)
-		this.Sectors = a
-	}
 	this.Sectors = append(this.Sectors, s)
 }
 

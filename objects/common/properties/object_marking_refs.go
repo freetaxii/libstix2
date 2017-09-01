@@ -21,9 +21,5 @@ type ObjectMarkingRefsPropertyType struct {
 // AddObjectMarkingRef takes in one parameter
 // param: s - a string value that represents a STIX identifer
 func (this *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) {
-	if this.Object_marking_refs == nil {
-		a := make([]string, 0)
-		this.Object_marking_refs = a
-	}
 	this.Object_marking_refs = append(this.Object_marking_refs, s)
 }

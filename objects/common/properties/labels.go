@@ -21,9 +21,5 @@ type LabelsPropertyType struct {
 // AddAlias takes in one parameter
 // param: s - a string value that represents a label for a STIX object
 func (this *LabelsPropertyType) AddLabel(s string) {
-	if this.Labels == nil {
-		a := make([]string, 0)
-		this.Labels = a
-	}
 	this.Labels = append(this.Labels, s)
 }

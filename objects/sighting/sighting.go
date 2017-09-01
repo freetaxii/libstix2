@@ -53,20 +53,12 @@ func (this *SightingType) SetSightingOfRef(s string) {
 // AddObservedDataRef takes in one parameter
 // param: s - a string value that represents a STIX identifier of the STIX Observed Data object that identifies what was sighted
 func (this *SightingType) AddObservedDataRef(s string) {
-	if this.Observed_data_refs == nil {
-		a := make([]string, 0)
-		this.Observed_data_refs = a
-	}
 	this.Observed_data_refs = append(this.Observed_data_refs, s)
 }
 
 // AddObservedDataRef takes in one parameter
 // param: s - a string value that represents a STIX identifier of the STIX Identity object that identifies where this was sighted
 func (this *SightingType) AddWhereSightedRef(s string) {
-	if this.Where_sighted_refs == nil {
-		a := make([]string, 0)
-		this.Where_sighted_refs = a
-	}
 	this.Where_sighted_refs = append(this.Where_sighted_refs, s)
 }
 

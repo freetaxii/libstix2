@@ -21,9 +21,5 @@ type SecondaryMotivationsPropertyType struct {
 // AddSecondaryMotivation takes in one parameter
 // param: s - a string value that represents a motivation from the attack-motivation-ov vocab
 func (this *SecondaryMotivationsPropertyType) AddSecondaryMotivation(s string) {
-	if this.Secondary_motivations == nil {
-		a := make([]string, 0)
-		this.Secondary_motivations = a
-	}
 	this.Secondary_motivations = append(this.Secondary_motivations, s)
 }
