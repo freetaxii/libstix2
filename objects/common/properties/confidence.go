@@ -10,6 +10,8 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// ConfidencePropertyType - A property used by one or more STIX objects that
+// captures the STIX confidence score, which is a value from 0-100.
 type ConfidencePropertyType struct {
 	Confidence int `json:"confidence,omitempty"`
 }
@@ -18,12 +20,13 @@ type ConfidencePropertyType struct {
 // Public Methods - ConfidencePropertyType
 // ----------------------------------------------------------------------
 
-// SetConfidence takes in one parameter
-// param: i - an integer representing a STIX confidence level 0-100
+// SetConfidence - This method takes in an integer representing a STIX
+// confidence level 0-100 and updates the Confidence property.
 func (this *ConfidencePropertyType) SetConfidence(i int) {
 	this.Confidence = i
 }
 
+// GetConfidence - This method returns the confidence value as an integer.
 func (this *ConfidencePropertyType) GetConfidence() int {
 	return this.Confidence
 }

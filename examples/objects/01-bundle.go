@@ -15,7 +15,7 @@ import (
 func main() {
 	sm := objects.NewBundle()
 
-	// Create a campagin
+	// Create a campaign
 	c := objects.NewCampaign()
 	c.SetName("Bank Attack 2016")
 	c.SetObjective("Compromise SWIFT system and steal money")

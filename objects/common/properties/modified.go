@@ -14,6 +14,9 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
+// ModifiedPropertyType - A property used by one or more STIX objects that
+// captures the time that this object was modified in STIX timestamp format,
+// which is an RFC3339 format.
 type ModifiedPropertyType struct {
 	Modified string `json:"modified,omitempty"`
 }
@@ -22,13 +25,18 @@ type ModifiedPropertyType struct {
 // Public Methods - ModifiedPropertyType
 // ----------------------------------------------------------------------
 
-// SetModified takes in one parameter
-// param: t - a timestamp in either time.Time or string format
+// SetModified - This method takes in a timestamp in either time.Time or string
+// format and updates the modifed property with it. The value is stored as a
+// string, so if the value is in time.Time format, it will be converted to the
+// correct STIX timestamp format.
 func (this *ModifiedPropertyType) SetModified(t interface{}) {
 	ts := timestamp.Verify(t)
 	this.Modified = ts
 }
 
+// GetModified - This method will return the modified timestamp as a string. If
+// the value is the same as the created timestamp, then this object is the
+// first version of the object.
 func (this *ModifiedPropertyType) GetModified() string {
 	return this.Modified
 }

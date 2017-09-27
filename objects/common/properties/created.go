@@ -14,6 +14,9 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
+// CreatedPropertyType - A property used by one or more STIX objects that
+// captures the time that this object was created in STIX timestamp format,
+// which is an RFC3339 format.
 type CreatedPropertyType struct {
 	Created string `json:"created,omitempty"`
 }
@@ -22,18 +25,22 @@ type CreatedPropertyType struct {
 // Public Methods - CreatedPropertyType
 // ----------------------------------------------------------------------
 
-// SetCreatedToCurrentTime sets the object created time to the current time
+// SetCreatedToCurrentTime - This methods sets the object created time to the
+// current time
 func (this *CreatedPropertyType) SetCreatedToCurrentTime() {
 	this.Created = timestamp.GetCurrentTime()
 }
 
-// SetCreated takes in one parameter
-// param: t - a timestamp in either time.Time or string format
+// SetCreated - This method takes in a timestamp in either time.Time or string
+// format and updates the created property with it. The value is stored as a
+// string, so if the value is in time.Time format, it will be converted to the
+// correct STIX timestamp format.
 func (this *CreatedPropertyType) SetCreated(t interface{}) {
 	ts := timestamp.Verify(t)
 	this.Created = ts
 }
 
+// GetCreated - This method will return the created timestamp as a string.
 func (this *CreatedPropertyType) GetCreated() string {
 	return this.Created
 }

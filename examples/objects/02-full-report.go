@@ -22,7 +22,7 @@ func main() {
 	r.SetDescription("This report gives us details about Malware Foo1")
 	r.SetPublished(time.Now())
 
-	// Create a campagin
+	// Create a campaign
 	c := objects.NewCampaign()
 	c.SetName("Bank Attack 2016")
 	c.SetObjective("Compromise SWIFT system and steal money")

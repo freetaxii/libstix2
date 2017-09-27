@@ -14,18 +14,22 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
+// FirstSeenPropertyType - A property used by one or more STIX objects that
+// captures the time that this object was first seen in STIX timestamp format,
+// which is an RFC3339 format.
 type FirstSeenPropertyType struct {
-	First_seen string `json:"first_seen,omitempty"`
+	FirstSeen string `json:"first_seen,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - FirstSeenPropertyType
 // ----------------------------------------------------------------------
 
-// SetFirstSeen takes in one parameter
-// param: t - a timestamp in either time.Time or string format
+// SetFirstSeen -  This method takes in a timestamp in either time.Time or string
+// format and updates the first seen property with it. The value is stored as a
+// string, so if the value is in time.Time format, it will be converted to the
+// correct STIX timestamp format.
 func (this *FirstSeenPropertyType) SetFirstSeen(t interface{}) {
-
 	ts := timestamp.Verify(t)
-	this.First_seen = ts
+	this.FirstSeen = ts
 }

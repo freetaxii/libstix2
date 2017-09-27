@@ -14,6 +14,9 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
+// LastSeenPropertyType - A property used by one or more STIX objects that
+// captures the time that this object was last seen in STIX timestamp format,
+// which is an RFC3339 format.
 type LastSeenPropertyType struct {
 	Last_seen string `json:"last_seen,omitempty"`
 }
@@ -22,10 +25,11 @@ type LastSeenPropertyType struct {
 // Public Methods - LastSeenPropertyType
 // ----------------------------------------------------------------------
 
-// SetLastSeen takes in one parameter
-// param: t - a timestamp in either time.Time or string format
+// SetLastSeen -  This method takes in a timestamp in either time.Time or string
+// format and updates the last seen property with it. The value is stored as a
+// string, so if the value is in time.Time format, it will be converted to the
+// correct STIX timestamp format.
 func (this *LastSeenPropertyType) SetLastSeen(t interface{}) {
-
 	ts := timestamp.Verify(t)
 	this.Last_seen = ts
 }
