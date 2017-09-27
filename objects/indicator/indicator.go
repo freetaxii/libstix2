@@ -7,26 +7,31 @@
 package indicator
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Indicator Type
 // ----------------------------------------------------------------------
 
+// IndicatorType -
+// This type defines all of the properties associated with the STIX Indicator SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type IndicatorType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	Pattern     string `json:"pattern,omitempty"`
-	Valid_from  string `json:"valid_from,omitempty"`
-	Valid_until string `json:"valid_until,omitempty"`
-	common.KillChainPhasesPropertyType
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	Pattern    string `json:"pattern,omitempty"`
+	ValidFrom  string `json:"valid_from,omitempty"`
+	ValidUntil string `json:"valid_until,omitempty"`
+	properties.KillChainPhasesPropertyType
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new indicator object
 func New() IndicatorType {
 	var obj IndicatorType
 	obj.InitNewObject("indicator")
@@ -37,22 +42,24 @@ func New() IndicatorType {
 // Public Methods - IndicatorType
 // ----------------------------------------------------------------------
 
+// SetPattern - This method will take in a string value representing a complete
+// and valid STIX pattern and set the pattern property to that value.
 func (this *IndicatorType) SetPattern(s string) {
 	this.Pattern = s
 }
 
-// SetValidForm takes in one parameter
-// param: t a timestamp in either time.Time or string format
+// SetValidFrom - This method will take in a timestamp in either time.Time or
+// string format and will set the valid from property to that value.
 func (this *IndicatorType) SetValidFrom(t interface{}) {
 	ts := this.VerifyTimestamp(t)
-	this.Valid_from = ts
+	this.ValidFrom = ts
 }
 
-// SetValidUntil takes in one parameter
-// param: t a timestamp in either time.Time or string format
+// SetValidUntil - This method will take in a timestamp in either time.Time or
+// string format and will set the valid until property to that value.
 func (this *IndicatorType) SetValidUntil(t interface{}) {
 	ts := this.VerifyTimestamp(t)
 
 	// TODO check to make sure this is later than the vaild_from
-	this.Valid_until = ts
+	this.ValidUntil = ts
 }
