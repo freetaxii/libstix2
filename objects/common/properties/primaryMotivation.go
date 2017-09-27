@@ -10,20 +10,24 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// PrimaryMotivationPropertyType - A property used by one or more STIX objects
+// that captures the primary motivation.
 type PrimaryMotivationPropertyType struct {
-	Primary_motivation string `json:"primary_motivation,omitempty"`
+	PrimaryMotivation string `json:"primary_motivation,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - PrimaryMotivationPropertyType
 // ----------------------------------------------------------------------
 
-// SetPrimaryMotivation takes in one parameter
-// param: s - a string value representing a motivation from the attack-motivation-ov vocab
+// SetPrimaryMotivation - This methods takes in a string value representing a
+// motivation from the attack-motivation-ov vocab and updates the primary
+// motivation property.
 func (this *PrimaryMotivationPropertyType) SetPrimaryMotivation(s string) {
-	this.Primary_motivation = s
+	this.PrimaryMotivation = s
 }
 
+// GetPrimaryMotivation - This method returns the primary motivation.
 func (this *PrimaryMotivationPropertyType) GetPrimaryMotivation() string {
-	return this.Primary_motivation
+	return this.PrimaryMotivation
 }

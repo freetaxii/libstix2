@@ -10,6 +10,8 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// MessageTypePropertyType - A property used by one or more STIX objects that
+// captures the STIX object type in string format.
 type MessageTypePropertyType struct {
 	MessageType string `json:"type,omitempty"`
 }
@@ -18,12 +20,13 @@ type MessageTypePropertyType struct {
 // Public Methods - MessageTypePropertyType
 // ----------------------------------------------------------------------
 
-// SetMessageType takes in one parameter
-// param: s - a string value representing a STIX object type
+// SetMessageType - This method takes in a string value representing a STIX
+// object type and updates the type property.
 func (this *MessageTypePropertyType) SetMessageType(s string) {
 	this.MessageType = s
 }
 
+// GetMessageType - This method returns the object type.
 func (this *MessageTypePropertyType) GetMessageType() string {
 	return this.MessageType
 }

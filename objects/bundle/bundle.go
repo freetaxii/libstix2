@@ -33,7 +33,7 @@ type BundleType struct {
 func New() BundleType {
 	var obj BundleType
 	obj.SetMessageType("bundle")
-	obj.CreateId("bundle")
+	obj.CreateID("bundle")
 	obj.SetSpecVersion21()
 	return obj
 }

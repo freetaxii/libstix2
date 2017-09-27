@@ -10,16 +10,20 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// ObjectMarkingRefsPropertyType - A property used by one or more STIX objects
+// that captures a list of STIX identifier that represent marking definition
+// objects.
 type ObjectMarkingRefsPropertyType struct {
-	Object_marking_refs []string `json:"object_marking_refs,omitempty"`
+	ObjectMarkingRefs []string `json:"object_marking_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - ObjectMarkingRefsPropertyType
 // ----------------------------------------------------------------------
 
-// AddObjectMarkingRef takes in one parameter
-// param: s - a string value that represents a STIX identifer
+// AddObjectMarkingRef - This method takes in a string value that represents a
+// STIX identifer for a marking definition object and adds it to the list of
+// object marking refs.
 func (this *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) {
-	this.Object_marking_refs = append(this.Object_marking_refs, s)
+	this.ObjectMarkingRefs = append(this.ObjectMarkingRefs, s)
 }

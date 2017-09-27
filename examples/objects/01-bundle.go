@@ -94,43 +94,43 @@ func main() {
 	// Connect the malware sample to a malware family
 	r1 := objects.NewRelationship()
 	r1.SetRelationshipType("member-of")
-	r1.SetSourceTarget(m1.GetId(), m2.GetId())
+	r1.SetSourceTarget(m1.GetID(), m2.GetID())
 	sm.AddObject(r1)
 
 	// Identify that this campaign uses this piece of malware
 	r2 := objects.NewRelationship()
 	r2.SetRelationshipType("uses")
-	r2.SetSourceTarget(c.GetId(), m2.GetId())
+	r2.SetSourceTarget(c.GetID(), m2.GetID())
 	sm.AddObject(r2)
 
 	// Identify that this campaign uses this infrastructure
 	r3 := objects.NewRelationship()
 	r3.SetRelationshipType("uses")
-	r3.SetSourceTarget(c.GetId(), infra.GetId())
+	r3.SetSourceTarget(c.GetID(), infra.GetID())
 	sm.AddObject(r3)
 
 	// Identify that this malware uses this infrastructure
 	r4 := objects.NewRelationship()
 	r4.SetRelationshipType("uses")
-	r4.SetSourceTarget(m2.GetId(), infra.GetId())
+	r4.SetSourceTarget(m2.GetID(), infra.GetID())
 	sm.AddObject(r4)
 
 	// Identify that this indicator can indicate the presence of this malware
 	r5 := objects.NewRelationship()
 	r5.SetRelationshipType("indicates")
-	r5.SetSourceTarget(i.GetId(), m2.GetId())
+	r5.SetSourceTarget(i.GetID(), m2.GetID())
 	sm.AddObject(r5)
 
 	// Attach some Observed Data to an Infrastructure Object
 	r6 := objects.NewRelationship()
 	r6.SetRelationshipType("part-of")
-	r6.SetSourceTarget(od1.GetId(), infra.GetId())
+	r6.SetSourceTarget(od1.GetID(), infra.GetID())
 	sm.AddObject(r6)
 
 	// Attach some Observed Data to an Infrastructure Object
 	r7 := objects.NewRelationship()
 	r7.SetRelationshipType("part-of")
-	r7.SetSourceTarget(od2.GetId(), infra.GetId())
+	r7.SetSourceTarget(od2.GetID(), infra.GetID())
 	sm.AddObject(r7)
 
 	// Add a sighting for the malware
@@ -138,7 +138,7 @@ func main() {
 	s1.SetFirstSeen("2016-09-01T00:00:01Z")
 	s1.SetLastSeen("2016-09-01T10:30:00Z")
 	s1.SetCount(3)
-	s1.SetSightingOfRef(m2.GetId())
+	s1.SetSightingOfRef(m2.GetID())
 	sm.AddObject(s1)
 
 	// Add a sighting for the infrastructure
@@ -146,8 +146,8 @@ func main() {
 	s2.SetFirstSeen("2016-09-01T00:00:01Z")
 	s2.SetLastSeen("2016-09-01T10:30:00Z")
 	s2.SetCount(10)
-	s2.SetSightingOfRef(infra.GetId())
-	s2.AddObservedDataRef(od3.GetId())
+	s2.SetSightingOfRef(infra.GetID())
+	s2.AddObservedDataRef(od3.GetID())
 	sm.AddObject(s2)
 
 	var data []byte

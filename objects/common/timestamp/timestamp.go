@@ -16,12 +16,14 @@ import (
 // Public Functions
 // ----------------------------------------------------------------------
 
+// GetCurrentTime - This function will return the current time in STIX timestamp
+// format, which is in RFC 3339 format.
 func GetCurrentTime() string {
 	return time.Now().UTC().Format(defs.TIME_RFC_3339)
 }
 
-// Verify takes in one parameter and returns a string version of the timestamp
-// param: t - a timestamp in either time.Time or string format
+// Verify - This function takes in a timestamp in either time.Time or string
+// format and returns a string version of the timestamp.
 func Verify(t interface{}) string {
 	switch ts := t.(type) {
 	case time.Time:

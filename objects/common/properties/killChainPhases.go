@@ -10,22 +10,27 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// KillChainPhasesPropertyType - A property used by one or more STIX objects
+// that captures a list of kll chain phases as defined by STIX.
 type KillChainPhasesPropertyType struct {
-	Kill_chain_phases []KillChainPhaseType `json:"kill_chain_phases,omitempty"`
+	KillChainPhases []KillChainPhaseType `json:"kill_chain_phases,omitempty"`
 }
 
+// KillChainPhaseType -
+// This type defines all of the properties associated with the STIX Kill Chain Phase type.
 type KillChainPhaseType struct {
-	Kill_chain_name string `json:"kill_chain_name,omitempty"`
-	Phase_name      string `json:"phase_name,omitempty"`
+	KillChainName string `json:"kill_chain_name,omitempty"`
+	PhaseName     string `json:"phase_name,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - KillChainPhasesPropertyType
 // ----------------------------------------------------------------------
 
-// AddKillChainPhase takes in two parameters
-// param: name - a string value representing the name of a kill chain
-// param: phase - a string value representing the phase of the kill chain
+// AddKillChainPhase - This method takes in two parameters and creates a adds
+// a new kill chain phase to the list. The first value is a string value
+// representing the name of the kill chain being used. The second value is a
+// string value representing the phase name from that kill chain.
 func (this *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
 	k := this.newKillChainPhase()
 	k.SetName(name)
@@ -36,33 +41,33 @@ func (this *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
 // Private Methods - KillChainPhasesPropertyType
 // ----------------------------------------------------------------------
 
-// newKillChainPhase returns a reference to a slice location. This
+// newKillChainPhase - This method returns a reference to a slice location. This
 // will enable the code to update an object located at that slice location.
 func (this *KillChainPhasesPropertyType) newKillChainPhase() *KillChainPhaseType {
 	var s KillChainPhaseType
 
-	if this.Kill_chain_phases == nil {
+	if this.KillChainPhases == nil {
 		a := make([]KillChainPhaseType, 0)
-		this.Kill_chain_phases = a
+		this.KillChainPhases = a
 	}
 
-	positionThatAppendWillUse := len(this.Kill_chain_phases)
-	this.Kill_chain_phases = append(this.Kill_chain_phases, s)
-	return &this.Kill_chain_phases[positionThatAppendWillUse]
+	positionThatAppendWillUse := len(this.KillChainPhases)
+	this.KillChainPhases = append(this.KillChainPhases, s)
+	return &this.KillChainPhases[positionThatAppendWillUse]
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - KillChainPhaseType
 // ----------------------------------------------------------------------
 
-// SetName takes in one parameter
-// param: s - a string value representing the name of a kill chain
+// SetName - This method takes in a string value representing the name of a kill
+// chain and updates the kill chain name property.
 func (this *KillChainPhaseType) SetName(s string) {
-	this.Kill_chain_name = s
+	this.KillChainName = s
 }
 
-// SetPhase takes in one parameter
-// param: s - a string value representing the phase of a kill chain
+// SetPhase - This method takes in a string value representing the phase of a
+// kill chain and updates the phase name property.
 func (this *KillChainPhaseType) SetPhase(s string) {
-	this.Phase_name = s
+	this.PhaseName = s
 }

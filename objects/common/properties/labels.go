@@ -10,6 +10,9 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// LabelsPropertyType - A property used by one or more STIX objects that
+// captures a list of labels or tags for a STIX object. On some objects the
+// labels property is defined as coming from an open-vocab.
 type LabelsPropertyType struct {
 	Labels []string `json:"labels,omitempty"`
 }
@@ -18,8 +21,8 @@ type LabelsPropertyType struct {
 // Public Methods - LabelsPropertyType
 // ----------------------------------------------------------------------
 
-// AddAlias takes in one parameter
-// param: s - a string value that represents a label for a STIX object
+// AddLabel - This method takes in a string value that represents a label for a
+// STIX object and adds it to the list of labels in the lables property.
 func (this *LabelsPropertyType) AddLabel(s string) {
 	this.Labels = append(this.Labels, s)
 }

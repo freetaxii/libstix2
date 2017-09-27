@@ -18,7 +18,7 @@ import (
 // that are used by all STIX SDOs and SROs
 type CommonObjectPropertiesType struct {
 	MessageTypePropertyType
-	IdPropertyType
+	IDPropertyType
 	CreatedByRefPropertyType
 	CreatedPropertyType
 	ModifiedPropertyType
@@ -35,7 +35,7 @@ type CommonObjectPropertiesType struct {
 // properties that are used by the STIX Marking Definition object
 type CommonMarkingDefinitionPropertiesType struct {
 	MessageTypePropertyType
-	IdPropertyType
+	IDPropertyType
 	CreatedByRefPropertyType
 	CreatedPropertyType
 	ExternalReferencesPropertyType
@@ -47,7 +47,7 @@ type CommonMarkingDefinitionPropertiesType struct {
 // that are used by the STIX Bundle object
 type CommonBundlePropertiesType struct {
 	MessageTypePropertyType
-	IdPropertyType
+	IDPropertyType
 }
 
 // ----------------------------------------------------------------------
@@ -60,7 +60,7 @@ type CommonBundlePropertiesType struct {
 func (this *CommonObjectPropertiesType) InitNewObject(s string) {
 	// TODO make sure that the value coming in a a valid STIX object type
 	this.SetMessageType(s)
-	this.CreateId(s)
+	this.CreateID(s)
 	this.SetCreatedToCurrentTime()
 	this.SetModifiedToCreated()
 }

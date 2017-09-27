@@ -18,7 +18,7 @@ import (
 // captures the time that this object was last seen in STIX timestamp format,
 // which is an RFC3339 format.
 type LastSeenPropertyType struct {
-	Last_seen string `json:"last_seen,omitempty"`
+	LastSeen string `json:"last_seen,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -31,5 +31,5 @@ type LastSeenPropertyType struct {
 // correct STIX timestamp format.
 func (this *LastSeenPropertyType) SetLastSeen(t interface{}) {
 	ts := timestamp.Verify(t)
-	this.Last_seen = ts
+	this.LastSeen = ts
 }

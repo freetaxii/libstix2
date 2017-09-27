@@ -14,37 +14,38 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
-type IdPropertyType struct {
-	Id string `json:"id,omitempty"`
+// IDPropertyType - A property used by one or more STIX objects that
+// captures the STIX identifier in string format.
+type IDPropertyType struct {
+	ID string `json:"id,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - IdPropertyType
 // ----------------------------------------------------------------------
 
-// NewId takes in one parameter
-// This function will create a new ID based on the approved STIX UUIDv4 format
-// This can be called from functions that just need to make new IDs
-// param: s - a string value representing a STIX Object type
-func (this *IdPropertyType) NewSTIXId(s string) string {
+// NewSTIXID - This method takes in a string value representing a STIX object
+// type and create and return a new ID based on the approved STIX UUIDv4 format.
+func (this *IDPropertyType) NewSTIXID(s string) string {
 	id := s + "--" + uuid.New()
 	return id
 }
 
-// CreateNewId takes in one parameter
-// This function will create a new ID based on the approved STIX UUIDv4 format
-// param: s - a string value representing a STIX Object type
-func (this *IdPropertyType) CreateId(s string) {
+// CreateID - This method takes in a string value representing a STIX object
+// type and create a new ID based on the approved STIX UUIDv4 format and update
+// the id property for the object.
+func (this *IDPropertyType) CreateID(s string) {
 	// TODO Add check to validate input value
-	this.Id = this.NewSTIXId(s)
+	this.ID = this.NewSTIXID(s)
 }
 
-// SetId takes in one parameter
-// param: s - a string value representing a STIX ID
-func (this *IdPropertyType) SetId(s string) {
-	this.Id = s
+// SetID - This method takes in a string value representing an existing STIX id
+// and updates the id property for the object.
+func (this *IDPropertyType) SetID(s string) {
+	this.ID = s
 }
 
-func (this *IdPropertyType) GetId() string {
-	return this.Id
+// GetID - This method will return the id for a given STIX object.
+func (this *IDPropertyType) GetID() string {
+	return this.ID
 }

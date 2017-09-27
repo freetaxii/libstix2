@@ -14,7 +14,7 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// ThreatActorype -
+// ThreatActorType -
 // This type defines all of the properties associated with the STIX Threat Actor SDO.
 // All of the methods not defined local to this type are inherited from the individual properties.
 type ThreatActorType struct {

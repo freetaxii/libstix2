@@ -10,20 +10,24 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// ResourceLevelPropertyType - A property used by one or more STIX objects
+// that captures the resource level.
 type ResourceLevelPropertyType struct {
-	Resource_level string `json:"resource_level,omitempty"`
+	ResourceLevel string `json:"resource_level,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - ResourceLevelPropertyType
 // ----------------------------------------------------------------------
 
-// SetResourceLevel takes in one parameter
-// param: s - a string value representing a resource level from the attack-resrouce-level-ov vocab
+// SetResourceLevel - This method takes in a string value representing a
+// resource level from the attack-resrouce-level-ov vocab and updates the
+// resource level property.
 func (this *ResourceLevelPropertyType) SetResourceLevel(s string) {
-	this.Resource_level = s
+	this.ResourceLevel = s
 }
 
+// GetResourceLevel - This method returns the resource level.
 func (this *ResourceLevelPropertyType) GetResourceLevel() string {
-	return this.Resource_level
+	return this.ResourceLevel
 }

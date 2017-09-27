@@ -10,16 +10,19 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
+// SecondaryMotivationsPropertyType - A property used by one or more STIX objects
+// that captures a list of motivations.
 type SecondaryMotivationsPropertyType struct {
-	Secondary_motivations []string `json:"secondary_motivations,omitempty"`
+	SecondaryMotivations []string `json:"secondary_motivations,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Methods - SecondaryMotivationPropertyType
 // ----------------------------------------------------------------------
 
-// AddSecondaryMotivation takes in one parameter
-// param: s - a string value that represents a motivation from the attack-motivation-ov vocab
+// AddSecondaryMotivation - This method takes in a string value that represents
+// a motivation from the attack-motivation-ov vocab and adds it to the list of
+// motivations in the secondary motivations property.
 func (this *SecondaryMotivationsPropertyType) AddSecondaryMotivation(s string) {
-	this.Secondary_motivations = append(this.Secondary_motivations, s)
+	this.SecondaryMotivations = append(this.SecondaryMotivations, s)
 }
