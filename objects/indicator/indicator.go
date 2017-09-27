@@ -31,7 +31,7 @@ type IndicatorType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// New - This function will create a new indicator object
+// New - This function will create a new indicator object.
 func New() IndicatorType {
 	var obj IndicatorType
 	obj.InitNewObject("indicator")

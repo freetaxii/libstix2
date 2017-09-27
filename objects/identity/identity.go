@@ -7,25 +7,30 @@
 package identity
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// IdentityType -
+// This type defines all of the properties associated with the STIX Identity SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type IdentityType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	Identity_class      string   `json:"identity_class,omitempty"`
-	Sectors             []string `json:"sectors,omitempty"`
-	Contact_information string   `json:"contact_information,omitempty"`
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	IdentityClass      string   `json:"identity_class,omitempty"`
+	Sectors            []string `json:"sectors,omitempty"`
+	ContactInformation string   `json:"contact_information,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new identity object.
 func New() IdentityType {
 	var obj IdentityType
 	obj.InitNewObject("identity")
@@ -36,20 +41,22 @@ func New() IdentityType {
 // Public Methods - IdentityType
 // ----------------------------------------------------------------------
 
-// SetIdentityClass takes in one parameter
-// param: s - a string value representing a STIX identity class from the vocab identity-class-ov
+// SetIdentityClass - This method takes in a string value representing a STIX
+// identity class from the vocab identity-class-ov and updates the identity class
+// property.
 func (this *IdentityType) SetIdentityClass(s string) {
-	this.Identity_class = s
+	this.IdentityClass = s
 }
 
-// AddSector takes in one parameter
-// param: s - a string value that represents a STIX sector from the vocab industry-sector-ov
+// AddSector - This method takes in a string value that represents a STIX sector
+// from the vocab industry-sector-ov and adds it to the identity object.
 func (this *IdentityType) AddSector(s string) {
 	this.Sectors = append(this.Sectors, s)
 }
 
-// SetContactInformation takes in one parameter
-// param: s - a string value representing contact information as a text string
+// SetContactInformation - This method takes in a string value representing
+// contact information as a text string and updates the contact information
+// property.
 func (this *IdentityType) SetContactInformation(s string) {
-	this.Contact_information = s
+	this.ContactInformation = s
 }

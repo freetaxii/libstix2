@@ -4,31 +4,36 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package intrusion_set
+package intrusionSet
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// IntrusionSetType -
+// This type defines all of the properties associated with the STIX Intrusion Set SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type IntrusionSetType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	common.AliasesPropertiesType
-	common.FirstLastSeenPropertiesType
-	common.GoalsPropertiesType
-	common.ResourceLevelPropertyType
-	common.PrimaryMotivationPropertyType
-	common.SecondaryMotivationsPropertyType
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	properties.AliasesPropertiesType
+	properties.FirstLastSeenPropertiesType
+	properties.GoalsPropertiesType
+	properties.ResourceLevelPropertyType
+	properties.PrimaryMotivationPropertyType
+	properties.SecondaryMotivationsPropertyType
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new intrusion set object.
 func New() IntrusionSetType {
 	var obj IntrusionSetType
 	obj.InitNewObject("intrusion-set")

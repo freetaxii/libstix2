@@ -5,7 +5,7 @@
 // tree.
 
 // Package attackPattern - This package defines the properties and methods needed to
-// create a work with the STIX Indicator SDO.
+// create a work with the STIX Attack Pattern SDO.
 //
 // The following information comes directly from the STIX 2.0 specificaton documents:
 //
