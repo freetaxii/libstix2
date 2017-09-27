@@ -19,7 +19,7 @@ import (
 // All of the methods not defined local to this type are inherited from the individual properties.
 type SightingType struct {
 	properties.CommonObjectPropertiesType
-	properties.FirstSeenPropertiesType
+	properties.FirstSeenPropertyType
 	properties.LastSeenPropertyType
 	Count            int      `json:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`
@@ -60,14 +60,14 @@ func (this *SightingType) SetSightingOfRef(s string) {
 // STIX identifier of the STIX Observed Data object that identifies what was
 // sighted and adds it to the observed data refs property.
 func (this *SightingType) AddObservedDataRef(s string) {
-	this.ObservedDataRefs = append(this.Observed_data_refs, s)
+	this.ObservedDataRefs = append(this.ObservedDataRefs, s)
 }
 
 // AddWhereSightedRef - This method takes in a string value that represents a
 // STIX identifier of the STIX Identity object that identifies where this was
 // sighted (location, sector, etc) and adds it to the where sighted ref property.
 func (this *SightingType) AddWhereSightedRef(s string) {
-	this.WhereSightedRefs = append(this.Where_sighted_refs, s)
+	this.WhereSightedRefs = append(this.WhereSightedRefs, s)
 }
 
 // SetSummary - This method set the boolean value of the summary to true.

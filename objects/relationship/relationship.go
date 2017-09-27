@@ -19,10 +19,10 @@ import (
 // All of the methods not defined local to this type are inherited from the individual properties.
 type RelationshipType struct {
 	properties.CommonObjectPropertiesType
-	Relationship_type string `json:"relationship_type,omitempty"`
-	properties.DescriptionPropertiesType
-	Source_ref string `json:"source_ref,omitempty"`
-	Target_ref string `json:"target_ref,omitempty"`
+	RelationshipType string `json:"relationship_type,omitempty"`
+	properties.DescriptionPropertyType
+	SourceRef string `json:"source_ref,omitempty"`
+	TargetRef string `json:"target_ref,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -43,21 +43,21 @@ func New() RelationshipType {
 // SetRelationshipType - This method takes in a string value that represents the
 // type name of the releationship and updates the relationship type property.
 func (this *RelationshipType) SetRelationshipType(s string) {
-	this.Relationship_type = s
+	this.RelationshipType = s
 }
 
 // SetSourceRef - This method takes in a string value that represents a STIX
 // identifier of the source STIX object in the relationship and updates the
 // source ref property.
 func (this *RelationshipType) SetSourceRef(s string) {
-	this.Source_ref = s
+	this.SourceRef = s
 }
 
 // SetTargetRef - This method takes in a string value that represents a STIX
 // identifier of the target STIX object in the relationship and updates the
 // target ref property.
 func (this *RelationshipType) SetTargetRef(s string) {
-	this.Target_ref = s
+	this.TargetRef = s
 }
 
 // SetSourceTarget - This methods takes in two string values where both
@@ -65,6 +65,6 @@ func (this *RelationshipType) SetTargetRef(s string) {
 // ends of the relationship at the same time. The first identifier is for the
 // source and the second is for the target.
 func (this *RelationshipType) SetSourceTarget(s, t string) {
-	this.Source_ref = s
-	this.Target_ref = t
+	this.SourceRef = s
+	this.TargetRef = t
 }

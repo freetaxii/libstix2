@@ -21,8 +21,9 @@ type CampaignType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
 	properties.DescriptionPropertyType
-	properties.AliasesPropertiesType
-	properties.FirstLastSeenPropertiesType
+	properties.AliasesPropertyType
+	properties.FirstSeenPropertyType
+	properties.LastSeenPropertyType
 	Objective string `json:"objective,omitempty"`
 }
 

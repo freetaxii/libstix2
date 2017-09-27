@@ -7,20 +7,20 @@
 package objects
 
 import (
-	"github.com/freetaxii/libstix2/objects/attack_pattern"
+	"github.com/freetaxii/libstix2/objects/attackPattern"
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/campaign"
-	"github.com/freetaxii/libstix2/objects/course_of_action"
+	"github.com/freetaxii/libstix2/objects/courseOfAction"
 	"github.com/freetaxii/libstix2/objects/identity"
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/objects/infrastructure"
-	"github.com/freetaxii/libstix2/objects/intrusion_set"
+	"github.com/freetaxii/libstix2/objects/intrusionSet"
 	"github.com/freetaxii/libstix2/objects/malware"
-	"github.com/freetaxii/libstix2/objects/observed_data"
+	"github.com/freetaxii/libstix2/objects/observedData"
 	"github.com/freetaxii/libstix2/objects/relationship"
 	"github.com/freetaxii/libstix2/objects/report"
 	"github.com/freetaxii/libstix2/objects/sighting"
-	"github.com/freetaxii/libstix2/objects/threat_actor"
+	"github.com/freetaxii/libstix2/objects/threatActor"
 	"github.com/freetaxii/libstix2/objects/tool"
 	"github.com/freetaxii/libstix2/objects/vulnerability"
 )
@@ -30,8 +30,8 @@ import (
 // ----------------------------------------------------------------------
 
 // NewAttackPattern - Create and return a new Attack Pattern object.
-func NewAttackPattern() attack_pattern.AttackPatternType {
-	return attack_pattern.New()
+func NewAttackPattern() attackPattern.AttackPatternType {
+	return attackPattern.New()
 }
 
 // NewBundle - Create and return a new Bundle object.
@@ -45,8 +45,8 @@ func NewCampaign() campaign.CampaignType {
 }
 
 // NewCourseOfAction - Create and return a new Course of Action object.
-func NewCourseOfAction() course_of_action.CourseOfActionType {
-	return course_of_action.New()
+func NewCourseOfAction() courseOfAction.CourseOfActionType {
+	return courseOfAction.New()
 }
 
 // NewIdentity - Create and return a new Identity object.
@@ -65,8 +65,8 @@ func NewInfrastructure() infrastructure.InfrastructureType {
 }
 
 // NewIntrusionSet - Create and return a new Intrusion Set object.
-func NewIntrusionSet() intrusion_set.IntrusionSetType {
-	return intrusion_set.New()
+func NewIntrusionSet() intrusionSet.IntrusionSetType {
+	return intrusionSet.New()
 }
 
 // NewMalware - Create and return a new Malware object.
@@ -75,8 +75,8 @@ func NewMalware() malware.MalwareType {
 }
 
 // NewObservedData - Create and return a new Observed Data object.
-func NewObservedData() observed_data.ObservedDataType {
-	return observed_data.New()
+func NewObservedData() observedData.ObservedDataType {
+	return observedData.New()
 }
 
 // NewRelationship - Create and return a new Relationship object.
@@ -95,8 +95,8 @@ func NewSighting() sighting.SightingType {
 }
 
 // NewThreatActor - Create and return a new Threat Actor object.
-func NewThreatActor() threat_actor.ThreatActorType {
-	return threat_actor.New()
+func NewThreatActor() threatActor.ThreatActorType {
+	return threatActor.New()
 }
 
 // NewTool - Create and return a new Tool object.

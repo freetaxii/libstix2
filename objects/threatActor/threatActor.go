@@ -21,9 +21,9 @@ type ThreatActorType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
 	properties.DescriptionPropertyType
-	properties.AliasesPropertiesType
+	properties.AliasesPropertyType
 	Roles []string `json:"roles,omitempty"`
-	properties.GoalsPropertiesType
+	properties.GoalsPropertyType
 	Sophistication string `json:"sophistication,omitempty"`
 	properties.ResourceLevelPropertyType
 	properties.PrimaryMotivationPropertyType

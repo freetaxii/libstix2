@@ -21,9 +21,10 @@ type IntrusionSetType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
 	properties.DescriptionPropertyType
-	properties.AliasesPropertiesType
-	properties.FirstLastSeenPropertiesType
-	properties.GoalsPropertiesType
+	properties.AliasesPropertyType
+	properties.FirstSeenPropertyType
+	properties.LastSeenPropertyType
+	properties.GoalsPropertyType
 	properties.ResourceLevelPropertyType
 	properties.PrimaryMotivationPropertyType
 	properties.SecondaryMotivationsPropertyType

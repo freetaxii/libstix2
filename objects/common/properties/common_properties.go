@@ -17,37 +17,37 @@ import (
 // CommonObjectPropertiesType - This type includes all of the common properties
 // that are used by all STIX SDOs and SROs
 type CommonObjectPropertiesType struct {
-	properties.MessageTypePropertyType
-	properties.IdPropertyType
-	properties.CreatedByRefPropertyType
-	properties.CreatedPropertyType
-	properties.ModifiedPropertyType
-	properties.RevokedPropertyType
-	properties.LabelsPropertyType
-	properties.ConfidencePropertyType
-	properties.LangPropertyType
-	properties.ExternalReferencesPropertyType
-	properties.ObjectMarkingRefsPropertyType
-	properties.GranularMarkingsPropertyType
+	MessageTypePropertyType
+	IdPropertyType
+	CreatedByRefPropertyType
+	CreatedPropertyType
+	ModifiedPropertyType
+	RevokedPropertyType
+	LabelsPropertyType
+	ConfidencePropertyType
+	LangPropertyType
+	ExternalReferencesPropertyType
+	ObjectMarkingRefsPropertyType
+	GranularMarkingsPropertyType
 }
 
 // CommonMarkingDefinitionPropertiesType - This type includes all of the common
 // properties that are used by the STIX Marking Definition object
 type CommonMarkingDefinitionPropertiesType struct {
-	properties.MessageTypePropertyType
-	properties.IdPropertyType
-	properties.CreatedByRefPropertyType
-	properties.CreatedPropertyType
-	properties.ExternalReferencesPropertyType
-	properties.ObjectMarkingRefsPropertyType
-	properties.GranularMarkingsPropertyType
+	MessageTypePropertyType
+	IdPropertyType
+	CreatedByRefPropertyType
+	CreatedPropertyType
+	ExternalReferencesPropertyType
+	ObjectMarkingRefsPropertyType
+	GranularMarkingsPropertyType
 }
 
 // CommonBundlePropertiesType - This type includes all of the common properties
 // that are used by the STIX Bundle object
 type CommonBundlePropertiesType struct {
-	properties.MessageTypePropertyType
-	properties.IdPropertyType
+	MessageTypePropertyType
+	IdPropertyType
 }
 
 // ----------------------------------------------------------------------

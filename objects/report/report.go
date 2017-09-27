@@ -50,5 +50,5 @@ func (this *ReportType) SetPublished(t interface{}) {
 // AddObject - This methods takes in a string value that represents a STIX
 // identifier and adds it to the objects ref property.
 func (this *ReportType) AddObject(s string) {
-	this.Object_refs = append(this.Object_refs, s)
+	this.ObjectRefs = append(this.ObjectRefs, s)
 }
