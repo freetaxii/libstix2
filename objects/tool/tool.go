@@ -7,24 +7,29 @@
 package tool
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// ToolType -
+// This type defines all of the properties associated with the STIX Tool SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type ToolType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	common.KillChainPhasesPropertyType
-	Tool_version string `json:"tool_version,omitempty"`
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	properties.KillChainPhasesPropertyType
+	ToolVersion string `json:"tool_version,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new tool object.
 func New() ToolType {
 	var obj ToolType
 	obj.InitNewObject("tool")
@@ -35,8 +40,8 @@ func New() ToolType {
 // Public Methods - ToolType
 // ----------------------------------------------------------------------
 
-// SetToolVersion takes in one parameter
-// param: s - a string value representing the version of the tool
+// SetToolVersion - This method takes in a string value representing the version
+// of the tool and updates the tool version property.
 func (this *ToolType) SetToolVersion(s string) {
-	this.Tool_version = s
+	this.ToolVersion = s
 }
