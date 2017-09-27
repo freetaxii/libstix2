@@ -7,17 +7,20 @@
 package relationship
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// RelationshipType -
+// This type defines all of the properties associated with the STIX Relationship SRO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type RelationshipType struct {
-	common.CommonObjectPropertiesType
+	properties.CommonObjectPropertiesType
 	Relationship_type string `json:"relationship_type,omitempty"`
-	common.DescriptionPropertiesType
+	properties.DescriptionPropertiesType
 	Source_ref string `json:"source_ref,omitempty"`
 	Target_ref string `json:"target_ref,omitempty"`
 }
@@ -26,6 +29,7 @@ type RelationshipType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new relationship object.
 func New() RelationshipType {
 	var obj RelationshipType
 	obj.InitNewObject("relationship")
@@ -36,28 +40,30 @@ func New() RelationshipType {
 // Public Methods - RelationshipType
 // ----------------------------------------------------------------------
 
-// SetRelationshipType takes in one parameter
-// param: s - a string value that represents the type name of the releationship
+// SetRelationshipType - This method takes in a string value that represents the
+// type name of the releationship and updates the relationship type property.
 func (this *RelationshipType) SetRelationshipType(s string) {
 	this.Relationship_type = s
 }
 
-// SetSourceRef takes in one parameter
-// param: s - a string value that represents a STIX identifier to the source STIX object
+// SetSourceRef - This method takes in a string value that represents a STIX
+// identifier of the source STIX object in the relationship and updates the
+// source ref property.
 func (this *RelationshipType) SetSourceRef(s string) {
 	this.Source_ref = s
 }
 
-// SetTargetRef takes in one parameter
-// param: s - a string value that represents a STIX identifier to the target STIX object
+// SetTargetRef - This method takes in a string value that represents a STIX
+// identifier of the target STIX object in the relationship and updates the
+// target ref property.
 func (this *RelationshipType) SetTargetRef(s string) {
 	this.Target_ref = s
 }
 
-// SetSourceTarget takes in two parameters
-// This function is a convenience function for setting both ends of the relationship at the same time.
-// param: s - a string value that represents a STIX identifier to the source STIX object
-// param: t - a string value that represents a STIX identifier to the target STIX object
+// SetSourceTarget - This methods takes in two string values where both
+// represent a STIX identifier. This is a convenience function for setting both
+// ends of the relationship at the same time. The first identifier is for the
+// source and the second is for the target.
 func (this *RelationshipType) SetSourceTarget(s, t string) {
 	this.Source_ref = s
 	this.Target_ref = t

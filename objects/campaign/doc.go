@@ -7,7 +7,7 @@
 // Package campaign - This package defines the properties and methods needed to
 // create a work with the STIX Campaign SDO.
 //
-// The following information comes directly from the STIX 2.0 specificaton documents:
+// The following information comes directly from the STIX 2 specificaton documents:
 //
 // A Campaign is a grouping of adversarial behaviors that describes a set of malicious activities or attacks (sometimes called waves) that occur over a period of time against a specific set of targets. Campaigns usually have well defined objectives and may be part of an Intrusion Set.
 //

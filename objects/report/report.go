@@ -7,24 +7,29 @@
 package report
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// ReportType -
+// This type defines all of the properties associated with the STIX Report SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type ReportType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	Published   string   `json:"published,omitempty"`
-	Object_refs []string `json:"object_refs,omitempty"`
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	Published  string   `json:"published,omitempty"`
+	ObjectRefs []string `json:"object_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new report object.
 func New() ReportType {
 	var obj ReportType
 	obj.InitNewObject("report")
@@ -35,15 +40,15 @@ func New() ReportType {
 // Public Methods - ReportType
 // ----------------------------------------------------------------------
 
-// SetPublished takes in one parameter
-// param: t - a timestamp in either time.Time or string format
+// SetPublished - This method takes in a timestamp in either time.Time or string
+// format and updates the published timestamp property.
 func (this *ReportType) SetPublished(t interface{}) {
 	ts := this.VerifyTimestamp(t)
 	this.Published = ts
 }
 
-// AddObject takes in one parameter
-// param: s - a string value that represents a STIX identifier
+// AddObject - This methods takes in a string value that represents a STIX
+// identifier and adds it to the objects ref property.
 func (this *ReportType) AddObject(s string) {
 	this.Object_refs = append(this.Object_refs, s)
 }

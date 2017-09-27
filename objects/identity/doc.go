@@ -7,7 +7,7 @@
 // Package identity - This package defines the properties and methods needed to
 // create a work with the STIX Identity SDO.
 //
-// The following information comes directly from the STIX 2.0 specificaton documents:
+// The following information comes directly from the STIX 2 specificaton documents:
 //
 // Identities can represent actual individuals, organizations, or groups (e.g., ACME, Inc.) as well as classes of individuals, organizations, or groups (e.g., the finance sector).
 //

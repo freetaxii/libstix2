@@ -7,7 +7,7 @@
 // Package bundle - This package defines the properties and methods needed to
 // create a work with the STIX Bundle.
 //
-// The following information comes directly from the STIX 2.0 specificaton documents:
+// The following information comes directly from the STIX 2 specificaton documents:
 //
 // A Bundle is a collection of arbitrary STIX Objects and Marking Definitions grouped together in a single container. A Bundle does not have any semantic meaning and Objects are not considered related by virtue of being in the same Bundle.
 //

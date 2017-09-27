@@ -7,7 +7,7 @@
 // Package indicator - This package defines the properties and methods needed to
 // create a work with the STIX Indicator SDO.
 //
-// The following information comes directly from the STIX 2.0 specificaton documents:
+// The following information comes directly from the STIX 2 specificaton documents:
 //
 // Indicators contain a pattern that can be used to detect suspicious or malicious cyber activity. For example, an Indicator may be used to represent a set of malicious domains and use the STIX Patterning Language (STIX™ Version 2.0. Part 5: STIX Patterning) to specify these domains.
 //

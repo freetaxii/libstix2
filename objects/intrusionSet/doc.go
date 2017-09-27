@@ -7,7 +7,7 @@
 // Package intrusionSet - This package defines the properties and methods needed to
 // create a work with the STIX Intrustion Set SDO.
 //
-// The following information comes directly from the STIX 2.0 specificaton documents:
+// The following information comes directly from the STIX 2 specificaton documents:
 //
 // An Intrusion Set is a grouped set of adversarial behaviors and resources with common properties that is believed to be orchestrated by a single organization. An Intrusion Set may capture multiple Campaigns or other activities that are all tied together by shared attributes indicating a common known or unknown Threat Actor. New activity can be attributed to an Intrusion Set even if the Threat Actors behind the attack are not known. Threat Actors can move from supporting one Intrusion Set to supporting another, or they may support multiple Intrusion Sets.
 //
