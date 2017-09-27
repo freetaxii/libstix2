@@ -7,25 +7,29 @@
 package bundle
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// BundleType -
+// This type defines all of the properties associated with the STIX Bundle.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type BundleType struct {
-	common.CommonBasePropertiesType
-	Spec_version string        `json:"spec_version,omitempty"`
-	Objects      []interface{} `json:"objects,omitempty"`
+	properties.CommonBundlePropertiesType
+	SpecVersion string        `json:"spec_version,omitempty"`
+	Objects     []interface{} `json:"objects,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new bundle object.
 // This function can not use the InitNewObject() function as a Bundle does not
-// have all of the fields that are common to a standard object
+// have all of the fields that are common to a standard object.
 func New() BundleType {
 	var obj BundleType
 	obj.SetMessageType("bundle")
@@ -38,13 +42,13 @@ func New() BundleType {
 // Public Methods - BundleType
 // ----------------------------------------------------------------------
 
-// SetSepcVersion21 set the specification version to 2.1
+// SetSpecVersion21 - This method will set the specification version to 2.1.
 func (this *BundleType) SetSpecVersion21() {
-	this.Spec_version = "2.1"
+	this.SpecVersion = "2.1"
 }
 
-// AddObject takes in one parameter
-// param: s - a string value representing a STIX Identifier
+// AddObject - This method will take in an object as an interface and add it to
+// the list of objects in the bundle.
 func (this *BundleType) AddObject(i interface{}) {
 	this.Objects = append(this.Objects, i)
 }

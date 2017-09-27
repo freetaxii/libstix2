@@ -7,18 +7,22 @@
 package campaign
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// CampaignType -
+// This type defines all of the properties associated with the STIX Campaign SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type CampaignType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
-	common.AliasesPropertiesType
-	common.FirstLastSeenPropertiesType
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
+	properties.AliasesPropertiesType
+	properties.FirstLastSeenPropertiesType
 	Objective string `json:"objective,omitempty"`
 }
 
@@ -26,6 +30,7 @@ type CampaignType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new campaign object.
 func New() CampaignType {
 	var obj CampaignType
 	obj.InitNewObject("campaign")
@@ -36,8 +41,8 @@ func New() CampaignType {
 // Public Methods - CampaignType
 // ----------------------------------------------------------------------
 
-// SetObjective takes in one parameter
-// param: s - a string value representing an objective, goal, desired outcome, or indended effect
+// SetObjective - This method will take in a string representing an objective,
+// goal, desired outcome, or intended effect and update the objective property.
 func (this *CampaignType) SetObjective(s string) {
 	this.Objective = s
 }

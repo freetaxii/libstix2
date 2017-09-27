@@ -4,25 +4,30 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package course_of_action
+package courseOfAction
 
 import (
-	"github.com/freetaxii/libstix2/objects/common"
+	"github.com/freetaxii/libstix2/objects/common/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
+// CourseOfActionType -
+// This type defines all of the properties associated with the STIX Course of Action SDO.
+// All of the methods not defined local to this type are inherited from the individual properties.
 type CourseOfActionType struct {
-	common.CommonObjectPropertiesType
-	common.DescriptivePropertiesType
+	properties.CommonObjectPropertiesType
+	properties.NamePropertyType
+	properties.DescriptionPropertyType
 }
 
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
 
+// New - This function will create a new course of action object.
 func New() CourseOfActionType {
 	var obj CourseOfActionType
 	obj.InitNewObject("course-of-action")

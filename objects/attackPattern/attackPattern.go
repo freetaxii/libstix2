@@ -28,7 +28,7 @@ type AttackPatternType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// New - This function will create a new attack pattern object
+// New - This function will create a new attack pattern object.
 func New() AttackPatternType {
 	var obj AttackPatternType
 	obj.InitNewObject("atttack-pattern")
