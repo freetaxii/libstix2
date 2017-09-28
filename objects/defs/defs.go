@@ -6,6 +6,9 @@
 
 package defs
 
+// These are the STIX timestamp formats.
+// TIME_RFC_3339 is the general purpose timestamp.
+// TIME_RFC_3339_MICRO is the timestamp for the created and modified properites.
 const (
 	TIME_RFC_3339       = "2006-01-02T15:04:05Z07:00"
 	TIME_RFC_3339_MICRO = "2006-01-02T15:04:05.999999Z07:00"
