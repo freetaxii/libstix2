@@ -31,8 +31,8 @@ type KillChainPhaseType struct {
 // a new kill chain phase to the list. The first value is a string value
 // representing the name of the kill chain being used. The second value is a
 // string value representing the phase name from that kill chain.
-func (this *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
-	k := this.newKillChainPhase()
+func (ezt *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
+	k := ezt.newKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 }
@@ -43,17 +43,17 @@ func (this *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) {
 
 // newKillChainPhase - This method returns a reference to a slice location. This
 // will enable the code to update an object located at that slice location.
-func (this *KillChainPhasesPropertyType) newKillChainPhase() *KillChainPhaseType {
+func (ezt *KillChainPhasesPropertyType) newKillChainPhase() *KillChainPhaseType {
 	var s KillChainPhaseType
 
-	if this.KillChainPhases == nil {
+	if ezt.KillChainPhases == nil {
 		a := make([]KillChainPhaseType, 0)
-		this.KillChainPhases = a
+		ezt.KillChainPhases = a
 	}
 
-	positionThatAppendWillUse := len(this.KillChainPhases)
-	this.KillChainPhases = append(this.KillChainPhases, s)
-	return &this.KillChainPhases[positionThatAppendWillUse]
+	positionThatAppendWillUse := len(ezt.KillChainPhases)
+	ezt.KillChainPhases = append(ezt.KillChainPhases, s)
+	return &ezt.KillChainPhases[positionThatAppendWillUse]
 }
 
 // ----------------------------------------------------------------------
@@ -62,12 +62,12 @@ func (this *KillChainPhasesPropertyType) newKillChainPhase() *KillChainPhaseType
 
 // SetName - This method takes in a string value representing the name of a kill
 // chain and updates the kill chain name property.
-func (this *KillChainPhaseType) SetName(s string) {
-	this.KillChainName = s
+func (ezt *KillChainPhaseType) SetName(s string) {
+	ezt.KillChainName = s
 }
 
 // SetPhase - This method takes in a string value representing the phase of a
 // kill chain and updates the phase name property.
-func (this *KillChainPhaseType) SetPhase(s string) {
-	this.PhaseName = s
+func (ezt *KillChainPhaseType) SetPhase(s string) {
+	ezt.PhaseName = s
 }

@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// SightingType -
-// This type defines all of the properties associated with the STIX Sighting SRO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+SightingType defines all of the properties associated with the STIX Sighting
+SRO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type SightingType struct {
 	properties.CommonObjectPropertiesType
 	properties.FirstSeenPropertyType
@@ -45,32 +47,32 @@ func New() SightingType {
 
 // SetCount - This method takes in an integer that represents the number of
 // sightings and upates the count properties.
-func (this *SightingType) SetCount(i int) {
-	this.Count = i
+func (ezt *SightingType) SetCount(i int) {
+	ezt.Count = i
 }
 
 // SetSightingOfRef - This method takes in a string value that represents a STIX
 // identifier of the object that was sighted and updates the sighting of ref
 // property.
-func (this *SightingType) SetSightingOfRef(s string) {
-	this.SightingOfRef = s
+func (ezt *SightingType) SetSightingOfRef(s string) {
+	ezt.SightingOfRef = s
 }
 
 // AddObservedDataRef - This method takes in a string value that represents a
 // STIX identifier of the STIX Observed Data object that identifies what was
 // sighted and adds it to the observed data refs property.
-func (this *SightingType) AddObservedDataRef(s string) {
-	this.ObservedDataRefs = append(this.ObservedDataRefs, s)
+func (ezt *SightingType) AddObservedDataRef(s string) {
+	ezt.ObservedDataRefs = append(ezt.ObservedDataRefs, s)
 }
 
 // AddWhereSightedRef - This method takes in a string value that represents a
 // STIX identifier of the STIX Identity object that identifies where this was
 // sighted (location, sector, etc) and adds it to the where sighted ref property.
-func (this *SightingType) AddWhereSightedRef(s string) {
-	this.WhereSightedRefs = append(this.WhereSightedRefs, s)
+func (ezt *SightingType) AddWhereSightedRef(s string) {
+	ezt.WhereSightedRefs = append(ezt.WhereSightedRefs, s)
 }
 
 // SetSummary - This method set the boolean value of the summary to true.
-func (this *SightingType) SetSummary() {
-	this.Summary = true
+func (ezt *SightingType) SetSummary() {
+	ezt.Summary = true
 }

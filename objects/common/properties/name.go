@@ -22,11 +22,11 @@ type NamePropertyType struct {
 
 // SetName - This method takes in a string value representing a name of the
 // object and updates the name property.
-func (this *NamePropertyType) SetName(s string) {
-	this.Name = s
+func (ezt *NamePropertyType) SetName(s string) {
+	ezt.Name = s
 }
 
 // GetName - This method returns the current name of the object.
-func (this *NamePropertyType) GetName() string {
-	return this.Name
+func (ezt *NamePropertyType) GetName() string {
+	return ezt.Name
 }

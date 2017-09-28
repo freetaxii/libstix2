@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// RelationshipType -
-// This type defines all of the properties associated with the STIX Relationship SRO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+RelationshipType defines all of the properties associated with the STIX
+Relationship SRO. All of the methods not defined local to this type are
+inherited from the individual properties.
+*/
 type RelationshipType struct {
 	properties.CommonObjectPropertiesType
 	RelationshipType string `json:"relationship_type,omitempty"`
@@ -42,29 +44,29 @@ func New() RelationshipType {
 
 // SetRelationshipType - This method takes in a string value that represents the
 // type name of the releationship and updates the relationship type property.
-func (this *RelationshipType) SetRelationshipType(s string) {
-	this.RelationshipType = s
+func (ezt *RelationshipType) SetRelationshipType(s string) {
+	ezt.RelationshipType = s
 }
 
 // SetSourceRef - This method takes in a string value that represents a STIX
 // identifier of the source STIX object in the relationship and updates the
 // source ref property.
-func (this *RelationshipType) SetSourceRef(s string) {
-	this.SourceRef = s
+func (ezt *RelationshipType) SetSourceRef(s string) {
+	ezt.SourceRef = s
 }
 
 // SetTargetRef - This method takes in a string value that represents a STIX
 // identifier of the target STIX object in the relationship and updates the
 // target ref property.
-func (this *RelationshipType) SetTargetRef(s string) {
-	this.TargetRef = s
+func (ezt *RelationshipType) SetTargetRef(s string) {
+	ezt.TargetRef = s
 }
 
 // SetSourceTarget - This methods takes in two string values where both
 // represent a STIX identifier. This is a convenience function for setting both
 // ends of the relationship at the same time. The first identifier is for the
 // source and the second is for the target.
-func (this *RelationshipType) SetSourceTarget(s, t string) {
-	this.SourceRef = s
-	this.TargetRef = t
+func (ezt *RelationshipType) SetSourceTarget(s, t string) {
+	ezt.SourceRef = s
+	ezt.TargetRef = t
 }

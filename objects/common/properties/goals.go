@@ -22,10 +22,10 @@ type GoalsPropertyType struct {
 
 // AddGoal - This method takes in a string value that represents a goal and adds
 // it to the list of goals in the goals property.
-func (this *GoalsPropertyType) AddGoal(s string) {
+func (ezt *GoalsPropertyType) AddGoal(s string) {
 	// if this.Goals == nil {
 	// 	a := make([]string, 0)
 	// 	this.Goals = a
 	// }
-	this.Goals = append(this.Goals, s)
+	ezt.Goals = append(ezt.Goals, s)
 }

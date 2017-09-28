@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// ToolType -
-// This type defines all of the properties associated with the STIX Tool SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+ToolType defines all of the properties associated with the STIX Tool
+SDO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type ToolType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -42,6 +44,6 @@ func New() ToolType {
 
 // SetToolVersion - This method takes in a string value representing the version
 // of the tool and updates the tool version property.
-func (this *ToolType) SetToolVersion(s string) {
-	this.ToolVersion = s
+func (ezt *ToolType) SetToolVersion(s string) {
+	ezt.ToolVersion = s
 }

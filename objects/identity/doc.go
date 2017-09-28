@@ -4,12 +4,22 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-// Package identity - This package defines the properties and methods needed to
-// create a work with the STIX Identity SDO.
-//
-// The following information comes directly from the STIX 2 specificaton documents:
-//
-// Identities can represent actual individuals, organizations, or groups (e.g., ACME, Inc.) as well as classes of individuals, organizations, or groups (e.g., the finance sector).
-//
-// The Identity SDO can capture basic identifying information, contact information, and the sectors that the Identity belongs to. Identity is used in STIX to represent, among other things, targets of attacks, information sources, object creators, and threat actor identities.
+/*
+Package identity implements the STIX 2 Identity Domain Object.
+This package defines the properties and methods needed to create and work with
+the STIX Identity SDO.
+
+STIX 2 Specification Text
+
+The following information comes directly from the STIX 2 specificaton documents.
+
+Identities can represent actual individuals, organizations, or groups (e.g.,
+ACME, Inc.) as well as classes of individuals, organizations, or groups (e.g.,
+the finance sector).
+
+The Identity SDO can capture basic identifying information, contact information,
+and the sectors that the Identity belongs to. Identity is used in STIX to
+represent, among other things, targets of attacks, information sources, object
+creators, and threat actor identities.
+*/
 package identity

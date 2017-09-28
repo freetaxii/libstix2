@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// ObservedDataType -
-// This type defines all of the properties associated with the STIX Observed Data SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+ObservedDataType defines all of the properties associated with the STIX Observed
+Data SDO. All of the methods not defined local to this type are inherited from
+the individual properties.
+*/
 type ObservedDataType struct {
 	properties.CommonObjectPropertiesType
 	FirstObserved  string `json:"first_observed,omitempty"`
@@ -42,26 +44,26 @@ func New() ObservedDataType {
 
 // SetFirstObserved - This method takes in a timestamp in either time.Time or
 // string format and updates the first observed property.
-func (this *ObservedDataType) SetFirstObserved(t interface{}) {
-	ts := this.VerifyTimestamp(t)
-	this.FirstObserved = ts
+func (ezt *ObservedDataType) SetFirstObserved(t interface{}) {
+	ts := ezt.VerifyTimestamp(t)
+	ezt.FirstObserved = ts
 }
 
 // SetLastObserved - This method takes in a timestamp in either time.Time or
 // string format and updates the last observed property.
-func (this *ObservedDataType) SetLastObserved(t interface{}) {
-	ts := this.VerifyTimestamp(t)
-	this.LastObserved = ts
+func (ezt *ObservedDataType) SetLastObserved(t interface{}) {
+	ts := ezt.VerifyTimestamp(t)
+	ezt.LastObserved = ts
 }
 
 // SetNumberObserved - This method takes in an integer that represents the
 // number of objects that were observed and updates the number observed property.
-func (this *ObservedDataType) SetNumberObserved(i int) {
-	this.NumberObserved = i
+func (ezt *ObservedDataType) SetNumberObserved(i int) {
+	ezt.NumberObserved = i
 }
 
 // SetObjects - This takes in a string value that represents represents a cyber
 // observable JSON object and updates the objects property.
-func (this *ObservedDataType) SetObjects(s string) {
-	this.Objects = s
+func (ezt *ObservedDataType) SetObjects(s string) {
+	ezt.Objects = s
 }

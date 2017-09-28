@@ -12,7 +12,7 @@ package properties
 
 // LangPropertyType - A property used by one or more STIX objects that
 // captures the lang string as defined in RFC 5646. This is used to record the
-// langauge that a given object is using.
+// language that a given object is using.
 type LangPropertyType struct {
 	Lang string `json:"lang,omitempty"`
 }
@@ -23,11 +23,11 @@ type LangPropertyType struct {
 
 // SetLang - This method takes in a string value representing an ISO 639-2
 // encoded language code as defined in RFC 5646 and updates the lang property.
-func (this *LangPropertyType) SetLang(s string) {
-	this.Lang = s
+func (ezt *LangPropertyType) SetLang(s string) {
+	ezt.Lang = s
 }
 
 // GetLang - This method returns the current language code for a given object.
-func (this *LangPropertyType) GetLang() string {
-	return this.Lang
+func (ezt *LangPropertyType) GetLang() string {
+	return ezt.Lang
 }

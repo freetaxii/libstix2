@@ -29,14 +29,14 @@ type ModifiedPropertyType struct {
 // format and updates the modifed property with it. The value is stored as a
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
-func (this *ModifiedPropertyType) SetModified(t interface{}) {
+func (ezt *ModifiedPropertyType) SetModified(t interface{}) {
 	ts := timestamp.Verify(t)
-	this.Modified = ts
+	ezt.Modified = ts
 }
 
 // GetModified - This method will return the modified timestamp as a string. If
 // the value is the same as the created timestamp, then this object is the
 // first version of the object.
-func (this *ModifiedPropertyType) GetModified() string {
-	return this.Modified
+func (ezt *ModifiedPropertyType) GetModified() string {
+	return ezt.Modified
 }

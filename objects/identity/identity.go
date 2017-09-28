@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// IdentityType -
-// This type defines all of the properties associated with the STIX Identity SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+IdentityType defines all of the properties associated with the STIX Identity
+SDO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type IdentityType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -44,19 +46,19 @@ func New() IdentityType {
 // SetIdentityClass - This method takes in a string value representing a STIX
 // identity class from the vocab identity-class-ov and updates the identity class
 // property.
-func (this *IdentityType) SetIdentityClass(s string) {
-	this.IdentityClass = s
+func (ezt *IdentityType) SetIdentityClass(s string) {
+	ezt.IdentityClass = s
 }
 
 // AddSector - This method takes in a string value that represents a STIX sector
 // from the vocab industry-sector-ov and adds it to the identity object.
-func (this *IdentityType) AddSector(s string) {
-	this.Sectors = append(this.Sectors, s)
+func (ezt *IdentityType) AddSector(s string) {
+	ezt.Sectors = append(ezt.Sectors, s)
 }
 
 // SetContactInformation - This method takes in a string value representing
 // contact information as a text string and updates the contact information
 // property.
-func (this *IdentityType) SetContactInformation(s string) {
-	this.ContactInformation = s
+func (ezt *IdentityType) SetContactInformation(s string) {
+	ezt.ContactInformation = s
 }

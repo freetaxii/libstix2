@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// InfrastructureType -
-// This type defines all of the properties associated with the STIX Infrastructure SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+InfrastructureType defines all of the properties associated with the STIX
+Infrastructure SDO. All of the methods not defined local to this type are
+inherited from the individual properties.
+*/
 type InfrastructureType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType

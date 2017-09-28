@@ -23,11 +23,11 @@ type PrimaryMotivationPropertyType struct {
 // SetPrimaryMotivation - This methods takes in a string value representing a
 // motivation from the attack-motivation-ov vocab and updates the primary
 // motivation property.
-func (this *PrimaryMotivationPropertyType) SetPrimaryMotivation(s string) {
-	this.PrimaryMotivation = s
+func (ezt *PrimaryMotivationPropertyType) SetPrimaryMotivation(s string) {
+	ezt.PrimaryMotivation = s
 }
 
 // GetPrimaryMotivation - This method returns the primary motivation.
-func (this *PrimaryMotivationPropertyType) GetPrimaryMotivation() string {
-	return this.PrimaryMotivation
+func (ezt *PrimaryMotivationPropertyType) GetPrimaryMotivation() string {
+	return ezt.PrimaryMotivation
 }

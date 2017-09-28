@@ -22,11 +22,11 @@ type DescriptionPropertyType struct {
 
 // SetDescription - This method takes in a string value representing a text
 // description and updates the description property.
-func (this *DescriptionPropertyType) SetDescription(s string) {
-	this.Description = s
+func (ezt *DescriptionPropertyType) SetDescription(s string) {
+	ezt.Description = s
 }
 
 // GetDescription - This method returns the description for an object as a string.
-func (this *DescriptionPropertyType) GetDescription() string {
-	return this.Description
+func (ezt *DescriptionPropertyType) GetDescription() string {
+	return ezt.Description
 }

@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// ThreatActorType -
-// This type defines all of the properties associated with the STIX Threat Actor SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+ThreatActorType defines all of the properties associated with the STIX Threat
+Actor SDO. All of the methods not defined local to this type are inherited from
+the individual properties.
+*/
 type ThreatActorType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -48,20 +50,20 @@ func New() ThreatActorType {
 
 // AddRole - This method takes in a string value representing a threat actor
 // role from the threat-actor-role-ov and adds it to the role property.
-func (this *ThreatActorType) AddRole(s string) {
-	this.Roles = append(this.Roles, s)
+func (ezt *ThreatActorType) AddRole(s string) {
+	ezt.Roles = append(ezt.Roles, s)
 }
 
 // SetSophistication - This method takes in a string value representing the
 // sophistication level of a threat actor from the threat-actor-sophistication-ov
 // and adds it to the sophistication property.
-func (this *ThreatActorType) SetSophistication(s string) {
-	this.Sophistication = s
+func (ezt *ThreatActorType) SetSophistication(s string) {
+	ezt.Sophistication = s
 }
 
 // AddPersonalMotivation - This method takes in a string value representing the
 // motivation of a threat actor from the threat-actor-motivation-ov and adds it
 // to the personal motivations property.
-func (this *ThreatActorType) AddPersonalMotivation(s string) {
-	this.PersonalMotivations = append(this.PersonalMotivations, s)
+func (ezt *ThreatActorType) AddPersonalMotivation(s string) {
+	ezt.PersonalMotivations = append(ezt.PersonalMotivations, s)
 }

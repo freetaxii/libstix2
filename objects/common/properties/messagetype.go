@@ -22,11 +22,11 @@ type MessageTypePropertyType struct {
 
 // SetMessageType - This method takes in a string value representing a STIX
 // object type and updates the type property.
-func (this *MessageTypePropertyType) SetMessageType(s string) {
-	this.MessageType = s
+func (ezt *MessageTypePropertyType) SetMessageType(s string) {
+	ezt.MessageType = s
 }
 
 // GetMessageType - This method returns the object type.
-func (this *MessageTypePropertyType) GetMessageType() string {
-	return this.MessageType
+func (ezt *MessageTypePropertyType) GetMessageType() string {
+	return ezt.MessageType
 }

@@ -57,26 +57,26 @@ type CommonBundlePropertiesType struct {
 // InitNewObject is a helper function to init a new object with common elements
 // It takes in one parameter
 // param: s - a string value of the STIX object type
-func (this *CommonObjectPropertiesType) InitNewObject(s string) {
+func (ezt *CommonObjectPropertiesType) InitNewObject(s string) {
 	// TODO make sure that the value coming in a a valid STIX object type
-	this.SetMessageType(s)
-	this.CreateID(s)
-	this.SetCreatedToCurrentTime()
-	this.SetModifiedToCreated()
+	ezt.SetMessageType(s)
+	ezt.CreateID(s)
+	ezt.SetCreatedToCurrentTime()
+	ezt.SetModifiedToCreated()
 }
 
 // SetModifiedToCreated sets the object modified time to be the same as the
 // created time. This has to be done at this level, since at the individual
 // properties type say "ModifiedPropertyType" this.Created does not exist.
 // But it will exist at this level of inheritance
-func (this *CommonObjectPropertiesType) SetModifiedToCreated() {
-	this.Modified = this.Created
+func (ezt *CommonObjectPropertiesType) SetModifiedToCreated() {
+	ezt.Modified = ezt.Created
 }
 
 // VerifyTimestamp is a helper function to prevent needing to import the timestamp property object locally.
 // It takes in one parameter and returns a string version of the timestamp
 // param: t - a timestamp in either time.Time or string format
-func (this *CommonObjectPropertiesType) VerifyTimestamp(t interface{}) string {
+func (ezt *CommonObjectPropertiesType) VerifyTimestamp(t interface{}) string {
 	return timestamp.Verify(t)
 }
 

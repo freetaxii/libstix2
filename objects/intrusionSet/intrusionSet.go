@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// IntrusionSetType -
-// This type defines all of the properties associated with the STIX Intrusion Set SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+IntrusionSetType defines all of the properties associated with the STIX
+Intrusion Set SDO. All of the methods not defined local to this type are
+inherited from the individual properties.
+*/
 type IntrusionSetType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType

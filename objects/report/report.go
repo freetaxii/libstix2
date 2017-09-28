@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// ReportType -
-// This type defines all of the properties associated with the STIX Report SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+ReportType defines all of the properties associated with the STIX Report
+SDO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type ReportType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -42,13 +44,13 @@ func New() ReportType {
 
 // SetPublished - This method takes in a timestamp in either time.Time or string
 // format and updates the published timestamp property.
-func (this *ReportType) SetPublished(t interface{}) {
-	ts := this.VerifyTimestamp(t)
-	this.Published = ts
+func (ezt *ReportType) SetPublished(t interface{}) {
+	ts := ezt.VerifyTimestamp(t)
+	ezt.Published = ts
 }
 
 // AddObject - This methods takes in a string value that represents a STIX
 // identifier and adds it to the objects ref property.
-func (this *ReportType) AddObject(s string) {
-	this.ObjectRefs = append(this.ObjectRefs, s)
+func (ezt *ReportType) AddObject(s string) {
+	ezt.ObjectRefs = append(ezt.ObjectRefs, s)
 }

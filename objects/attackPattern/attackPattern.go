@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// AttackPatternType -
-// This type defines all of the properties associated with the STIX Attack Pattern SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+AttackPatternType defines all of the properties associated with the STIX Attack
+Pattern SDO. All of the methods not defined local to this type are inherited
+from the individual properties.
+*/
 type AttackPatternType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -28,7 +30,7 @@ type AttackPatternType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// New - This function will create a new attack pattern object.
+// New - This function will create and return a new STIX attack pattern object.
 func New() AttackPatternType {
 	var obj AttackPatternType
 	obj.InitNewObject("atttack-pattern")

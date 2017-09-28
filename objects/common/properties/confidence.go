@@ -22,11 +22,11 @@ type ConfidencePropertyType struct {
 
 // SetConfidence - This method takes in an integer representing a STIX
 // confidence level 0-100 and updates the Confidence property.
-func (this *ConfidencePropertyType) SetConfidence(i int) {
-	this.Confidence = i
+func (ezt *ConfidencePropertyType) SetConfidence(i int) {
+	ezt.Confidence = i
 }
 
 // GetConfidence - This method returns the confidence value as an integer.
-func (this *ConfidencePropertyType) GetConfidence() int {
-	return this.Confidence
+func (ezt *ConfidencePropertyType) GetConfidence() int {
+	return ezt.Confidence
 }

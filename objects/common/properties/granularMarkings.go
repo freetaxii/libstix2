@@ -32,18 +32,18 @@ type GranularMarkingType struct {
 // SetMarkingRef - This method takes in a string value representing a STIX
 // identifier of a marking definition object and sets the marking ref property
 // to that value.
-func (this *GranularMarkingType) SetMarkingRef(s string) {
-	this.MarkingRef = s
+func (ezt *GranularMarkingType) SetMarkingRef(s string) {
+	ezt.MarkingRef = s
 }
 
 // GetMarkingRef - This method returns the STIX identifier of the marking
 // definition object that was recorded in this granular marking type.
-func (this *GranularMarkingType) GetMarkingRef() string {
-	return this.MarkingRef
+func (ezt *GranularMarkingType) GetMarkingRef() string {
+	return ezt.MarkingRef
 }
 
 // AddSelector - This method takes in a string value representing a STIX
 // granular marking selector and adds it to the list of selectors.
-func (this *GranularMarkingType) AddSelector(s string) {
-	this.Selectors = append(this.Selectors, s)
+func (ezt *GranularMarkingType) AddSelector(s string) {
+	ezt.Selectors = append(ezt.Selectors, s)
 }

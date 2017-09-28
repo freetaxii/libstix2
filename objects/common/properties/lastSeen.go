@@ -29,7 +29,7 @@ type LastSeenPropertyType struct {
 // format and updates the last seen property with it. The value is stored as a
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
-func (this *LastSeenPropertyType) SetLastSeen(t interface{}) {
+func (ezt *LastSeenPropertyType) SetLastSeen(t interface{}) {
 	ts := timestamp.Verify(t)
-	this.LastSeen = ts
+	ezt.LastSeen = ts
 }

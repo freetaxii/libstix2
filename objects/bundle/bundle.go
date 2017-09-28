@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// BundleType -
-// This type defines all of the properties associated with the STIX Bundle.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+BundleType defines all of the properties associated with the STIX Bundle. All
+of the methods not defined local to this type are inherited from the individual
+properties.
+*/
 type BundleType struct {
 	properties.CommonBundlePropertiesType
 	SpecVersion string        `json:"spec_version,omitempty"`
@@ -43,12 +45,12 @@ func New() BundleType {
 // ----------------------------------------------------------------------
 
 // SetSpecVersion21 - This method will set the specification version to 2.1.
-func (this *BundleType) SetSpecVersion21() {
-	this.SpecVersion = "2.1"
+func (ezt *BundleType) SetSpecVersion21() {
+	ezt.SpecVersion = "2.1"
 }
 
 // AddObject - This method will take in an object as an interface and add it to
 // the list of objects in the bundle.
-func (this *BundleType) AddObject(i interface{}) {
-	this.Objects = append(this.Objects, i)
+func (ezt *BundleType) AddObject(i interface{}) {
+	ezt.Objects = append(ezt.Objects, i)
 }

@@ -14,9 +14,11 @@ import (
 // Define Indicator Type
 // ----------------------------------------------------------------------
 
-// IndicatorType -
-// This type defines all of the properties associated with the STIX Indicator SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+IndicatorType defines all of the properties associated with the STIX Indicator
+SDO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type IndicatorType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -44,22 +46,22 @@ func New() IndicatorType {
 
 // SetPattern - This method will take in a string value representing a complete
 // and valid STIX pattern and set the pattern property to that value.
-func (this *IndicatorType) SetPattern(s string) {
-	this.Pattern = s
+func (ezt *IndicatorType) SetPattern(s string) {
+	ezt.Pattern = s
 }
 
 // SetValidFrom - This method will take in a timestamp in either time.Time or
 // string format and will set the valid from property to that value.
-func (this *IndicatorType) SetValidFrom(t interface{}) {
-	ts := this.VerifyTimestamp(t)
-	this.ValidFrom = ts
+func (ezt *IndicatorType) SetValidFrom(t interface{}) {
+	ts := ezt.VerifyTimestamp(t)
+	ezt.ValidFrom = ts
 }
 
 // SetValidUntil - This method will take in a timestamp in either time.Time or
 // string format and will set the valid until property to that value.
-func (this *IndicatorType) SetValidUntil(t interface{}) {
-	ts := this.VerifyTimestamp(t)
+func (ezt *IndicatorType) SetValidUntil(t interface{}) {
+	ts := ezt.VerifyTimestamp(t)
 
 	// TODO check to make sure this is later than the vaild_from
-	this.ValidUntil = ts
+	ezt.ValidUntil = ts
 }

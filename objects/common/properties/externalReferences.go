@@ -32,47 +32,47 @@ type ExternalReferenceType struct {
 // ----------------------------------------------------------------------
 
 // SetSourceName - This method takes in a string value representing the name of
-// a source for an external refernce and udpates the source name property.
-func (this *ExternalReferenceType) SetSourceName(s string) {
-	this.SourceName = s
+// a source for an external reference and udpates the source name property.
+func (ezt *ExternalReferenceType) SetSourceName(s string) {
+	ezt.SourceName = s
 }
 
 // GetSourceName - This method will return the source name.
-func (this *ExternalReferenceType) GetSourceName() string {
-	return this.SourceName
+func (ezt *ExternalReferenceType) GetSourceName() string {
+	return ezt.SourceName
 }
 
 // SetURL - This method takes in a string value representing a URL location of a
-// source for an external refernce and updates the url property.
-func (this *ExternalReferenceType) SetURL(s string) {
-	this.URL = s
+// source for an external reference and updates the url property.
+func (ezt *ExternalReferenceType) SetURL(s string) {
+	ezt.URL = s
 }
 
 // GetURL - This method returns the url for this external reference.
-func (this *ExternalReferenceType) GetURL() string {
-	return this.URL
+func (ezt *ExternalReferenceType) GetURL() string {
+	return ezt.URL
 }
 
 // AddHash - This method takes in two parameters and adds the hash to the map.
 // The first is a string value representing a hash type from the STIX hashes
 // vocabulary. The second is a string value representing the actual hash of the
 // content from the remote external reference.
-func (this *ExternalReferenceType) AddHash(k, v string) {
-	if this.Hashes == nil {
+func (ezt *ExternalReferenceType) AddHash(k, v string) {
+	if ezt.Hashes == nil {
 		m := make(map[string]string, 0)
-		this.Hashes = m
+		ezt.Hashes = m
 	}
-	this.Hashes[k] = v
+	ezt.Hashes[k] = v
 }
 
 // SetExternalID - This method takes in a string value representing an general
-// purpose id in a remote system for the source of this external refernce and
+// purpose id in a remote system for the source of this external reference and
 // updates the external id property.
-func (this *ExternalReferenceType) SetExternalID(s string) {
-	this.ExternalID = s
+func (ezt *ExternalReferenceType) SetExternalID(s string) {
+	ezt.ExternalID = s
 }
 
 // GetExternalID - This method returns the external id for this reference.
-func (this *ExternalReferenceType) GetExternalID() string {
-	return this.ExternalID
+func (ezt *ExternalReferenceType) GetExternalID() string {
+	return ezt.ExternalID
 }

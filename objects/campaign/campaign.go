@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// CampaignType -
-// This type defines all of the properties associated with the STIX Campaign SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+CampaignType defines all of the properties associated with the STIX Campaign
+SDO. All of the methods not defined local to this type are inherited from the
+individual properties.
+*/
 type CampaignType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
@@ -44,6 +46,6 @@ func New() CampaignType {
 
 // SetObjective - This method will take in a string representing an objective,
 // goal, desired outcome, or intended effect and update the objective property.
-func (this *CampaignType) SetObjective(s string) {
-	this.Objective = s
+func (ezt *CampaignType) SetObjective(s string) {
+	ezt.Objective = s
 }

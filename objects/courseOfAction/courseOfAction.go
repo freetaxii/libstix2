@@ -14,9 +14,11 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-// CourseOfActionType -
-// This type defines all of the properties associated with the STIX Course of Action SDO.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+CourseOfActionType defines all of the properties associated with the STIX Course
+of Action SDO. All of the methods not defined local to this type are inherited
+from the individual properties.
+*/
 type CourseOfActionType struct {
 	properties.CommonObjectPropertiesType
 	properties.NamePropertyType
