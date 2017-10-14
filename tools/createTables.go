@@ -19,7 +19,9 @@ func main() {
 	err = ds.Connect()
 	handleError(err)
 
-	ds.CreateTables()
+	//ds.CreateTables()
+	//ds.CreateVocabTables()
+	//ds.PopulateVocabTables()
 
 	ds.Close()
 

@@ -74,12 +74,6 @@ func (ds *Sqlite3DatastoreType) Close() error {
 	return nil
 }
 
-// CreateTables - This method will create all of the tables needed to store
-// STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateTables() {
-	ds.createTable("sdo_attack_pattern", ds.attackPatternProperties())
-}
-
 // ----------------------------------------------------------------------
 // Private Methods
 // ----------------------------------------------------------------------
@@ -90,38 +84,4 @@ func (ds *Sqlite3DatastoreType) verifyFileExists() error {
 		return fmt.Errorf("ERROR: The sqlite3 database cannot be opened due to error: %v", err)
 	}
 	return nil
-}
-
-// commonProperties - This method will return the the common properties
-func (ds *Sqlite3DatastoreType) commonProperties() string {
-	return `
-	"aid" INTEGER PRIMARY KEY,
- 	"stix_spec_version" TEXT NOT NULL,
- 	"taxii_date_added" TEXT NOT NULL,
- 	"type" TEXT NOT NULL,
- 	"id" TEXT NOT NULL,
- 	"created_by_ref" TEXT,
- 	"created" TEXT NOT NULL,
- 	"modified" TEXT NOT NULL,
- 	"revoked" integer(1,0) DEFAULT 0,
- 	"confidence" integer(3,0),
- 	"lang" text,`
-}
-
-// attackPatternProperties  - This method will return the properties for attack patterns
-func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
-	return ds.commonProperties() + `
-	"name" text NOT NULL,
-	"description" text
-	`
-}
-
-// createAttackPatternTable - This method will create the actual table
-func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
-	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
-	_, err := ds.DB.Exec(stmt)
-
-	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created")
-	}
 }
