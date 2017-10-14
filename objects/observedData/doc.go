@@ -11,7 +11,7 @@ the STIX Observed Data SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Observed Data conveys information that was observed on systems and networks
 using the Cyber Observable specification defined in parts 3 and 4 of this

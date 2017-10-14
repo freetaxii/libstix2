@@ -11,7 +11,7 @@ the STIX Attack Pattern SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Attack Patterns are a type of TTP that describe ways that adversaries attempt to
 compromise targets. Attack Patterns are used to help categorize attacks,

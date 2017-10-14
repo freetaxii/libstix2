@@ -11,7 +11,7 @@ the STIX Campaign SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 A Campaign is a grouping of adversarial behaviors that describes a set of
 malicious activities or attacks (sometimes called waves) that occur over a

@@ -11,14 +11,14 @@ the STIX Indicator SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Indicators contain a pattern that can be used to detect suspicious or malicious
 cyber activity. For example, an Indicator may be used to represent a set of
 malicious domains and use the STIX Patterning Language (STIX™ Version 2.0.
 Part 5: STIX Patterning) to specify these domains.
 
-The Indicator SDO contains a simple textuasl description, the Kill Chain Phases
+The Indicator SDO contains a simple textual description, the Kill Chain Phases
 that it detects behavior in, a time window for when the Indicator is valid or
 useful, and a required pattern property to capture a structured detection
 pattern. Conforming STIX implementations MUST support the STIX Patterning

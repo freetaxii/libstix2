@@ -11,7 +11,7 @@ the STIX Course of Action SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 A Course of Action is an action taken either to prevent an attack or to respond
 to an attack that is in progress. It may describe technical, automatable

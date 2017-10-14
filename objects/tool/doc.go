@@ -11,7 +11,7 @@ the STIX Tool SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Tools are legitimate software that can be used by threat actors to perform
 attacks. Knowing how and when threat actors use such tools can be important for
@@ -28,7 +28,7 @@ of Kill Chain Phases the tool can be used to carry out, and the version of the
 tool.
 
 This SDO MUST NOT be used to characterize malware. Further, Tool MUST NOT be
-used to characterise tools used as part of a course of action in response to an
+used to characterize tools used as part of a course of action in response to an
 attack. Tools used during response activities can be included directly as part
 of a Course of Action SDO.
 */

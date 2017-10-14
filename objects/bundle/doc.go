@@ -11,7 +11,7 @@ the STIX Bundle.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 A Bundle is a collection of arbitrary STIX Objects and Marking Definitions
 grouped together in a single container. A Bundle does not have any semantic

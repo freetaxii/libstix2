@@ -11,7 +11,7 @@ the STIX Identity SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Identities can represent actual individuals, organizations, or groups (e.g.,
 ACME, Inc.) as well as classes of individuals, organizations, or groups (e.g.,

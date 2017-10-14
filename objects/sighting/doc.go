@@ -11,7 +11,7 @@ the STIX Sighting SRO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 A Sighting denotes the belief that something in CTI (e.g., an indicator,
 malware, tool, threat actor, etc.) was seen. Sightings are used to track who and

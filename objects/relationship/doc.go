@@ -11,7 +11,7 @@ the STIX Relationship SRO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 The Relationship object is used to link together two SDOs in order to describe
 how they are related to each other. If SDOs are considered "nodes" or "vertices"

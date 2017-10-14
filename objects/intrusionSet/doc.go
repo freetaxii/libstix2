@@ -11,7 +11,7 @@ the STIX Intrusion Set SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 An Intrusion Set is a grouped set of adversarial behaviors and resources with
 common properties that is believed to be orchestrated by a single organization.

@@ -7,7 +7,10 @@
 package attackPattern
 
 import (
+	"database/sql"
 	"github.com/freetaxii/libstix2/objects/common/properties"
+	"github.com/freetaxii/libstix2/objects/defs"
+	"time"
 )
 
 // ----------------------------------------------------------------------
@@ -40,3 +43,49 @@ func New() AttackPatternType {
 // ----------------------------------------------------------------------
 // Public Methods - AttackPatternType
 // ----------------------------------------------------------------------
+
+func (o *AttackPatternType) AddToDatabase(db *sql.DB, ver string) error {
+	stixtype := "attack-pattern"
+
+	var stmt1 = `
+		INSERT INTO 'sdo_attack_pattern'
+		(
+			stix_spec_version,
+			taxii_date_added,
+			type,
+			id,
+			created_by_ref,
+			created,
+			modified,
+			revoked,
+			confidence,
+			lang,
+			name,
+			description
+		)
+		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	_, err := db.Exec(stmt1,
+		ver,
+		dateAdded,
+		stixtype,
+		o.ID,
+		o.CreatedByRef,
+		o.Created,
+		o.Modified,
+		o.Revoked,
+		o.Confidence,
+		o.Lang,
+		o.Name,
+		o.Description)
+
+	if err != nil {
+		return err
+	}
+
+	//commonPropertyID, _ := res.LastInsertId()
+
+	return nil
+}

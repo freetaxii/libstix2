@@ -11,7 +11,7 @@ the STIX Report SDO.
 
 STIX 2 Specification Text
 
-The following information comes directly from the STIX 2 specificaton documents.
+The following information comes directly from the STIX 2 specification documents.
 
 Reports are collections of threat intelligence focused on one or more topics,
 such as a description of a threat actor, malware, or attack technique, including
