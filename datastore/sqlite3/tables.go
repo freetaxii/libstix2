@@ -16,7 +16,8 @@ import (
 
 // CreateTables - This method will create all of the tables needed to store
 // STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateTables() {
+func (ds *Sqlite3DatastoreType) CreateAllTables() {
+	ds.createTable("stix_base_object", ds.commonProperties())
 	ds.createTable("sdo_attack_pattern", ds.attackPatternProperties())
 	ds.createTable("sdo_campaign", ds.campaignProperties())
 	ds.createTable("sdo_course_of_action", ds.courseOfActionProperties())
@@ -71,7 +72,7 @@ func (ds *Sqlite3DatastoreType) childProperties() string {
 
 // attackPatternProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text
 	`
@@ -79,7 +80,7 @@ func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
 
 // campaignProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) campaignProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"first_seen" text,
@@ -90,7 +91,7 @@ func (ds *Sqlite3DatastoreType) campaignProperties() string {
 
 // courseOfActionProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) courseOfActionProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text
 	`
@@ -98,7 +99,7 @@ func (ds *Sqlite3DatastoreType) courseOfActionProperties() string {
 
 // identityProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) identityProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"identity_class" integer NOT NULL,
@@ -109,7 +110,7 @@ func (ds *Sqlite3DatastoreType) identityProperties() string {
 
 // indicatorProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) indicatorProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"pattern" text NOT NULL,
@@ -120,7 +121,7 @@ func (ds *Sqlite3DatastoreType) indicatorProperties() string {
 
 // intrusionSetProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) intrusionSetProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"first_seen" text,
@@ -132,7 +133,7 @@ func (ds *Sqlite3DatastoreType) intrusionSetProperties() string {
 
 // malwareProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) malwareProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text
 	`
@@ -140,7 +141,7 @@ func (ds *Sqlite3DatastoreType) malwareProperties() string {
 
 // observedDataProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) observedDataProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"first_observed" text NOT NULL,
 	"last_observed" text NOT NULL,
 	"number_observed" integer NOT NULL,
@@ -150,7 +151,7 @@ func (ds *Sqlite3DatastoreType) observedDataProperties() string {
 
 // reportProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) reportProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"published" text NOT NULL
@@ -166,7 +167,7 @@ func (ds *Sqlite3DatastoreType) reportObjectsProperties() string {
 
 // threatActorProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) threatActorProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"sophistication_id" integer,
@@ -184,7 +185,7 @@ func (ds *Sqlite3DatastoreType) threatActorGoalsProperties() string {
 
 // toolProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) toolProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text,
 	"tool_version" text
@@ -193,7 +194,7 @@ func (ds *Sqlite3DatastoreType) toolProperties() string {
 
 // vulnerabilityProperties  - This method will return the properties for attack patterns
 func (ds *Sqlite3DatastoreType) vulnerabilityProperties() string {
-	return ds.commonProperties() + `
+	return `
 	"name" text NOT NULL,
 	"description" text
 	`
