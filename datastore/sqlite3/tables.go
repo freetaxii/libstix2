@@ -48,154 +48,206 @@ func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
 	}
 }
 
+func (ds *Sqlite3DatastoreType) baseProperties() string {
+	return ds.baseProperties() + `
+	"row_id" INTEGER PRIMARY KEY,
+ 	"object_id" TEXT NOT NULL,`
+}
+
 // commonProperties - This method will return the the common properties
 func (ds *Sqlite3DatastoreType) commonProperties() string {
-	return `
-	"row_id" INTEGER PRIMARY KEY,
- 	"spec_version" TEXT NOT NULL,
- 	"taxii_date_added" TEXT NOT NULL,
+	return ds.baseProperties() + `
+ 	"version" TEXT NOT NULL,
+ 	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
  	"id" TEXT NOT NULL,
  	"created_by_ref" TEXT,
  	"created" TEXT NOT NULL,
  	"modified" TEXT NOT NULL,
- 	"revoked" integer(1,0) DEFAULT 0,
- 	"confidence" integer(3,0),
- 	"lang" text,`
+ 	"revoked" INTEGER(1,0) DEFAULT 0,
+ 	"confidence" INTEGER(3,0),
+ 	"lang" TEXT,`
 }
 
-func (ds *Sqlite3DatastoreType) childProperties() string {
-	return `
-	"row_id" INTEGER PRIMARY KEY,
- 	"parent_id" INTEGER NOT NULL,`
-}
-
-// attackPatternProperties  - This method will return the properties for attack patterns
+// attackPatternProperties  - This method will return the properties for attack pattern SDOs
 func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
 	`
 }
 
-// campaignProperties  - This method will return the properties for attack patterns
+// campaignProperties  - This method will return the properties for campaign SDOs
 func (ds *Sqlite3DatastoreType) campaignProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"first_seen" text,
-	"last_seen" text,
-	"objective" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"first_seen" TEXT,
+	"last_seen" TEXT,
+	"objective" TEXT
 	`
 }
 
-// courseOfActionProperties  - This method will return the properties for attack patterns
+// courseOfActionProperties  - This method will return the properties for course of action SDOs
 func (ds *Sqlite3DatastoreType) courseOfActionProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
 	`
 }
 
-// identityProperties  - This method will return the properties for attack patterns
+// identityProperties  - This method will return the properties for identity SDOs
 func (ds *Sqlite3DatastoreType) identityProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"identity_class" integer NOT NULL,
-	"identity_class_ov_text" text,
-	"contact_information" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"identity_class" INTEGER NOT NULL,
+	"contact_information" TEXT
 	`
 }
 
-// indicatorProperties  - This method will return the properties for attack patterns
+// indicatorProperties  - This method will return the properties for indicator SDOs
 func (ds *Sqlite3DatastoreType) indicatorProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"pattern" text NOT NULL,
-	"valid_from" text NOT NULL,
-	"valid_until" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"pattern" TEXT NOT NULL,
+	"valid_from" TEXT NOT NULL,
+	"valid_until" TEXT
 	`
 }
 
-// intrusionSetProperties  - This method will return the properties for attack patterns
+// intrusionSetProperties  - This method will return the properties for intrusion set SDOs
 func (ds *Sqlite3DatastoreType) intrusionSetProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"first_seen" text,
-	"last_seen" text,
-	"resource_level_id" integer,
-	"primary_motivation_id" integer
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"first_seen" TEXT,
+	"last_seen" TEXT,
+	"resource_level" INTEGER,
+	"primary_motivation" TEXT
 	`
 }
 
-// malwareProperties  - This method will return the properties for attack patterns
+// malwareProperties  - This method will return the properties for malware SDOs
 func (ds *Sqlite3DatastoreType) malwareProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
 	`
 }
 
-// observedDataProperties  - This method will return the properties for attack patterns
+// observedDataProperties  - This method will return the properties for observed data SDOs
 func (ds *Sqlite3DatastoreType) observedDataProperties() string {
-	return `
-	"first_observed" text NOT NULL,
-	"last_observed" text NOT NULL,
-	"number_observed" integer NOT NULL,
-	"objects" text NOT NULL
+	return ds.baseProperties() + `
+	"first_observed" TEXT NOT NULL,
+	"last_observed" TEXT NOT NULL,
+	"number_observed" INTEGER NOT NULL,
+	"objects" TEXT NOT NULL
 	`
 }
 
-// reportProperties  - This method will return the properties for attack patterns
+// reportProperties  - This method will return the properties for report SDOs
 func (ds *Sqlite3DatastoreType) reportProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"published" text NOT NULL
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"published" TEXT NOT NULL
 	`
 }
 
-// reportObjectsProperties  - This method will return the properties for attack patterns
+// reportObjectsProperties  - This method will return the properties for report objects
 func (ds *Sqlite3DatastoreType) reportObjectsProperties() string {
-	return ds.childProperties() + `
-	"object_refs" text NOT NULL
+	return ds.baseProperties() + `
+	"object_refs" TEXT NOT NULL
 	`
 }
 
-// threatActorProperties  - This method will return the properties for attack patterns
+// threatActorProperties  - This method will return the properties for threat actor SDOs
 func (ds *Sqlite3DatastoreType) threatActorProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"sophistication_id" integer,
-	"resource_level_id" integer,
-	"primary_motivation_id" integer
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"sophistication" INTEGER,
+	"resource_level" INTEGER,
+	"primary_motivation" TEXT
 	`
 }
 
-// threatActorGoalsProperties  - This method will return the properties for attack patterns
+// threatActorGoalsProperties  - This method will return the properties for threat actor goals
 func (ds *Sqlite3DatastoreType) threatActorGoalsProperties() string {
-	return ds.childProperties() + `
-	"goals" text NOT NULL
+	return ds.baseProperties() + `
+	"goals" TEXT NOT NULL
 	`
 }
 
-// toolProperties  - This method will return the properties for attack patterns
+// toolProperties  - This method will return the properties for tool SDOs
 func (ds *Sqlite3DatastoreType) toolProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text,
-	"tool_version" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"tool_version" TEXT
 	`
 }
 
-// vulnerabilityProperties  - This method will return the properties for attack patterns
+// vulnerabilityProperties  - This method will return the properties for vulnerability SDOs
 func (ds *Sqlite3DatastoreType) vulnerabilityProperties() string {
-	return `
-	"name" text NOT NULL,
-	"description" text
+	return ds.baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
+	`
+}
+
+// commonAliasesProperties - This method will return the properties for aliases
+func (ds *Sqlite3DatastoreType) commonAliasesProperties() string {
+	return ds.baseProperties() + `
+	"aliases" TEXT NOT NULL
+	`
+}
+
+// commonExternalReferencesProperties - This method will return the properties for external references
+func (ds *Sqlite3DatastoreType) commonExternalReferencesProperties() string {
+	return ds.baseProperties() + `
+	"source_name" TEXT NOT NULL,
+	"description" TEXT,
+	"url" TEXT,
+	"external_id" TEXT
+	`
+}
+
+// commonHashesProperties - This method will return the properties for hashes
+func (ds *Sqlite3DatastoreType) commonHashesProperties() string {
+	return ds.baseProperties() + `
+	"hash" TEXT NOT NULL,
+	"value" TEXT NOT NULL
+	`
+}
+
+// commonKillChainPhasesProperties - This method will return the properties for kill chain phases
+func (ds *Sqlite3DatastoreType) commonKillChainPhasesProperties() string {
+	return ds.baseProperties() + `
+	"kill_chain_name" TEXT NOT NULL,
+	"phase_name" TEXT NOT NULL
+	`
+}
+
+// commonLabelsProperties - This method will return the properties for labels
+func (ds *Sqlite3DatastoreType) commonLabelsProperties() string {
+	return ds.baseProperties() + `
+	"labels" TEXT
+	`
+}
+
+// commonSecondaryMotivationsProperties - This method will return the properties for secondary motivations
+func (ds *Sqlite3DatastoreType) commonSecondaryMotivationsProperties() string {
+	return ds.baseProperties() + `
+	"secondary_motivations" TEXT
+	`
+}
+
+// commonObjectMarkingRefsProperties - This method will return the properties for object markings
+func (ds *Sqlite3DatastoreType) commonObjectMarkingRefsProperties() string {
+	return ds.baseProperties() + `
+	"object_marking_refs" TEXT NOT NULL
 	`
 }
