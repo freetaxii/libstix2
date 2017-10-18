@@ -14,10 +14,10 @@ import (
 // Public Methods
 // ----------------------------------------------------------------------
 
-// CreateTables - This method will create all of the tables needed to store
+// CreateAllTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllTables() {
-	ds.createTable("stix_base_object", ds.commonProperties())
+	ds.createTable("stix_base_object", ds.baseObjectProperties())
 	ds.createTable("sdo_attack_pattern", ds.attackPatternProperties())
 	ds.createTable("sdo_campaign", ds.campaignProperties())
 	ds.createTable("sdo_course_of_action", ds.courseOfActionProperties())
@@ -49,13 +49,13 @@ func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
 }
 
 func (ds *Sqlite3DatastoreType) baseProperties() string {
-	return ds.baseProperties() + `
+	return `
 	"row_id" INTEGER PRIMARY KEY,
  	"object_id" TEXT NOT NULL,`
 }
 
 // commonProperties - This method will return the the common properties
-func (ds *Sqlite3DatastoreType) commonProperties() string {
+func (ds *Sqlite3DatastoreType) baseObjectProperties() string {
 	return ds.baseProperties() + `
  	"version" TEXT NOT NULL,
  	"date_added" TEXT NOT NULL,
@@ -66,7 +66,7 @@ func (ds *Sqlite3DatastoreType) commonProperties() string {
  	"modified" TEXT NOT NULL,
  	"revoked" INTEGER(1,0) DEFAULT 0,
  	"confidence" INTEGER(3,0),
- 	"lang" TEXT,`
+ 	"lang" TEXT`
 }
 
 // attackPatternProperties  - This method will return the properties for attack pattern SDOs
