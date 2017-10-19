@@ -25,6 +25,10 @@ type Sqlite3DatastoreType struct {
 	DB       *sql.DB
 }
 
+type Databaser interface {
+	AddToDatabase(db *sql.DB, ver string) error
+}
+
 // ----------------------------------------------------------------------
 // Public Create Functions
 // ----------------------------------------------------------------------
@@ -33,6 +37,12 @@ type Sqlite3DatastoreType struct {
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename
+
+	err := ds.connect()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	return ds
 }
 
@@ -40,9 +50,40 @@ func New(filename string) Sqlite3DatastoreType {
 // Public Methods
 // ----------------------------------------------------------------------
 
-// Connect - This method is called from the libstix2/datastore package and is
-// used to connect to an sqlite3 database
-func (ds *Sqlite3DatastoreType) Connect() error {
+func (ds *Sqlite3DatastoreType) Insert(ver string, obj Databaser) {
+
+	// values := strings.Split(obj.ID.(type), "--")
+	// log.Fatalln(values[0])
+
+	// switch o := obj.(type) {
+	// case attackPattern.AttackPatternType:
+	// 	log.Fatalln(o.ID)
+	// }
+
+	// o := obj.()
+	// log.Fatalln(o.ID)
+
+	err := obj.AddToDatabase(ds.DB, ver)
+	if err != nil {
+		log.Fatalln("ERROR: Problem adding record to database", err)
+	}
+}
+
+// Close - This method will close the database connection
+func (ds *Sqlite3DatastoreType) Close() error {
+	err := ds.DB.Close()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ----------------------------------------------------------------------
+// Private Methods
+// ----------------------------------------------------------------------
+
+// connect - This method is used to connect to an sqlite3 database
+func (ds *Sqlite3DatastoreType) connect() error {
 	var err error
 
 	if ds.Filename == "" {
@@ -64,19 +105,6 @@ func (ds *Sqlite3DatastoreType) Connect() error {
 
 	return nil
 }
-
-// Close - This method will close the database connection
-func (ds *Sqlite3DatastoreType) Close() error {
-	err := ds.DB.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// ----------------------------------------------------------------------
-// Private Methods
-// ----------------------------------------------------------------------
 
 // verifyFileExists - This method will check to make sure the file is found on the filesystem
 func (ds *Sqlite3DatastoreType) verifyFileExists() error {

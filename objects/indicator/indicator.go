@@ -7,7 +7,12 @@
 package indicator
 
 import (
+	"crypto/sha1"
+	"database/sql"
+	"encoding/base64"
 	"github.com/freetaxii/libstix2/objects/common/properties"
+	"github.com/freetaxii/libstix2/objects/defs"
+	"time"
 )
 
 // ----------------------------------------------------------------------
@@ -64,4 +69,104 @@ func (ezt *IndicatorType) SetValidUntil(t interface{}) {
 
 	// TODO check to make sure this is later than the vaild_from
 	ezt.ValidUntil = ts
+}
+
+func (ezt *IndicatorType) AddToDatabase(db *sql.DB, ver string) error {
+
+	var stmt = `INSERT INTO "stix_base_object" (
+	 	"object_id",
+	 	"version",
+	 	"date_added",
+	 	"type",
+	 	"id",
+	 	"created_by_ref",
+	 	"created",
+	 	"modified",
+	 	"revoked",
+	 	"confidence",
+	 	"lang"
+		)
+		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	objectID := "id" + ezt.ID + "created" + ezt.Created + "modified" + ezt.Modified
+
+	h := sha1.New()
+	h.Write([]byte(objectID))
+	hashID := base64.URLEncoding.EncodeToString(h.Sum(nil))
+
+	_, err := db.Exec(stmt,
+		hashID,
+		ver,
+		dateAdded,
+		ezt.MessageType,
+		ezt.ID,
+		ezt.CreatedByRef,
+		ezt.Created,
+		ezt.Modified,
+		ezt.Revoked,
+		ezt.Confidence,
+		ezt.Lang)
+
+	if err != nil {
+		return err
+	}
+
+	var stmt1 = `INSERT INTO "sdo_indicator" (
+		"object_id",
+		"name",
+		"description",
+		"pattern",
+		"valid_from",
+		"valid_until"
+		)
+		values (?, ?, ?, ?, ?, ?)`
+
+	_, err1 := db.Exec(stmt1,
+		hashID,
+		ezt.Name,
+		ezt.Description,
+		ezt.Pattern,
+		ezt.ValidFrom,
+		ezt.ValidUntil)
+
+	// TODO if there is an error, we probably need to back out all of the INSERTS
+	if err1 != nil {
+		return err
+	}
+
+	if ezt.KillChainPhases != nil {
+		for _, v := range ezt.KillChainPhases {
+			var stmt2 = `INSERT INTO "kill_chain_phases" (
+			"object_id",
+			"kill_chain_name",
+			"phase_name"
+			)
+			values (?, ?, ?)`
+
+			_, err2 := db.Exec(stmt2, hashID, v.KillChainName, v.PhaseName)
+
+			if err2 != nil {
+				return err
+			}
+		}
+	}
+
+	if ezt.Labels != nil {
+		for _, v1 := range ezt.Labels {
+			var stmt3 = `INSERT INTO "labels" (
+			"object_id",
+			"labels"
+			)
+			values (?, ?)`
+
+			_, err3 := db.Exec(stmt3, hashID, v1)
+
+			if err3 != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }

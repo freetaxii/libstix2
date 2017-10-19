@@ -7,10 +7,7 @@
 package attackPattern
 
 import (
-	"database/sql"
 	"github.com/freetaxii/libstix2/objects/common/properties"
-	"github.com/freetaxii/libstix2/objects/defs"
-	"time"
 )
 
 // ----------------------------------------------------------------------
