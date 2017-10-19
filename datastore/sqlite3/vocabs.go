@@ -15,9 +15,9 @@ import (
 // Public Methods
 // ----------------------------------------------------------------------
 
-// CreateVocabTables - This method will create all of the tables needed to store
+// CreateAllVocabTables - This method will create all of the tables needed to store
 // STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateVocabTables() {
+func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
 	ds.createTable("v_attack_motivation", ds.vocabProperties())
 	ds.createTable("v_attack_resource_level", ds.vocabProperties())
 	ds.createTable("v_identity_class", ds.vocabProperties())
@@ -31,9 +31,9 @@ func (ds *Sqlite3DatastoreType) CreateVocabTables() {
 	ds.createTable("v_tool_label", ds.vocabProperties())
 }
 
-// PopulateVocabTables - This method will insert all of the vocabulary data
+// PopulateAllVocabTables - This method will insert all of the vocabulary data
 // into the right database tables.
-func (ds *Sqlite3DatastoreType) PopulateVocabTables() {
+func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
 	ds.insertVocabData("v_attack_motivation", vocabs.AttackMotivation)
 	ds.insertVocabData("v_attack_resource_level", vocabs.AttackResourceLevel)
 	ds.insertVocabData("v_identity_class", vocabs.IdentityClass)
