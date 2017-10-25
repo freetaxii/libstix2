@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	r := objects.NewReport()
+	r := objects.NewReport("2.0")
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")

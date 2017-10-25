@@ -37,9 +37,9 @@ type IntrusionSetType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new intrusion set object.
-func New() IntrusionSetType {
+func New(ver string) IntrusionSetType {
 	var obj IntrusionSetType
-	obj.InitNewObject("intrusion-set")
+	obj.InitNewObject("intrusion-set", ver)
 	return obj
 }
 

@@ -32,9 +32,9 @@ type RelationshipType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new relationship object.
-func New() RelationshipType {
+func New(ver string) RelationshipType {
 	var obj RelationshipType
-	obj.InitNewObject("relationship")
+	obj.InitNewObject("relationship", ver)
 	return obj
 }
 

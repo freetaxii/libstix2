@@ -38,9 +38,9 @@ type ThreatActorType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new threat actor object.
-func New() ThreatActorType {
+func New(ver string) ThreatActorType {
 	var obj ThreatActorType
-	obj.InitNewObject("threat-actor")
+	obj.InitNewObject("threat-actor", ver)
 	return obj
 }
 

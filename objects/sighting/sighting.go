@@ -35,9 +35,9 @@ type SightingType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new sighting object.
-func New() SightingType {
+func New(ver string) SightingType {
 	var obj SightingType
-	obj.InitNewObject("sighting")
+	obj.InitNewObject("sighting", ver)
 	return obj
 }
 

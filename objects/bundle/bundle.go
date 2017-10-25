@@ -36,7 +36,7 @@ func New() BundleType {
 	var obj BundleType
 	obj.SetMessageType("bundle")
 	obj.CreateID("bundle")
-	obj.SetSpecVersion21()
+	obj.SetSpecVersion20()
 	return obj
 }
 
@@ -45,8 +45,8 @@ func New() BundleType {
 // ----------------------------------------------------------------------
 
 // SetSpecVersion21 - This method will set the specification version to 2.1.
-func (p *BundleType) SetSpecVersion21() {
-	p.SpecVersion = "2.1"
+func (p *BundleType) SetSpecVersion20() {
+	p.SpecVersion = "2.0"
 }
 
 // AddObject - This method will take in an object as an interface and add it to

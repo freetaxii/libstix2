@@ -32,9 +32,9 @@ type ReportType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new report object.
-func New() ReportType {
+func New(ver string) ReportType {
 	var obj ReportType
-	obj.InitNewObject("report")
+	obj.InitNewObject("report", ver)
 	return obj
 }
 

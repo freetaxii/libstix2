@@ -17,6 +17,7 @@ import (
 // CommonObjectPropertiesType - This type includes all of the common properties
 // that are used by all STIX SDOs and SROs
 type CommonObjectPropertiesType struct {
+	STIXVersionPropertyType
 	MessageTypePropertyType
 	IDPropertyType
 	CreatedByRefPropertyType
@@ -34,6 +35,7 @@ type CommonObjectPropertiesType struct {
 // CommonMarkingDefinitionPropertiesType - This type includes all of the common
 // properties that are used by the STIX Marking Definition object
 type CommonMarkingDefinitionPropertiesType struct {
+	STIXVersionPropertyType
 	MessageTypePropertyType
 	IDPropertyType
 	CreatedByRefPropertyType
@@ -56,11 +58,12 @@ type CommonBundlePropertiesType struct {
 
 // InitNewObject is a helper function to init a new object with common elements
 // It takes in one parameter
-// param: s - a string value of the STIX object type
-func (p *CommonObjectPropertiesType) InitNewObject(s string) {
+// param: objectType - a string value of the STIX object type
+func (p *CommonObjectPropertiesType) InitNewObject(objectType, version string) {
 	// TODO make sure that the value coming in a a valid STIX object type
-	p.SetMessageType(s)
-	p.CreateID(s)
+	p.SetSpecVersion(version)
+	p.SetMessageType(objectType)
+	p.CreateID(objectType)
 	p.SetCreatedToCurrentTime()
 	p.SetModifiedToCreated()
 }

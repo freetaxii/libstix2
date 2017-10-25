@@ -30,9 +30,9 @@ type CourseOfActionType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new course of action object.
-func New() CourseOfActionType {
+func New(ver string) CourseOfActionType {
 	var obj CourseOfActionType
-	obj.InitNewObject("course-of-action")
+	obj.InitNewObject("course-of-action", ver)
 	return obj
 }
 

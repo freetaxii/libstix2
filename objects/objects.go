@@ -30,8 +30,8 @@ import (
 // ----------------------------------------------------------------------
 
 // NewAttackPattern - Create and return a new Attack Pattern object.
-func NewAttackPattern() attackPattern.AttackPatternType {
-	return attackPattern.New()
+func NewAttackPattern(ver string) attackPattern.AttackPatternType {
+	return attackPattern.New(ver)
 }
 
 // NewBundle - Create and return a new Bundle object.
@@ -40,71 +40,71 @@ func NewBundle() bundle.BundleType {
 }
 
 // NewCampaign - Create and return a new Campaign object.
-func NewCampaign() campaign.CampaignType {
-	return campaign.New()
+func NewCampaign(ver string) campaign.CampaignType {
+	return campaign.New(ver)
 }
 
 // NewCourseOfAction - Create and return a new Course of Action object.
-func NewCourseOfAction() courseOfAction.CourseOfActionType {
-	return courseOfAction.New()
+func NewCourseOfAction(ver string) courseOfAction.CourseOfActionType {
+	return courseOfAction.New(ver)
 }
 
 // NewIdentity - Create and return a new Identity object.
-func NewIdentity() identity.IdentityType {
-	return identity.New()
+func NewIdentity(ver string) identity.IdentityType {
+	return identity.New(ver)
 }
 
 // NewIndicator - Create and return a new Indicator object.
-func NewIndicator() indicator.IndicatorType {
-	return indicator.New()
+func NewIndicator(ver string) indicator.IndicatorType {
+	return indicator.New(ver)
 }
 
 // NewInfrastructure - Create and return a new Infrastructure object.
-func NewInfrastructure() infrastructure.InfrastructureType {
-	return infrastructure.New()
+func NewInfrastructure(ver string) infrastructure.InfrastructureType {
+	return infrastructure.New(ver)
 }
 
 // NewIntrusionSet - Create and return a new Intrusion Set object.
-func NewIntrusionSet() intrusionSet.IntrusionSetType {
-	return intrusionSet.New()
+func NewIntrusionSet(ver string) intrusionSet.IntrusionSetType {
+	return intrusionSet.New(ver)
 }
 
 // NewMalware - Create and return a new Malware object.
-func NewMalware() malware.MalwareType {
-	return malware.New()
+func NewMalware(ver string) malware.MalwareType {
+	return malware.New(ver)
 }
 
 // NewObservedData - Create and return a new Observed Data object.
-func NewObservedData() observedData.ObservedDataType {
-	return observedData.New()
+func NewObservedData(ver string) observedData.ObservedDataType {
+	return observedData.New(ver)
 }
 
 // NewRelationship - Create and return a new Relationship object.
-func NewRelationship() relationship.RelationshipType {
-	return relationship.New()
+func NewRelationship(ver string) relationship.RelationshipType {
+	return relationship.New(ver)
 }
 
 // NewReport - Create and return a new Report object.
-func NewReport() report.ReportType {
-	return report.New()
+func NewReport(ver string) report.ReportType {
+	return report.New(ver)
 }
 
 // NewSighting - Create and return a new Sighting object.
-func NewSighting() sighting.SightingType {
-	return sighting.New()
+func NewSighting(ver string) sighting.SightingType {
+	return sighting.New(ver)
 }
 
 // NewThreatActor - Create and return a new Threat Actor object.
-func NewThreatActor() threatActor.ThreatActorType {
-	return threatActor.New()
+func NewThreatActor(ver string) threatActor.ThreatActorType {
+	return threatActor.New(ver)
 }
 
 // NewTool - Create and return a new Tool object.
-func NewTool() tool.ToolType {
-	return tool.New()
+func NewTool(ver string) tool.ToolType {
+	return tool.New(ver)
 }
 
 // NewVulnerability - Create and return a new Vulnerability object.
-func NewVulnerability() vulnerability.VulnerabilityType {
-	return vulnerability.New()
+func NewVulnerability(ver string) vulnerability.VulnerabilityType {
+	return vulnerability.New(ver)
 }

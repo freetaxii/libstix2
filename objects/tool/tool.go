@@ -32,9 +32,9 @@ type ToolType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new tool object.
-func New() ToolType {
+func New(ver string) ToolType {
 	var obj ToolType
-	obj.InitNewObject("tool")
+	obj.InitNewObject("tool", ver)
 	return obj
 }
 

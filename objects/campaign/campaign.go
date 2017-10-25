@@ -34,9 +34,9 @@ type CampaignType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new campaign object.
-func New() CampaignType {
+func New(ver string) CampaignType {
 	var obj CampaignType
-	obj.InitNewObject("campaign")
+	obj.InitNewObject("campaign", ver)
 	return obj
 }
 

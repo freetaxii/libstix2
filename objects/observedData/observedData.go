@@ -32,9 +32,9 @@ type ObservedDataType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new observed data object.
-func New() ObservedDataType {
+func New(ver string) ObservedDataType {
 	var obj ObservedDataType
-	obj.InitNewObject("observed-data")
+	obj.InitNewObject("observed-data", ver)
 	return obj
 }
 

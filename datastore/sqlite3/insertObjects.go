@@ -16,8 +16,6 @@ import (
 )
 
 func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) (string, error) {
-	// TODO change, add to object creation
-	ver := "2.0"
 
 	var stmt = `INSERT INTO "stix_base_object" (
 	 	"object_id", 
@@ -43,7 +41,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	_, err := ds.DB.Exec(stmt,
 		hashID,
-		ver,
+		obj.Version,
 		dateAdded,
 		obj.MessageType,
 		obj.ID,

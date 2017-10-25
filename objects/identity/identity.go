@@ -33,9 +33,9 @@ type IdentityType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new identity object.
-func New() IdentityType {
+func New(ver string) IdentityType {
 	var obj IdentityType
-	obj.InitNewObject("identity")
+	obj.InitNewObject("identity", ver)
 	return obj
 }
 

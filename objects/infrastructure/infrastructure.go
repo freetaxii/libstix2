@@ -31,9 +31,9 @@ type InfrastructureType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new infrastructure object.
-func New() InfrastructureType {
+func New(ver string) InfrastructureType {
 	var obj InfrastructureType
-	obj.InitNewObject("infrastructure")
+	obj.InitNewObject("infrastructure", ver)
 	return obj
 }
 

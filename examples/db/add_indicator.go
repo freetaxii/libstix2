@@ -10,7 +10,7 @@ func main() {
 	databaseFilename := "freestix.db"
 	ds := sqlite3.New(databaseFilename)
 
-	i := objects.NewIndicator()
+	i := objects.NewIndicator("2.0")
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.SetDescription("Some more information about this")

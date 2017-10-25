@@ -34,9 +34,9 @@ type IndicatorType struct {
 // ----------------------------------------------------------------------
 
 // New - This function will create a new indicator object.
-func New() IndicatorType {
+func New(ver string) IndicatorType {
 	var obj IndicatorType
-	obj.InitNewObject("indicator")
+	obj.InitNewObject("indicator", ver)
 	return obj
 }
 

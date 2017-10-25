@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	i := indicator.New()
+	i := indicator.New("2.0")
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
