@@ -50,7 +50,7 @@ func New(filename string) Sqlite3DatastoreType {
 func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
 	switch o := obj.(type) {
 	case indicator.IndicatorType:
-		ds.addIndicatorToDatabase(o)
+		ds.addIndicator(o)
 	}
 }
 

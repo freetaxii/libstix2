@@ -12,12 +12,19 @@ import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects/common/properties"
 	"github.com/freetaxii/libstix2/objects/indicator"
+	"log"
 	"time"
 )
 
-func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) (string, error) {
+func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	objectID := "id" + obj.ID + "created" + obj.Created + "modified" + obj.Modified
 
-	var stmt = `INSERT INTO "stix_base_object" (
+	h := sha1.New()
+	h.Write([]byte(objectID))
+	hashID := base64.URLEncoding.EncodeToString(h.Sum(nil))
+
+	var stmt1 = `INSERT INTO "stix_base_object" (
 	 	"object_id", 
 	 	"version", 
 	 	"date_added", 
@@ -32,14 +39,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	 	)
 		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
-	objectID := "id" + obj.ID + "created" + obj.Created + "modified" + obj.Modified
-
-	h := sha1.New()
-	h.Write([]byte(objectID))
-	hashID := base64.URLEncoding.EncodeToString(h.Sum(nil))
-
-	_, err := ds.DB.Exec(stmt,
+	_, err1 := ds.DB.Exec(stmt1,
 		hashID,
 		obj.Version,
 		dateAdded,
@@ -52,15 +52,75 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 		obj.Confidence,
 		obj.Lang)
 
-	return hashID, err
+	if err1 != nil {
+		log.Println("ERROR: Database execution error inserting base record", err1)
+	}
+
+	if obj.Labels != nil {
+		for _, label := range obj.Labels {
+			var stmt2 = `INSERT INTO "labels" (
+			"object_id",
+			"labels"
+			)
+			values (?, ?)`
+
+			_, err2 := ds.DB.Exec(stmt2, hashID, label)
+
+			if err2 != nil {
+				log.Println("ERROR: Database execution error inserting labels", err2)
+			}
+		}
+	}
+
+	if obj.ExternalReferences != nil {
+		for _, reference := range obj.ExternalReferences {
+			var stmt3 = `INSERT INTO "external_references" (
+			"object_id",
+			"source_name",
+			"description"
+			"url",
+			"external_id"
+			)
+			values (?, ?, ?, ?, ?)`
+
+			_, err3 := ds.DB.Exec(stmt3,
+				hashID,
+				reference.SourceName,
+				reference.Description,
+				reference.URL,
+				reference.ExternalID)
+
+			if err3 != nil {
+				log.Println("ERROR: Database execution error inserting external references", err3)
+			}
+		}
+	}
+
+	return hashID
 }
 
-func (ds *Sqlite3DatastoreType) addIndicatorToDatabase(obj indicator.IndicatorType) error {
+// addKillChainPhases
+func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
+	for _, v := range obj.KillChainPhases {
+		var stmt = `INSERT INTO "kill_chain_phases" (
+			"object_id",
+			"kill_chain_name",
+			"phase_name"
+			)
+			values (?, ?, ?)`
 
-	hashID, err := ds.addBaseObject(obj.CommonObjectPropertiesType)
-	if err != nil {
-		return err
+		_, err := ds.DB.Exec(stmt, hashID, v.KillChainName, v.PhaseName)
+
+		if err != nil {
+			log.Println("ERROR: Database execution error inserting kill chain phases", err)
+		}
 	}
+}
+
+// addIndicator
+func (ds *Sqlite3DatastoreType) addIndicator(obj indicator.IndicatorType) error {
+
+	hashID := ds.addBaseObject(obj.CommonObjectPropertiesType)
 
 	var stmt1 = `INSERT INTO "sdo_indicator" (
 		"object_id",
@@ -82,40 +142,12 @@ func (ds *Sqlite3DatastoreType) addIndicatorToDatabase(obj indicator.IndicatorTy
 
 	// TODO if there is an error, we probably need to back out all of the INSERTS
 	if err1 != nil {
-		return err
+		return err1
 	}
 
 	if obj.KillChainPhases != nil {
-		for _, v := range obj.KillChainPhases {
-			var stmt2 = `INSERT INTO "kill_chain_phases" (
-			"object_id",
-			"kill_chain_name",
-			"phase_name"
-			)
-			values (?, ?, ?)`
-
-			_, err2 := ds.DB.Exec(stmt2, hashID, v.KillChainName, v.PhaseName)
-
-			if err2 != nil {
-				return err
-			}
-		}
+		ds.addKillChainPhases(hashID, obj.KillChainPhasesPropertyType)
 	}
 
-	if obj.Labels != nil {
-		for _, v1 := range obj.Labels {
-			var stmt3 = `INSERT INTO "labels" (
-			"object_id",
-			"labels"
-			)
-			values (?, ?)`
-
-			_, err3 := ds.DB.Exec(stmt3, hashID, v1)
-
-			if err3 != nil {
-				return err
-			}
-		}
-	}
 	return nil
 }

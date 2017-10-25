@@ -86,6 +86,9 @@ func (ds *Sqlite3DatastoreType) baseObjectProperties() string {
  	"revoked" INTEGER(1,0) DEFAULT 0,
  	"confidence" INTEGER(3,0),
  	"lang" TEXT`
+	// labels
+	// external_references
+	// object_marking_refs
 }
 
 // attackPatternProperties  - This method will return the properties for attack pattern SDOs
