@@ -47,32 +47,32 @@ func New() SightingType {
 
 // SetCount - This method takes in an integer that represents the number of
 // sightings and upates the count properties.
-func (ezt *SightingType) SetCount(i int) {
-	ezt.Count = i
+func (p *SightingType) SetCount(i int) {
+	p.Count = i
 }
 
 // SetSightingOfRef - This method takes in a string value that represents a STIX
 // identifier of the object that was sighted and updates the sighting of ref
 // property.
-func (ezt *SightingType) SetSightingOfRef(s string) {
-	ezt.SightingOfRef = s
+func (p *SightingType) SetSightingOfRef(s string) {
+	p.SightingOfRef = s
 }
 
 // AddObservedDataRef - This method takes in a string value that represents a
 // STIX identifier of the STIX Observed Data object that identifies what was
 // sighted and adds it to the observed data refs property.
-func (ezt *SightingType) AddObservedDataRef(s string) {
-	ezt.ObservedDataRefs = append(ezt.ObservedDataRefs, s)
+func (p *SightingType) AddObservedDataRef(s string) {
+	p.ObservedDataRefs = append(p.ObservedDataRefs, s)
 }
 
 // AddWhereSightedRef - This method takes in a string value that represents a
 // STIX identifier of the STIX Identity object that identifies where this was
 // sighted (location, sector, etc) and adds it to the where sighted ref property.
-func (ezt *SightingType) AddWhereSightedRef(s string) {
-	ezt.WhereSightedRefs = append(ezt.WhereSightedRefs, s)
+func (p *SightingType) AddWhereSightedRef(s string) {
+	p.WhereSightedRefs = append(p.WhereSightedRefs, s)
 }
 
 // SetSummary - This method set the boolean value of the summary to true.
-func (ezt *SightingType) SetSummary() {
-	ezt.Summary = true
+func (p *SightingType) SetSummary() {
+	p.Summary = true
 }

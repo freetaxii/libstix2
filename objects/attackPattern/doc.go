@@ -9,8 +9,6 @@ Package attackPattern implements the STIX 2 Attack Pattern Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Attack Pattern SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 Attack Patterns are a type of TTP that describe ways that adversaries attempt to

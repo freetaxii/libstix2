@@ -22,12 +22,12 @@ type CreatedByRefPropertyType struct {
 
 // SetCreatedByRef - This method takes in a string value representing a STIX
 // identifier and updates the Created By Ref property.
-func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) {
-	ezt.CreatedByRef = s
+func (p *CreatedByRefPropertyType) SetCreatedByRef(s string) {
+	p.CreatedByRef = s
 }
 
 // GetCreatedByRef - This method returns the STIX identifier for the identity
 // that created this object.
-func (ezt *CreatedByRefPropertyType) GetCreatedByRef() string {
-	return ezt.CreatedByRef
+func (p *CreatedByRefPropertyType) GetCreatedByRef() string {
+	return p.CreatedByRef
 }

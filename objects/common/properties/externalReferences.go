@@ -33,46 +33,46 @@ type ExternalReferenceType struct {
 
 // SetSourceName - This method takes in a string value representing the name of
 // a source for an external reference and udpates the source name property.
-func (ezt *ExternalReferenceType) SetSourceName(s string) {
-	ezt.SourceName = s
+func (p *ExternalReferenceType) SetSourceName(s string) {
+	p.SourceName = s
 }
 
 // GetSourceName - This method will return the source name.
-func (ezt *ExternalReferenceType) GetSourceName() string {
-	return ezt.SourceName
+func (p *ExternalReferenceType) GetSourceName() string {
+	return p.SourceName
 }
 
 // SetURL - This method takes in a string value representing a URL location of a
 // source for an external reference and updates the url property.
-func (ezt *ExternalReferenceType) SetURL(s string) {
-	ezt.URL = s
+func (p *ExternalReferenceType) SetURL(s string) {
+	p.URL = s
 }
 
 // GetURL - This method returns the url for this external reference.
-func (ezt *ExternalReferenceType) GetURL() string {
-	return ezt.URL
+func (p *ExternalReferenceType) GetURL() string {
+	return p.URL
 }
 
 // AddHash - This method takes in two parameters and adds the hash to the map.
 // The first is a string value representing a hash type from the STIX hashes
 // vocabulary. The second is a string value representing the actual hash of the
 // content from the remote external reference.
-func (ezt *ExternalReferenceType) AddHash(k, v string) {
-	if ezt.Hashes == nil {
+func (p *ExternalReferenceType) AddHash(k, v string) {
+	if p.Hashes == nil {
 		m := make(map[string]string, 0)
-		ezt.Hashes = m
+		p.Hashes = m
 	}
-	ezt.Hashes[k] = v
+	p.Hashes[k] = v
 }
 
 // SetExternalID - This method takes in a string value representing an general
 // purpose id in a remote system for the source of this external reference and
 // updates the external id property.
-func (ezt *ExternalReferenceType) SetExternalID(s string) {
-	ezt.ExternalID = s
+func (p *ExternalReferenceType) SetExternalID(s string) {
+	p.ExternalID = s
 }
 
 // GetExternalID - This method returns the external id for this reference.
-func (ezt *ExternalReferenceType) GetExternalID() string {
-	return ezt.ExternalID
+func (p *ExternalReferenceType) GetExternalID() string {
+	return p.ExternalID
 }

@@ -46,19 +46,19 @@ func New() IdentityType {
 // SetIdentityClass - This method takes in a string value representing a STIX
 // identity class from the vocab identity-class-ov and updates the identity class
 // property.
-func (ezt *IdentityType) SetIdentityClass(s string) {
-	ezt.IdentityClass = s
+func (p *IdentityType) SetIdentityClass(s string) {
+	p.IdentityClass = s
 }
 
 // AddSector - This method takes in a string value that represents a STIX sector
 // from the vocab industry-sector-ov and adds it to the identity object.
-func (ezt *IdentityType) AddSector(s string) {
-	ezt.Sectors = append(ezt.Sectors, s)
+func (p *IdentityType) AddSector(s string) {
+	p.Sectors = append(p.Sectors, s)
 }
 
 // SetContactInformation - This method takes in a string value representing
 // contact information as a text string and updates the contact information
 // property.
-func (ezt *IdentityType) SetContactInformation(s string) {
-	ezt.ContactInformation = s
+func (p *IdentityType) SetContactInformation(s string) {
+	p.ContactInformation = s
 }

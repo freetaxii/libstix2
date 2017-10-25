@@ -23,6 +23,6 @@ type SecondaryMotivationsPropertyType struct {
 // AddSecondaryMotivation - This method takes in a string value that represents
 // a motivation from the attack-motivation-ov vocab and adds it to the list of
 // motivations in the secondary motivations property.
-func (ezt *SecondaryMotivationsPropertyType) AddSecondaryMotivation(s string) {
-	ezt.SecondaryMotivations = append(ezt.SecondaryMotivations, s)
+func (p *SecondaryMotivationsPropertyType) AddSecondaryMotivation(s string) {
+	p.SecondaryMotivations = append(p.SecondaryMotivations, s)
 }

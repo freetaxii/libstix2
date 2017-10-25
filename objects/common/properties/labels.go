@@ -23,6 +23,6 @@ type LabelsPropertyType struct {
 
 // AddLabel - This method takes in a string value that represents a label for a
 // STIX object and adds it to the list of labels in the lables property.
-func (ezt *LabelsPropertyType) AddLabel(s string) {
-	ezt.Labels = append(ezt.Labels, s)
+func (p *LabelsPropertyType) AddLabel(s string) {
+	p.Labels = append(p.Labels, s)
 }

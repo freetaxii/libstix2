@@ -50,20 +50,20 @@ func New() ThreatActorType {
 
 // AddRole - This method takes in a string value representing a threat actor
 // role from the threat-actor-role-ov and adds it to the role property.
-func (ezt *ThreatActorType) AddRole(s string) {
-	ezt.Roles = append(ezt.Roles, s)
+func (p *ThreatActorType) AddRole(s string) {
+	p.Roles = append(p.Roles, s)
 }
 
 // SetSophistication - This method takes in a string value representing the
 // sophistication level of a threat actor from the threat-actor-sophistication-ov
 // and adds it to the sophistication property.
-func (ezt *ThreatActorType) SetSophistication(s string) {
-	ezt.Sophistication = s
+func (p *ThreatActorType) SetSophistication(s string) {
+	p.Sophistication = s
 }
 
 // AddPersonalMotivation - This method takes in a string value representing the
 // motivation of a threat actor from the threat-actor-motivation-ov and adds it
 // to the personal motivations property.
-func (ezt *ThreatActorType) AddPersonalMotivation(s string) {
-	ezt.PersonalMotivations = append(ezt.PersonalMotivations, s)
+func (p *ThreatActorType) AddPersonalMotivation(s string) {
+	p.PersonalMotivations = append(p.PersonalMotivations, s)
 }

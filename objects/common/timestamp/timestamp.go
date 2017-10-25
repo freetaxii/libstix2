@@ -8,7 +8,7 @@ package timestamp
 
 import (
 	"fmt"
-	"github.com/freetaxii/libstix2/objects/defs"
+	"github.com/freetaxii/libstix2/defs"
 	"time"
 )
 

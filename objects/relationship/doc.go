@@ -9,8 +9,6 @@ Package relationship implements the STIX 2 Relationship Object.
 This package defines the properties and methods needed to create and work with
 the STIX Relationship SRO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 The Relationship object is used to link together two SDOs in order to describe

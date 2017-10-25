@@ -29,7 +29,7 @@ type FirstSeenPropertyType struct {
 // format and updates the first seen property with it. The value is stored as a
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
-func (ezt *FirstSeenPropertyType) SetFirstSeen(t interface{}) {
+func (p *FirstSeenPropertyType) SetFirstSeen(t interface{}) {
 	ts := timestamp.Verify(t)
-	ezt.FirstSeen = ts
+	p.FirstSeen = ts
 }

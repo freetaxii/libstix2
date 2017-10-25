@@ -9,8 +9,6 @@ Package indicator implements the STIX 2 Indicator Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Indicator SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 Indicators contain a pattern that can be used to detect suspicious or malicious

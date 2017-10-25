@@ -5,12 +5,3 @@
 // tree.
 
 package datastore
-
-import (
-	"github.com/freetaxii/libstix2/datastore/sqlite3"
-)
-
-// NewSqlite3 - This is a helper function that will return a sqlite3.Sqlite3DatastoreType
-func NewSqlite3(filename string) sqlite3.Sqlite3DatastoreType {
-	return sqlite3.New(filename)
-}

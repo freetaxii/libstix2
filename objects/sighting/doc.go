@@ -9,8 +9,6 @@ Package sighting implements the STIX 2 Sighting Relationship Object.
 This package defines the properties and methods needed to create and work with
 the STIX Sighting SRO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 A Sighting denotes the belief that something in CTI (e.g., an indicator,

@@ -23,11 +23,11 @@ type ResourceLevelPropertyType struct {
 // SetResourceLevel - This method takes in a string value representing a
 // resource level from the attack-resrouce-level-ov vocab and updates the
 // resource level property.
-func (ezt *ResourceLevelPropertyType) SetResourceLevel(s string) {
-	ezt.ResourceLevel = s
+func (p *ResourceLevelPropertyType) SetResourceLevel(s string) {
+	p.ResourceLevel = s
 }
 
 // GetResourceLevel - This method returns the resource level.
-func (ezt *ResourceLevelPropertyType) GetResourceLevel() string {
-	return ezt.ResourceLevel
+func (p *ResourceLevelPropertyType) GetResourceLevel() string {
+	return p.ResourceLevel
 }

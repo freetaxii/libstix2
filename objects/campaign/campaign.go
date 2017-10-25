@@ -46,6 +46,6 @@ func New() CampaignType {
 
 // SetObjective - This method will take in a string representing an objective,
 // goal, desired outcome, or intended effect and update the objective property.
-func (ezt *CampaignType) SetObjective(s string) {
-	ezt.Objective = s
+func (p *CampaignType) SetObjective(s string) {
+	p.Objective = s
 }

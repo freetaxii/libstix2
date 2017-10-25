@@ -45,12 +45,12 @@ func New() BundleType {
 // ----------------------------------------------------------------------
 
 // SetSpecVersion21 - This method will set the specification version to 2.1.
-func (ezt *BundleType) SetSpecVersion21() {
-	ezt.SpecVersion = "2.1"
+func (p *BundleType) SetSpecVersion21() {
+	p.SpecVersion = "2.1"
 }
 
 // AddObject - This method will take in an object as an interface and add it to
 // the list of objects in the bundle.
-func (ezt *BundleType) AddObject(i interface{}) {
-	ezt.Objects = append(ezt.Objects, i)
+func (p *BundleType) AddObject(i interface{}) {
+	p.Objects = append(p.Objects, i)
 }

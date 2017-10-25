@@ -9,8 +9,6 @@ Package campaign implements the STIX 2 Campaign Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Campaign SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 A Campaign is a grouping of adversarial behaviors that describes a set of

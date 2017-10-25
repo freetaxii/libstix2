@@ -21,6 +21,6 @@ type AliasesPropertyType struct {
 
 // AddAlias - This method takes in a takes in a string value that represents an
 // alias for something in STIX and adds it to the property.
-func (ezt *AliasesPropertyType) AddAlias(s string) {
-	ezt.Aliases = append(ezt.Aliases, s)
+func (p *AliasesPropertyType) AddAlias(s string) {
+	p.Aliases = append(p.Aliases, s)
 }

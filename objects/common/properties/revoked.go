@@ -22,11 +22,11 @@ type RevokedPropertyType struct {
 // ----------------------------------------------------------------------
 
 // SetRevoked - This method sets the revoked boolean to true
-func (ezt *RevokedPropertyType) SetRevoked() {
-	ezt.Revoked = true
+func (p *RevokedPropertyType) SetRevoked() {
+	p.Revoked = true
 }
 
 // GetRevoked - This method returns the current value of the revoked property.
-func (ezt *RevokedPropertyType) GetRevoked() bool {
-	return ezt.Revoked
+func (p *RevokedPropertyType) GetRevoked() bool {
+	return p.Revoked
 }

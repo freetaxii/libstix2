@@ -44,6 +44,6 @@ func New() ToolType {
 
 // SetToolVersion - This method takes in a string value representing the version
 // of the tool and updates the tool version property.
-func (ezt *ToolType) SetToolVersion(s string) {
-	ezt.ToolVersion = s
+func (p *ToolType) SetToolVersion(s string) {
+	p.ToolVersion = s
 }

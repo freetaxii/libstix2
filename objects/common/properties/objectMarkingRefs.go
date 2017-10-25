@@ -24,6 +24,6 @@ type ObjectMarkingRefsPropertyType struct {
 // AddObjectMarkingRef - This method takes in a string value that represents a
 // STIX identifer for a marking definition object and adds it to the list of
 // object marking refs.
-func (ezt *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) {
-	ezt.ObjectMarkingRefs = append(ezt.ObjectMarkingRefs, s)
+func (p *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) {
+	p.ObjectMarkingRefs = append(p.ObjectMarkingRefs, s)
 }

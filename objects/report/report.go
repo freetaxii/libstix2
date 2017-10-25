@@ -44,13 +44,13 @@ func New() ReportType {
 
 // SetPublished - This method takes in a timestamp in either time.Time or string
 // format and updates the published timestamp property.
-func (ezt *ReportType) SetPublished(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
-	ezt.Published = ts
+func (p *ReportType) SetPublished(t interface{}) {
+	ts := p.VerifyTimestamp(t)
+	p.Published = ts
 }
 
 // AddObject - This methods takes in a string value that represents a STIX
 // identifier and adds it to the objects ref property.
-func (ezt *ReportType) AddObject(s string) {
-	ezt.ObjectRefs = append(ezt.ObjectRefs, s)
+func (p *ReportType) AddObject(s string) {
+	p.ObjectRefs = append(p.ObjectRefs, s)
 }

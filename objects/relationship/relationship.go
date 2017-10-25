@@ -44,29 +44,29 @@ func New() RelationshipType {
 
 // SetRelationshipType - This method takes in a string value that represents the
 // type name of the releationship and updates the relationship type property.
-func (ezt *RelationshipType) SetRelationshipType(s string) {
-	ezt.RelationshipType = s
+func (p *RelationshipType) SetRelationshipType(s string) {
+	p.RelationshipType = s
 }
 
 // SetSourceRef - This method takes in a string value that represents a STIX
 // identifier of the source STIX object in the relationship and updates the
 // source ref property.
-func (ezt *RelationshipType) SetSourceRef(s string) {
-	ezt.SourceRef = s
+func (p *RelationshipType) SetSourceRef(s string) {
+	p.SourceRef = s
 }
 
 // SetTargetRef - This method takes in a string value that represents a STIX
 // identifier of the target STIX object in the relationship and updates the
 // target ref property.
-func (ezt *RelationshipType) SetTargetRef(s string) {
-	ezt.TargetRef = s
+func (p *RelationshipType) SetTargetRef(s string) {
+	p.TargetRef = s
 }
 
 // SetSourceTarget - This methods takes in two string values where both
 // represent a STIX identifier. This is a convenience function for setting both
 // ends of the relationship at the same time. The first identifier is for the
 // source and the second is for the target.
-func (ezt *RelationshipType) SetSourceTarget(s, t string) {
-	ezt.SourceRef = s
-	ezt.TargetRef = t
+func (p *RelationshipType) SetSourceTarget(s, t string) {
+	p.SourceRef = s
+	p.TargetRef = t
 }

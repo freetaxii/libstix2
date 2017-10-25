@@ -33,7 +33,7 @@ type AttackPatternType struct {
 // New - This function will create and return a new STIX attack pattern object.
 func New() AttackPatternType {
 	var obj AttackPatternType
-	obj.InitNewObject("atttack-pattern")
+	obj.InitNewObject("attack-pattern")
 	return obj
 }
 

@@ -9,8 +9,6 @@ Package identity implements the STIX 2 Identity Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Identity SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 Identities can represent actual individuals, organizations, or groups (e.g.,

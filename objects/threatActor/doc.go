@@ -9,8 +9,6 @@ Package threatActor implements the STIX 2 Threat Actor Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Threat Actor SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 Threat Actors are actual individuals, groups, or organizations believed to be

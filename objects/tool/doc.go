@@ -9,8 +9,6 @@ Package tool implements the STIX 2 Tool Domain Object.
 This package defines the properties and methods needed to create and work with
 the STIX Tool SDO.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 Tools are legitimate software that can be used by threat actors to perform

@@ -9,8 +9,6 @@ Package bundle implements the STIX 2 Bundle Object.
 This package defines the properties and methods needed to create and work with
 the STIX Bundle.
 
-STIX 2 Specification Text
-
 The following information comes directly from the STIX 2 specification documents.
 
 A Bundle is a collection of arbitrary STIX Objects and Marking Definitions
