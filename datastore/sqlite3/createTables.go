@@ -325,6 +325,10 @@ func (ds *Sqlite3DatastoreType) commonGoalsProperties() string {
 // commonHashesProperties - This method will return the properties for hashes
 // Used by:
 //
+//   external references
+// TODO need find a way to link this back to an actual external reference instance
+// maybe this should be called external references hashes.  Otherwise  how will you
+// know which object in the database it is tied to.
 func (ds *Sqlite3DatastoreType) commonHashesProperties() string {
 	return ds.baseProperties() + `
 	"hash" TEXT NOT NULL,

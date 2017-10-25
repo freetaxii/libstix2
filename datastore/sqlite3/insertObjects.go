@@ -96,6 +96,22 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 		}
 	}
 
+	if obj.ObjectMarkingRefs != nil {
+		for _, marking := range obj.ObjectMarkingRefs {
+			var stmt4 = `INSERT INTO "object_marking_refs" (
+			"object_id",
+			"object_marking_refs"
+			)
+			values (?, ?)`
+
+			_, err4 := ds.DB.Exec(stmt4, hashID, marking)
+
+			if err4 != nil {
+				log.Println("ERROR: Database execution error inserting object marking refs", err4)
+			}
+		}
+	}
+
 	return hashID
 }
 
