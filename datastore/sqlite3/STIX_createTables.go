@@ -16,7 +16,7 @@ import (
 
 // CreateAllTables - This method will create all of the tables needed to store
 // STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateAllTables() {
+func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
 	ds.createTable("stix_base_object", ds.baseObjectProperties())
 	ds.createTable("sdo_attack_pattern", ds.attackPatternProperties())
 	ds.createTable("sdo_campaign", ds.campaignProperties())
@@ -72,11 +72,11 @@ func (ds *Sqlite3DatastoreType) baseProperties() string {
 }
 
 // baseObjectProperties - This method will return the the common properties
-// version    = STIX specification version
+// spec_version = STIX specification version
 // date_added = TAXII, the date the object was added to the TAXII server
 func (ds *Sqlite3DatastoreType) baseObjectProperties() string {
 	return ds.baseProperties() + `
- 	"version" TEXT NOT NULL,
+ 	"spec_version" TEXT NOT NULL,
  	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
  	"id" TEXT NOT NULL,

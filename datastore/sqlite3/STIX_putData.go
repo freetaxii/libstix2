@@ -26,7 +26,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	var stmt1 = `INSERT INTO "stix_base_object" (
 	 	"object_id", 
-	 	"version", 
+	 	"spec_version", 
 	 	"date_added", 
 	 	"type", 
 	 	"id", 
@@ -41,7 +41,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	_, err1 := ds.DB.Exec(stmt1,
 		hashID,
-		obj.Version,
+		obj.SpecVersion,
 		dateAdded,
 		obj.MessageType,
 		obj.ID,

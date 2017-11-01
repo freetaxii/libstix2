@@ -10,6 +10,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/resources/collection"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
@@ -49,6 +50,9 @@ func New(filename string) Sqlite3DatastoreType {
 
 func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
 	switch o := obj.(type) {
+	case collection.CollectionType:
+		ds.addCollection(o)
+	}
 	case indicator.IndicatorType:
 		ds.addIndicator(o)
 	}
@@ -80,7 +84,7 @@ func (ds *Sqlite3DatastoreType) connect() error {
 		return err
 	}
 
-	log.Println("Connecting to sqlite3 datastore at filename", ds.Filename)
+	//log.Println("Connecting to sqlite3 datastore at filename", ds.Filename)
 
 	db, sqlerr := sql.Open("sqlite3", ds.Filename)
 	if sqlerr != nil {
@@ -94,7 +98,11 @@ func (ds *Sqlite3DatastoreType) connect() error {
 // verifyFileExists - This method will check to make sure the file is found on the filesystem
 func (ds *Sqlite3DatastoreType) verifyFileExists() error {
 	if _, err := os.Stat(ds.Filename); os.IsNotExist(err) {
-		return fmt.Errorf("ERROR: The sqlite3 database cannot be opened due to error: %v", err)
+		w, err2 := os.Create(ds.Filename)
+		w.Close()
+		if err2 != nil {
+			return fmt.Errorf("ERROR: The sqlite3 database cannot be opened due to error: %v", err2)
+		}
 	}
 	return nil
 }

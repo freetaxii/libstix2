@@ -2,10 +2,10 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/freetaxii/libstix2)](https://goreportcard.com/report/github.com/freetaxii/libstix2) [![GoDoc](https://godoc.org/github.com/freetaxii/libstix2?status.png)](https://godoc.org/github.com/freetaxii/libstix2)
 
-libstix2 an API for generating JSON based STIX messages with the Go (Golang)
-programming language. Please see the examples directory and the README files in 
-each of the sub packages for more information. This API is built to support 
-STIX 2.x. 
+libstix2 an API for generating JSON based STIX objects and TAXII messages with 
+the Go (Golang) programming language. Please see the examples directory and the 
+README files in each of the sub packages for more information. This API is built 
+to support STIX 2.x and TAXII 2.x.
 
 ## Installation ##
 
@@ -60,6 +60,24 @@ Other STIX Objects
 - [x] Bundle
 - [ ] Language Content
 - [ ] Marking Definition
+
+TAXII Features
+- [x] Multiple Discovery Services
+- [ ] Authentication
+- [ ] Persistent storage
+- [ ] Version checking
+- [ ] URL parameters
+- [ ] Object by ID
+
+TAXII Resources
+- [x] Discovery
+- [x] API Root
+- [x] Collections
+- [x] Collection
+- [ ] Objects
+- [ ] Manifest
+- [ ] Status
+- [ ] Error
 
 
 ## License ##

@@ -28,6 +28,36 @@ type ExternalReferenceType struct {
 }
 
 // ----------------------------------------------------------------------
+// Public Methods - ExternalReferencesPropertyType
+// ----------------------------------------------------------------------
+
+// NewExternalReference - This method creates a new external reference
+// in the external references list.
+func (p *ExternalReferencesPropertyType) NewExternalReference() *ExternalReferenceType {
+	e := p.newExternalRefernce()
+	return e
+}
+
+// ----------------------------------------------------------------------
+// Private Methods - ExternalReferencesPropertyType
+// ----------------------------------------------------------------------
+
+// newExternalRefernce - This method returns a reference to a slice location. This
+// will enable the code to update an object located at that slice location.
+func (p *ExternalReferencesPropertyType) newExternalRefernce() *ExternalReferenceType {
+	var s ExternalReferenceType
+
+	if p.ExternalReferences == nil {
+		a := make([]ExternalReferenceType, 0)
+		p.ExternalReferences = a
+	}
+
+	positionThatAppendWillUse := len(p.ExternalReferences)
+	p.ExternalReferences = append(p.ExternalReferences, s)
+	return &p.ExternalReferences[positionThatAppendWillUse]
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - ExternalReferenceType
 // ----------------------------------------------------------------------
 

@@ -14,7 +14,7 @@ package properties
 // captures the STIX specification version. This is not included in the JSON
 // serialization, but is used for writing to the database.
 type STIXVersionPropertyType struct {
-	Version string `json:"-"`
+	SpecVersion string `json:"-"`
 }
 
 // ----------------------------------------------------------------------
@@ -24,10 +24,10 @@ type STIXVersionPropertyType struct {
 // SetVersion - This method takes in a string representing a STIX specification
 // version and updates the Version property.
 func (p *STIXVersionPropertyType) SetSpecVersion(s string) {
-	p.Version = s
+	p.SpecVersion = s
 }
 
 // GetVersion - This method returns the version value as a string.
 func (p *STIXVersionPropertyType) GetSpecVersion() string {
-	return p.Version
+	return p.SpecVersion
 }

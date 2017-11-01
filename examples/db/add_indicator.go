@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	databaseFilename := "freestix.db"
+	databaseFilename := "freetaxii.db"
 	ds := sqlite3.New(databaseFilename)
 
 	i := objects.NewIndicator("2.0")
