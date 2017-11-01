@@ -4,33 +4,31 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package collections
-
-import (
-	"github.com/freetaxii/libstix2/resources/collection"
-)
+package resources
 
 // ----------------------------------------------------------------------
 // Define Message Type
 // ----------------------------------------------------------------------
 
 /*
-CollectionsType defines all of the properties associated with the TAXII
-Collections Resource. All of the methods not defined local to this type are inherited
-from the individual properties.
+CollectionsType - This type implements the TAXII 2 Collctions Resource and defines
+all of the properties methods needed to create and work with the TAXII Collections
+Resource. All of the methods not defined local to this type are inherited from
+the individual properties.
+
+The following information comes directly from the TAXII 2 specificaton documents.
+
+This Endpoint provides information about the Collections hosted under this API
+Root. This is similar to the response to get a Collection (see section 5.2), but
+rather than providing information about one Collection it provides information
+about all of the Collections. Most importantly, it provides the Collection's id,
+which is used to request objects or manifest entries from the Collection.
+
+The collections resource is a simple wrapper around a list of collection
+resources.
 */
 type CollectionsType struct {
-	Collections []collection.CollectionType `json:"collections,omitempty"`
-}
-
-// ----------------------------------------------------------------------
-// Public Create Functions
-// ----------------------------------------------------------------------
-
-// New - This function will create and return a new TAXII collections object.
-func New() CollectionsType {
-	var obj CollectionsType
-	return obj
+	Collections []CollectionType `json:"collections,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -42,10 +40,10 @@ func New() CollectionsType {
 // the location in the slice where the collection object was added. This method
 // would be used if the collection was created separtely and it just needs to be
 // added in whole to the collections list.
-func (p *CollectionsType) AddCollection(o collection.CollectionType) int {
-	p.initCollectionsProperty()
-	positionThatAppendWillUse := len(p.Collections)
-	p.Collections = append(p.Collections, o)
+func (ezt *CollectionsType) AddCollection(o CollectionType) int {
+	ezt.initCollectionsProperty()
+	positionThatAppendWillUse := len(ezt.Collections)
+	ezt.Collections = append(ezt.Collections, o)
 	return positionThatAppendWillUse
 }
 
@@ -53,12 +51,12 @@ func (p *CollectionsType) AddCollection(o collection.CollectionType) int {
 // add it to the collections array. It returns a collection.CollectionType which
 // is a pointer to the actual Collection that was created in the collections
 // slice.
-func (p *CollectionsType) NewCollection() *collection.CollectionType {
-	p.initCollectionsProperty()
-	o := collection.New()
-	positionThatAppendWillUse := len(p.Collections)
-	p.Collections = append(p.Collections, o)
-	return &p.Collections[positionThatAppendWillUse]
+func (ezt *CollectionsType) NewCollection() *CollectionType {
+	ezt.initCollectionsProperty()
+	o := NewCollection()
+	positionThatAppendWillUse := len(ezt.Collections)
+	ezt.Collections = append(ezt.Collections, o)
+	return &ezt.Collections[positionThatAppendWillUse]
 }
 
 // ----------------------------------------------------------------------
@@ -67,9 +65,9 @@ func (p *CollectionsType) NewCollection() *collection.CollectionType {
 
 // initCollectionsProperty - This method will initialize the Collections
 // slice if it has not already been initialized.
-func (p *CollectionsType) initCollectionsProperty() {
-	if p.Collections == nil {
-		a := make([]collection.CollectionType, 0)
-		p.Collections = a
+func (ezt *CollectionsType) initCollectionsProperty() {
+	if ezt.Collections == nil {
+		a := make([]CollectionType, 0)
+		ezt.Collections = a
 	}
 }

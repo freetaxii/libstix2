@@ -22,7 +22,7 @@ func main() {
 	// You can do this manually by creating your own Collection object
 	// and adding data to and then manually adding it to the collections array
 	// c := objects.NewCollection()
-	// c.CreateId()
+	// c.NewId()
 	// c.SetCanRead()
 	// i := o.AddCollection(c)
 	// You can even add stuff to it after the fact, even if this is bad form

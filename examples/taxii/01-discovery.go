@@ -13,7 +13,9 @@ import (
 )
 
 func main() {
-	d := resources.NewDiscovery()
+	//d := resources.NewDiscovery()
+
+	var d resources.DiscoveryType
 
 	d.SetTitle("FreeTAXII Discovery Service")
 	d.SetDescription("This service will display API roots that this TAXII knows about.")
