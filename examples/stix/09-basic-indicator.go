@@ -9,12 +9,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects"
 	"time"
 )
 
 func main() {
-	i := indicator.New("2.0")
+	i := objects.NewIndicator("2.0")
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")

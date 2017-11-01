@@ -20,23 +20,23 @@ func main() {
 	r.SetDescription("This report gives us details about Malware Foo1")
 	r.SetPublished(time.Now())
 
-	r.AddObject(r.NewSTIXID("malware"))
-	r.AddObject(r.NewSTIXID("campaign"))
-	r.AddObject(r.NewSTIXID("sighting"))
-	r.AddObject(r.NewSTIXID("sighting"))
-	r.AddObject(r.NewSTIXID("threat-actor"))
-	r.AddObject(r.NewSTIXID("threat-actor"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
-	r.AddObject(r.NewSTIXID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("malware"))
+	r.AddObject(r.CreateSTIXUUID("campaign"))
+	r.AddObject(r.CreateSTIXUUID("sighting"))
+	r.AddObject(r.CreateSTIXUUID("sighting"))
+	r.AddObject(r.CreateSTIXUUID("threat-actor"))
+	r.AddObject(r.CreateSTIXUUID("threat-actor"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
+	r.AddObject(r.CreateSTIXUUID("relationship"))
 
 	for j := 0; j <= 4; j++ {
-		r.AddObject(r.NewSTIXID("indicator"))
+		r.AddObject(r.CreateSTIXUUID("indicator"))
 	}
 
 	var data []byte
