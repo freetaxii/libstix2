@@ -8,13 +8,13 @@ package sqlite3
 
 import (
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collection"
+	"github.com/freetaxii/libstix2/resources"
 	"log"
 	"time"
 )
 
 // addCollection
-func (ds *Sqlite3DatastoreType) addCollection(obj collection.CollectionType) {
+func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	var stmt1 = `INSERT INTO ` + defs.DB_TABLE_TAXII_COLLECTION + ` (

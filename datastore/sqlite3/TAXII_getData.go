@@ -9,13 +9,12 @@ package sqlite3
 import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources"
-	"github.com/freetaxii/libstix2/resources/collections"
 	"log"
 )
 
 // GetEnabledCollections - This method will return all of the collections that
 // are currently enabled.
-func (ds *Sqlite3DatastoreType) GetEnabledCollections() collections.CollectionsType {
+func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
 
 	allCollections := resources.NewCollections()
 

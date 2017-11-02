@@ -8,16 +8,15 @@ package sqlite3
 
 import (
 	"github.com/freetaxii/libstix2/defs"
-	"log"
 )
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-// CreateAllTables - This method will create all of the tables needed to store
+// CreateAllTAXIITables - This method will create all of the tables needed to store
 // STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateAllTables() {
+func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
 	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
 	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION, ds.collection())
 	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
@@ -27,23 +26,6 @@ func (ds *Sqlite3DatastoreType) CreateAllTables() {
 // Private Methods
 // ----------------------------------------------------------------------
 
-// createAttackPatternTable - This method will create the actual table
-func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
-	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
-	_, err := ds.DB.Exec(stmt)
-
-	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created due to error:", err)
-	}
-}
-
-// baseProperties - This method will return the base properties for all objects
-// row_id    = This is a database tracking number
-func (ds *Sqlite3DatastoreType) baseProperties() string {
-	return `
-	"row_id" INTEGER PRIMARY KEY,`
-}
-
 // collectionContent - This method will return the properties for the collectionContent table
 // collection_id = The collection ID that this object is tied to
 // stix_id       = The STIX ID for the object that is being mapped to a collection.
@@ -51,7 +33,8 @@ func (ds *Sqlite3DatastoreType) baseProperties() string {
 //   specific version and we need to be able to find all versions of an object
 // date_added    = The date that this object was added to the collection
 func (ds *Sqlite3DatastoreType) collectionContent() string {
-	return ds.baseProperties() + `
+	return `
+	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
  	"collection_id" TEXT NOT NULL,
  	"stix_id" TEXT NOT NULL`
@@ -60,7 +43,8 @@ func (ds *Sqlite3DatastoreType) collectionContent() string {
 // collection  - This method will return the properties for the collections table
 // date_added = The date that this collection was added to the system
 func (ds *Sqlite3DatastoreType) collection() string {
-	return ds.baseProperties() + `
+	return `
+	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
 	"enabled" INTEGER(1,0) NOT NULL DEFAULT 1,
 	"id" TEXT NOT NULL,
@@ -73,7 +57,8 @@ func (ds *Sqlite3DatastoreType) collection() string {
 
 // collectionMediaType  - This method will return the properties for the collection media type table
 func (ds *Sqlite3DatastoreType) collectionMediaType() string {
-	return ds.baseProperties() + `
+	return `
+	"row_id" INTEGER PRIMARY KEY,
 	"collection_id" TEXT NOT NULL,
 	"media_type" TEXT NOT NULL
 	`

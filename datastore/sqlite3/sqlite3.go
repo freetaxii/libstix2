@@ -9,8 +9,8 @@ package sqlite3
 import (
 	"database/sql"
 	"fmt"
-	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/resources/collection"
+	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/resources"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
@@ -50,10 +50,9 @@ func New(filename string) Sqlite3DatastoreType {
 
 func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
 	switch o := obj.(type) {
-	case collection.CollectionType:
+	case resources.CollectionType:
 		ds.addCollection(o)
-	}
-	case indicator.IndicatorType:
+	case objects.IndicatorType:
 		ds.addIndicator(o)
 	}
 }

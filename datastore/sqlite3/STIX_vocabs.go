@@ -7,6 +7,7 @@
 package sqlite3
 
 import (
+	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/vocabs"
 	"log"
 )
@@ -18,33 +19,33 @@ import (
 // CreateAllVocabTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
-	ds.createTable("v_attack_motivation", ds.vocabProperties())
-	ds.createTable("v_attack_resource_level", ds.vocabProperties())
-	ds.createTable("v_identity_class", ds.vocabProperties())
-	ds.createTable("v_indicator_label", ds.vocabProperties())
-	ds.createTable("v_industry_sector", ds.vocabProperties())
-	ds.createTable("v_malware_label", ds.vocabProperties())
-	ds.createTable("v_report_label", ds.vocabProperties())
-	ds.createTable("v_threat_actor_label", ds.vocabProperties())
-	ds.createTable("v_threat_actor_role", ds.vocabProperties())
-	ds.createTable("v_threat_actor_sophistication", ds.vocabProperties())
-	ds.createTable("v_tool_label", ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_IDENTITY_CLASS, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_INDICATOR_LABEL, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_INDUSTRY_SECTOR, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_MALWARE_LABEL, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_REPORT_LABEL, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, ds.vocabProperties())
+	ds.createTable(defs.DB_TABLE_VOCAB_TOOL_LABEL, ds.vocabProperties())
 }
 
 // PopulateAllVocabTables - This method will insert all of the vocabulary data
 // into the right database tables.
 func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
-	ds.insertVocabData("v_attack_motivation", vocabs.AttackMotivation)
-	ds.insertVocabData("v_attack_resource_level", vocabs.AttackResourceLevel)
-	ds.insertVocabData("v_identity_class", vocabs.IdentityClass)
-	ds.insertVocabData("v_indicator_label", vocabs.IndicatorLabel)
-	ds.insertVocabData("v_industry_sector", vocabs.IndustrySector)
-	ds.insertVocabData("v_malware_label", vocabs.MalwareLabel)
-	ds.insertVocabData("v_report_label", vocabs.ReportLabel)
-	ds.insertVocabData("v_threat_actor_label", vocabs.ThreatActorLabel)
-	ds.insertVocabData("v_threat_actor_role", vocabs.ThreatActorRole)
-	ds.insertVocabData("v_threat_actor_sophistication", vocabs.ThreatActorSophistication)
-	ds.insertVocabData("v_tool_label", vocabs.ToolLabel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
+	ds.insertVocabData(defs.DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
 }
 
 // ----------------------------------------------------------------------

@@ -7,60 +7,50 @@
 package sqlite3
 
 import (
-	"log"
+	"github.com/freetaxii/libstix2/defs"
 )
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-// CreateAllTables - This method will create all of the tables needed to store
+// CreateAllSTIXTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
-	ds.createTable("stix_base_object", ds.baseObjectProperties())
-	ds.createTable("sdo_attack_pattern", ds.attackPatternProperties())
-	ds.createTable("sdo_campaign", ds.campaignProperties())
-	ds.createTable("sdo_course_of_action", ds.courseOfActionProperties())
-	ds.createTable("sdo_identity", ds.identityProperties())
-	ds.createTable("identity_sectors", ds.identitySectorsProperties())
-	ds.createTable("sdo_indicator", ds.indicatorProperties())
-	ds.createTable("sdo_intrusion_set", ds.intrusionSetProperties())
-	ds.createTable("sdo_location", ds.locationProperties())
-	ds.createTable("sdo_malware", ds.malwareProperties())
-	ds.createTable("sdo_note", ds.noteProperties())
-	ds.createTable("sdo_observed_data", ds.observedDataProperties())
-	ds.createTable("sdo_opinion", ds.opinionProperties())
-	ds.createTable("sdo_report", ds.reportProperties())
-	ds.createTable("sdo_threat_actor", ds.threatActorProperties())
-	ds.createTable("threat_actor_roles", ds.threatActorRolesProperties())
-	ds.createTable("sdo_tool", ds.toolProperties())
-	ds.createTable("sdo_vulnerability", ds.vulnerabilityProperties())
-	ds.createTable("aliases", ds.commonAliasesProperties())
-	ds.createTable("authors", ds.commonAuthorsProperties())
-	ds.createTable("external_references", ds.commonExternalReferencesProperties())
-	ds.createTable("goals", ds.commonGoalsProperties())
-	ds.createTable("hashes", ds.commonHashesProperties())
-	ds.createTable("kill_chain_phases", ds.commonKillChainPhasesProperties())
-	ds.createTable("labels", ds.commonLabelsProperties())
-	ds.createTable("object_marking_refs", ds.commonObjectMarkingRefsProperties())
-	ds.createTable("object_refs", ds.commonObjectRefsProperties())
-	ds.createTable("secondary_motivations", ds.commonSecondaryMotivationsProperties())
-	ds.createTable("primary_motivations", ds.commonPersonalMotivationsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
+	ds.createTable(defs.DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
+	ds.createTable(defs.DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
+	ds.createTable(defs.DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
+	ds.createTable(defs.DB_TABLE_STIX_IDENTITY, ds.identityProperties())
+	ds.createTable(defs.DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
+	ds.createTable(defs.DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
+	ds.createTable(defs.DB_TABLE_STIX_LOCATION, ds.locationProperties())
+	ds.createTable(defs.DB_TABLE_STIX_MALWARE, ds.malwareProperties())
+	ds.createTable(defs.DB_TABLE_STIX_NOTE, ds.noteProperties())
+	ds.createTable(defs.DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
+	ds.createTable(defs.DB_TABLE_STIX_OPINION, ds.opinionProperties())
+	ds.createTable(defs.DB_TABLE_STIX_REPORT, ds.reportProperties())
+	ds.createTable(defs.DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
+	ds.createTable(defs.DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
+	ds.createTable(defs.DB_TABLE_STIX_TOOL, ds.toolProperties())
+	ds.createTable(defs.DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
+	ds.createTable(defs.DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
+	ds.createTable(defs.DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
+	ds.createTable(defs.DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
+	ds.createTable(defs.DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
+	ds.createTable(defs.DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
+	ds.createTable(defs.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
 }
 
 // ----------------------------------------------------------------------
 // Private Methods
 // ----------------------------------------------------------------------
-
-// createAttackPatternTable - This method will create the actual table
-func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
-	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
-	_, err := ds.DB.Exec(stmt)
-
-	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created")
-	}
-}
 
 // baseProperties - This method will return the base properties for all objects
 // row_id    = This is a database tracking number
