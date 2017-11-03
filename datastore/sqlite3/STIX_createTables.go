@@ -6,10 +6,6 @@
 
 package sqlite3
 
-import (
-	"github.com/freetaxii/libstix2/defs"
-)
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -17,35 +13,35 @@ import (
 // CreateAllSTIXTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
-	ds.createTable(defs.DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
-	ds.createTable(defs.DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
-	ds.createTable(defs.DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
-	ds.createTable(defs.DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
-	ds.createTable(defs.DB_TABLE_STIX_IDENTITY, ds.identityProperties())
-	ds.createTable(defs.DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
-	ds.createTable(defs.DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
-	ds.createTable(defs.DB_TABLE_STIX_LOCATION, ds.locationProperties())
-	ds.createTable(defs.DB_TABLE_STIX_MALWARE, ds.malwareProperties())
-	ds.createTable(defs.DB_TABLE_STIX_NOTE, ds.noteProperties())
-	ds.createTable(defs.DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
-	ds.createTable(defs.DB_TABLE_STIX_OPINION, ds.opinionProperties())
-	ds.createTable(defs.DB_TABLE_STIX_REPORT, ds.reportProperties())
-	ds.createTable(defs.DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
-	ds.createTable(defs.DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
-	ds.createTable(defs.DB_TABLE_STIX_TOOL, ds.toolProperties())
-	ds.createTable(defs.DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
-	ds.createTable(defs.DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
-	ds.createTable(defs.DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
-	ds.createTable(defs.DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
-	ds.createTable(defs.DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
-	ds.createTable(defs.DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
-	ds.createTable(defs.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
+	ds.createTable(DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
+	ds.createTable(DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
+	ds.createTable(DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
+	ds.createTable(DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
+	ds.createTable(DB_TABLE_STIX_IDENTITY, ds.identityProperties())
+	ds.createTable(DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
+	ds.createTable(DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
+	ds.createTable(DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
+	ds.createTable(DB_TABLE_STIX_LOCATION, ds.locationProperties())
+	ds.createTable(DB_TABLE_STIX_MALWARE, ds.malwareProperties())
+	ds.createTable(DB_TABLE_STIX_NOTE, ds.noteProperties())
+	ds.createTable(DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
+	ds.createTable(DB_TABLE_STIX_OPINION, ds.opinionProperties())
+	ds.createTable(DB_TABLE_STIX_REPORT, ds.reportProperties())
+	ds.createTable(DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
+	ds.createTable(DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
+	ds.createTable(DB_TABLE_STIX_TOOL, ds.toolProperties())
+	ds.createTable(DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
+	ds.createTable(DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
+	ds.createTable(DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
+	ds.createTable(DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
+	ds.createTable(DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
+	ds.createTable(DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
+	ds.createTable(DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
+	ds.createTable(DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
+	ds.createTable(DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
+	ds.createTable(DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
+	ds.createTable(DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
+	ds.createTable(DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
 }
 
 // ----------------------------------------------------------------------

@@ -17,7 +17,7 @@ import (
 func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + defs.DB_TABLE_TAXII_COLLECTION + ` (
+	var stmt1 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION + ` (
 	 	"date_added", 
 	 	"id", 
 	 	"title",
@@ -41,7 +41,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
-			var stmt2 = `INSERT INTO ` + defs.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` (
+			var stmt2 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` (
 			"collection_id",
 			"media_type"
 			)
@@ -63,7 +63,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 func (ds *Sqlite3DatastoreType) addObjectToCollection(cID, sID string) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + defs.DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
+	var stmt1 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
 	 	"date_added", 
 	 	"collection_id", 
 	 	"stix_id"

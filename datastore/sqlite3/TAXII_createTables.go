@@ -6,10 +6,6 @@
 
 package sqlite3
 
-import (
-	"github.com/freetaxii/libstix2/defs"
-)
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -17,9 +13,9 @@ import (
 // CreateAllTAXIITables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
-	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
-	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION, ds.collection())
-	ds.createTable(defs.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
+	ds.createTable(DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
+	ds.createTable(DB_TABLE_TAXII_COLLECTION, ds.collection())
+	ds.createTable(DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
 }
 
 // ----------------------------------------------------------------------

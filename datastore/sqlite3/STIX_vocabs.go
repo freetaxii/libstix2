@@ -7,7 +7,6 @@
 package sqlite3
 
 import (
-	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/vocabs"
 	"log"
 )
@@ -19,33 +18,33 @@ import (
 // CreateAllVocabTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
-	ds.createTable(defs.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_IDENTITY_CLASS, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_INDICATOR_LABEL, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_INDUSTRY_SECTOR, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_MALWARE_LABEL, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_REPORT_LABEL, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, ds.vocabProperties())
-	ds.createTable(defs.DB_TABLE_VOCAB_TOOL_LABEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_IDENTITY_CLASS, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_INDICATOR_LABEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_INDUSTRY_SECTOR, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_MALWARE_LABEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_REPORT_LABEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, ds.vocabProperties())
+	ds.createTable(DB_TABLE_VOCAB_TOOL_LABEL, ds.vocabProperties())
 }
 
 // PopulateAllVocabTables - This method will insert all of the vocabulary data
 // into the right database tables.
 func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
-	ds.insertVocabData(defs.DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
+	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
+	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
+	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
+	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
 }
 
 // ----------------------------------------------------------------------
