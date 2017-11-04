@@ -11,6 +11,30 @@ import (
 	"log"
 )
 
+func (ds *Sqlite3DatastoreType) GetObjectsInCollection(cid string) []string {
+	var allObjects []string
+	var getAllObjectsInCollection = `
+		SELECT stix_id
+	   	FROM ` + DB_TABLE_TAXII_COLLECTION_CONTENT + ` 
+	   	WHERE collection_id = "` + cid + `"`
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(getAllObjectsInCollection)
+	if err != nil {
+		log.Fatal("ERROR: Database execution error quering collection content: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var sid string
+		if err := rows.Scan(&sid); err != nil {
+			log.Fatal(err)
+		}
+		allObjects = append(allObjects, sid)
+	}
+	return allObjects
+}
+
 // GetEnabledCollections - This method will return all of the collections that
 // are currently enabled.
 func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {

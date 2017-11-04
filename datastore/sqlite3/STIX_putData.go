@@ -77,7 +77,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 			var stmt3 = `INSERT INTO "` + DB_TABLE_STIX_EXTERNAL_REFERENCES + `" (
 			"object_id",
 			"source_name",
-			"description"
+			"description",
 			"url",
 			"external_id"
 			)

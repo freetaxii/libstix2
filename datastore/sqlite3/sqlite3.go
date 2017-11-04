@@ -52,6 +52,8 @@ func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
 	switch o := obj.(type) {
 	case resources.CollectionType:
 		ds.addCollection(o)
+	case resources.CollectionEntryType:
+		ds.addObjectToCollection(o)
 	case objects.IndicatorType:
 		ds.addIndicator(o)
 	}

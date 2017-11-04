@@ -60,7 +60,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 // by adding an entry in the taxii_collection_content table. In this table
 // we use the STIX ID not the Object ID because we need to make sure we
 // include all versions of an object. So we need to store just the STIX ID
-func (ds *Sqlite3DatastoreType) addObjectToCollection(cID, sID string) {
+func (ds *Sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionEntryType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	var stmt1 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
@@ -72,8 +72,8 @@ func (ds *Sqlite3DatastoreType) addObjectToCollection(cID, sID string) {
 
 	_, err1 := ds.DB.Exec(stmt1,
 		dateAdded,
-		cID,
-		sID)
+		obj.CollectionID,
+		obj.STIXID)
 
 	if err1 != nil {
 		log.Println("ERROR: Database execution error inserting collection content", err1)

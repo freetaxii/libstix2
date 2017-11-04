@@ -42,6 +42,12 @@ type CollectionType struct {
 	MediaTypes []string `json:"media_types,omitempty"`
 }
 
+// CollectionEntryType - This type will hold the data for adding an object to a collection
+type CollectionEntryType struct {
+	CollectionID string
+	STIXID       string
+}
+
 // ----------------------------------------------------------------------
 // Public Methods - CollectionType
 // ----------------------------------------------------------------------
