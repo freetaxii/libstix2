@@ -22,7 +22,7 @@ func NewAttackPattern(ver string) AttackPatternType {
 // have all of the fields that are common to a standard object.
 func NewBundle() BundleType {
 	var obj BundleType
-	obj.SetMessageType("bundle")
+	obj.SetObjectType("bundle")
 	obj.NewID("bundle")
 	obj.SetSpecVersion20()
 	return obj

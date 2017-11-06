@@ -43,7 +43,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 		hashID,
 		obj.SpecVersion,
 		dateAdded,
-		obj.MessageType,
+		obj.ObjectType,
 		obj.ID,
 		obj.CreatedByRef,
 		obj.Created,

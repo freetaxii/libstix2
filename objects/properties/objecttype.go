@@ -10,23 +10,23 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// MessageTypePropertyType - A property used by one or more STIX objects that
+// ObjectTypePropertyType - A property used by one or more STIX objects that
 // captures the STIX object type in string format.
-type MessageTypePropertyType struct {
-	MessageType string `json:"type,omitempty"`
+type ObjectTypePropertyType struct {
+	ObjectType string `json:"type,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - MessageTypePropertyType
+// Public Methods - ObjectTypePropertyType
 // ----------------------------------------------------------------------
 
-// SetMessageType - This method takes in a string value representing a STIX
+// SetObjectType - This method takes in a string value representing a STIX
 // object type and updates the type property.
-func (ezt *MessageTypePropertyType) SetMessageType(s string) {
-	ezt.MessageType = s
+func (ezt *ObjectTypePropertyType) SetObjectType(s string) {
+	ezt.ObjectType = s
 }
 
-// GetMessageType - This method returns the object type.
-func (ezt *MessageTypePropertyType) GetMessageType() string {
-	return ezt.MessageType
+// GetObjectType - This method returns the object type.
+func (ezt *ObjectTypePropertyType) GetObjectType() string {
+	return ezt.ObjectType
 }

@@ -17,8 +17,9 @@ import (
 // CommonObjectPropertiesType - This type includes all of the common properties
 // that are used by all STIX SDOs and SROs
 type CommonObjectPropertiesType struct {
+	ObjectIDPropertyType
 	STIXVersionPropertyType
-	MessageTypePropertyType
+	ObjectTypePropertyType
 	IDPropertyType
 	CreatedByRefPropertyType
 	CreatedPropertyType
@@ -36,7 +37,7 @@ type CommonObjectPropertiesType struct {
 // properties that are used by the STIX Marking Definition object
 type CommonMarkingDefinitionPropertiesType struct {
 	STIXVersionPropertyType
-	MessageTypePropertyType
+	ObjectTypePropertyType
 	IDPropertyType
 	CreatedByRefPropertyType
 	CreatedPropertyType
@@ -48,7 +49,7 @@ type CommonMarkingDefinitionPropertiesType struct {
 // CommonBundlePropertiesType - This type includes all of the common properties
 // that are used by the STIX Bundle object
 type CommonBundlePropertiesType struct {
-	MessageTypePropertyType
+	ObjectTypePropertyType
 	IDPropertyType
 }
 
@@ -62,7 +63,7 @@ type CommonBundlePropertiesType struct {
 func (ezt *CommonObjectPropertiesType) InitNewObject(objectType, version string) {
 	// TODO make sure that the value coming in a a valid STIX object type
 	ezt.SetSpecVersion(version)
-	ezt.SetMessageType(objectType)
+	ezt.SetObjectType(objectType)
 	ezt.NewID(objectType)
 	ezt.SetCreatedToCurrentTime()
 	ezt.SetModifiedToCreated()
