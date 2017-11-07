@@ -51,3 +51,9 @@ func NewCollectionEntry(cid, sid string) CollectionEntryType {
 	obj.STIXID = sid
 	return obj
 }
+
+// NewError - This functions will create a new TAXII Error Message object.
+func NewError() ErrorType {
+	var obj ErrorType
+	return obj
+}

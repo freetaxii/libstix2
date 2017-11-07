@@ -7,19 +7,21 @@
 package sqlite3
 
 import (
+	"database/sql"
+	"errors"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 	"log"
 )
 
-func (ds *Sqlite3DatastoreType) GetObject(stixid string) interface{} {
+func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
 
 	// We first need to look at the STIX ID that was passed in to see what type of object it is
-	i := ds.getIndicator(stixid)
-	return i
+	i, err := ds.getIndicator(stixid)
+	return i, err
 }
 
-func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) []properties.CommonObjectPropertiesType {
+func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
 
 	var baseObjects []properties.CommonObjectPropertiesType
 	var objectID, specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
@@ -79,7 +81,10 @@ func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) []properties.Commo
 		// Capture the base object
 		baseObjects = append(baseObjects, base)
 	}
-	return baseObjects
+	if len(baseObjects) == 0 {
+		return nil, errors.New("No Records Found")
+	}
+	return baseObjects, nil
 }
 
 func (ds *Sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.LabelsPropertyType {
@@ -142,10 +147,16 @@ func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 	return extrefs
 }
 
-func (ds *Sqlite3DatastoreType) getIndicator(stixid string) objects.IndicatorType {
+func (ds *Sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
 	var i objects.IndicatorType
 
-	baseObjects := ds.getBaseObjects(stixid)
+	// Lets first get the base object so we know the objectID
+	baseObjects, errBase := ds.getBaseObjects(stixid)
+	if errBase != nil {
+		return i, errBase
+	}
+
+	// TODO this needs to be changed so we can make use of more than one version of an object
 	i.CommonObjectPropertiesType = baseObjects[0]
 
 	var getIndicatorObject = `
@@ -161,6 +172,9 @@ func (ds *Sqlite3DatastoreType) getIndicator(stixid string) objects.IndicatorTyp
 	var name, description, pattern, validFrom, validUntil string
 	err := ds.DB.QueryRow(getIndicatorObject, i.ObjectID).Scan(&name, &description, &pattern, &validFrom, &validUntil)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return i, errors.New("No Records Found")
+		}
 		log.Println("ERROR", err)
 	}
 	i.SetName(name)
@@ -168,5 +182,5 @@ func (ds *Sqlite3DatastoreType) getIndicator(stixid string) objects.IndicatorTyp
 	i.SetPattern(pattern)
 	i.SetValidFrom(validFrom)
 	i.SetValidUntil(validUntil)
-	return i
+	return i, nil
 }
