@@ -17,6 +17,7 @@ import (
 func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
 
 	// We first need to look at the STIX ID that was passed in to see what type of object it is
+	// TODO split the ID to get the type and then do a switch statement
 	i, err := ds.getIndicator(stixid)
 	return i, err
 }
