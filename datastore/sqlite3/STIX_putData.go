@@ -9,6 +9,7 @@ package sqlite3
 import (
 	"crypto/sha1"
 	"encoding/base64"
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
@@ -16,7 +17,7 @@ import (
 	"time"
 )
 
-func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
+func (ds *sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 	objectID := "id" + obj.ID + "created" + obj.Created + "modified" + obj.Modified
 
@@ -24,7 +25,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	h.Write([]byte(objectID))
 	hashID := base64.URLEncoding.EncodeToString(h.Sum(nil))
 
-	var stmt1 = `INSERT INTO "` + DB_TABLE_STIX_BASE_OBJECT + `" (
+	var stmt1 = `INSERT INTO "` + datastore.DB_TABLE_STIX_BASE_OBJECT + `" (
 	 	"object_id", 
 	 	"spec_version", 
 	 	"date_added", 
@@ -58,7 +59,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	if obj.Labels != nil {
 		for _, label := range obj.Labels {
-			var stmt2 = `INSERT INTO "` + DB_TABLE_STIX_LABELS + `" (
+			var stmt2 = `INSERT INTO "` + datastore.DB_TABLE_STIX_LABELS + `" (
 			"object_id",
 			"labels"
 			)
@@ -74,7 +75,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	if obj.ExternalReferences != nil {
 		for _, reference := range obj.ExternalReferences {
-			var stmt3 = `INSERT INTO "` + DB_TABLE_STIX_EXTERNAL_REFERENCES + `" (
+			var stmt3 = `INSERT INTO "` + datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES + `" (
 			"object_id",
 			"source_name",
 			"description",
@@ -98,7 +99,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 
 	if obj.ObjectMarkingRefs != nil {
 		for _, marking := range obj.ObjectMarkingRefs {
-			var stmt4 = `INSERT INTO "` + DB_TABLE_STIX_OBJECT_MARKING_REFS + `" (
+			var stmt4 = `INSERT INTO "` + datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS + `" (
 			"object_id",
 			"object_marking_refs"
 			)
@@ -116,9 +117,9 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 }
 
 // addKillChainPhases
-func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
+func (ds *sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
 	for _, v := range obj.KillChainPhases {
-		var stmt = `INSERT INTO "` + DB_TABLE_STIX_KILL_CHAIN_PHASES + `" (
+		var stmt = `INSERT INTO "` + datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES + `" (
 			"object_id",
 			"kill_chain_name",
 			"phase_name"
@@ -134,11 +135,11 @@ func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties
 }
 
 // addIndicator
-func (ds *Sqlite3DatastoreType) addIndicator(obj objects.IndicatorType) error {
+func (ds *sqlite3DatastoreType) addIndicator(obj objects.IndicatorType) error {
 
 	hashID := ds.addBaseObject(obj.CommonObjectPropertiesType)
 
-	var stmt1 = `INSERT INTO "` + DB_TABLE_STIX_INDICATOR + `" (
+	var stmt1 = `INSERT INTO "` + datastore.DB_TABLE_STIX_INDICATOR + `" (
 		"object_id",
 		"name",
 		"description",

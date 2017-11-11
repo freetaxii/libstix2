@@ -6,16 +6,20 @@
 
 package sqlite3
 
+import (
+	"github.com/freetaxii/libstix2/datastore"
+)
+
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
 // CreateAllTAXIITables - This method will create all of the tables needed to store
 // STIX content in the database.
-func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
-	ds.createTable(DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
-	ds.createTable(DB_TABLE_TAXII_COLLECTION, ds.collection())
-	ds.createTable(DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
+func (ds *sqlite3DatastoreType) CreateAllTAXIITables() {
+	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
+	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION, ds.collection())
+	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
 }
 
 // ----------------------------------------------------------------------
@@ -28,7 +32,7 @@ func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
 //   We do not use the object_id here or the row_id as that would point to a
 //   specific version and we need to be able to find all versions of an object
 // date_added    = The date that this object was added to the collection
-func (ds *Sqlite3DatastoreType) collectionContent() string {
+func (ds *sqlite3DatastoreType) collectionContent() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
@@ -38,7 +42,7 @@ func (ds *Sqlite3DatastoreType) collectionContent() string {
 
 // collection  - This method will return the properties for the collections table
 // date_added = The date that this collection was added to the system
-func (ds *Sqlite3DatastoreType) collection() string {
+func (ds *sqlite3DatastoreType) collection() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
@@ -52,7 +56,7 @@ func (ds *Sqlite3DatastoreType) collection() string {
 }
 
 // collectionMediaType  - This method will return the properties for the collection media type table
-func (ds *Sqlite3DatastoreType) collectionMediaType() string {
+func (ds *sqlite3DatastoreType) collectionMediaType() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"collection_id" TEXT NOT NULL,

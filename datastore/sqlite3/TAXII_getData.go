@@ -7,13 +7,14 @@
 package sqlite3
 
 import (
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/resources"
 	"log"
 )
 
 // GetEnabledCollections - This method will return all of the collections that
 // are currently enabled.
-func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
+func (ds *sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
 
 	allCollections := resources.NewCollections()
 
@@ -24,12 +25,12 @@ func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsTyp
 	    	description,
 	    	can_read,
 	    	can_write
-	   	FROM ` + DB_TABLE_TAXII_COLLECTION + ` 
+	   	FROM ` + datastore.DB_TABLE_TAXII_COLLECTION + ` 
 	   	WHERE enabled = 1`
 
 	var getMediaTypesForCollection = `
 		SELECT media_type 
-		FROM ` + DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` 
+		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` 
 		WHERE collection_id = $1`
 
 	// Query database for all the collections

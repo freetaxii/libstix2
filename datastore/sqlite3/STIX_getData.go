@@ -9,20 +9,13 @@ package sqlite3
 import (
 	"database/sql"
 	"errors"
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 	"log"
 )
 
-func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
-
-	// We first need to look at the STIX ID that was passed in to see what type of object it is
-	// TODO split the ID to get the type and then do a switch statement
-	i, err := ds.getIndicator(stixid)
-	return i, err
-}
-
-func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
+func (ds *sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
 
 	var baseObjects []properties.CommonObjectPropertiesType
 	var objectID, specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
@@ -42,7 +35,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.Comm
 		 	revoked,
 		 	confidence,
 		 	lang
-	   	FROM ` + DB_TABLE_STIX_BASE_OBJECT + ` 
+	   	FROM ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` 
 	   	WHERE id = $1
 	   	ORDER BY modified DESC`
 
@@ -88,12 +81,12 @@ func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.Comm
 	return baseObjects, nil
 }
 
-func (ds *Sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.LabelsPropertyType {
+func (ds *sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.LabelsPropertyType {
 	var objectLabels properties.LabelsPropertyType
 
 	var getLabelForObject = `
 		SELECT labels
-		FROM ` + DB_TABLE_STIX_LABELS + `
+		FROM ` + datastore.DB_TABLE_STIX_LABELS + `
 		WHERE object_id = $1`
 
 	rows, err := ds.DB.Query(getLabelForObject, objectID)
@@ -114,7 +107,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.
 	return objectLabels
 }
 
-func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string) properties.ExternalReferencesPropertyType {
+func (ds *sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string) properties.ExternalReferencesPropertyType {
 	var extrefs properties.ExternalReferencesPropertyType
 
 	var getExternalReferencesForObject = `
@@ -123,7 +116,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 			description,
 			url,
 			external_id
-		FROM ` + DB_TABLE_STIX_EXTERNAL_REFERENCES + `
+		FROM ` + datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES + `
 		WHERE object_id = $1`
 
 	rows, err := ds.DB.Query(getExternalReferencesForObject, objectID)
@@ -148,7 +141,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 	return extrefs
 }
 
-func (ds *Sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
+func (ds *sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
 	var i objects.IndicatorType
 
 	// Lets first get the base object so we know the objectID
@@ -167,7 +160,7 @@ func (ds *Sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorTy
 			pattern,
 			valid_from,
 			valid_until
-		FROM ` + DB_TABLE_STIX_INDICATOR + `
+		FROM ` + datastore.DB_TABLE_STIX_INDICATOR + `
 		WHERE object_id = $1`
 
 	var name, description, pattern, validFrom, validUntil string

@@ -9,6 +9,7 @@ package sqlite3
 import (
 	"database/sql"
 	"fmt"
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,9 +21,9 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
-// Sqlite3DatastoreType defines all of the properties and information associated
+// sqlite3DatastoreType defines all of the properties and information associated
 // with connecting and talking to the database.
-type Sqlite3DatastoreType struct {
+type sqlite3DatastoreType struct {
 	Filename string
 	DB       *sql.DB
 }
@@ -31,9 +32,10 @@ type Sqlite3DatastoreType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// New - This function will return a datastore.STIXDatastorer
-func New(filename string) Sqlite3DatastoreType {
-	var ds Sqlite3DatastoreType
+// New - This function will return a datastore.Datastorer which is any datastore
+// that implements all of the methods that are defined in the Datastorer type.
+func New(filename string) datastore.Datastorer {
+	var ds sqlite3DatastoreType
 	ds.Filename = filename
 
 	err := ds.connect()
@@ -41,14 +43,24 @@ func New(filename string) Sqlite3DatastoreType {
 		log.Fatalln(err)
 	}
 
-	return ds
+	return &ds
 }
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
+func (ds *sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
+
+	// TODO
+	// We first need to look at the STIX ID that was passed in to see what type
+	// of object it is. Basically split the ID to get the type and then do a
+	// switch statement
+	i, err := ds.getIndicator(stixid)
+	return i, err
+}
+
+func (ds *sqlite3DatastoreType) Put(obj interface{}) {
 	switch o := obj.(type) {
 	case resources.CollectionType:
 		ds.addCollection(o)
@@ -60,7 +72,7 @@ func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
 }
 
 // Close - This method will close the database connection
-func (ds *Sqlite3DatastoreType) Close() error {
+func (ds *sqlite3DatastoreType) Close() error {
 	err := ds.DB.Close()
 	if err != nil {
 		return err
@@ -73,7 +85,7 @@ func (ds *Sqlite3DatastoreType) Close() error {
 // ----------------------------------------------------------------------
 
 // connect - This method is used to connect to an sqlite3 database
-func (ds *Sqlite3DatastoreType) connect() error {
+func (ds *sqlite3DatastoreType) connect() error {
 	var err error
 
 	if ds.Filename == "" {
@@ -97,7 +109,7 @@ func (ds *Sqlite3DatastoreType) connect() error {
 }
 
 // verifyFileExists - This method will check to make sure the file is found on the filesystem
-func (ds *Sqlite3DatastoreType) verifyFileExists() error {
+func (ds *sqlite3DatastoreType) verifyFileExists() error {
 	if _, err := os.Stat(ds.Filename); os.IsNotExist(err) {
 		w, err2 := os.Create(ds.Filename)
 		w.Close()

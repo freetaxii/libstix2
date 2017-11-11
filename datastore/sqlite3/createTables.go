@@ -11,7 +11,7 @@ import (
 )
 
 // createAttackPatternTable - This method will create the actual table
-func (ds *Sqlite3DatastoreType) createTable(name, properties string) {
+func (ds *sqlite3DatastoreType) createTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 

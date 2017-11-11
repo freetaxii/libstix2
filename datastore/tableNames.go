@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package sqlite3
+package datastore
 
 const (
 	DB_TABLE_STIX_BASE_OBJECT           = "stix_base_object"

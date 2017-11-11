@@ -7,6 +7,7 @@
 package sqlite3
 
 import (
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources"
 	"log"
@@ -14,10 +15,10 @@ import (
 )
 
 // addCollection
-func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
+func (ds *sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION + ` (
+	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION + ` (
 	 	"date_added", 
 	 	"id", 
 	 	"title",
@@ -41,7 +42,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
-			var stmt2 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` (
+			var stmt2 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` (
 			"collection_id",
 			"media_type"
 			)
@@ -60,10 +61,10 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 // by adding an entry in the taxii_collection_content table. In this table
 // we use the STIX ID not the Object ID because we need to make sure we
 // include all versions of an object. So we need to store just the STIX ID
-func (ds *Sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionEntryType) {
+func (ds *sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionEntryType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
+	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
 	 	"date_added", 
 	 	"collection_id", 
 	 	"stix_id"
