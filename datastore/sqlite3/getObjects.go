@@ -15,7 +15,7 @@ import (
 // ListObjectsInCollection - This method will take in an ID for a collection
 // and return a slice of strings that contains all of the STIX IDs that are in
 // the colleciton.
-func (ds *sqlite3DatastoreType) ListObjectsInCollection(collectionid string) []string {
+func (ds *Sqlite3DatastoreType) ListObjectsInCollection(collectionid string) []string {
 	var allObjects []string
 
 	var getAllObjectsInCollection = `
@@ -43,7 +43,7 @@ func (ds *sqlite3DatastoreType) ListObjectsInCollection(collectionid string) []s
 // GetObjectsInCollection - This method will take in an ID for a collection
 // and return a STIX Bundle that contains all of the STIX objects that are in
 // the collection.
-func (ds *sqlite3DatastoreType) GetObjectsInCollection(collectionid string) objects.BundleType {
+func (ds *Sqlite3DatastoreType) GetObjectsInCollection(collectionid string) objects.BundleType {
 	stixBundle := objects.NewBundle()
 
 	allObjects := ds.ListObjectsInCollection(collectionid)

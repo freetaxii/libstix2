@@ -15,7 +15,7 @@ import (
 )
 
 // addCollection
-func (ds *sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
+func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION + ` (
@@ -61,7 +61,7 @@ func (ds *sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 // by adding an entry in the taxii_collection_content table. In this table
 // we use the STIX ID not the Object ID because we need to make sure we
 // include all versions of an object. So we need to store just the STIX ID
-func (ds *sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionEntryType) {
+func (ds *Sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionEntryType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + ` (

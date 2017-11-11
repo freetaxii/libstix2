@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func (ds *sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
+func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 	objectID := "id" + obj.ID + "created" + obj.Created + "modified" + obj.Modified
 
@@ -117,7 +117,7 @@ func (ds *sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 }
 
 // addKillChainPhases
-func (ds *sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
+func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
 	for _, v := range obj.KillChainPhases {
 		var stmt = `INSERT INTO "` + datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES + `" (
 			"object_id",
@@ -135,7 +135,7 @@ func (ds *sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties
 }
 
 // addIndicator
-func (ds *sqlite3DatastoreType) addIndicator(obj objects.IndicatorType) error {
+func (ds *Sqlite3DatastoreType) addIndicator(obj objects.IndicatorType) error {
 
 	hashID := ds.addBaseObject(obj.CommonObjectPropertiesType)
 

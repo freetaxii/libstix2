@@ -15,7 +15,7 @@ import (
 	"log"
 )
 
-func (ds *sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
+func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
 
 	var baseObjects []properties.CommonObjectPropertiesType
 	var objectID, specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
@@ -81,7 +81,7 @@ func (ds *sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.Comm
 	return baseObjects, nil
 }
 
-func (ds *sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.LabelsPropertyType {
+func (ds *Sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.LabelsPropertyType {
 	var objectLabels properties.LabelsPropertyType
 
 	var getLabelForObject = `
@@ -107,7 +107,7 @@ func (ds *sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.
 	return objectLabels
 }
 
-func (ds *sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string) properties.ExternalReferencesPropertyType {
+func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string) properties.ExternalReferencesPropertyType {
 	var extrefs properties.ExternalReferencesPropertyType
 
 	var getExternalReferencesForObject = `
@@ -141,7 +141,7 @@ func (ds *sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 	return extrefs
 }
 
-func (ds *sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
+func (ds *Sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
 	var i objects.IndicatorType
 
 	// Lets first get the base object so we know the objectID

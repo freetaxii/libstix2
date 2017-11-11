@@ -14,9 +14,9 @@ import (
 // Datastorer - This type enables access to the TAXII datastore.
 // GetObject returns a STIX object
 type Datastorer interface {
-	ListObjectsInCollection(collectionid string) []string
-	GetObjectsInCollection(collectionid string) objects.BundleType
-	GetObject(stixid string) (interface{}, error)
 	Close() error
 	GetEnabledCollections() resources.CollectionsType
+	GetObject(stixid string) (interface{}, error)
+	GetObjectsInCollection(collectionid string) objects.BundleType
+	ListObjectsInCollection(collectionid string) []string
 }

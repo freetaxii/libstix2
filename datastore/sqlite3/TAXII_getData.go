@@ -14,7 +14,7 @@ import (
 
 // GetEnabledCollections - This method will return all of the collections that
 // are currently enabled.
-func (ds *sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
+func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
 
 	allCollections := resources.NewCollections()
 
