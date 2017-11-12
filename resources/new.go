@@ -44,9 +44,10 @@ func NewDiscovery() DiscoveryType {
 // 	return status.New()
 // }
 
-// NewCollectionEntry - This function will create a new Collection Entry object.
-func NewCollectionEntry(cid, sid string) CollectionEntryType {
-	var obj CollectionEntryType
+// NewCollectionRecord - This function will take in a colleciton ID and a STIX ID
+// and return a colleciton record type.
+func NewCollectionRecord(cid, sid string) CollectionRecordType {
+	var obj CollectionRecordType
 	obj.CollectionID = cid
 	obj.STIXID = sid
 	return obj
