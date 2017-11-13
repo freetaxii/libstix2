@@ -17,20 +17,27 @@ import (
 // CreateAllTAXIITables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
-	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
-	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION, ds.collection())
-	ds.createTable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION, ds.collection())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
 }
 
 // ----------------------------------------------------------------------
+//
 // Private Methods
+//
+// These methods return a list of fields that is used for creating the
+// database table.
+//
 // ----------------------------------------------------------------------
 
 // collectionContent - This method will return the properties for the collectionContent table
 // collection_id = The collection ID that this object is tied to
 // stix_id       = The STIX ID for the object that is being mapped to a collection.
 //   We do not use the object_id here or the row_id as that would point to a
-//   specific version and we need to be able to find all versions of an object
+//   specific version and we need to be able to find all versions of an object.
+//   and if we used row_id for example, it would require two queries, the first
+//   to get the SITX ID and then the second to get all objects with that STIX ID.
 // date_added    = The date that this object was added to the collection
 func (ds *Sqlite3DatastoreType) collectionContent() string {
 	return `

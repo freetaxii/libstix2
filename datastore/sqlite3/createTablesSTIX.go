@@ -17,39 +17,44 @@ import (
 // CreateAllSTIXTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
-	ds.createTable(datastore.DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_IDENTITY, ds.identityProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_LOCATION, ds.locationProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_MALWARE, ds.malwareProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_NOTE, ds.noteProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_OPINION, ds.opinionProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_REPORT, ds.reportProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_TOOL, ds.toolProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
-	ds.createTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY, ds.identityProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_LOCATION, ds.locationProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_MALWARE, ds.malwareProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_NOTE, ds.noteProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OPINION, ds.opinionProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_REPORT, ds.reportProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_TOOL, ds.toolProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
 }
 
 // ----------------------------------------------------------------------
+//
 // Private Methods
+//
+// These methods return a list of fields that is used for creating the
+// database table.
+//
 // ----------------------------------------------------------------------
 
 // baseProperties - This method will return the base properties for all objects
