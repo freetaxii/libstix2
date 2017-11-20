@@ -12,10 +12,22 @@ import (
 	"log"
 )
 
-// ListObjectsInCollection - This method will take in an ID for a collection
+// GetObject - This method will take in a STIX ID and return the STIX object.
+func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
+
+	// TODO
+	// We first need to look at the STIX ID that was passed in to see what type
+	// of object it is. Basically split the ID to get the type and then do a
+	// switch statement
+	// Need to also be able to handle multiple versions
+	i, err := ds.getIndicator(stixid)
+	return i, err
+}
+
+// GetListOfObjectInCollection - This method will take in an ID for a collection
 // and return a slice of strings that contains all of the STIX IDs that are in
-// the colleciton.
-func (ds *Sqlite3DatastoreType) ListObjectsInCollection(collectionid string) []string {
+// that colleciton.
+func (ds *Sqlite3DatastoreType) GetListOfObjectInCollection(collectionid string) []string {
 	var allObjects []string
 
 	var getAllObjectsInCollection = `
@@ -42,11 +54,13 @@ func (ds *Sqlite3DatastoreType) ListObjectsInCollection(collectionid string) []s
 
 // GetObjectsInCollection - This method will take in an ID for a collection
 // and return a STIX Bundle that contains all of the STIX objects that are in
-// the collection.
+// that collection.
 func (ds *Sqlite3DatastoreType) GetObjectsInCollection(collectionid string) objects.BundleType {
+	// TODO need the ability to take in a query struct of list of parameters
+
 	stixBundle := objects.NewBundle()
 
-	allObjects := ds.ListObjectsInCollection(collectionid)
+	allObjects := ds.GetListOfObjectInCollection(collectionid)
 	for _, stixid := range allObjects {
 		obj, _ := ds.GetObject(stixid)
 		stixBundle.AddObject(obj)
