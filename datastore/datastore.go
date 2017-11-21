@@ -18,5 +18,5 @@ type Datastorer interface {
 	GetEnabledCollections() resources.CollectionsType
 	GetObject(stixid string) (interface{}, error)
 	GetObjectsInCollection(collectionid string) objects.BundleType
-	ListObjectsInCollection(collectionid string) []string
+	GetListOfObjectsInCollection(collectionid string) ([]string, error)
 }

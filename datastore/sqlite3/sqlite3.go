@@ -31,8 +31,7 @@ type Sqlite3DatastoreType struct {
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// New - This function will return a datastore.Datastorer which is any datastore
-// that implements all of the methods that are defined in the Datastorer type.
+// New - This function will return a Sqlite3DatastoreType.
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename

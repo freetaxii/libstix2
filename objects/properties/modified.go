@@ -25,6 +25,12 @@ type ModifiedPropertyType struct {
 // Public Methods - ModifiedPropertyType
 // ----------------------------------------------------------------------
 
+// SetModifiedToCurrentTime - This methods sets the object modified time to the
+// current time
+func (ezt *ModifiedPropertyType) SetModifiedToCurrentTime() {
+	ezt.Modified = timestamp.GetCurrentTime()
+}
+
 // SetModified - This method takes in a timestamp in either time.Time or string
 // format and updates the modifed property with it. The value is stored as a
 // string, so if the value is in time.Time format, it will be converted to the
