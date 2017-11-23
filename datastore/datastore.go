@@ -20,3 +20,15 @@ type Datastorer interface {
 	GetObjectsInCollection(collectionid string) objects.BundleType
 	GetListOfObjectsInCollection(collectionid string) ([]string, error)
 }
+
+// QueryType - This struct will hold all of the variables that a user can
+// query a collection on.
+type QueryType struct {
+	CollectionID string
+	STIXID       string
+	STIXType     string
+	Version      string
+	AddedAfter   string
+	RangeBegin   int
+	RangeEnd     int
+}

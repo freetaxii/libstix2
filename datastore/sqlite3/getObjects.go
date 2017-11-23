@@ -10,7 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
-	"github.com/freetaxii/libstix2/objects"
+	//"github.com/freetaxii/libstix2/objects"
 	"log"
 )
 
@@ -27,34 +27,59 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
 }
 
 /*
-GetListOfObjectsInCollection - This method will take in an ID for a collection
-and will return a slice of strings that contains all of the STIX IDs that are in
-that collection that meet the range requirements or an error.
+GetListOfObjectsInCollection - This method will take in query and range
+parameters for a collection and will return a slice of strings that contains all
+of the STIX IDs that are in that collection that meet those query or range
+parameters.
+
+Retval:
+	[]string = list of objects
+    int = number of total objects, not number in range
+    error
 */
-func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(collectionid string) ([]string, error) {
+func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) ([]string, int, error) {
 	var allObjects []string
+	var whereQuery string
+
+	if query.AddedAfter != "" {
+		whereQuery = whereQuery + ` AND t_collection_content.date_added > $2 `
+	}
+
+	if query.STIXType != "" {
+		whereQuery = whereQuery + ` AND t_collection_content.stix_id LIKE $3 || '%' `
+	}
 
 	var getAllObjectsInCollection = `
-		SELECT stix_id
-	   	FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + ` 
-	   	WHERE collection_id = $1`
+		SELECT
+			t_collection_content.date_added,
+			t_collection_content.stix_id,
+			group_concat(s_base_object.modified),
+			group_concat(s_base_object.spec_version)
+		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `
+		JOIN s_base_object
+		ON t_collection_content.stix_id = s_base_object.id
+		WHERE
+			t_collection_content.collection_id = $1 ` + whereQuery +
+		` GROUP BY t_collection_content.stix_id
+	`
 
 	// Query database for all the collection entries
-	rows, err := ds.DB.Query(getAllObjectsInCollection, collectionid)
+	rows, err := ds.DB.Query(getAllObjectsInCollection, query.CollectionID, query.AddedAfter, query.STIXType)
 	if err != nil {
-		return nil, fmt.Errorf("Database execution error querying collection content: ", err)
+		return nil, 0, fmt.Errorf("Database execution error querying collection content: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var stixid string
-		if err := rows.Scan(&stixid); err != nil {
+		var dateAdded, stixid, modified, specVersion string
+		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
 			log.Fatal(err)
 		}
 		allObjects = append(allObjects, stixid)
 	}
 
-	return allObjects, nil
+	size := len(allObjects)
+	return allObjects, size, nil
 }
 
 /*
@@ -62,9 +87,9 @@ GetRangeOfObjects - This method will take in a slice of strings and two index
 values that represent the number of records to return. The method will return a
 new slice of strings that meet the range requirements or an error.
 Retval:
-  []string = list of objects
-  int = number of total objects, not number in range
-  error
+	[]string = list of objects
+    int = number of total objects, not number in range
+	error
 */
 func (ds *Sqlite3DatastoreType) GetRangeOfObjects(allObjects []string, maxsize, first, last int) ([]string, int, error) {
 
@@ -104,27 +129,27 @@ Retval:
   STIX Bundle Type
   error
 */
-func (ds *Sqlite3DatastoreType) GetObjectsInCollection(collectionid string, paginate bool, maxsize, first, last int) (objects.BundleType, error) {
-	// TODO need the ability to take in a query struct of list of parameters
+// func (ds *Sqlite3DatastoreType) GetObjectsInCollection(collectionid string, paginate bool, maxsize, first, last int) (objects.BundleType, error) {
+// 	// TODO need the ability to take in a query struct of list of parameters
 
-	var rangeOfObjects []string
-	var err error
-	stixBundle := objects.NewBundle()
-	allObjects, err := ds.GetListOfObjectsInCollection(collectionid)
+// 	var rangeOfObjects []string
+// 	var err error
+// 	stixBundle := objects.NewBundle()
+// 	allObjects, _, err := ds.GetListOfObjectsInCollection(collectionid)
 
-	if err != nil {
-		return stixBundle, err
-	}
+// 	if err != nil {
+// 		return stixBundle, err
+// 	}
 
-	if paginate == true {
-		rangeOfObjects, _, err = ds.GetRangeOfObjects(allObjects, maxsize, first, last)
-	} else {
-		rangeOfObjects = allObjects
-	}
+// 	if paginate == true {
+// 		rangeOfObjects, _, err = ds.GetRangeOfObjects(allObjects, maxsize, first, last)
+// 	} else {
+// 		rangeOfObjects = allObjects
+// 	}
 
-	for _, stixid := range rangeOfObjects {
-		obj, _ := ds.GetObject(stixid)
-		stixBundle.AddObject(obj)
-	}
-	return stixBundle, nil
-}
+// 	for _, stixid := range rangeOfObjects {
+// 		obj, _ := ds.GetObject(stixid)
+// 		stixBundle.AddObject(obj)
+// 	}
+// 	return stixBundle, nil
+// }

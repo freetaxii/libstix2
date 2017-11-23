@@ -31,24 +31,39 @@ func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
 //
 // ----------------------------------------------------------------------
 
-// collectionContent - This method will return the properties for the collectionContent table
-// collection_id = The collection ID that this object is tied to
-// stix_id       = The STIX ID for the object that is being mapped to a collection.
-//   We do not use the object_id here or the row_id as that would point to a
-//   specific version and we need to be able to find all versions of an object.
-//   and if we used row_id for example, it would require two queries, the first
-//   to get the SITX ID and then the second to get all objects with that STIX ID.
-// date_added    = The date that this object was added to the collection
+/*
+collectionContent - This method will return the properties that make up the
+collection content table
+
+date_added    = The date that this object was added to the collection
+collection_id = The collection ID that this object is tied to
+stix_id       = The STIX ID for the object that is being mapped to a collection.
+  We do not use the object_id here or the row_id as that would point to a
+  specific version and we need to be able to find all versions of an object.
+  and if we used row_id for example, it would require two queries, the first
+  to get the SITX ID and then the second to get all objects with that STIX ID.
+*/
 func (ds *Sqlite3DatastoreType) collectionContent() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
  	"collection_id" TEXT NOT NULL,
- 	"stix_id" TEXT NOT NULL`
+ 	"stix_id" TEXT NOT NULL
+ 	`
 }
 
-// collection  - This method will return the properties for the collections table
-// date_added = The date that this collection was added to the system
+/*
+collection - This method will return the properties that make up the collection
+table
+
+date_added  = The date that this collection was added to the system
+enabled     = Is this collection currently enabled
+id 		    = The collection ID, a UUIDv4 value
+title 	    = The title of this collection
+description = A long description about this collection
+can_read    = A boolean flag that indicates if one can read from this collection
+can_write   = A boolean flag that indicates if one can write to this collection
+*/
 func (ds *Sqlite3DatastoreType) collection() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
@@ -62,7 +77,13 @@ func (ds *Sqlite3DatastoreType) collection() string {
 	`
 }
 
-// collectionMediaType  - This method will return the properties for the collection media type table
+/*
+collectionMediaType  - This method will return the properties that make up the
+collection media type table
+
+collection_id = The collection ID, a UUIDv4 value
+media_type    = The media types supported on this collection
+*/
 func (ds *Sqlite3DatastoreType) collectionMediaType() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
