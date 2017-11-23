@@ -22,12 +22,28 @@ func GetCurrentTime() string {
 	return time.Now().UTC().Format(defs.TIME_RFC_3339)
 }
 
+func GetCurrentTimeMilli() string {
+	return time.Now().UTC().Format(defs.TIME_RFC_3339_MILLI)
+}
+
 // Verify - This function takes in a timestamp in either time.Time or string
 // format and returns a string version of the timestamp.
 func Verify(t interface{}) string {
 	switch ts := t.(type) {
 	case time.Time:
 		return ts.UTC().Format(defs.TIME_RFC_3339)
+	case string:
+		//TODO verify format of timestamp when in string format
+		return ts
+	default:
+		return fmt.Sprintf("The timestamp format of \"%s\" is not a valid format", ts)
+	}
+}
+
+func VerifyMilli(t interface{}) string {
+	switch ts := t.(type) {
+	case time.Time:
+		return ts.UTC().Format(defs.TIME_RFC_3339_MILLI)
 	case string:
 		//TODO verify format of timestamp when in string format
 		return ts

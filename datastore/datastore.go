@@ -27,7 +27,7 @@ type QueryType struct {
 	CollectionID string
 	STIXID       string
 	STIXType     string
-	Version      string
+	STIXVersion  string
 	AddedAfter   string
 	RangeBegin   int
 	RangeEnd     int

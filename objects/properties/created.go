@@ -28,7 +28,7 @@ type CreatedPropertyType struct {
 // SetCreatedToCurrentTime - This methods sets the object created time to the
 // current time
 func (ezt *CreatedPropertyType) SetCreatedToCurrentTime() {
-	ezt.Created = timestamp.GetCurrentTime()
+	ezt.Created = timestamp.GetCurrentTimeMilli()
 }
 
 // SetCreated - This method takes in a timestamp in either time.Time or string
@@ -36,7 +36,7 @@ func (ezt *CreatedPropertyType) SetCreatedToCurrentTime() {
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
 func (ezt *CreatedPropertyType) SetCreated(t interface{}) {
-	ts := timestamp.Verify(t)
+	ts := timestamp.VerifyMilli(t)
 	ezt.Created = ts
 }
 

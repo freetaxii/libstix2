@@ -10,8 +10,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
-	//"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 	"log"
+	"strings"
 )
 
 // GetObject - This method will take in a STIX ID and return the STIX object.
@@ -45,8 +46,49 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		whereQuery = whereQuery + ` AND t_collection_content.date_added > $2 `
 	}
 
+	// ----------------------------------------------------------------------
+	// Check for one or more STIX types to query on
+	// ----------------------------------------------------------------------
 	if query.STIXType != "" {
-		whereQuery = whereQuery + ` AND t_collection_content.stix_id LIKE $3 || '%' `
+		// If there is more than one type, split it out
+		types := strings.Split(query.STIXType, ",")
+
+		if len(types) == 1 {
+			if objects.ValidSTIXObject(query.STIXType) {
+				whereQuery += ` AND t_collection_content.stix_id LIKE "` + query.STIXType + `%"`
+			}
+		} else if len(types) > 1 {
+			whereQuery += ` AND (`
+			for i, v := range types {
+				// Lets only add the OR after the first object and not after the last object
+				if i > 0 {
+					whereQuery += ` OR `
+				}
+				// Lets make sure the value that was passed in is actually a valid object
+				if objects.ValidSTIXObject(v) {
+					whereQuery += `t_collection_content.stix_id LIKE "` + v + `%"`
+				}
+			}
+			whereQuery += `)`
+		}
+	}
+
+	if query.STIXVersion != "" {
+		if query.STIXVersion == "last" {
+			whereQuery = whereQuery + ` AND s_base_object.modified = (select max(modified) from s_base_object where t_collection_content.stix_id = s_base_object.id) `
+			// We need to zero out the value since we will be passing it in to the query function below for the else use case
+			query.STIXVersion = ""
+		} else if query.STIXVersion == "first" {
+			whereQuery = whereQuery + ` AND s_base_object.modified = (select min(modified) from s_base_object where t_collection_content.stix_id = s_base_object.id) `
+			// We need to zero out the value since we will be passing it in to the query function below for the else use case
+			query.STIXVersion = ""
+		} else if query.STIXVersion == "all" {
+			// We need to zero out the value since we will be passing it in to the query function below for the else use case
+			query.STIXVersion = ""
+		} else {
+			//whereQuery = whereQuery + ` AND s_base_object.modified = (select modified from s_base_object where t_collection_content.stix_id = s_base_object.id AND s_base_object.modified = $4) `
+			whereQuery = whereQuery + ` AND s_base_object.modified = $3 `
+		}
 	}
 
 	var getAllObjectsInCollection = `
@@ -58,13 +100,15 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `
 		JOIN s_base_object
 		ON t_collection_content.stix_id = s_base_object.id
-		WHERE
+		WHERE 
 			t_collection_content.collection_id = $1 ` + whereQuery +
 		` GROUP BY t_collection_content.stix_id
 	`
 
+	log.Println(getAllObjectsInCollection)
+
 	// Query database for all the collection entries
-	rows, err := ds.DB.Query(getAllObjectsInCollection, query.CollectionID, query.AddedAfter, query.STIXType)
+	rows, err := ds.DB.Query(getAllObjectsInCollection, query.CollectionID, query.AddedAfter, query.STIXVersion)
 	if err != nil {
 		return nil, 0, fmt.Errorf("Database execution error querying collection content: ", err)
 	}
@@ -75,6 +119,7 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
 			log.Fatal(err)
 		}
+		log.Println(stixid, " ", modified)
 		allObjects = append(allObjects, stixid)
 	}
 
