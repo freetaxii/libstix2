@@ -6,10 +6,6 @@
 
 package properties
 
-import (
-	"github.com/freetaxii/libstix2/objects/common/timestamp"
-)
-
 // ----------------------------------------------------------------------
 // Common Property Types - Used to populate the common object properties
 // ----------------------------------------------------------------------
@@ -57,9 +53,12 @@ type CommonBundlePropertiesType struct {
 // Public Methods - CommonObjectPropertiesType
 // ----------------------------------------------------------------------
 
-// InitNewObject is a helper function to init a new object with common elements
-// It takes in one parameter
-// param: objectType - a string value of the STIX object type
+// InitNewObject is a helper function to initialize a new object with common
+// elements.
+//
+// params: objectType - a string value of the STIX object type
+// params: version - the STIX spec version of the object, ex. "2.0". This is
+// 		stored and used in TAXII.
 func (ezt *CommonObjectPropertiesType) InitNewObject(objectType, version string) {
 	// TODO make sure that the value coming in a a valid STIX object type
 	ezt.SetSpecVersion(version)
@@ -76,14 +75,3 @@ func (ezt *CommonObjectPropertiesType) InitNewObject(objectType, version string)
 func (ezt *CommonObjectPropertiesType) SetModifiedToCreated() {
 	ezt.Modified = ezt.Created
 }
-
-// VerifyTimestamp is a helper function to prevent needing to import the timestamp property object locally.
-// It takes in one parameter and returns a string version of the timestamp
-// param: t - a timestamp in either time.Time or string format
-func (ezt *CommonObjectPropertiesType) VerifyTimestamp(t interface{}) string {
-	return timestamp.Verify(t)
-}
-
-// func (this *CommonObjectPropertiesType) GetCurrentTime() string {
-// 	return timestamp.GetCurrentTime()
-// }

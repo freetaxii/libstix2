@@ -7,7 +7,7 @@
 package properties
 
 import (
-	"github.com/freetaxii/libstix2/objects/common/timestamp"
+	"github.com/freetaxii/libstix2/common/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -28,7 +28,7 @@ type CreatedPropertyType struct {
 // SetCreatedToCurrentTime - This methods sets the object created time to the
 // current time
 func (ezt *CreatedPropertyType) SetCreatedToCurrentTime() {
-	ezt.Created = timestamp.GetCurrentTimeMilli()
+	ezt.Created = timestamp.GetCurrentTime("milli")
 }
 
 // SetCreated - This method takes in a timestamp in either time.Time or string
@@ -36,7 +36,7 @@ func (ezt *CreatedPropertyType) SetCreatedToCurrentTime() {
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
 func (ezt *CreatedPropertyType) SetCreated(t interface{}) {
-	ts := timestamp.VerifyMilli(t)
+	ts, _ := timestamp.ToString(t, "milli")
 	ezt.Created = ts
 }
 

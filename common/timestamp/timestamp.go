@@ -16,30 +16,36 @@ import (
 // Public Functions
 // ----------------------------------------------------------------------
 
-// GetCurrentTime - This function will return the current time in STIX timestamp
-// format, which is in RFC 3339 format.
-func GetCurrentTime() string {
+// GetCurrentTime - This function will return the current time in the STIX
+// time stamp format, which is in RFC 3339 format. The options are "milli",
+// "micro", or "" which will give you to the second.
+func GetCurrentTime(precision string) string {
+	if precision == "milli" {
+		return time.Now().UTC().Format(defs.TIME_RFC_3339_MILLI)
+	} else if precision == "micro" {
+		return time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	}
 	return time.Now().UTC().Format(defs.TIME_RFC_3339)
 }
 
-func GetCurrentTimeMilli() string {
-	return time.Now().UTC().Format(defs.TIME_RFC_3339_MILLI)
-}
+// func Valid() bool {
 
-func Valid() bool {
+// }
 
-}
-
-// Verify - This function takes in a timestamp in either time.Time or string
+// ToString - This function takes in a timestamp in either time.Time or string
 // format and returns a string version of the timestamp.
-func Verify(t interface{}, p string) (string, error) {
+func ToString(t interface{}, p string) (string, error) {
+	// TODO: One potential problem is if the time is created with the time package
+	// at a precision less than micro and we set it to micro in things like
+	// indicator, observed_data, first_seen, and last_seen for example
+
 	var format string
 	if p == "milli" {
 		format = defs.TIME_RFC_3339_MILLI
 	} else if p == "micro" {
 		format = defs.TIME_RFC_3339_MICRO
 	} else {
-
+		format = defs.TIME_RFC_3339
 	}
 
 	switch ts := t.(type) {
@@ -49,7 +55,7 @@ func Verify(t interface{}, p string) (string, error) {
 		//TODO verify format of timestamp when in string format
 		return ts, nil
 	default:
-		return fmt.Sprintf("The timestamp format of \"%s\" is not a valid format", ts)
+		return "", fmt.Errorf("The timestamp format of \"%s\" is not a valid format", ts)
 	}
 }
 

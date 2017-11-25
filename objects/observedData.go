@@ -7,6 +7,7 @@
 package objects
 
 import (
+	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -65,17 +66,29 @@ type ObservedDataType struct {
 // Public Methods - ObservedDataType
 // ----------------------------------------------------------------------
 
+// SetFirstObservedToCurrentTime - This methods sets the first observed time to the
+// current time
+func (ezt *ObservedDataType) SetFirstObservedToCurrentTime() {
+	ezt.FirstObserved = timestamp.GetCurrentTime("micro")
+}
+
 // SetFirstObserved - This method takes in a timestamp in either time.Time or
 // string format and updates the first observed property.
 func (ezt *ObservedDataType) SetFirstObserved(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
+	ts, _ := timestamp.ToString(t, "micro")
 	ezt.FirstObserved = ts
+}
+
+// SetLastObservedToCurrentTime - This methods sets the last observed time to the
+// current time
+func (ezt *ObservedDataType) SetLastObservedToCurrentTime() {
+	ezt.LastObserved = timestamp.GetCurrentTime("micro")
 }
 
 // SetLastObserved - This method takes in a timestamp in either time.Time or
 // string format and updates the last observed property.
 func (ezt *ObservedDataType) SetLastObserved(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
+	ts, _ := timestamp.ToString(t, "micro")
 	ezt.LastObserved = ts
 }
 

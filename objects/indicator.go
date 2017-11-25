@@ -7,6 +7,7 @@
 package objects
 
 import (
+	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -62,17 +63,29 @@ func (ezt *IndicatorType) SetPattern(s string) {
 	ezt.Pattern = s
 }
 
+// SetValidFromToCurrentTime - This methods sets the valid from time to the
+// current time
+func (ezt *IndicatorType) SetValidFromToCurrentTime() {
+	ezt.ValidFrom = timestamp.GetCurrentTime("micro")
+}
+
 // SetValidFrom - This method will take in a timestamp in either time.Time or
 // string format and will set the valid from property to that value.
 func (ezt *IndicatorType) SetValidFrom(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
+	ts, _ := timestamp.ToString(t, "micro")
 	ezt.ValidFrom = ts
+}
+
+// SetValidUntilToCurrentTime - This methods sets the valid until time to the
+// current time
+func (ezt *IndicatorType) SetValidUntilToCurrentTime() {
+	ezt.ValidUntil = timestamp.GetCurrentTime("micro")
 }
 
 // SetValidUntil - This method will take in a timestamp in either time.Time or
 // string format and will set the valid until property to that value.
 func (ezt *IndicatorType) SetValidUntil(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
+	ts, _ := timestamp.ToString(t, "micro")
 
 	// TODO check to make sure this is later than the vaild_from
 	ezt.ValidUntil = ts

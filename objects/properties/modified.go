@@ -7,7 +7,7 @@
 package properties
 
 import (
-	"github.com/freetaxii/libstix2/objects/common/timestamp"
+	"github.com/freetaxii/libstix2/common/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -28,7 +28,7 @@ type ModifiedPropertyType struct {
 // SetModifiedToCurrentTime - This methods sets the object modified time to the
 // current time
 func (ezt *ModifiedPropertyType) SetModifiedToCurrentTime() {
-	ezt.Modified = timestamp.GetCurrentTimeMilli()
+	ezt.Modified = timestamp.GetCurrentTime("milli")
 }
 
 // SetModified - This method takes in a timestamp in either time.Time or string
@@ -36,7 +36,7 @@ func (ezt *ModifiedPropertyType) SetModifiedToCurrentTime() {
 // string, so if the value is in time.Time format, it will be converted to the
 // correct STIX timestamp format.
 func (ezt *ModifiedPropertyType) SetModified(t interface{}) {
-	ts := timestamp.VerifyMilli(t)
+	ts, _ := timestamp.ToString(t, "milli")
 	ezt.Modified = ts
 }
 

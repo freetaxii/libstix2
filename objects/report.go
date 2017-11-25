@@ -7,6 +7,7 @@
 package objects
 
 import (
+	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -52,7 +53,7 @@ type ReportType struct {
 // SetPublished - This method takes in a timestamp in either time.Time or string
 // format and updates the published timestamp property.
 func (ezt *ReportType) SetPublished(t interface{}) {
-	ts := ezt.VerifyTimestamp(t)
+	ts, _ := timestamp.ToString(t, "micro")
 	ezt.Published = ts
 }
 

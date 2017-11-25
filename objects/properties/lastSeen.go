@@ -7,7 +7,7 @@
 package properties
 
 import (
-	"github.com/freetaxii/libstix2/objects/common/timestamp"
+	"github.com/freetaxii/libstix2/common/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -25,11 +25,17 @@ type LastSeenPropertyType struct {
 // Public Methods - LastSeenPropertyType
 // ----------------------------------------------------------------------
 
-// SetLastSeen -  This method takes in a timestamp in either time.Time or string
+// SetLastSeenToCurrentTime - This methods sets the first seen time to the
+// current time
+func (ezt *LastSeenPropertyType) SetLastSeenToCurrentTime() {
+	ezt.LastSeen = timestamp.GetCurrentTime("micro")
+}
+
+// SetLastSeen -  This method takes in a time stamp in either time.Time or string
 // format and updates the last seen property with it. The value is stored as a
 // string, so if the value is in time.Time format, it will be converted to the
-// correct STIX timestamp format.
+// correct STIX time stamp format.
 func (ezt *LastSeenPropertyType) SetLastSeen(t interface{}) {
-	ts := timestamp.Verify(t)
+	ts, _ := timestamp.ToString(t, "micro")
 	ezt.LastSeen = ts
 }
