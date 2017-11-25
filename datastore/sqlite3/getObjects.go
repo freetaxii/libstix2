@@ -47,10 +47,13 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 	}
 
 	// ----------------------------------------------------------------------
-	// Check for one or more STIX types to query on
+	// Check to see if one or more STIX types to query on was supplied.
+	// If there is more than one option given, split with a comma we need to
+	// enclose the options in parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------
 	if query.STIXType != "" {
-		// If there is more than one type, split it out
+		// If there is more than one type, split it out. If there is only one it
+		// will be element [0] in the slice.
 		types := strings.Split(query.STIXType, ",")
 
 		if len(types) == 1 {

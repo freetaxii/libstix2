@@ -26,27 +26,28 @@ func GetCurrentTimeMilli() string {
 	return time.Now().UTC().Format(defs.TIME_RFC_3339_MILLI)
 }
 
-// Verify - This function takes in a timestamp in either time.Time or string
-// format and returns a string version of the timestamp.
-func Verify(t interface{}) string {
-	switch ts := t.(type) {
-	case time.Time:
-		return ts.UTC().Format(defs.TIME_RFC_3339)
-	case string:
-		//TODO verify format of timestamp when in string format
-		return ts
-	default:
-		return fmt.Sprintf("The timestamp format of \"%s\" is not a valid format", ts)
-	}
+func Valid() bool {
+
 }
 
-func VerifyMilli(t interface{}) string {
+// Verify - This function takes in a timestamp in either time.Time or string
+// format and returns a string version of the timestamp.
+func Verify(t interface{}, p string) (string, error) {
+	var format string
+	if p == "milli" {
+		format = defs.TIME_RFC_3339_MILLI
+	} else if p == "micro" {
+		format = defs.TIME_RFC_3339_MICRO
+	} else {
+
+	}
+
 	switch ts := t.(type) {
 	case time.Time:
-		return ts.UTC().Format(defs.TIME_RFC_3339_MILLI)
+		return ts.UTC().Format(format), nil
 	case string:
 		//TODO verify format of timestamp when in string format
-		return ts
+		return ts, nil
 	default:
 		return fmt.Sprintf("The timestamp format of \"%s\" is not a valid format", ts)
 	}
