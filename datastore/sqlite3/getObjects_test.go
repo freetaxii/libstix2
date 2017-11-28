@@ -7,6 +7,7 @@
 package sqlite3
 
 import (
+	"github.com/freetaxii/libstix2/datastore"
 	"testing"
 )
 
@@ -137,4 +138,59 @@ func verifyRangeData(t *testing.T, rangeData, testData []string) {
 			}
 		}
 	}
+}
+
+func TestProcessQueryOptions(t *testing.T) {
+	var ds Sqlite3DatastoreType
+	var q datastore.QueryType
+	var err error
+
+	t.Log("Test 1: make sure we get an error if a single type value is wrong")
+	q.STIXType = "indicatorr"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 2: make sure we get an error if a two type values are wrong")
+	q.STIXType = "foo,bar"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 3: make sure we get an error if the first type value is correct but the second is wrong")
+	q.STIXType = "indicator,bar"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 4: make sure we get an error if the first type value is wrong but the second is correct")
+	q.STIXType = "foo,indicator"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 5: make sure we do not get an error if a single type value is correct")
+	q.STIXType = "indicator"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 6: make sure we do not get an error if two type values are correct")
+	q.STIXType = "indicator,attack-pattern"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
 }

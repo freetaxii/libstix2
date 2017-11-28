@@ -9,6 +9,7 @@ package timestamp
 import (
 	"fmt"
 	"github.com/freetaxii/libstix2/defs"
+	"regexp"
 	"time"
 )
 
@@ -28,9 +29,22 @@ func GetCurrentTime(precision string) string {
 	return time.Now().UTC().Format(defs.TIME_RFC_3339)
 }
 
-// func Valid() bool {
-
-// }
+// Valid - This function will return true if the time stamp is a valid STIX
+// time stamp, just the date in proper RFC3339 format, or just the year. If it
+// is anything else it will return false.
+func Valid(t string) bool {
+	re1 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}T[0-2]\d{1}:[0-5]\d{1}:[0-5]\d{1}(\.\d{0,6})?Z$`)
+	re2 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}$`)
+	re3 := regexp.MustCompile(`^[12]\d{3}$`)
+	if re1.MatchString(t) {
+		return true
+	} else if re2.MatchString(t) {
+		return true
+	} else if re3.MatchString(t) {
+		return true
+	}
+	return false
+}
 
 // ToString - This function takes in a timestamp in either time.Time or string
 // format and returns a string version of the timestamp.

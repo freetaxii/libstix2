@@ -9,6 +9,7 @@ package sqlite3
 import (
 	"errors"
 	"fmt"
+	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"log"
@@ -28,70 +29,24 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid string) (interface{}, error) {
 }
 
 /*
-GetListOfObjectsInCollection - This method will take in query and range
+GetListOfObjectsInCollection - This method will take in query struct and range
 parameters for a collection and will return a slice of strings that contains all
 of the STIX IDs that are in that collection that meet those query or range
 parameters.
 
-Retval:
-	[]string = list of objects
-    int = number of total objects, not number in range
+Return:
+	allObjects ([]string) - A list of all STIX objects that match the query parameters
     error
 */
-func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) ([]string, int, error) {
+func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) ([]string, error) {
 	var allObjects []string
-	var whereQuery string
 
-	if query.AddedAfter != "" {
-		whereQuery = whereQuery + ` AND t_collection_content.date_added > $2 `
-	}
+	whereQuery, err := ds.processQueryOptions(query)
 
-	// ----------------------------------------------------------------------
-	// Check to see if one or more STIX types to query on was supplied.
-	// If there is more than one option given, split with a comma we need to
-	// enclose the options in parentheses as the comma represents an OR operator.
-	// ----------------------------------------------------------------------
-	if query.STIXType != "" {
-		// If there is more than one type, split it out. If there is only one it
-		// will be element [0] in the slice.
-		types := strings.Split(query.STIXType, ",")
-
-		if len(types) == 1 {
-			if objects.ValidSTIXObject(query.STIXType) {
-				whereQuery += ` AND t_collection_content.stix_id LIKE "` + query.STIXType + `%"`
-			}
-		} else if len(types) > 1 {
-			whereQuery += ` AND (`
-			for i, v := range types {
-				// Lets only add the OR after the first object and not after the last object
-				if i > 0 {
-					whereQuery += ` OR `
-				}
-				// Lets make sure the value that was passed in is actually a valid object
-				if objects.ValidSTIXObject(v) {
-					whereQuery += `t_collection_content.stix_id LIKE "` + v + `%"`
-				}
-			}
-			whereQuery += `)`
-		}
-	}
-
-	if query.STIXVersion != "" {
-		if query.STIXVersion == "last" {
-			whereQuery = whereQuery + ` AND s_base_object.modified = (select max(modified) from s_base_object where t_collection_content.stix_id = s_base_object.id) `
-			// We need to zero out the value since we will be passing it in to the query function below for the else use case
-			query.STIXVersion = ""
-		} else if query.STIXVersion == "first" {
-			whereQuery = whereQuery + ` AND s_base_object.modified = (select min(modified) from s_base_object where t_collection_content.stix_id = s_base_object.id) `
-			// We need to zero out the value since we will be passing it in to the query function below for the else use case
-			query.STIXVersion = ""
-		} else if query.STIXVersion == "all" {
-			// We need to zero out the value since we will be passing it in to the query function below for the else use case
-			query.STIXVersion = ""
-		} else {
-			//whereQuery = whereQuery + ` AND s_base_object.modified = (select modified from s_base_object where t_collection_content.stix_id = s_base_object.id AND s_base_object.modified = $4) `
-			whereQuery = whereQuery + ` AND s_base_object.modified = $3 `
-		}
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, err
 	}
 
 	var getAllObjectsInCollection = `
@@ -103,17 +58,17 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `
 		JOIN s_base_object
 		ON t_collection_content.stix_id = s_base_object.id
-		WHERE 
-			t_collection_content.collection_id = $1 ` + whereQuery +
-		` GROUP BY t_collection_content.stix_id
-	`
+		WHERE ` + whereQuery + `
+		GROUP BY t_collection_content.stix_id
+		`
 
+	// Debug
 	log.Println(getAllObjectsInCollection)
 
 	// Query database for all the collection entries
-	rows, err := ds.DB.Query(getAllObjectsInCollection, query.CollectionID, query.AddedAfter, query.STIXVersion)
+	rows, err := ds.DB.Query(getAllObjectsInCollection)
 	if err != nil {
-		return nil, 0, fmt.Errorf("Database execution error querying collection content: ", err)
+		return nil, fmt.Errorf("database execution error querying collection content: ", err)
 	}
 	defer rows.Close()
 
@@ -126,8 +81,7 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		allObjects = append(allObjects, stixid)
 	}
 
-	size := len(allObjects)
-	return allObjects, size, nil
+	return allObjects, nil
 }
 
 /*
@@ -201,3 +155,127 @@ Retval:
 // 	}
 // 	return stixBundle, nil
 // }
+
+// ----------------------------------------------------------------------
+// Private Methods
+// ----------------------------------------------------------------------
+
+/*
+processQueryOptions - This method will take in a query struct and build an SQL
+where statement based on all of the provided query parameters.
+
+Return:
+    webQuery (string) - The where statement for the SQL query
+    error
+*/
+func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (string, error) {
+	var whereQuery string
+
+	// ----------------------------------------------------------------------
+	// Lets first add the collection ID to the where clause.
+	// ----------------------------------------------------------------------
+	if query.CollectionID != "" {
+		whereQuery += datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.collection_id = "` + query.CollectionID + `"`
+	}
+
+	// ----------------------------------------------------------------------
+	// Check to see if an added after query was supplied. There can only be one
+	// added after option, it does not make sense to have multiple.
+	// ----------------------------------------------------------------------
+	if query.AddedAfter != "" {
+		if timestamp.Valid(query.AddedAfter) {
+			whereQuery += ` AND ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.date_added > "` + query.AddedAfter + `"`
+		} else {
+			return "", errors.New("the provided timestamp for added after is invalid")
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Check to see if one or more STIX types, to query on, was supplied.
+	// If there is more than one option given, split with a comma, we need to
+	// enclose the options in parentheses as the comma represents an OR operator.
+	// ----------------------------------------------------------------------
+	if query.STIXType != "" {
+		// If there is more than one type, split it out. If there is only one it
+		// will be element [0] in the slice.
+		types := strings.Split(query.STIXType, ",")
+
+		if len(types) == 1 {
+			if objects.ValidSTIXObject(types[0]) {
+				whereQuery += ` AND ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id LIKE "` + types[0] + `%"`
+			} else {
+				return "", errors.New("the provided object type is invalid")
+			}
+		} else if len(types) > 1 {
+			whereQuery += ` AND (`
+			addOR := false
+			for _, v := range types {
+
+				// Lets only add the OR after the first object and not after the last object
+				if addOR == true {
+					whereQuery += ` OR `
+					addOR = false
+				}
+				// Lets make sure the value that was passed in is actually a valid object
+				if objects.ValidSTIXObject(v) {
+					whereQuery += datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id LIKE "` + v + `%"`
+					addOR = true
+				} else {
+					return "", errors.New("the provided object type is invalid")
+				}
+			}
+			whereQuery += `)`
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Check to see if one or more STIX versions to query on was supplied.
+	// If there is more than one option given, split with a comma, we need to
+	// enclose the options in parentheses as the comma represents an OR operator.
+	// ----------------------------------------------------------------------
+	if query.STIXVersion != "" {
+		// If there is more than one version, split it out. If there is only one
+		// it will be element [0] in the slice.
+		versions := strings.Split(query.STIXVersion, ",")
+
+		if len(versions) == 1 {
+			if versions[0] == "last" {
+				whereQuery += ` AND ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = (select max(modified) from ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` where ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.id) `
+			} else if versions[0] == "first" {
+				whereQuery += ` AND ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = (select min(modified) from ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` where ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.id) `
+			} else if versions[0] == "all" {
+				// Do nothing, since the default is to return all versions.
+			} else {
+				//whereQuery = whereQuery + ` AND s_base_object.modified = (select modified from s_base_object where t_collection_content.stix_id = s_base_object.id AND s_base_object.modified = $4) `
+				if timestamp.Valid(versions[0]) {
+					whereQuery += ` AND ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = "` + versions[0] + `"`
+				} else {
+					return "", errors.New("the provided timestamp for the version is invalid")
+				}
+			}
+		} else if len(versions) > 1 {
+			whereQuery += ` AND (`
+			for i, v := range versions {
+				// Lets only add he OR after the first object and not after the last object
+				if i > 0 {
+					whereQuery += ` OR `
+				}
+				if v == "last" {
+					whereQuery += datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = (select max(modified) from ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` where ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.id) `
+				} else if v == "first" {
+					whereQuery += datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = (select min(modified) from ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` where ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = ` + datastore.DB_TABLE_STIX_BASE_OBJECT + `.id) `
+				} else if v == "all" {
+					// Do nothing as it will do nothing here, or it should not be valid
+				} else {
+					if timestamp.Valid(v) {
+						whereQuery += datastore.DB_TABLE_STIX_BASE_OBJECT + `.modified = "` + v + `"`
+					} else {
+						return "", errors.New("the provided timestamp for the version is invalid")
+					}
+				}
+			}
+			whereQuery += `)`
+		}
+	}
+	return whereQuery, nil
+}
