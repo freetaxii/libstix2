@@ -16,11 +16,11 @@ import (
 
 /*
 ErrorType - This type implements the TAXII 2 Error Message and defines
-all of the properties methods needed to create and work with the TAXII Error
+all of the properties and methods needed to create and work with the TAXII Error
 Message. All of the methods not defined local to this type are inherited from
 the individual properties.
 
-The following information comes directly from the TAXII 2 specificaton documents.
+The following information comes directly from the TAXII 2 specification documents.
 
 TAXII primarily relies on the standard HTTP error semantics (400-series and
 500-series status codes, defined by sections 6.5 and 6.6 of [RFC7231]) to allow

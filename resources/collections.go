@@ -11,12 +11,12 @@ package resources
 // ----------------------------------------------------------------------
 
 /*
-CollectionsType - This type implements the TAXII 2 Collctions Resource and defines
-all of the properties methods needed to create and work with the TAXII Collections
+CollectionsType - This type implements the TAXII 2 Collections Resource and defines
+all of the properties and methods needed to create and work with the TAXII Collections
 Resource. All of the methods not defined local to this type are inherited from
 the individual properties.
 
-The following information comes directly from the TAXII 2 specificaton documents.
+The following information comes directly from the TAXII 2 specification documents.
 
 This Endpoint provides information about the Collections hosted under this API
 Root. This is similar to the response to get a Collection (see section 5.2), but
@@ -38,7 +38,7 @@ type CollectionsType struct {
 // AddCollection - This method takes in an object that represents a collection
 // and adds it to the list in the collections property and returns an integer of
 // the location in the slice where the collection object was added. This method
-// would be used if the collection was created separtely and it just needs to be
+// would be used if the collection was created separately and it just needs to be
 // added in whole to the collections list.
 func (ezt *CollectionsType) AddCollection(o CollectionType) int {
 	ezt.initCollectionsProperty()
@@ -48,7 +48,7 @@ func (ezt *CollectionsType) AddCollection(o CollectionType) int {
 }
 
 // NewCollection - This method is used to create a collection and automatically
-// add it to the collections array. It returns a collection.CollectionType which
+// add it to the collections array. It returns a resources.CollectionType which
 // is a pointer to the actual Collection that was created in the collections
 // slice.
 func (ezt *CollectionsType) NewCollection() *CollectionType {

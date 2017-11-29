@@ -16,11 +16,11 @@ import (
 
 /*
 DiscoveryType - This type implements the TAXII 2 Discovery Resource and defines
-all of the properties methods needed to create and work with the TAXII Discovery
+all of the properties and methods needed to create and work with the TAXII Discovery
 Resource. All of the methods not defined local to this type are inherited from
 the individual properties.
 
-The following information comes directly from the TAXII 2 specificaton documents.
+The following information comes directly from the TAXII 2 specification documents.
 
 This Endpoint provides general information about a TAXII Server, including the
 advertised API Roots. It's a common entry point for TAXII Clients into the data

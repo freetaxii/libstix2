@@ -12,7 +12,7 @@ import (
 )
 
 /*
-TestGetRangeOfObjects - This function will test the following things:
+Test_GetRangeOfObjects - This function will test the following things:
   1) First value is negative
   2) First value is greater than last value
   3) First value is bigger than size of data
@@ -23,7 +23,7 @@ TestGetRangeOfObjects - This function will test the following things:
   8) Last value minus first value is smaller than the server will allow
   9) The values of first and last are the same
 */
-func TestGetRangeOfObjects(t *testing.T) {
+func Test_GetRangeOfObjects(t *testing.T) {
 	var rangeData []string
 	var testData []string
 	var size int
@@ -140,12 +140,70 @@ func verifyRangeData(t *testing.T, rangeData, testData []string) {
 	}
 }
 
-func TestProcessQueryOptions(t *testing.T) {
+func Test_processQueryOptions(t *testing.T) {
 	var ds Sqlite3DatastoreType
 	var q datastore.QueryType
 	var err error
 
-	t.Log("Test 1: make sure we get an error if a single type value is wrong")
+	t.Log("Test 1.1: make sure we do not get an error if a year date is used for added after")
+	err = nil
+	q.AddedAfter = "2017"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 1.2: make sure we do not get an error if a full date is used for added after")
+	err = nil
+	q.AddedAfter = "2017-03-02"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 1.3: make sure we do not get an error if a full timestamp (micro) is used for added after")
+	err = nil
+	q.AddedAfter = "2017-03-02T01:01:01.123456Z"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 1.4: make sure we do not get an error if a full timestamp (milli) is used for added after")
+	err = nil
+	q.AddedAfter = "2017-03-02T01:01:01.123Z"
+	_, err = ds.processQueryOptions(q)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 1.5: make sure we get an error if the timezone Z is left off")
+	err = nil
+	q.AddedAfter = "2017-03-02T01:01:01"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 1.6: make sure we get an error if the timestamp is incorrectly formatted")
+	err = nil
+	q.AddedAfter = "2017-03-02 01:01:01"
+	_, err = ds.processQueryOptions(q)
+
+	if err == nil {
+		t.Error(err)
+	}
+
+	// Clear out value
+	q.AddedAfter = ""
+
+	t.Log("Test 2.1: make sure we get an error if a single type value is wrong")
+	err = nil
 	q.STIXType = "indicatorr"
 	_, err = ds.processQueryOptions(q)
 
@@ -153,7 +211,8 @@ func TestProcessQueryOptions(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log("Test 2: make sure we get an error if a two type values are wrong")
+	t.Log("Test 2.2: make sure we get an error if a two type values are wrong")
+	err = nil
 	q.STIXType = "foo,bar"
 	_, err = ds.processQueryOptions(q)
 
@@ -161,7 +220,8 @@ func TestProcessQueryOptions(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log("Test 3: make sure we get an error if the first type value is correct but the second is wrong")
+	t.Log("Test 2.3: make sure we get an error if the first type value is correct but the second is wrong")
+	err = nil
 	q.STIXType = "indicator,bar"
 	_, err = ds.processQueryOptions(q)
 
@@ -169,7 +229,8 @@ func TestProcessQueryOptions(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log("Test 4: make sure we get an error if the first type value is wrong but the second is correct")
+	t.Log("Test 2.4: make sure we get an error if the first type value is wrong but the second is correct")
+	err = nil
 	q.STIXType = "foo,indicator"
 	_, err = ds.processQueryOptions(q)
 
@@ -177,7 +238,8 @@ func TestProcessQueryOptions(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log("Test 5: make sure we do not get an error if a single type value is correct")
+	t.Log("Test 2.5: make sure we do not get an error if a single type value is correct")
+	err = nil
 	q.STIXType = "indicator"
 	_, err = ds.processQueryOptions(q)
 
@@ -185,7 +247,8 @@ func TestProcessQueryOptions(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log("Test 6: make sure we do not get an error if two type values are correct")
+	t.Log("Test 2.6: make sure we do not get an error if two type values are correct")
+	err = nil
 	q.STIXType = "indicator,attack-pattern"
 	_, err = ds.processQueryOptions(q)
 

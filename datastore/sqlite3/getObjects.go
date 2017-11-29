@@ -12,6 +12,7 @@ import (
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/resources"
 	"log"
 	"strings"
 )
@@ -41,12 +42,75 @@ Return:
 func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) ([]string, error) {
 	var allObjects []string
 
+	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+	if err != nil {
+		return nil, fmt.Errorf("database execution error querying collection content: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var dateAdded, stixid, modified, specVersion string
+		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			return nil, fmt.Errorf("database scan error: ", err)
+		}
+		log.Println(stixid, " ", modified)
+		allObjects = append(allObjects, stixid)
+	}
+
+	return allObjects, nil
+}
+
+/*
+GetManifestFromCollection - This method will take in query struct and range
+parameters for a collection and will return a TAXII manifest.
+
+Return:
+	manifest (resource.ManifestType) - A TAXII manifest resource that match the query parameters
+    error
+*/
+func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryType) (*resources.ManifestType, error) {
+	manifest := resources.NewManifest()
+
+	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+	if err != nil {
+		return nil, fmt.Errorf("database execution error querying collection content: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var dateAdded, stixid, modified, specVersion string
+		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			return nil, fmt.Errorf("database scan error: ", err)
+		}
+		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+	}
+
+	return &manifest, nil
+}
+
+func (ds *Sqlite3DatastoreType) sqlGetAllObjectsInCollection(query datastore.QueryType) (string, error) {
 	whereQuery, err := ds.processQueryOptions(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	var getAllObjectsInCollection = `
@@ -63,25 +127,8 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 		`
 
 	// Debug
-	log.Println(getAllObjectsInCollection)
-
-	// Query database for all the collection entries
-	rows, err := ds.DB.Query(getAllObjectsInCollection)
-	if err != nil {
-		return nil, fmt.Errorf("database execution error querying collection content: ", err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var dateAdded, stixid, modified, specVersion string
-		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
-			log.Fatal(err)
-		}
-		log.Println(stixid, " ", modified)
-		allObjects = append(allObjects, stixid)
-	}
-
-	return allObjects, nil
+	//log.Println(sqlStmt)
+	return getAllObjectsInCollection, nil
 }
 
 /*
@@ -90,37 +137,45 @@ values that represent the number of records to return. The method will return a
 new slice of strings that meet the range requirements or an error.
 Retval:
 	[]string = list of objects
-    int = number of total objects, not number in range
 	error
 */
-func (ds *Sqlite3DatastoreType) GetRangeOfObjects(allObjects []string, maxsize, first, last int) ([]string, int, error) {
+func (ds *Sqlite3DatastoreType) GetRangeOfObjects(allObjects []string, query datastore.QueryType) ([]string, error) {
+
+	first := query.RangeBegin
+	last := query.RangeEnd
+	maxsize := query.RangeMax
+	size := len(allObjects)
 
 	if first < 0 {
-		return nil, 0, errors.New("The starting value can not be negative")
+		return nil, errors.New("the starting value can not be negative")
 	}
 
 	if first > last {
-		return nil, 0, errors.New("The starting range value is larger than the ending range value")
+		return nil, errors.New("the starting range value is larger than the ending range value")
 	}
-
-	// We need to be inclusive of the last value
-	last++
-
-	if (last - first) > maxsize {
-		last = first + maxsize
-	}
-
-	size := len(allObjects)
 
 	if first >= size {
-		return nil, size, errors.New("The starting range value is out of scope")
+		return nil, errors.New("the starting range value is out of scope")
 	}
+
+	// We need to be inclusive of the last value that was provided
+	last++
+
+	// If the last record requested is bigger than the total size of the data
+	// set the last size to be the size of the data
 	if last > size {
 		last = size
 	}
 
+	// If the request is for more records than the maxsize will allow, then
+	// compute where the new last record should be.
+	if (last - first) > maxsize {
+		last = first + maxsize
+	}
+
+	// Get a new slice based on the range of records
 	rangeObjects := allObjects[first:last]
-	return rangeObjects, size, nil
+	return rangeObjects, nil
 }
 
 /*

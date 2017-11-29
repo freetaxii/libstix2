@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+// These functions are used by the follow properties and objects:
+// created, modified, firstSeen, lastSeen,
+// indicator, observedData, report
+
 // ----------------------------------------------------------------------
 // Public Functions
 // ----------------------------------------------------------------------

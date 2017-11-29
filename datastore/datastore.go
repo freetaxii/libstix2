@@ -31,4 +31,5 @@ type QueryType struct {
 	AddedAfter   string
 	RangeBegin   int
 	RangeEnd     int
+	RangeMax     int
 }

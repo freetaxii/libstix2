@@ -35,9 +35,16 @@ func NewDiscovery() DiscoveryType {
 }
 
 // NewManifest - This function will create a new TAXII Manifest object.
-// func NewManifest() ManifestType {
-// 	return manifest.New()
-// }
+func NewManifest() ManifestType {
+	var obj ManifestType
+	return obj
+}
+
+// NewManifestEntry - This function will create a new TAXII Manifest Entry object.
+func NewManifestEntry() ManifestEntryType {
+	var obj ManifestEntryType
+	return obj
+}
 
 // NewStatus - This function will create a new TAXII Status object.
 // func NewStatus() StatusType {

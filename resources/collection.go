@@ -15,12 +15,12 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-CollectionType - This type implements the TAXII 2 Collction Resource and defines
-all of the properties methods needed to create and work with the TAXII Collection
+CollectionType - This type implements the TAXII 2 Collection Resource and defines
+all of the properties and methods needed to create and work with the TAXII Collection
 Resource. All of the methods not defined local to this type are inherited from
 the individual properties.
 
-The following information comes directly from the TAXII 2 specificaton documents.
+The following information comes directly from the TAXII 2 specification documents.
 
 This Endpoint provides general information about a Collection, which can be used
 to help users and clients decide whether and how they want to interact with it.
