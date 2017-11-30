@@ -67,17 +67,17 @@ TAXII Features
 - [ ] Persistent storage
 - [ ] Version checking
 - [ ] URL parameters
-- [ ] Object by ID
+- [x] Object by ID
 
 TAXII Resources
 - [x] Discovery
 - [x] API Root
 - [x] Collections
 - [x] Collection
-- [ ] Objects
-- [ ] Manifest
+- [x] Objects
+- [x] Manifest
 - [ ] Status
-- [ ] Error
+- [x] Error
 
 
 ## License ##

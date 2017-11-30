@@ -57,7 +57,7 @@ func (ezt *ManifestType) AddManifestEntry(o ManifestEntryType) int {
 }
 
 // NewManifestEntry - This method is used to create a manifest entry and automatically
-// add it to the manifest array. It returns a resources.ManifestEntryType which
+// add it to the objects array. It returns a resources.ManifestEntryType which
 // is a pointer to the actual manifest entry that was created in the manifest
 // slice.
 func (ezt *ManifestType) NewManifestEntry() *ManifestEntryType {
@@ -68,6 +68,10 @@ func (ezt *ManifestType) NewManifestEntry() *ManifestEntryType {
 	return &ezt.Objects[positionThatAppendWillUse]
 }
 
+// CreateManifestEntry - This method is used to create and add a manifest entry
+// in a single step, but taking in all of the values as parameters. Multiple
+// values for the version and media type properties can be provided as a comma
+// separated list with no spaces in between the values.
 func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) {
 	m := ezt.NewManifestEntry()
 	m.SetID(id)
@@ -81,6 +85,8 @@ func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) {
 	mediatypes := strings.Split(media, ",")
 	for i, mt := range mediatypes {
 
+		// If the media types are all the same, due to the way the SQL query
+		// returns results, then only record one entry.
 		if i > 0 && mt == mediatypes[i-1] {
 			continue
 		}
