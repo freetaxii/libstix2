@@ -6,10 +6,34 @@
 
 package objects
 
-// ValidSTIXObject - This function will take in a string and return true if the
+import (
+	"github.com/freetaxii/libstix2/common/stixid"
+	"strings"
+)
+
+// IsValidSTIXID - This function will take in a STIX ID and return true if the
+// string represents an actual STIX ID in the correct format.
+func IsValidSTIXID(id string) bool {
+	valid := false
+
+	idparts := strings.Split(id, "--")
+
+	valid = IsValidSTIXObject(idparts[0])
+
+	// Short circuit if the STIX type part is wrong
+	if valid == false {
+		return false
+	}
+
+	valid = stixid.IsValidUUID(idparts[1])
+
+	return valid
+}
+
+// IsValidSTIXObject - This function will take in a string and return true if the
 // string represents an actual STIX object type. This is used for determining if
 // input from an outside source is actually a defined STIX object or not.
-func ValidSTIXObject(obj string) bool {
+func IsValidSTIXObject(obj string) bool {
 	valid := false
 
 	switch obj {

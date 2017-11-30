@@ -35,124 +35,107 @@ of the STIX IDs that are in that collection that meet those query or range
 parameters.
 
 Return:
-	rangeObjects ([]string) - A list of all STIX objects that match the query and range parameters
-	size (int) - The size of the entire dataset
-    error
+rangeObjects ([]string]) - A pointer to a list of STIX objects that match the
+	query and range parameters
+metaData (datastore.QueryReturnDataType) - A pointer to a struct that contain
+	meta data values like size and TAXII X header information
+error
 */
-func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) (*[]string, int, error) {
+func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) (*[]string, *datastore.QueryReturnDataType, error) {
 	var allObjects []string
+	var metaData datastore.QueryReturnDataType
 
 	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
 	if err != nil {
-		return nil, 0, err
+		return nil, nil, err
 	}
 
 	// Query database for all the collection entries
 	rows, err := ds.DB.Query(sqlStmt)
 	if err != nil {
-		return nil, 0, fmt.Errorf("database execution error querying collection content: ", err)
+		return nil, nil, fmt.Errorf("database execution error querying collection content: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var dateAdded, stixid, modified, specVersion string
 		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
-			return nil, 0, fmt.Errorf("database scan error: ", err)
+			return nil, nil, fmt.Errorf("database scan error: ", err)
 		}
 		allObjects = append(allObjects, stixid)
 	}
 
-	size := len(allObjects)
+	metaData.Size = len(allObjects)
 
-	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, size)
+	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
 
 	// Get a new slice based on the range of records
 	rangeObjects := allObjects[first:last]
 
-	return &rangeObjects, size, nil
+	return &rangeObjects, &metaData, nil
 }
 
 /*
-GetManifestFromCollection - This method will take in query struct and range
+GetManifestFromCollection - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest.
 
 Return:
-	manifest (resource.ManifestType) - A TAXII manifest resource that match the query parameters
-    error
+rangeManifest (resource.ManifestType) - A pointer to a TAXII manifest resource
+	that matches the query parameters
+metaData (datastore.QueryReturnDataType) - A pointer to a struct that contain
+	meta data values like size and TAXII X header information
+error
 */
-func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryType) (*resources.ManifestType, int, error) {
+func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryType) (*resources.ManifestType, *datastore.QueryReturnDataType, error) {
 	manifest := resources.NewManifest()
 	rangeManifest := resources.NewManifest()
+	var metaData datastore.QueryReturnDataType
 
 	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
 	if err != nil {
-		return nil, 0, err
+		return nil, nil, err
 	}
 
 	// Query database for all the collection entries
 	rows, err := ds.DB.Query(sqlStmt)
 	if err != nil {
-		return nil, 0, fmt.Errorf("database execution error querying collection content: ", err)
+		return nil, nil, fmt.Errorf("database execution error querying collection content: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var dateAdded, stixid, modified, specVersion string
 		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
-			return nil, 0, fmt.Errorf("database scan error: ", err)
+			return nil, nil, fmt.Errorf("database scan error: ", err)
 		}
 		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
 	}
 
-	size := len(manifest.Objects)
+	metaData.Size = len(manifest.Objects)
 
-	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, size)
+	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
 
 	// Get a new slice based on the range of records
-	//rangeObjects := allObjects[first:last]
+	rangeManifest.Objects = manifest.Objects[first:last]
+	metaData.DateAddedFirst = rangeManifest.Objects[0].DateAdded
+	metaData.DateAddedLast = rangeManifest.Objects[len(rangeManifest.Objects)-1].DateAdded
 
-	return &manifest, size, nil
-}
-
-func (ds *Sqlite3DatastoreType) sqlGetAllObjectsInCollection(query datastore.QueryType) (string, error) {
-	whereQuery, err := ds.processQueryOptions(query)
-
-	// If an error is found, that means a query parameter was passed incorrectly
-	// and we should return an error versus just skipping the option.
-	if err != nil {
-		return "", err
-	}
-
-	var getAllObjectsInCollection = `
-		SELECT
-			t_collection_content.date_added,
-			t_collection_content.stix_id,
-			group_concat(s_base_object.modified),
-			group_concat(s_base_object.spec_version)
-		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `
-		JOIN s_base_object
-		ON t_collection_content.stix_id = s_base_object.id
-		WHERE ` + whereQuery + `
-		GROUP BY t_collection_content.stix_id
-		`
-
-	// Debug
-	//log.Println(sqlStmt)
-	return getAllObjectsInCollection, nil
+	return &rangeManifest, &metaData, nil
 }
 
 /*
-GetRangeValues - This method will take in a slice of strings and two index
-values that represent the number of records to return. The method will return a
-new slice of strings that meet the range requirements or an error.
-Retval:
-	[]string = list of objects
-	error
+GetRangeValues - This method will take in the various range parameters and size
+of the dataset and will return the correct first and last index values to be used.
+
+Return:
+first (int) - The index of the first element of the range request
+last  (int) - The index of the last element of the range request
+error
 */
 func (ds *Sqlite3DatastoreType) GetRangeValues(first, last, max, size int) (int, int, error) {
 
@@ -228,12 +211,48 @@ Retval:
 // ----------------------------------------------------------------------
 
 /*
+sqlGetAllObjectsInCollection - This method will take in a query struct and return
+an SQL select statement that matches the requirements and parameters given in the
+query struct.
+
+Return:
+getAllObjectsInCollection (string) - This is a complete SQL SELECT command
+error
+*/
+func (ds *Sqlite3DatastoreType) sqlGetAllObjectsInCollection(query datastore.QueryType) (string, error) {
+	whereQuery, err := ds.processQueryOptions(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return "", err
+	}
+
+	var getAllObjectsInCollection = `
+		SELECT
+			t_collection_content.date_added,
+			t_collection_content.stix_id,
+			group_concat(s_base_object.modified),
+			group_concat(s_base_object.spec_version)
+		FROM ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `
+		JOIN s_base_object
+		ON t_collection_content.stix_id = s_base_object.id
+		WHERE ` + whereQuery + `
+		GROUP BY t_collection_content.stix_id
+		`
+
+	// Debug
+	//log.Println(sqlStmt)
+	return getAllObjectsInCollection, nil
+}
+
+/*
 processQueryOptions - This method will take in a query struct and build an SQL
 where statement based on all of the provided query parameters.
 
 Return:
-    webQuery (string) - The where statement for the SQL query
-    error
+webQuery (string) - The where statement for the SQL query
+error
 */
 func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (string, error) {
 	var whereQuery string
@@ -243,6 +262,8 @@ func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (
 	// ----------------------------------------------------------------------
 	if query.CollectionID != "" {
 		whereQuery += datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.collection_id = "` + query.CollectionID + `"`
+	} else {
+		return "", errors.New("no collection ID was provided")
 	}
 
 	// ----------------------------------------------------------------------
@@ -258,6 +279,44 @@ func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (
 	}
 
 	// ----------------------------------------------------------------------
+	// Check to see if one or more STIX ID, to query on, was supplied.
+	// If there is more than one option given, split with a comma, we need to
+	// enclose the options in parentheses as the comma represents an OR operator.
+	// ----------------------------------------------------------------------
+	if query.STIXID != "" {
+		// If there is more than one type, split it out. If there is only one it
+		// will be element [0] in the slice.
+		ids := strings.Split(query.STIXID, ",")
+
+		if len(ids) == 1 {
+			if objects.IsValidSTIXID(query.STIXID) {
+				whereQuery += ` AND ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = "` + query.STIXID + `"`
+			} else {
+				return "", errors.New("the provided object id is invalid")
+			}
+		} else if len(ids) > 1 {
+			whereQuery += ` AND (`
+			addOR := false
+			for _, v := range ids {
+
+				// Lets only add the OR after the first object id and not after the last object id
+				if addOR == true {
+					whereQuery += ` OR `
+					addOR = false
+				}
+				// Lets make sure the value that was passed in is actually a valid id
+				if objects.IsValidSTIXID(v) {
+					whereQuery += datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id = "` + v + `"`
+					addOR = true
+				} else {
+					return "", errors.New("the provided object id is invalid")
+				}
+			}
+			whereQuery += `)`
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	// Check to see if one or more STIX types, to query on, was supplied.
 	// If there is more than one option given, split with a comma, we need to
 	// enclose the options in parentheses as the comma represents an OR operator.
@@ -268,7 +327,7 @@ func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (
 		types := strings.Split(query.STIXType, ",")
 
 		if len(types) == 1 {
-			if objects.ValidSTIXObject(types[0]) {
+			if objects.IsValidSTIXObject(types[0]) {
 				whereQuery += ` AND ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id LIKE "` + types[0] + `%"`
 			} else {
 				return "", errors.New("the provided object type is invalid")
@@ -284,7 +343,7 @@ func (ds *Sqlite3DatastoreType) processQueryOptions(query datastore.QueryType) (
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid object
-				if objects.ValidSTIXObject(v) {
+				if objects.IsValidSTIXObject(v) {
 					whereQuery += datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + `.stix_id LIKE "` + v + `%"`
 					addOR = true
 				} else {

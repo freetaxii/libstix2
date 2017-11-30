@@ -33,3 +33,13 @@ type QueryType struct {
 	RangeEnd     int
 	RangeMax     int
 }
+
+// QueryReturnDataType - This struct contains the various bits of meta data that
+// are returned from a query against a TAXII server. This is done so that the
+// method signatures do not need to change as time goes on and we add more meta
+// data that needs to be returned.
+type QueryReturnDataType struct {
+	Size           int
+	DateAddedFirst string
+	DateAddedLast  string
+}
