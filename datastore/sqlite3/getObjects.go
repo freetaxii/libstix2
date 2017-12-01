@@ -44,6 +44,8 @@ error
 func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.QueryType) (*[]string, *datastore.QueryReturnDataType, error) {
 	var allObjects []string
 	var metaData datastore.QueryReturnDataType
+	var first, last int
+	var errRange error
 
 	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
 	// If an error is found, that means a query parameter was passed incorrectly
@@ -69,7 +71,12 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 
 	metaData.Size = len(allObjects)
 
-	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+	// User my request a range even if the server does not force it
+	first, last, errRange = ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+
+	if errRange != nil {
+		return nil, nil, errRange
+	}
 
 	// Get a new slice based on the range of records
 	rangeObjects := allObjects[first:last]
@@ -92,6 +99,8 @@ func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryT
 	manifest := resources.NewManifest()
 	rangeManifest := resources.NewManifest()
 	var metaData datastore.QueryReturnDataType
+	var first, last int
+	var errRange error
 
 	sqlStmt, err := ds.sqlGetAllObjectsInCollection(query)
 
@@ -118,7 +127,11 @@ func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryT
 
 	metaData.Size = len(manifest.Objects)
 
-	first, last, err := ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+	first, last, errRange = ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+
+	if errRange != nil {
+		return nil, nil, errRange
+	}
 
 	// Get a new slice based on the range of records
 	rangeManifest.Objects = manifest.Objects[first:last]
@@ -151,7 +164,8 @@ func (ds *Sqlite3DatastoreType) GetRangeValues(first, last, max, size int) (int,
 		return 0, 0, errors.New("the starting range value is out of scope")
 	}
 
-	if last == 0 && first == 0 {
+	// If no range is requested and the server is not forcing it, do nothing.
+	if last == 0 && first == 0 && max != 0 {
 		last = first + max
 	} else {
 		// We need to be inclusive of the last value that was provided
@@ -165,8 +179,9 @@ func (ds *Sqlite3DatastoreType) GetRangeValues(first, last, max, size int) (int,
 	}
 
 	// If the request is for more records than the max size will allow, then
-	// compute where the new last record should be.
-	if (last - first) > max {
+	// compute where the new last record should be, but only if the server is
+	// forcing a max size.
+	if max != 0 && (last-first) > max {
 		last = first + max
 	}
 

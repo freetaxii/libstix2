@@ -12,248 +12,172 @@ import (
 )
 
 /*
-Test_GetRangeOfObjects - This function will test the following things:
-  1) First value is negative
-  2) First value is greater than last value
-  3) First value is bigger than size of data
-  4) Last value is bigger than size of data
-  5) Make sure the size we get back is correct if we get all records
-  6) Make sure the size we get back is correct if we only ask for some
-  7) Last value minus first value is bigger than the server will allow
-  8) Last value minus first value is smaller than the server will allow
-  9) The values of first and last are the same
+Test_GetRangeValues - This function will test the following method:
+GetRangeValues(first, last, max, size) (first, last, error)
 */
-func Test_GetRangeOfObjects(t *testing.T) {
-	var rangeData []string
-	var testData []string
-	var size int
-	var err error
-	var data = []string{"indicator--1", "indicator--2", "indicator--3", "indicator--4", "indicator--5"}
+func Test_GetRangeValues(t *testing.T) {
 	var ds Sqlite3DatastoreType
 
 	// Test 1: This test should throw an error
-	t.Log("Test 1: make sure we get an error if the first value is negative")
-	_, _, err = ds.GetRangeOfObjects(data, 5, -1, 1)
-
-	if err == nil {
+	t.Log("Test 1: get an error if the first value is negative")
+	if _, _, err := ds.GetRangeValues(-1, 1, 5, 10); err == nil {
 		t.Error(err)
 	}
 
 	// Test 2: This test should throw an error
-	t.Log("Test 2: make sure we get an error if the first value is greater than last")
-	_, _, err = ds.GetRangeOfObjects(data, 5, 3, 1)
-
-	if err == nil {
+	t.Log("Test 2: get an error if the first value is greater than last")
+	if _, _, err := ds.GetRangeValues(5, 3, 5, 10); err == nil {
 		t.Error(err)
 	}
 
 	// Test 3: This test should throw an error
-	t.Log("Test 3: make sure we get an error if the first value is greater than the size of data")
-	_, _, err = ds.GetRangeOfObjects(data, 5, 10, 12)
-
-	if err == nil {
+	t.Log("Test 3: get an error if the first value is greater than the size of data")
+	if _, _, err := ds.GetRangeValues(100, 200, 50, 50); err == nil {
 		t.Error(err)
 	}
 
 	// Test 4:
-	t.Log("Test 4: make sure we get the right data if the last value is greater than the size of data")
-	rangeData, _, err = ds.GetRangeOfObjects(data, 20, 0, 12)
-
-	if err != nil {
-		t.Error(err)
+	t.Log("Test 4: check last value if first and last start as zero and pagination is forced")
+	if _, last, _ := ds.GetRangeValues(0, 0, 10, 20); last != 10 {
+		t.Errorf("incorrect range value returned: got %v want %v", last, 9)
 	}
-
-	testData = []string{"indicator--1", "indicator--2", "indicator--3", "indicator--4", "indicator--5"}
-	verifyRangeData(t, rangeData, testData)
 
 	// Test 5:
-	t.Log("Test 5: client asks for all data, make sure the size we get back is correct")
-	_, size, err = ds.GetRangeOfObjects(data, 20, 0, 4)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	if size != 5 {
-		t.Errorf("the total size of data is wrong: we got %v and want %v", size, 5)
+	t.Log("Test 5: check last value if first and last start as zero and no pagination is forced")
+	if _, last, _ := ds.GetRangeValues(0, 0, 0, 20); last != 1 {
+		t.Errorf("incorrect range value returned: got %v want %v", last, 1)
 	}
 
 	// Test 6:
-	t.Log("Test 6: client asks for a few records, make sure the size we get back is correct")
-	_, size, err = ds.GetRangeOfObjects(data, 20, 1, 3)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	if size != 5 {
-		t.Errorf("the total size of data is wrong: we got %v and want %v", size, 5)
+	t.Log("Test 6: last value is larger than size")
+	if _, last, _ := ds.GetRangeValues(0, 100, 0, 20); last != 20 {
+		t.Errorf("incorrect range value returned: got %v want %v", last, 20)
 	}
 
 	// Test 7:
-	t.Log("Test 7: client asks for more than server will allow")
-	rangeData, _, err = ds.GetRangeOfObjects(data, 2, 1, 3)
-
-	if err != nil {
-		t.Error(err)
+	t.Log("Test 7: last value is larger than max")
+	if _, last, _ := ds.GetRangeValues(0, 15, 10, 20); last != 10 {
+		t.Errorf("incorrect range value returned: got %v want %v", last, 10)
 	}
-
-	testData = []string{"indicator--2", "indicator--3"}
-	verifyRangeData(t, rangeData, testData)
 
 	// Test 8:
-	t.Log("Test 8: client asks for less than server will allow")
-	rangeData, _, err = ds.GetRangeOfObjects(data, 10, 2, 3)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	testData = []string{"indicator--3", "indicator--4"}
-	verifyRangeData(t, rangeData, testData)
-
-	// Test 9:
-	t.Log("Test 9: client asks for a single value")
-	rangeData, _, err = ds.GetRangeOfObjects(data, 2, 2, 2)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	testData = []string{"indicator--3"}
-	verifyRangeData(t, rangeData, testData)
-
-}
-
-func verifyRangeData(t *testing.T, rangeData, testData []string) {
-	if rangeData == nil && testData != nil {
-		t.Errorf("no results returned: got %v want %v", rangeData, testData)
-	} else if len(rangeData) != len(testData) {
-		t.Errorf("slice length is not the same: got %v want %v", len(rangeData), len(testData))
-	} else {
-		for i := range testData {
-			if rangeData[i] != testData[i] {
-				t.Log("testing index value: ", i)
-				t.Errorf("wrong results: got %v want %v", rangeData[i], testData[i])
-			}
-		}
+	t.Log("Test 8: last value is smaller than max")
+	if _, last, _ := ds.GetRangeValues(0, 3, 10, 20); last != 4 {
+		t.Errorf("incorrect range value returned: got %v want %v", last, 10)
 	}
 }
 
+// 	var rangeData []string
+// 	var testData []string
+// 	var data = []string{"indicator--1", "indicator--2", "indicator--3", "indicator--4", "indicator--5"}
+//
+// 	testData = []string{"indicator--1", "indicator--2", "indicator--3", "indicator--4", "indicator--5"}
+// 	verifyRangeData(t, rangeData, testData)
+// 	testData = []string{"indicator--3"}
+// 	verifyRangeData(t, rangeData, testData)
+// }
+
+// func verifyRangeData(t *testing.T, rangeData, testData []string) {
+// 	if rangeData == nil && testData != nil {
+// 		t.Errorf("no results returned: got %v want %v", rangeData, testData)
+// 	} else if len(rangeData) != len(testData) {
+// 		t.Errorf("slice length is not the same: got %v want %v", len(rangeData), len(testData))
+// 	} else {
+// 		for i := range testData {
+// 			if rangeData[i] != testData[i] {
+// 				t.Log("testing index value: ", i)
+// 				t.Errorf("wrong results: got %v want %v", rangeData[i], testData[i])
+// 			}
+// 		}
+// 	}
+// }
+
+/*
+Test_processQueryOptions - This function will test the following method:
+processQueryOptions(query) (whereQuery, error)
+*/
 func Test_processQueryOptions(t *testing.T) {
 	var ds Sqlite3DatastoreType
 	var q datastore.QueryType
-	var err error
+	q.CollectionID = "81f6f8c8-061c-4cb0-97e6-98b317ee5c93"
 
-	t.Log("Test 1.1: make sure we do not get an error if a year date is used for added after")
-	err = nil
+	t.Log("Test 1.1: do not get an error if year date is used for added after")
 	q.AddedAfter = "2017"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 1.2: make sure we do not get an error if a full date is used for added after")
-	err = nil
+	t.Log("Test 1.2: do not get an error if full date is used for added after")
 	q.AddedAfter = "2017-03-02"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 1.3: make sure we do not get an error if a full timestamp (micro) is used for added after")
-	err = nil
+	t.Log("Test 1.3: do not get an error if a full timestamp (micro) is used for added after")
 	q.AddedAfter = "2017-03-02T01:01:01.123456Z"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 1.4: make sure we do not get an error if a full timestamp (milli) is used for added after")
-	err = nil
+	t.Log("Test 1.4: do not get an error if a full timestamp (milli) is used for added after")
 	q.AddedAfter = "2017-03-02T01:01:01.123Z"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 1.5: make sure we get an error if the timezone Z is left off")
-	err = nil
+	t.Log("Test 1.5: get an error if the timezone Z is left off")
 	q.AddedAfter = "2017-03-02T01:01:01"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 1.6: make sure we get an error if the timestamp is incorrectly formatted")
-	err = nil
+	t.Log("Test 1.6: get an error if the timestamp is incorrectly formatted")
 	q.AddedAfter = "2017-03-02 01:01:01"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
 	// Clear out value
 	q.AddedAfter = ""
 
-	t.Log("Test 2.1: make sure we get an error if a single type value is wrong")
-	err = nil
+	// TODO test STIX ID
+
+	t.Log("Test 3.1: get an error if a single type value is wrong")
 	q.STIXType = "indicatorr"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 2.2: make sure we get an error if a two type values are wrong")
-	err = nil
+	t.Log("Test 3.2: get an error if a two type values are wrong")
 	q.STIXType = "foo,bar"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 2.3: make sure we get an error if the first type value is correct but the second is wrong")
-	err = nil
+	t.Log("Test 3.3: get an error if the first type value is correct but the second is wrong")
 	q.STIXType = "indicator,bar"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 2.4: make sure we get an error if the first type value is wrong but the second is correct")
-	err = nil
+	t.Log("Test 3.4: get an error if the first type value is wrong but the second is correct")
 	q.STIXType = "foo,indicator"
-	_, err = ds.processQueryOptions(q)
-
-	if err == nil {
+	if _, err := ds.processQueryOptions(q); err == nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 2.5: make sure we do not get an error if a single type value is correct")
-	err = nil
+	t.Log("Test 3.5: do not get an error if a single type value is correct")
 	q.STIXType = "indicator"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Test 2.6: make sure we do not get an error if two type values are correct")
-	err = nil
+	t.Log("Test 3.6: do not get an error if two type values are correct")
 	q.STIXType = "indicator,attack-pattern"
-	_, err = ds.processQueryOptions(q)
-
-	if err != nil {
+	if _, err := ds.processQueryOptions(q); err != nil {
 		t.Error(err)
 	}
+
+	// TODO test STIX versions
 
 }
