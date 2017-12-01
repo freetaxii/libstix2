@@ -21,12 +21,17 @@ This software uses the following external libraries:
 ```
 uuid
 	go get github.com/pborman/uuid
-	Copyright (c) 2014 Google Inc. All rights reserved.
+	Copyright (c) 2014 Google Inc. All rights reserved. (Google License)
+
+qo-sqlite3
+	go get github.com/mattn/go-sqlite3
+	go install github.com/mattn/go-sqlite3
+	Copyright (c) 2014 Yasuhiro Matsumoto (MIT License)
 ```
 
 This software uses the following builtin libraries:
 ```
-fmt, time
+crypto/sha1, database/sql, encoding/base64, errors, fmt, log, os, regexp, strings, testing, time
 	Copyright 2009 The Go Authors
 ```
 

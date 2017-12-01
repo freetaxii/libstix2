@@ -17,8 +17,8 @@ type Datastorer interface {
 	Close() error
 	GetEnabledCollections() resources.CollectionsType
 	GetObject(stixid string) (interface{}, error)
-	GetObjectsInCollection(collectionid string) objects.BundleType
-	GetListOfObjectsInCollection(collectionid string) ([]string, error)
+	GetObjectsInCollection(query QueryType) (*objects.BundleType, *QueryReturnDataType, error)
+	GetListOfObjectsInCollection(query QueryType) (*[]string, *QueryReturnDataType, error)
 }
 
 // QueryType - This struct will hold all of the variables that a user can

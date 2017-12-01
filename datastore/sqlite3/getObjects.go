@@ -35,9 +35,9 @@ of the STIX IDs that are in that collection that meet those query or range
 parameters.
 
 Return:
-rangeObjects ([]string]) - A pointer to a list of STIX objects that match the
+rangeObjects (*[]string) - A pointer to a list of STIX objects that match the
 	query and range parameters
-metaData (datastore.QueryReturnDataType) - A pointer to a struct that contain
+metaData (*datastore.QueryReturnDataType) - A pointer to a struct that contain
 	meta data values like size and TAXII X header information
 error
 */
@@ -72,7 +72,7 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsInCollection(query datastore.Que
 	metaData.Size = len(allObjects)
 
 	// User my request a range even if the server does not force it
-	first, last, errRange = ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+	first, last, errRange = ds.getRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
 
 	if errRange != nil {
 		return nil, nil, errRange
@@ -89,9 +89,9 @@ GetManifestFromCollection - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest.
 
 Return:
-rangeManifest (resource.ManifestType) - A pointer to a TAXII manifest resource
+rangeManifest (*resource.ManifestType) - A pointer to a TAXII manifest resource
 	that matches the query parameters
-metaData (datastore.QueryReturnDataType) - A pointer to a struct that contain
+metaData (*datastore.QueryReturnDataType) - A pointer to a struct that contain
 	meta data values like size and TAXII X header information
 error
 */
@@ -127,7 +127,7 @@ func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryT
 
 	metaData.Size = len(manifest.Objects)
 
-	first, last, errRange = ds.GetRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+	first, last, errRange = ds.getRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
 
 	if errRange != nil {
 		return nil, nil, errRange
@@ -142,7 +142,45 @@ func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryT
 }
 
 /*
-GetRangeValues - This method will take in the various range parameters and size
+GetObjectsInCollection - This method will take in query struct and range
+parameters for a collection and will return a STIX Bundle that contains all
+of the STIX objects that are in that collection that meet those query or range
+parameters.
+
+Return:
+stixBundle (*objects.BundleType) - A pointer to a STIX Bundle
+metaData (*datastore.QueryReturnDataType) - A pointer to a struct that contain
+	meta data values like size and TAXII X header information
+error
+*/
+func (ds *Sqlite3DatastoreType) GetObjectsInCollection(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
+
+	stixBundle := objects.NewBundle()
+	rangeObjects, metaData, err := ds.GetListOfObjectsInCollection(query)
+
+	if err != nil {
+		return &stixBundle, &metaData, err
+	}
+
+	for _, stixid := range rangeObjects {
+		obj, err := ds.GetObject(stixid)
+
+		if err != nil {
+			return &stixBundle, &metaData, err
+		}
+		stixBundle.AddObject(obj)
+	}
+	return &stixBundle, &metaData, nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Private Methods
+//
+// ----------------------------------------------------------------------
+
+/*
+getRangeValues - This method will take in the various range parameters and size
 of the dataset and will return the correct first and last index values to be used.
 
 Return:
@@ -150,7 +188,7 @@ first (int) - The index of the first element of the range request
 last  (int) - The index of the last element of the range request
 error
 */
-func (ds *Sqlite3DatastoreType) GetRangeValues(first, last, max, size int) (int, int, error) {
+func (ds *Sqlite3DatastoreType) getRangeValues(first, last, max, size int) (int, int, error) {
 
 	if first < 0 {
 		return 0, 0, errors.New("the starting value can not be negative")
@@ -187,43 +225,6 @@ func (ds *Sqlite3DatastoreType) GetRangeValues(first, last, max, size int) (int,
 
 	return first, last, nil
 }
-
-/*
-GetObjectsInCollection - This method will take in an ID for a collection and
-will return a STIX Bundle that contains all of the STIX objects that are in that
-collection that meet the range requirements.
-Retval:
-  STIX Bundle Type
-  error
-*/
-// func (ds *Sqlite3DatastoreType) GetObjectsInCollection(collectionid string, paginate bool, maxsize, first, last int) (objects.BundleType, error) {
-// 	// TODO need the ability to take in a query struct of list of parameters
-
-// 	var rangeOfObjects []string
-// 	var err error
-// 	stixBundle := objects.NewBundle()
-// 	allObjects, _, err := ds.GetListOfObjectsInCollection(collectionid)
-
-// 	if err != nil {
-// 		return stixBundle, err
-// 	}
-
-// 	if paginate == true {
-// 		rangeOfObjects, _, err = ds.GetRangeValues(allObjects, maxsize, first, last)
-// 	} else {
-// 		rangeOfObjects = allObjects
-// 	}
-
-// 	for _, stixid := range rangeOfObjects {
-// 		obj, _ := ds.GetObject(stixid)
-// 		stixBundle.AddObject(obj)
-// 	}
-// 	return stixBundle, nil
-// }
-
-// ----------------------------------------------------------------------
-// Private Methods
-// ----------------------------------------------------------------------
 
 /*
 sqlGetAllObjectsInCollection - This method will take in a query struct and return
