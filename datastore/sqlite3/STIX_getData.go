@@ -15,7 +15,7 @@ import (
 	"log"
 )
 
-func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.CommonObjectPropertiesType, error) {
+func (ds *Sqlite3DatastoreType) getBaseObjects(stixid, ver string) ([]properties.CommonObjectPropertiesType, error) {
 
 	var baseObjects []properties.CommonObjectPropertiesType
 	var objectID, specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
@@ -36,11 +36,11 @@ func (ds *Sqlite3DatastoreType) getBaseObjects(stixid string) ([]properties.Comm
 		 	confidence,
 		 	lang
 	   	FROM ` + datastore.DB_TABLE_STIX_BASE_OBJECT + ` 
-	   	WHERE id = $1
+	   	WHERE id = $1 AND modified = $2
 	   	ORDER BY modified DESC`
 
 	// Query the database
-	rows, err := ds.DB.Query(getBaseObject, stixid)
+	rows, err := ds.DB.Query(getBaseObject, stixid, ver)
 	if err != nil {
 		log.Println("ERROR: Database execution error quering for base object: ", err)
 	}
@@ -141,11 +141,11 @@ func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 	return extrefs
 }
 
-func (ds *Sqlite3DatastoreType) getIndicator(stixid string) (objects.IndicatorType, error) {
+func (ds *Sqlite3DatastoreType) getIndicator(stixid, ver string) (objects.IndicatorType, error) {
 	var i objects.IndicatorType
 
 	// Lets first get the base object so we know the objectID
-	baseObjects, errBase := ds.getBaseObjects(stixid)
+	baseObjects, errBase := ds.getBaseObjects(stixid, ver)
 	if errBase != nil {
 		return i, errBase
 	}

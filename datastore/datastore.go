@@ -16,19 +16,19 @@ import (
 type Datastorer interface {
 	Close() error
 	GetEnabledCollections() resources.CollectionsType
-	GetObject(stixid string) (interface{}, error)
-	GetObjectsInCollection(query QueryType) (*objects.BundleType, *QueryReturnDataType, error)
-	GetListOfObjectsInCollection(query QueryType) (*[]string, *QueryReturnDataType, error)
+	GetObject(stixid, version string) (interface{}, error)
+	GetObjectsFromCollection(query QueryType) (*objects.BundleType, *QueryReturnDataType, error)
+	GetListOfObjectsFromCollection(query QueryType) (*[]CollectionRawDataType, *QueryReturnDataType, error)
 }
 
 // QueryType - This struct will hold all of the variables that a user can
 // query a collection on.
 type QueryType struct {
 	CollectionID string
-	STIXID       string
-	STIXType     string
-	STIXVersion  string
-	AddedAfter   string
+	STIXID       []string
+	STIXType     []string
+	STIXVersion  []string
+	AddedAfter   []string
 	RangeBegin   int
 	RangeEnd     int
 	RangeMax     int
@@ -42,4 +42,12 @@ type QueryReturnDataType struct {
 	Size           int
 	DateAddedFirst string
 	DateAddedLast  string
+}
+
+// CollectionRawDataType -
+type CollectionRawDataType struct {
+	STIXID      string
+	DateAdded   string
+	STIXVersion string
+	SpecVersion string
 }
