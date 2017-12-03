@@ -114,6 +114,8 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsFromCollection(query datastore.Q
 	rangeCollectionRawData = collectionRawData[first:last]
 	metaData.DateAddedFirst = rangeCollectionRawData[0].DateAdded
 	metaData.DateAddedLast = rangeCollectionRawData[len(rangeCollectionRawData)-1].DateAdded
+	metaData.RangeBegin = first
+	metaData.RangeEnd = last - 1
 
 	// metaData is already a pointer
 	return &rangeCollectionRawData, &metaData, nil

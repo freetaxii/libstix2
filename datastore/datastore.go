@@ -41,6 +41,8 @@ type QueryType struct {
 // data that needs to be returned.
 type QueryReturnDataType struct {
 	Size           int
+	RangeBegin     int
+	RangeEnd       int
 	DateAddedFirst string
 	DateAddedLast  string
 }
