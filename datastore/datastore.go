@@ -19,6 +19,7 @@ type Datastorer interface {
 	GetObject(stixid, version string) (interface{}, error)
 	GetObjectsFromCollection(query QueryType) (*objects.BundleType, *QueryReturnDataType, error)
 	GetListOfObjectsFromCollection(query QueryType) (*[]CollectionRawDataType, *QueryReturnDataType, error)
+	GetManifestFromCollection(query QueryType) (*resources.ManifestType, *QueryReturnDataType, error)
 }
 
 // QueryType - This struct will hold all of the variables that a user can
