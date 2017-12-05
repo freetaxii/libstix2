@@ -19,17 +19,17 @@ import (
 // CreateAllVocabTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
-	ds.createTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_INDICATOR_LABEL, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_INDUSTRY_SECTOR, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_MALWARE_LABEL, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_REPORT_LABEL, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, ds.vocabProperties())
-	ds.createTable(datastore.DB_TABLE_VOCAB_TOOL_LABEL, ds.vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_INDICATOR_LABEL, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_MALWARE_LABEL, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_REPORT_LABEL, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabProperties())
+	ds.createVocabTable(datastore.DB_TABLE_VOCAB_TOOL_LABEL, vocabProperties())
 }
 
 // PopulateAllVocabTables - This method will insert all of the vocabulary data
@@ -52,12 +52,13 @@ func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
 // Private Methods
 // ----------------------------------------------------------------------
 
-// vocabProperties  - This method will return the properties for attack patterns
-func (ds *Sqlite3DatastoreType) vocabProperties() string {
-	return `
-	"row_id" INTEGER PRIMARY KEY,
-	"value" text NOT NULL
-	`
+func (ds *Sqlite3DatastoreType) createVocabTable(name, properties string) {
+	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
+	_, err := ds.DB.Exec(stmt)
+
+	if err != nil {
+		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+	}
 }
 
 // InsertVocabData - This method will add a vocabulary item to its table
@@ -72,4 +73,12 @@ func (ds *Sqlite3DatastoreType) insertVocabData(name string, data []string) {
 	if err != nil {
 		log.Println("ERROR: The vocabulary item could not be inserted in to the", name, "table")
 	}
+}
+
+// vocabProperties  - This method will return the properties for attack patterns
+func vocabProperties() string {
+	return `
+	"row_id" INTEGER PRIMARY KEY,
+	"value" text NOT NULL
+	`
 }

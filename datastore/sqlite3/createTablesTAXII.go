@@ -8,6 +8,7 @@ package sqlite3
 
 import (
 	"github.com/freetaxii/libstix2/datastore"
+	"log"
 )
 
 // ----------------------------------------------------------------------
@@ -17,22 +18,50 @@ import (
 // CreateAllTAXIITables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_CONTENT, ds.collectionContent())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION, ds.collection())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, ds.collectionMediaType())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionData())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION, collection())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaType())
+	ds.createTAXIIIndexes(datastore.DB_TABLE_TAXII_COLLECTION_DATA)
+}
+
+// ----------------------------------------------------------------------
+// Private Methods
+// ----------------------------------------------------------------------
+
+func (ds *Sqlite3DatastoreType) createTAXIITable(name, properties string) {
+	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
+	_, err := ds.DB.Exec(stmt)
+
+	if err != nil {
+		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+	}
+}
+
+func (ds *Sqlite3DatastoreType) createTAXIIIndexes(name string) {
+	var stmt string
+
+	if name == datastore.DB_TABLE_TAXII_COLLECTION_DATA {
+		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("collection_id" COLLATE BINARY ASC, "stix_id" COLLATE BINARY ASC)`
+	}
+
+	if stmt != "" {
+		_, err := ds.DB.Exec(stmt)
+
+		if err != nil {
+			log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+		}
+	}
 }
 
 // ----------------------------------------------------------------------
 //
-// Private Methods
-//
-// These methods return a list of fields that is used for creating the
-// database table.
+// Each of these functions returns a list of fields that are used for creating
+// a database tables.
 //
 // ----------------------------------------------------------------------
 
 /*
-collectionContent - This method will return the properties that make up the
+collectionData - This method will return the properties that make up the
 collection content table
 
 date_added    = The date that this object was added to the collection
@@ -43,7 +72,7 @@ stix_id       = The STIX ID for the object that is being mapped to a collection.
   and if we used row_id for example, it would require two queries, the first
   to get the SITX ID and then the second to get all objects with that STIX ID.
 */
-func (ds *Sqlite3DatastoreType) collectionContent() string {
+func collectionData() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
@@ -64,7 +93,7 @@ description = A long description about this collection
 can_read    = A boolean flag that indicates if one can read from this collection
 can_write   = A boolean flag that indicates if one can write to this collection
 */
-func (ds *Sqlite3DatastoreType) collection() string {
+func collection() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
@@ -84,7 +113,7 @@ collection media type table
 collection_id = The collection ID, a UUIDv4 value
 media_type    = The media types supported on this collection
 */
-func (ds *Sqlite3DatastoreType) collectionMediaType() string {
+func collectionMediaType() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"collection_id" TEXT NOT NULL,

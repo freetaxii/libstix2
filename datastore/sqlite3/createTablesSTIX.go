@@ -8,6 +8,7 @@ package sqlite3
 
 import (
 	"github.com/freetaxii/libstix2/datastore"
+	"log"
 )
 
 // ----------------------------------------------------------------------
@@ -17,50 +18,78 @@ import (
 // CreateAllSTIXTables - This method will create all of the tables needed to store
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, ds.baseObjectProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, ds.attackPatternProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, ds.campaignProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_COURSE_OF_ACTION, ds.courseOfActionProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY, ds.identityProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY_SECTORS, ds.identitySectorsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_INDICATOR, ds.indicatorProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_INTRUSION_SET, ds.intrusionSetProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_LOCATION, ds.locationProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_MALWARE, ds.malwareProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_NOTE, ds.noteProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBSERVED_DATA, ds.observedDataProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OPINION, ds.opinionProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_REPORT, ds.reportProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR, ds.threatActorProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR_ROLES, ds.threatActorRolesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_TOOL, ds.toolProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_VULNERABILITY, ds.vulnerabilityProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_ALIASES, ds.commonAliasesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_AUTHORS, ds.commonAuthorsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES, ds.commonExternalReferencesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_GOALS, ds.commonGoalsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_HASHES, ds.commonHashesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES, ds.commonKillChainPhasesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_LABELS, ds.commonLabelsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS, ds.commonObjectMarkingRefsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_REFS, ds.commonObjectRefsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, ds.commonSecondaryMotivationsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, ds.commonPersonalMotivationsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, campaignProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_COURSE_OF_ACTION, courseOfActionProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY, identityProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY_SECTORS, identitySectorsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_INDICATOR, indicatorProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_INTRUSION_SET, intrusionSetProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_LOCATION, locationProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_MALWARE, malwareProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_NOTE, noteProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBSERVED_DATA, observedDataProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OPINION, opinionProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_REPORT, reportProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR, threatActorProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR_ROLES, threatActorRolesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_TOOL, toolProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_VULNERABILITY, vulnerabilityProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_ALIASES, commonAliasesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_AUTHORS, commonAuthorsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES, commonExternalReferencesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_GOALS, commonGoalsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_HASHES, commonHashesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES, commonKillChainPhasesProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_LABELS, commonLabelsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS, commonObjectMarkingRefsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_REFS, commonObjectRefsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, commonSecondaryMotivationsProperties())
+	ds.createSTIXTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, commonPersonalMotivationsProperties())
+}
+
+// ----------------------------------------------------------------------
+// Private Methods
+// ----------------------------------------------------------------------
+
+func (ds *Sqlite3DatastoreType) createSTIXTable(name, properties string) {
+	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
+	_, err := ds.DB.Exec(stmt)
+
+	if err != nil {
+		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+	}
+	ds.createSTIXIndexes(name)
+}
+
+func (ds *Sqlite3DatastoreType) createSTIXIndexes(name string) {
+	var stmt string
+
+	if name == datastore.DB_TABLE_STIX_BASE_OBJECT {
+		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("object_id" COLLATE BINARY ASC, "id" COLLATE BINARY ASC)`
+	} else {
+		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("object_id" COLLATE BINARY ASC)`
+	}
+
+	_, err := ds.DB.Exec(stmt)
+
+	if err != nil {
+		log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+	}
 }
 
 // ----------------------------------------------------------------------
 //
-// Private Methods
-//
-// These methods return a list of fields that is used for creating the
-// database table.
+// Each of these functions returns a list of fields that are used for creating
+// a database tables.
 //
 // ----------------------------------------------------------------------
 
 // baseProperties - This method will return the base properties for all objects
 // row_id    = This is a database tracking number
 // object_id = This is a unique identifier for the STIX object based on its ID + created and modified timestamps
-func (ds *Sqlite3DatastoreType) baseProperties() string {
+func baseProperties() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
  	"object_id" TEXT NOT NULL,`
@@ -69,8 +98,8 @@ func (ds *Sqlite3DatastoreType) baseProperties() string {
 // baseObjectProperties - This method will return the the common properties
 // spec_version = STIX specification version
 // date_added = TAXII, the date the object was added to the TAXII server
-func (ds *Sqlite3DatastoreType) baseObjectProperties() string {
-	return ds.baseProperties() + `
+func baseObjectProperties() string {
+	return baseProperties() + `
  	"spec_version" TEXT NOT NULL,
  	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
@@ -87,8 +116,8 @@ func (ds *Sqlite3DatastoreType) baseObjectProperties() string {
 }
 
 // attackPatternProperties  - This method will return the properties for attack pattern SDOs
-func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
-	return ds.baseProperties() + `
+func attackPatternProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
@@ -96,8 +125,8 @@ func (ds *Sqlite3DatastoreType) attackPatternProperties() string {
 }
 
 // campaignProperties  - This method will return the properties for campaign SDOs
-func (ds *Sqlite3DatastoreType) campaignProperties() string {
-	return ds.baseProperties() + `
+func campaignProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"first_seen" TEXT,
@@ -108,16 +137,16 @@ func (ds *Sqlite3DatastoreType) campaignProperties() string {
 }
 
 // courseOfActionProperties  - This method will return the properties for course of action SDOs
-func (ds *Sqlite3DatastoreType) courseOfActionProperties() string {
-	return ds.baseProperties() + `
+func courseOfActionProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
 }
 
 // identityProperties  - This method will return the properties for identity SDOs
-func (ds *Sqlite3DatastoreType) identityProperties() string {
-	return ds.baseProperties() + `
+func identityProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"identity_class" TEXT NOT NULL,
@@ -129,15 +158,15 @@ func (ds *Sqlite3DatastoreType) identityProperties() string {
 // identitySectorsProperties  - This method will return the properties for identity sectors
 // Used by:
 //   identity
-func (ds *Sqlite3DatastoreType) identitySectorsProperties() string {
-	return ds.baseProperties() + `
+func identitySectorsProperties() string {
+	return baseProperties() + `
 	"sectors" TEXT NOT NULL
 	`
 }
 
 // indicatorProperties  - This method will return the properties for indicator SDOs
-func (ds *Sqlite3DatastoreType) indicatorProperties() string {
-	return ds.baseProperties() + `
+func indicatorProperties() string {
+	return baseProperties() + `
 	"name" TEXT,
 	"description" TEXT,
 	"pattern" TEXT NOT NULL,
@@ -148,8 +177,8 @@ func (ds *Sqlite3DatastoreType) indicatorProperties() string {
 }
 
 // intrusionSetProperties  - This method will return the properties for intrusion set SDOs
-func (ds *Sqlite3DatastoreType) intrusionSetProperties() string {
-	return ds.baseProperties() + `
+func intrusionSetProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"first_seen" TEXT,
@@ -163,8 +192,8 @@ func (ds *Sqlite3DatastoreType) intrusionSetProperties() string {
 }
 
 // locationProperties - This method will return the properties for location SDOs
-func (ds *Sqlite3DatastoreType) locationProperties() string {
-	return ds.baseProperties() + `
+func locationProperties() string {
+	return baseProperties() + `
 	"description" TEXT,
 	"latitude" TEXT,
 	"longitude" TEXT,
@@ -179,8 +208,8 @@ func (ds *Sqlite3DatastoreType) locationProperties() string {
 }
 
 // malwareProperties  - This method will return the properties for malware SDOs
-func (ds *Sqlite3DatastoreType) malwareProperties() string {
-	return ds.baseProperties() + `
+func malwareProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
@@ -188,8 +217,8 @@ func (ds *Sqlite3DatastoreType) malwareProperties() string {
 }
 
 // noteProperties  - This method will return the properties for note SDOs
-func (ds *Sqlite3DatastoreType) noteProperties() string {
-	return ds.baseProperties() + `
+func noteProperties() string {
+	return baseProperties() + `
 	"summary" TEXT,
 	"description" TEXT NOT NULL
 	`
@@ -198,8 +227,8 @@ func (ds *Sqlite3DatastoreType) noteProperties() string {
 }
 
 // observedDataProperties  - This method will return the properties for observed data SDOs
-func (ds *Sqlite3DatastoreType) observedDataProperties() string {
-	return ds.baseProperties() + `
+func observedDataProperties() string {
+	return baseProperties() + `
 	"first_observed" TEXT NOT NULL,
 	"last_observed" TEXT NOT NULL,
 	"number_observed" INTEGER NOT NULL,
@@ -208,8 +237,8 @@ func (ds *Sqlite3DatastoreType) observedDataProperties() string {
 }
 
 // opinionProperties - This method will return the properties for opinion SDOs
-func (ds *Sqlite3DatastoreType) opinionProperties() string {
-	return ds.baseProperties() + `
+func opinionProperties() string {
+	return baseProperties() + `
 	"description" TEXT,
 	"opinion" TEXT
 	`
@@ -218,8 +247,8 @@ func (ds *Sqlite3DatastoreType) opinionProperties() string {
 }
 
 // reportProperties  - This method will return the properties for report SDOs
-func (ds *Sqlite3DatastoreType) reportProperties() string {
-	return ds.baseProperties() + `
+func reportProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"published" TEXT NOT NULL
@@ -228,8 +257,8 @@ func (ds *Sqlite3DatastoreType) reportProperties() string {
 }
 
 // threatActorProperties  - This method will return the properties for threat actor SDOs
-func (ds *Sqlite3DatastoreType) threatActorProperties() string {
-	return ds.baseProperties() + `
+func threatActorProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"sophistication" TEXT,
@@ -246,15 +275,15 @@ func (ds *Sqlite3DatastoreType) threatActorProperties() string {
 // threatActorRolesProperties  - This method will return the properties for threat actor roles
 // Used by:
 //   threat actor
-func (ds *Sqlite3DatastoreType) threatActorRolesProperties() string {
-	return ds.baseProperties() + `
+func threatActorRolesProperties() string {
+	return baseProperties() + `
 	"roles" TEXT NOT NULL
 	`
 }
 
 // toolProperties  - This method will return the properties for tool SDOs
-func (ds *Sqlite3DatastoreType) toolProperties() string {
-	return ds.baseProperties() + `
+func toolProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"tool_version" TEXT
@@ -263,15 +292,15 @@ func (ds *Sqlite3DatastoreType) toolProperties() string {
 }
 
 // vulnerabilityProperties  - This method will return the properties for vulnerability SDOs
-func (ds *Sqlite3DatastoreType) vulnerabilityProperties() string {
-	return ds.baseProperties() + `
+func vulnerabilityProperties() string {
+	return baseProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
 }
 
 // ----------------------------------------------------------------------
-// Begin Common Properties
+// Begin Secondary STIX Tables
 // ----------------------------------------------------------------------
 
 // commonAliasesProperties - This method will return the properties for aliases
@@ -279,8 +308,8 @@ func (ds *Sqlite3DatastoreType) vulnerabilityProperties() string {
 //   campaign
 //   intrusion set
 //   threat actor
-func (ds *Sqlite3DatastoreType) commonAliasesProperties() string {
-	return ds.baseProperties() + `
+func commonAliasesProperties() string {
+	return baseProperties() + `
 	"aliases" TEXT NOT NULL
 	`
 }
@@ -289,8 +318,8 @@ func (ds *Sqlite3DatastoreType) commonAliasesProperties() string {
 // Used by:
 //   note
 //   opinion
-func (ds *Sqlite3DatastoreType) commonAuthorsProperties() string {
-	return ds.baseProperties() + `
+func commonAuthorsProperties() string {
+	return baseProperties() + `
 	"authors" TEXT NOT NULL
 	`
 }
@@ -298,8 +327,8 @@ func (ds *Sqlite3DatastoreType) commonAuthorsProperties() string {
 // commonExternalReferencesProperties - This method will return the properties for external references
 // Used by:
 //   all SDOs and SROs
-func (ds *Sqlite3DatastoreType) commonExternalReferencesProperties() string {
-	return ds.baseProperties() + `
+func commonExternalReferencesProperties() string {
+	return baseProperties() + `
 	"source_name" TEXT NOT NULL,
 	"description" TEXT,
 	"url" TEXT,
@@ -311,8 +340,8 @@ func (ds *Sqlite3DatastoreType) commonExternalReferencesProperties() string {
 // Used by:
 //   intrusion set
 //   threat actor
-func (ds *Sqlite3DatastoreType) commonGoalsProperties() string {
-	return ds.baseProperties() + `
+func commonGoalsProperties() string {
+	return baseProperties() + `
 	"goals" TEXT NOT NULL
 	`
 }
@@ -324,8 +353,8 @@ func (ds *Sqlite3DatastoreType) commonGoalsProperties() string {
 // TODO need find a way to link this back to an actual external reference instance
 // maybe this should be called external references hashes.  Otherwise  how will you
 // know which object in the database it is tied to.
-func (ds *Sqlite3DatastoreType) commonHashesProperties() string {
-	return ds.baseProperties() + `
+func commonHashesProperties() string {
+	return baseProperties() + `
 	"hash" TEXT NOT NULL,
 	"value" TEXT NOT NULL
 	`
@@ -337,8 +366,8 @@ func (ds *Sqlite3DatastoreType) commonHashesProperties() string {
 //   indicator
 //   malware
 //   tool
-func (ds *Sqlite3DatastoreType) commonKillChainPhasesProperties() string {
-	return ds.baseProperties() + `
+func commonKillChainPhasesProperties() string {
+	return baseProperties() + `
 	"kill_chain_name" TEXT NOT NULL,
 	"phase_name" TEXT NOT NULL
 	`
@@ -347,8 +376,8 @@ func (ds *Sqlite3DatastoreType) commonKillChainPhasesProperties() string {
 // commonLabelsProperties - This method will return the properties for labels
 // Used by:
 //   All SDOs and SROs
-func (ds *Sqlite3DatastoreType) commonLabelsProperties() string {
-	return ds.baseProperties() + `
+func commonLabelsProperties() string {
+	return baseProperties() + `
 	"labels" TEXT NOT NULL
 	`
 }
@@ -356,8 +385,8 @@ func (ds *Sqlite3DatastoreType) commonLabelsProperties() string {
 // commonObjectMarkingRefsProperties - This method will return the properties for object markings
 // Used by:
 //   All SDOs and SROs
-func (ds *Sqlite3DatastoreType) commonObjectMarkingRefsProperties() string {
-	return ds.baseProperties() + `
+func commonObjectMarkingRefsProperties() string {
+	return baseProperties() + `
 	"object_marking_refs" TEXT NOT NULL
 	`
 }
@@ -367,8 +396,8 @@ func (ds *Sqlite3DatastoreType) commonObjectMarkingRefsProperties() string {
 //   note
 //   opinion
 //   report
-func (ds *Sqlite3DatastoreType) commonObjectRefsProperties() string {
-	return ds.baseProperties() + `
+func commonObjectRefsProperties() string {
+	return baseProperties() + `
 	"object_refs" TEXT NOT NULL
 	`
 }
@@ -376,8 +405,8 @@ func (ds *Sqlite3DatastoreType) commonObjectRefsProperties() string {
 // commonPersonalMotivationsProperties - This method will return the properties for personal motivations
 // Used by:
 //   threat actor
-func (ds *Sqlite3DatastoreType) commonPersonalMotivationsProperties() string {
-	return ds.baseProperties() + `
+func commonPersonalMotivationsProperties() string {
+	return baseProperties() + `
 	"personal_motivations" TEXT NOT NULL
 	`
 }
@@ -386,8 +415,8 @@ func (ds *Sqlite3DatastoreType) commonPersonalMotivationsProperties() string {
 // Used by:
 //   intrusion set
 //   threat actor
-func (ds *Sqlite3DatastoreType) commonSecondaryMotivationsProperties() string {
-	return ds.baseProperties() + `
+func commonSecondaryMotivationsProperties() string {
+	return baseProperties() + `
 	"secondary_motivations" TEXT NOT NULL
 	`
 }

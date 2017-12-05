@@ -51,5 +51,5 @@ const (
 
 	DB_TABLE_TAXII_COLLECTION            = "t_collection"
 	DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE = "t_collection_media_type"
-	DB_TABLE_TAXII_COLLECTION_CONTENT    = "t_collection_content"
+	DB_TABLE_TAXII_COLLECTION_DATA       = "t_collection_data"
 )
