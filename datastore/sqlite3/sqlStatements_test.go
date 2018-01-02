@@ -50,13 +50,44 @@ func Test_sqlCollectionDataWhereAddedAfter(t *testing.T) {
 		t.Error("no error returned")
 	}
 
-	t.Log("Test 2: get correct where statement for added after")
+	t.Log("Test 2: do not get an error if year date is used for added after")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 3: do not get an error if full date is used for added after")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017-03-02"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 4: do not get an error if a full timestamp (micro) is used for added after")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017-03-02T01:01:01.123456Z"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 5: do not get an error if a full timestamp (milli) is used for added after")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017-03-02T01:01:01.123Z"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 6: get an error if the timezone Z is left off")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017-03-02T01:01:01"}, &b); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 7: get an error if the timestamp is incorrectly formatted")
+	if err := ds.sqlCollectionDataWhereAddedAfter([]string{"2017-03-02 01:01:01"}, &b); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 8: get correct where statement for added after")
 	b.Reset()
 	testdata = ` AND 
 	t_collection_data.date_added > "2017"`
 	if ds.sqlCollectionDataWhereAddedAfter([]string{"2017"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
+
 }
 
 // ----------------------------------------------------------------------
@@ -113,12 +144,9 @@ func Test_sqlCollectionDataWhereSTIXType(t *testing.T) {
 		t.Error("no error returned")
 	}
 
-	t.Log("Test 2: get correct where statement for single stix type")
-	b.Reset()
-	testdata = ` AND 
-	t_collection_data.stix_id LIKE "indicator%"`
-	if ds.sqlCollectionDataWhereSTIXType([]string{"indicator"}, &b); testdata != b.String() {
-		t.Error("sql where statement is not correct")
+	t.Log("Test 2: get an error if two stix type values are invalid")
+	if err := ds.sqlCollectionDataWhereSTIXType([]string{"foo", "bar"}, &b); err == nil {
+		t.Error("no error returned")
 	}
 
 	t.Log("Test 3: get an error for one valid and one invalid stix type")
@@ -126,7 +154,30 @@ func Test_sqlCollectionDataWhereSTIXType(t *testing.T) {
 		t.Error("no error returned")
 	}
 
-	t.Log("Test 4: get correct where statement for three stix types")
+	t.Log("Test 4: get an error if first is invalid and second is valid")
+	if err := ds.sqlCollectionDataWhereSTIXType([]string{"foo", "indicator"}, &b); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 5: do not get an error if a single type value is correct")
+	if err := ds.sqlCollectionDataWhereSTIXType([]string{"indicator"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 6: do not get an error if two type values are correct")
+	if err := ds.sqlCollectionDataWhereSTIXType([]string{"indicator", "attack-pattern"}, &b); err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Test 7: get correct where statement for single stix type")
+	b.Reset()
+	testdata = ` AND 
+	t_collection_data.stix_id LIKE "indicator%"`
+	if ds.sqlCollectionDataWhereSTIXType([]string{"indicator"}, &b); testdata != b.String() {
+		t.Error("sql where statement is not correct")
+	}
+
+	t.Log("Test 8: get correct where statement for three stix types")
 	b.Reset()
 	testdata = ` AND 
 	(t_collection_data.stix_id LIKE "indicator%" OR 
@@ -206,6 +257,34 @@ func Test_sqlCollectionDataWhereSTIXVersion(t *testing.T) {
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"2017-12-05T02:43:19.783Z", "2017-12-05T02:43:23.828Z", "2017-12-05T02:43:24.835Z"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
+
+	t.Log("Test 9: get correct where statement for first, last, and all stix versions")
+	b.Reset()
+	testdata = ` AND 
+	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
+	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
+	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "last", "all"}, &b); testdata != b.String() {
+		t.Error("sql where statement is not correct")
+	}
+
+	t.Log("Test 10: get correct where statement for first, all, and last stix versions")
+	b.Reset()
+	testdata = ` AND 
+	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
+	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
+	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "all", "last"}, &b); testdata != b.String() {
+		t.Error("sql where statement is not correct")
+	}
+
+	t.Log("Test 11: get correct where statement for all, first, and last stix versions")
+	b.Reset()
+	testdata = ` AND 
+	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
+	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
+	if ds.sqlCollectionDataWhereSTIXVersion([]string{"all", "first", "last"}, &b); testdata != b.String() {
+		t.Error("sql where statement is not correct")
+	}
+
 }
 
 // ----------------------------------------------------------------------
@@ -218,7 +297,7 @@ func Test_sqlCollectionDataQueryOptions(t *testing.T) {
 	var ds Sqlite3DatastoreType
 	var q datastore.QueryType
 
-	t.Log("Test 1.1: get an error if no collection id is provided")
+	t.Log("Test 1: get an error for no collection id")
 	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
 		t.Error("no error returned")
 	}
@@ -226,99 +305,32 @@ func Test_sqlCollectionDataQueryOptions(t *testing.T) {
 	// Setup for remaining tests
 	q.CollectionID = "81f6f8c8-061c-4cb0-97e6-98b317ee5c93"
 
-	t.Log("Test 2.1: do not get an error if year date is used for added after")
+	t.Log("Test 2: get an error for invalid timestamp")
 	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 2.2: do not get an error if full date is used for added after")
-	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017-03-02")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 2.3: do not get an error if a full timestamp (micro) is used for added after")
-	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017-03-02T01:01:01.123456Z")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 2.4: do not get an error if a full timestamp (milli) is used for added after")
-	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017-03-02T01:01:01.123Z")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 2.5: get an error if the timezone Z is left off")
-	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017-03-02T01:01:01")
+	q.AddedAfter = []string{"20111"}
 	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
+		t.Error("no error returned")
 	}
-
-	t.Log("Test 2.6: get an error if the timestamp is incorrectly formatted")
-	q.AddedAfter = nil
-	q.AddedAfter = append(q.AddedAfter, "2017-03-02 01:01:01")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
-	}
-
-	// Clear out value
 	q.AddedAfter = nil
 
-	// TODO test STIX ID
-
-	t.Log("Test 4.1: get an error if a single type value is wrong")
-	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "indicatorr")
+	t.Log("Test 3: get an error for invalid stix id")
+	q.STIXID = []string{"foo--1234"}
 	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
+		t.Error("no error returned")
 	}
+	q.STIXID = nil
 
-	t.Log("Test 4.2: get an error if a two type values are wrong")
-	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "foo")
-	q.STIXType = append(q.STIXType, "bar")
+	t.Log("Test 4: get an error for invalid stix type")
+	q.STIXType = []string{"indicatorr"}
 	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
+		t.Error("no error returned")
 	}
-
-	t.Log("Test 4.3: get an error if the first type value is correct but the second is wrong")
 	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "indicator")
-	q.STIXType = append(q.STIXType, "bar")
+
+	t.Log("Test 5: get an error for invalid stix version")
+	q.STIXVersion = []string{"200111"}
 	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
+		t.Error("no error returned")
 	}
-
-	t.Log("Test 4.4: get an error if the first type value is wrong but the second is correct")
-	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "foo")
-	q.STIXType = append(q.STIXType, "indicator")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err == nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 4.5: do not get an error if a single type value is correct")
-	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "indicator")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	t.Log("Test 4.6: do not get an error if two type values are correct")
-	q.STIXType = nil
-	q.STIXType = append(q.STIXType, "indicator")
-	q.STIXType = append(q.STIXType, "attack-pattern")
-	if _, err := ds.sqlCollectionDataQueryOptions(q); err != nil {
-		t.Error(err)
-	}
-
-	// TODO test STIX versions
-
+	q.STIXVersion = nil
 }
