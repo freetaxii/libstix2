@@ -100,6 +100,7 @@ table
 
 date_added  = The date that this collection was added to the system
 enabled     = Is this collection currently enabled
+hidden      = Is this collection currently hidden for this directory listing
 id 		    = The collection ID, a UUIDv4 value
 title 	    = The title of this collection
 description = A long description about this collection
@@ -111,6 +112,7 @@ func collections() string {
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
 	"enabled" INTEGER(1,0) NOT NULL DEFAULT 1,
+	"hidden" INTEGER(1,0) NOT NULL DEFAULT 0,
 	"id" TEXT NOT NULL,
 	"title" TEXT NOT NULL,
 	"description" TEXT,
@@ -124,7 +126,7 @@ collectionMediaType  - This method will return the properties that make up the
 collection media type table
 
 collection_id = The collection ID, a UUIDv4 value
-media_type    = The media types supported on this collection
+media_type_id = The media types supported on this collection
 */
 func collectionMediaType() string {
 	return `
@@ -138,7 +140,7 @@ func collectionMediaType() string {
 mediaTypes  - This method will return the properties that make up the media
 types table
 
-media_type    = The media types supported on this collection
+media_type    = A media type
 */
 func mediaTypes() string {
 	return `

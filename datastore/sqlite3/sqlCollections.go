@@ -29,7 +29,7 @@ func (ds *Sqlite3DatastoreType) sqlEnabledCollections() (string, error) {
 			t_collections.title,
 			t_collections.description,
 			t_collections.can_read,
-			t_collections.can_write
+			t_collections.can_write,
 			group_concat(t_media_types.media_type)
 		FROM
 			t_collections
@@ -40,53 +40,55 @@ func (ds *Sqlite3DatastoreType) sqlEnabledCollections() (string, error) {
 			t_media_types ON
 			t_collection_media_type.media_type_id = t_media_types.row_id
 		WHERE
-			t_collections.enabled == '1'
+			t_collections.enabled == '1' &&
+			t_collections.hidden != '1'
 		GROUP BY
 			t_collections.id
 	*/
 	var s bytes.Buffer
-	s.WriteString("SELECT \n\t")
+	s.WriteString("SELECT ")
 	s.WriteString(tblCol)
-	s.WriteString(".id, \n\t")
+	s.WriteString(".id, ")
 	s.WriteString(tblCol)
-	s.WriteString(".title, \n\t")
+	s.WriteString(".title, ")
 	s.WriteString(tblCol)
-	s.WriteString(".description, \n\t")
+	s.WriteString(".description, ")
 	s.WriteString(tblCol)
-	s.WriteString(".can_read, \n\t")
+	s.WriteString(".can_read, ")
 	s.WriteString(tblCol)
-	s.WriteString(".can_write, \n\t")
+	s.WriteString(".can_write, ")
 	s.WriteString("group_concat(")
 	s.WriteString(tblMediaTypes)
-	s.WriteString(".media_type) \n")
+	s.WriteString(".media_type) ")
 
-	s.WriteString("FROM \n\t")
+	s.WriteString("FROM ")
 	s.WriteString(tblCol)
-	s.WriteString("\n")
 
-	s.WriteString("JOIN \n\t")
+	s.WriteString(" JOIN ")
 	s.WriteString(tblColMedia)
-	s.WriteString(" ON \n\t")
+	s.WriteString(" ON ")
 	s.WriteString(tblCol)
 	s.WriteString(".id = ")
 	s.WriteString(tblColMedia)
-	s.WriteString(".collection_id \n")
+	s.WriteString(".collection_id ")
 
-	s.WriteString("JOIN \n\t")
+	s.WriteString("JOIN ")
 	s.WriteString(tblMediaTypes)
-	s.WriteString(" ON \n\t")
+	s.WriteString(" ON ")
 	s.WriteString(tblColMedia)
 	s.WriteString(".media_type_id = ")
 	s.WriteString(tblMediaTypes)
-	s.WriteString(".row_id \n")
+	s.WriteString(".row_id ")
 
-	s.WriteString("WHERE \n\t")
+	s.WriteString("WHERE ")
 	s.WriteString(tblCol)
-	s.WriteString(".enabled == '1' \n")
+	s.WriteString(".enabled == '1' && ")
+	s.WriteString(tblCol)
+	s.WriteString(".hidden != '1' ")
 
-	s.WriteString("GROUP BY \n\t")
+	s.WriteString("GROUP BY ")
 	s.WriteString(tblCol)
-	s.WriteString(".id \n")
+	s.WriteString(".id")
 
 	//log.Println("DEBUG: \n", s.String())
 	return s.String(), nil

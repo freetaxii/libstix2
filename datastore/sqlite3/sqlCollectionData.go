@@ -48,26 +48,28 @@ func (ds *Sqlite3DatastoreType) sqlObjectList(query datastore.QueryType) (string
 		WHERE
 	*/
 	var s bytes.Buffer
-	s.WriteString("SELECT \n\t")
+	s.WriteString("SELECT ")
 	s.WriteString(tblColData)
-	s.WriteString(".date_added, \n\t")
+	s.WriteString(".date_added, ")
 	s.WriteString(tblColData)
-	s.WriteString(".stix_id, \n\t")
+	s.WriteString(".stix_id, ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".modified, \n\t")
+	s.WriteString(".modified, ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version \n")
-	s.WriteString("FROM \n\t")
+	s.WriteString(".spec_version ")
+
+	s.WriteString("FROM ")
 	s.WriteString(tblColData)
-	s.WriteString("\n")
-	s.WriteString("JOIN \n\t")
+
+	s.WriteString(" JOIN ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(" ON \n\t")
+	s.WriteString(" ON ")
 	s.WriteString(tblColData)
 	s.WriteString(".stix_id = ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".id \n")
-	s.WriteString("WHERE \n\t")
+	s.WriteString(".id ")
+
+	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
 
 	//log.Println("DEBUG: \n", s.String())
@@ -120,31 +122,33 @@ func (ds *Sqlite3DatastoreType) sqlManifestData(query datastore.QueryType) (stri
 			t_collection_data.date_added
 	*/
 	var s bytes.Buffer
-	s.WriteString("SELECT \n\t")
+	s.WriteString("SELECT ")
 	s.WriteString(tblColData)
-	s.WriteString(".date_added, \n\t")
+	s.WriteString(".date_added, ")
 	s.WriteString(tblColData)
-	s.WriteString(".stix_id, \n\t")
+	s.WriteString(".stix_id, ")
 	s.WriteString("group_concat(")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".modified), \n\t")
+	s.WriteString(".modified), ")
 	s.WriteString("group_concat(")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version) \n")
-	s.WriteString("FROM \n\t")
+	s.WriteString(".spec_version) ")
+
+	s.WriteString("FROM ")
 	s.WriteString(tblColData)
-	s.WriteString("\n")
-	s.WriteString("JOIN \n\t")
+
+	s.WriteString(" JOIN ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(" ON \n\t")
+	s.WriteString(" ON ")
 	s.WriteString(tblColData)
 	s.WriteString(".stix_id = ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".id \n")
-	s.WriteString("WHERE \n\t")
+	s.WriteString(".id ")
+
+	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
-	s.WriteString("\n")
-	s.WriteString("GROUP BY \n\t")
+
+	s.WriteString(" GROUP BY ")
 	s.WriteString(tblColData)
 	s.WriteString(".date_added")
 
@@ -182,7 +186,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereAddedAfter(date []string, 
 		// We are only allowing a single added after value, since having more does
 		// not make sense.
 		if timestamp.Valid(date[0]) {
-			b.WriteString(" AND \n\t")
+			b.WriteString(" AND ")
 			b.WriteString(tblColData)
 			b.WriteString(`.date_added > "`)
 			b.WriteString(date[0])
@@ -210,7 +214,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 	if id != nil {
 		if len(id) == 1 {
 			if objects.IsValidSTIXID(id[0]) {
-				b.WriteString(" AND \n\t")
+				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id = "`)
 				b.WriteString(id[0])
@@ -219,13 +223,13 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 				return errors.New("the provided object id is invalid")
 			}
 		} else if len(id) > 1 {
-			b.WriteString(" AND \n\t(")
+			b.WriteString(" AND (")
 			addOR := false
 			for _, v := range id {
 
 				// Lets only add the OR after the first object id and not after the last object id
 				if addOR == true {
-					b.WriteString(" OR \n\t")
+					b.WriteString(" OR ")
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid id
@@ -261,7 +265,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXType(t []string, b *by
 	if t != nil {
 		if len(t) == 1 {
 			if objects.IsValidSTIXObject(t[0]) {
-				b.WriteString(" AND \n\t")
+				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id LIKE "`)
 				b.WriteString(t[0])
@@ -270,13 +274,13 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXType(t []string, b *by
 				return errors.New("the provided object type is invalid")
 			}
 		} else if len(t) > 1 {
-			b.WriteString(" AND \n\t(")
+			b.WriteString(" AND (")
 			addOR := false
 			for _, v := range t {
 
 				// Lets only add the OR after the first object and not after the last object
 				if addOR == true {
-					b.WriteString(" OR \n\t")
+					b.WriteString(" OR ")
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid object
@@ -355,7 +359,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 	if len(vers) == 1 {
 		if vers[0] == "last" {
 			// s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
-			b.WriteString(" AND \n\t")
+			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.modified = (select max(modified) from `)
 			b.WriteString(tblBaseObj)
@@ -367,7 +371,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 
 		} else if vers[0] == "first" {
 			// s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
-			b.WriteString(" AND \n\t")
+			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.modified = (select min(modified) from `)
 			b.WriteString(tblBaseObj)
@@ -381,7 +385,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 			// Do nothing, since the default is to return all versions.
 		} else {
 			if timestamp.Valid(vers[0]) {
-				b.WriteString(" AND \n\t")
+				b.WriteString(" AND ")
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.modified = "`)
 				b.WriteString(vers[0])
@@ -392,14 +396,14 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 			}
 		}
 	} else if len(vers) > 1 {
-		b.WriteString(" AND \n\t(")
+		b.WriteString(" AND (")
 		for i, v := range vers {
 			// Lets only add he OR after the first object and not after the
 			// last object. Since skipOr starts as true, this takes care of
 			// the first run case where i == 0
 
 			if i > 0 {
-				b.WriteString(" OR \n\t")
+				b.WriteString(" OR ")
 			}
 
 			if v == "last" {

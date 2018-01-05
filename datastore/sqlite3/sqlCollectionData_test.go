@@ -29,18 +29,7 @@ func Test_sqlObjectList(t *testing.T) {
 
 	t.Log("Test 2: get correct sql statement for object list")
 	query.CollectionID = "aa"
-	testdata = `SELECT 
-	t_collection_data.date_added, 
-	t_collection_data.stix_id, 
-	s_base_object.modified, 
-	s_base_object.spec_version 
-FROM 
-	t_collection_data
-JOIN 
-	s_base_object ON 
-	t_collection_data.stix_id = s_base_object.id 
-WHERE 
-	t_collection_data.collection_id = "aa"`
+	testdata = `SELECT t_collection_data.date_added, t_collection_data.stix_id, s_base_object.modified, s_base_object.spec_version FROM t_collection_data JOIN s_base_object ON t_collection_data.stix_id = s_base_object.id WHERE t_collection_data.collection_id = "aa"`
 	if v, _ := ds.sqlObjectList(query); testdata != v {
 		t.Error("sql statement is not correct")
 	}
@@ -63,20 +52,7 @@ func Test_sqlManifestData(t *testing.T) {
 
 	t.Log("Test 2: get correct sql statement for manifest data")
 	query.CollectionID = "aa"
-	testdata = `SELECT 
-	t_collection_data.date_added, 
-	t_collection_data.stix_id, 
-	group_concat(s_base_object.modified), 
-	group_concat(s_base_object.spec_version) 
-FROM 
-	t_collection_data
-JOIN 
-	s_base_object ON 
-	t_collection_data.stix_id = s_base_object.id 
-WHERE 
-	t_collection_data.collection_id = "aa"
-GROUP BY 
-	t_collection_data.date_added`
+	testdata = `SELECT t_collection_data.date_added, t_collection_data.stix_id, group_concat(s_base_object.modified), group_concat(s_base_object.spec_version) FROM t_collection_data JOIN s_base_object ON t_collection_data.stix_id = s_base_object.id WHERE t_collection_data.collection_id = "aa" GROUP BY t_collection_data.date_added`
 	if v, _ := ds.sqlManifestData(query); testdata != v {
 		t.Error("sql statement is not correct")
 	}
@@ -152,8 +128,7 @@ func Test_sqlCollectionDataWhereAddedAfter(t *testing.T) {
 
 	t.Log("Test 8: get correct where statement for added after")
 	b.Reset()
-	testdata = ` AND 
-	t_collection_data.date_added > "2017"`
+	testdata = ` AND t_collection_data.date_added > "2017"`
 	if ds.sqlCollectionDataWhereAddedAfter([]string{"2017"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
@@ -177,8 +152,7 @@ func Test_sqlCollectionDataWhereSTIXID(t *testing.T) {
 
 	t.Log("Test 2: get correct where statement for single stix id")
 	b.Reset()
-	testdata = ` AND 
-	t_collection_data.stix_id = "indicator--37abef16-7616-439c-86be-23712030c4b7"`
+	testdata = ` AND t_collection_data.stix_id = "indicator--37abef16-7616-439c-86be-23712030c4b7"`
 	if ds.sqlCollectionDataWhereSTIXID([]string{"indicator--37abef16-7616-439c-86be-23712030c4b7"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
@@ -190,10 +164,7 @@ func Test_sqlCollectionDataWhereSTIXID(t *testing.T) {
 
 	t.Log("Test 4: get correct where statement for three stix ids")
 	b.Reset()
-	testdata = ` AND 
-	(t_collection_data.stix_id = "indicator--37abef16-7616-439c-86be-23712030c4b7" OR 
-	t_collection_data.stix_id = "attack-pattern--c7c8a099-70a9-487b-a95f-2498d2941104" OR 
-	t_collection_data.stix_id = "campaign--6f938db5-6648-4ec1-81cb-5b65138c3c66")`
+	testdata = ` AND (t_collection_data.stix_id = "indicator--37abef16-7616-439c-86be-23712030c4b7" OR t_collection_data.stix_id = "attack-pattern--c7c8a099-70a9-487b-a95f-2498d2941104" OR t_collection_data.stix_id = "campaign--6f938db5-6648-4ec1-81cb-5b65138c3c66")`
 	if ds.sqlCollectionDataWhereSTIXID([]string{"indicator--37abef16-7616-439c-86be-23712030c4b7", "attack-pattern--c7c8a099-70a9-487b-a95f-2498d2941104", "campaign--6f938db5-6648-4ec1-81cb-5b65138c3c66"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
@@ -241,18 +212,14 @@ func Test_sqlCollectionDataWhereSTIXType(t *testing.T) {
 
 	t.Log("Test 7: get correct where statement for single stix type")
 	b.Reset()
-	testdata = ` AND 
-	t_collection_data.stix_id LIKE "indicator%"`
+	testdata = ` AND t_collection_data.stix_id LIKE "indicator%"`
 	if ds.sqlCollectionDataWhereSTIXType([]string{"indicator"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
 
 	t.Log("Test 8: get correct where statement for three stix types")
 	b.Reset()
-	testdata = ` AND 
-	(t_collection_data.stix_id LIKE "indicator%" OR 
-	t_collection_data.stix_id LIKE "attack-pattern%" OR 
-	t_collection_data.stix_id LIKE "campaign%")`
+	testdata = ` AND (t_collection_data.stix_id LIKE "indicator%" OR t_collection_data.stix_id LIKE "attack-pattern%" OR t_collection_data.stix_id LIKE "campaign%")`
 	if ds.sqlCollectionDataWhereSTIXType([]string{"indicator", "attack-pattern", "campaign"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
@@ -275,24 +242,21 @@ func Test_sqlCollectionDataWhereSTIXVersion(t *testing.T) {
 
 	t.Log("Test 2: get correct where statement for single stix version")
 	b.Reset()
-	testdata = ` AND 
-	s_base_object.modified = "2017-12-05T02:43:19.783Z"`
+	testdata = ` AND s_base_object.modified = "2017-12-05T02:43:19.783Z"`
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"2017-12-05T02:43:19.783Z"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
 
 	t.Log("Test 3: get correct where statement for first stix version")
 	b.Reset()
-	testdata = ` AND 
-	s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)`
+	testdata = ` AND s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)`
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
 
 	t.Log("Test 4: get correct where statement for last stix version")
 	b.Reset()
-	testdata = ` AND 
-	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)`
+	testdata = ` AND s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)`
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"last"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
@@ -311,19 +275,14 @@ func Test_sqlCollectionDataWhereSTIXVersion(t *testing.T) {
 
 	t.Log("Test 7: get correct where statement for first and last stix versions")
 	b.Reset()
-	testdata = ` AND 
-	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
-	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
+	testdata = ` AND (s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "last"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
 
 	t.Log("Test 8: get correct where statement for three stix versions")
 	b.Reset()
-	testdata = ` AND 
-	(s_base_object.modified = "2017-12-05T02:43:19.783Z" OR 
-	s_base_object.modified = "2017-12-05T02:43:23.828Z" OR 
-	s_base_object.modified = "2017-12-05T02:43:24.835Z")`
+	testdata = ` AND (s_base_object.modified = "2017-12-05T02:43:19.783Z" OR s_base_object.modified = "2017-12-05T02:43:23.828Z" OR s_base_object.modified = "2017-12-05T02:43:24.835Z")`
 	if ds.sqlCollectionDataWhereSTIXVersion([]string{"2017-12-05T02:43:19.783Z", "2017-12-05T02:43:23.828Z", "2017-12-05T02:43:24.835Z"}, &b); testdata != b.String() {
 		t.Error("sql where statement is not correct")
 	}
