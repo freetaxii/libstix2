@@ -300,6 +300,37 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
+	if vers == nil {
+		return nil
+	}
+
+	// Lets check the multiple version use case and see if the options are valid
+	if len(vers) > 1 {
+		first := 0
+		last := 0
+		all := 0
+
+		for _, v := range vers {
+			if v == "last" {
+				last++
+			} else if v == "first" {
+				first++
+			} else if v == "all" {
+				all++
+			}
+		}
+
+		if last > 1 {
+			return errors.New("can not use the 'last' key word multiple time in the version selector")
+		}
+		if first > 1 {
+			return errors.New("can not use the 'first' key word multiple time in the version selector")
+		}
+		if all > 0 {
+			return errors.New("can not use the 'all' key word with a multiple version selector")
+		}
+	}
+
 	/*
 		This sql where statement should look like one of the following:
 		t_collection_data.collection_id = "aa" AND
@@ -320,12 +351,58 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 		s_base_object.modified = "2017-12-05T02:43:23.822Z" OR
 		s_base_object.modified = "2017-12-05T02:43:24.835Z")
 	*/
-	if vers != nil {
-		if len(vers) == 1 {
-			if vers[0] == "last" {
 
-				// s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
+	if len(vers) == 1 {
+		if vers[0] == "last" {
+			// s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
+			b.WriteString(" AND \n\t")
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.modified = (select max(modified) from `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(` where `)
+			b.WriteString(tblColData)
+			b.WriteString(`.stix_id = `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.id)`)
+
+		} else if vers[0] == "first" {
+			// s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
+			b.WriteString(" AND \n\t")
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.modified = (select min(modified) from `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(` where `)
+			b.WriteString(tblColData)
+			b.WriteString(`.stix_id = `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.id)`)
+
+		} else if vers[0] == "all" {
+			// Do nothing, since the default is to return all versions.
+		} else {
+			if timestamp.Valid(vers[0]) {
 				b.WriteString(" AND \n\t")
+				b.WriteString(tblBaseObj)
+				b.WriteString(`.modified = "`)
+				b.WriteString(vers[0])
+				b.WriteString(`"`)
+
+			} else {
+				return errors.New("the provided timestamp for the version is invalid")
+			}
+		}
+	} else if len(vers) > 1 {
+		b.WriteString(" AND \n\t(")
+		for i, v := range vers {
+			// Lets only add he OR after the first object and not after the
+			// last object. Since skipOr starts as true, this takes care of
+			// the first run case where i == 0
+
+			if i > 0 {
+				b.WriteString(" OR \n\t")
+			}
+
+			if v == "last" {
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.modified = (select max(modified) from `)
 				b.WriteString(tblBaseObj)
@@ -334,10 +411,8 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 				b.WriteString(`.stix_id = `)
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.id)`)
-			} else if vers[0] == "first" {
 
-				// s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
-				b.WriteString(" AND \n\t")
+			} else if v == "first" {
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.modified = (select min(modified) from `)
 				b.WriteString(tblBaseObj)
@@ -346,70 +421,21 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 				b.WriteString(`.stix_id = `)
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.id)`)
-			} else if vers[0] == "all" {
-				// Do nothing, since the default is to return all versions.
+
 			} else {
-				if timestamp.Valid(vers[0]) {
-					b.WriteString(" AND \n\t")
+				if timestamp.Valid(v) {
 					b.WriteString(tblBaseObj)
 					b.WriteString(`.modified = "`)
-					b.WriteString(vers[0])
+					b.WriteString(v)
 					b.WriteString(`"`)
 				} else {
 					return errors.New("the provided timestamp for the version is invalid")
 				}
 			}
-		} else if len(vers) > 1 {
-			b.WriteString(" AND \n\t(")
-			for i, v := range vers {
-				// Lets only add he OR after the first object and not after the
-				// last object. Since skipOr starts as true, this takes care of
-				// the first run case where i == 0
-
-				// TODO need to check to make sure someone does not put last or first in twice and then build a test case for it
-
-				if i > 0 {
-					b.WriteString(" OR \n\t")
-				}
-
-				if v == "last" {
-					b.WriteString(tblBaseObj)
-					b.WriteString(`.modified = (select max(modified) from `)
-					b.WriteString(tblBaseObj)
-					b.WriteString(` where `)
-					b.WriteString(tblColData)
-					b.WriteString(`.stix_id = `)
-					b.WriteString(tblBaseObj)
-					b.WriteString(`.id)`)
-
-				} else if v == "first" {
-					b.WriteString(tblBaseObj)
-					b.WriteString(`.modified = (select min(modified) from `)
-					b.WriteString(tblBaseObj)
-					b.WriteString(` where `)
-					b.WriteString(tblColData)
-					b.WriteString(`.stix_id = `)
-					b.WriteString(tblBaseObj)
-					b.WriteString(`.id)`)
-
-				} else if v == "all" {
-					// Do nothing as it will do nothing here, or it should not be valid
-					return errors.New("can not use the all key word with a multiple version selector")
-
-				} else {
-					if timestamp.Valid(v) {
-						b.WriteString(tblBaseObj)
-						b.WriteString(`.modified = "`)
-						b.WriteString(v)
-						b.WriteString(`"`)
-					} else {
-						return errors.New("the provided timestamp for the version is invalid")
-					}
-				}
-			}
-			b.WriteString(`)`)
 		}
+		b.WriteString(`)`)
 	}
+
 	//log.Println("DEBUG: \n", b.String())
 	return nil
 }

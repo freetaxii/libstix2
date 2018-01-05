@@ -14,6 +14,76 @@ import (
 
 // ----------------------------------------------------------------------
 //
+// func (ds *Sqlite3DatastoreType) sqlObjectList(query datastore.QueryType) (string, error)
+//
+// ----------------------------------------------------------------------
+func Test_sqlObjectList(t *testing.T) {
+	var ds Sqlite3DatastoreType
+	var query datastore.QueryType
+	var testdata string
+
+	t.Log("Test 1: get an error for no collection id")
+	if _, err := ds.sqlObjectList(query); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 2: get correct sql statement for object list")
+	query.CollectionID = "aa"
+	testdata = `SELECT 
+	t_collection_data.date_added, 
+	t_collection_data.stix_id, 
+	s_base_object.modified, 
+	s_base_object.spec_version 
+FROM 
+	t_collection_data
+JOIN 
+	s_base_object ON 
+	t_collection_data.stix_id = s_base_object.id 
+WHERE 
+	t_collection_data.collection_id = "aa"`
+	if v, _ := ds.sqlObjectList(query); testdata != v {
+		t.Error("sql statement is not correct")
+	}
+}
+
+// ----------------------------------------------------------------------
+//
+// func (ds *Sqlite3DatastoreType) sqlManifestData(query datastore.QueryType) (string, error)
+//
+// ----------------------------------------------------------------------
+func Test_sqlManifestData(t *testing.T) {
+	var ds Sqlite3DatastoreType
+	var query datastore.QueryType
+	var testdata string
+
+	t.Log("Test 1: get an error for no collection id")
+	if _, err := ds.sqlManifestData(query); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 2: get correct sql statement for manifest data")
+	query.CollectionID = "aa"
+	testdata = `SELECT 
+	t_collection_data.date_added, 
+	t_collection_data.stix_id, 
+	group_concat(s_base_object.modified), 
+	group_concat(s_base_object.spec_version) 
+FROM 
+	t_collection_data
+JOIN 
+	s_base_object ON 
+	t_collection_data.stix_id = s_base_object.id 
+WHERE 
+	t_collection_data.collection_id = "aa"
+GROUP BY 
+	t_collection_data.date_added`
+	if v, _ := ds.sqlManifestData(query); testdata != v {
+		t.Error("sql statement is not correct")
+	}
+}
+
+// ----------------------------------------------------------------------
+//
 // func (ds *Sqlite3DatastoreType) sqlWhereCollectionID(id string, b *bytes.Buffer) error
 //
 // ----------------------------------------------------------------------
@@ -258,38 +328,36 @@ func Test_sqlCollectionDataWhereSTIXVersion(t *testing.T) {
 		t.Error("sql where statement is not correct")
 	}
 
-	t.Log("Test 9: get correct where statement for first, last, and all stix versions")
-	b.Reset()
-	testdata = ` AND 
-	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
-	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
-	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "last", "all"}, &b); testdata != b.String() {
-		t.Error("sql where statement is not correct")
+	t.Log("Test 9: get an error when using first, last, and all stix versions")
+	if err := ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "last", "all"}, &b); err == nil {
+		t.Error("no error returned")
 	}
 
-	t.Log("Test 10: get correct where statement for first, all, and last stix versions")
-	b.Reset()
-	testdata = ` AND 
-	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
-	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
-	if ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "all", "last"}, &b); testdata != b.String() {
-		t.Error("sql where statement is not correct")
+	t.Log("Test 10: get an error when using first, all, and last stix versions")
+	if err := ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "all", "last"}, &b); err == nil {
+		t.Error("no error returned")
 	}
 
-	t.Log("Test 11: get correct where statement for all, first, and last stix versions")
-	b.Reset()
-	testdata = ` AND 
-	(s_base_object.modified = (select min(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id) OR 
-	s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id))`
-	if ds.sqlCollectionDataWhereSTIXVersion([]string{"all", "first", "last"}, &b); testdata != b.String() {
-		t.Error("sql where statement is not correct")
+	t.Log("Test 11: get an error when using all, first, and last stix versions")
+	if err := ds.sqlCollectionDataWhereSTIXVersion([]string{"all", "first", "last"}, &b); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 12: get an error when using two 'first' keywords for a stix versions")
+	if err := ds.sqlCollectionDataWhereSTIXVersion([]string{"first", "first"}, &b); err == nil {
+		t.Error("no error returned")
+	}
+
+	t.Log("Test 13: get an error when using two 'last' keywords for a stix versions")
+	if err := ds.sqlCollectionDataWhereSTIXVersion([]string{"last", "last"}, &b); err == nil {
+		t.Error("no error returned")
 	}
 
 }
 
 // ----------------------------------------------------------------------
 //
-//
+// func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
 //
 // ----------------------------------------------------------------------
 
