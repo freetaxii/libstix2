@@ -19,20 +19,20 @@ type Datastorer interface {
 	GetObject(stixid, version string) (interface{}, error)
 	GetObjectsFromCollection(query QueryType) (*objects.BundleType, *QueryReturnDataType, error)
 	GetListOfObjectsFromCollection(query QueryType) (*[]CollectionRawDataType, *QueryReturnDataType, error)
-	GetManifestFromCollection(query QueryType) (*resources.ManifestType, *QueryReturnDataType, error)
+	GetManifestData(query QueryType) (*resources.ManifestType, *QueryReturnDataType, error)
 }
 
 // QueryType - This struct will hold all of the variables that a user can
 // query a collection on.
 type QueryType struct {
 	CollectionID string
-	STIXID       []string
-	STIXType     []string
-	STIXVersion  []string
-	AddedAfter   []string
-	RangeBegin   int
-	RangeEnd     int
-	RangeMax     int
+	STIXID       []string // Passed in from the URL
+	STIXType     []string // Passed in from the URL
+	STIXVersion  []string // Passed in from the URL
+	AddedAfter   []string // Passed in from the URL
+	RangeBegin   int      // Passed in from Range Headers
+	RangeEnd     int      // Passed in from Range Headers
+	RangeMax     int      // Server defined value in the configuration file
 }
 
 // QueryReturnDataType - This struct contains the various bits of meta data that

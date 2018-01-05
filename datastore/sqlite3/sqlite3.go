@@ -48,7 +48,7 @@ func New(filename string) Sqlite3DatastoreType {
 // Public Methods
 // ----------------------------------------------------------------------
 
-func (ds *Sqlite3DatastoreType) Put(obj interface{}) {
+func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
 	switch o := obj.(type) {
 	case resources.CollectionType:
 		ds.addCollection(o)

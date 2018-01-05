@@ -19,9 +19,11 @@ import (
 // STIX content in the database.
 func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionData())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION, collection())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTIONS, collections())
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaType())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_MEDIA_TYPES, mediaTypes())
 	ds.createTAXIIIndexes(datastore.DB_TABLE_TAXII_COLLECTION_DATA)
+	ds.insertMediaTypes(datastore.DB_TABLE_TAXII_MEDIA_TYPES)
 }
 
 // ----------------------------------------------------------------------
@@ -50,6 +52,17 @@ func (ds *Sqlite3DatastoreType) createTAXIIIndexes(name string) {
 		if err != nil {
 			log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
 		}
+	}
+}
+
+func (ds *Sqlite3DatastoreType) insertMediaTypes(name string) {
+	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
+
+	var err error
+	_, err = ds.DB.Exec(stmt, "application/vnd.oasis.stix+json")
+
+	if err != nil {
+		log.Println("ERROR: The media type item could not be inserted in to the", name, "table")
 	}
 }
 
@@ -82,7 +95,7 @@ func collectionData() string {
 }
 
 /*
-collection - This method will return the properties that make up the collection
+collections - This method will return the properties that make up the collection
 table
 
 date_added  = The date that this collection was added to the system
@@ -93,7 +106,7 @@ description = A long description about this collection
 can_read    = A boolean flag that indicates if one can read from this collection
 can_write   = A boolean flag that indicates if one can write to this collection
 */
-func collection() string {
+func collections() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"date_added" TEXT NOT NULL,
@@ -117,6 +130,19 @@ func collectionMediaType() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
 	"collection_id" TEXT NOT NULL,
+	"media_type_id" INTEGER NOT NULL
+	`
+}
+
+/*
+mediaTypes  - This method will return the properties that make up the media
+types table
+
+media_type    = The media types supported on this collection
+*/
+func mediaTypes() string {
+	return `
+	"row_id" INTEGER PRIMARY KEY,
 	"media_type" TEXT NOT NULL
 	`
 }

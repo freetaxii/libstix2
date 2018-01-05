@@ -30,16 +30,16 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, 
 }
 
 /*
-GetObjectsFromCollection - This method will take in query struct with range
+GetBundle - This method will take in a query struct with range
 parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *Sqlite3DatastoreType) GetObjectsFromCollection(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
+func (ds *Sqlite3DatastoreType) GetBundle(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
 
 	stixBundle := objects.NewBundle()
 
-	rangeCollectionRawData, metaData, err := ds.GetListOfObjectsFromCollection(query)
+	rangeCollectionRawData, metaData, err := ds.GetObjectList(query)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -58,17 +58,17 @@ func (ds *Sqlite3DatastoreType) GetObjectsFromCollection(query datastore.QueryTy
 }
 
 /*
-GetListOfObjectsFromCollection - This method will take in query struct with range
+GetObjectList - This method will take in a query struct with range
 parameters for a collection and will return a datastore collection raw data type
 that contains all of the STIX IDs and their associated meta data that are in
 that collection that meet those query or range parameters.
 */
-func (ds *Sqlite3DatastoreType) GetListOfObjectsFromCollection(query datastore.QueryType) (*[]datastore.CollectionRawDataType, *datastore.QueryReturnDataType, error) {
+func (ds *Sqlite3DatastoreType) GetObjectList(query datastore.QueryType) (*[]datastore.CollectionRawDataType, *datastore.QueryReturnDataType, error) {
 	var metaData datastore.QueryReturnDataType
 	var collectionRawData []datastore.CollectionRawDataType
 	var rangeCollectionRawData []datastore.CollectionRawDataType
 
-	sqlStmt, err := ds.sqlListOfObjectsFromCollection(query)
+	sqlStmt, err := ds.sqlObjectList(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -122,18 +122,18 @@ func (ds *Sqlite3DatastoreType) GetListOfObjectsFromCollection(query datastore.Q
 }
 
 /*
-GetManifestFromCollection - This method will take in query struct with range
+GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
-func (ds *Sqlite3DatastoreType) GetManifestFromCollection(query datastore.QueryType) (*resources.ManifestType, *datastore.QueryReturnDataType, error) {
+func (ds *Sqlite3DatastoreType) GetManifestData(query datastore.QueryType) (*resources.ManifestType, *datastore.QueryReturnDataType, error) {
 	manifest := resources.NewManifest()
 	rangeManifest := resources.NewManifest()
 	var metaData datastore.QueryReturnDataType
 	var first, last int
 	var errRange error
 
-	sqlStmt, err := ds.sqlManifestDataFromCollection(query)
+	sqlStmt, err := ds.sqlManifestData(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.

@@ -49,7 +49,8 @@ const (
 	DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION = "v_threat_actor_sophistication"
 	DB_TABLE_VOCAB_TOOL_LABEL                  = "v_tool_label"
 
-	DB_TABLE_TAXII_COLLECTION            = "t_collection"
+	DB_TABLE_TAXII_COLLECTIONS           = "t_collections"
 	DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE = "t_collection_media_type"
 	DB_TABLE_TAXII_COLLECTION_DATA       = "t_collection_data"
+	DB_TABLE_TAXII_MEDIA_TYPES           = "t_media_types"
 )

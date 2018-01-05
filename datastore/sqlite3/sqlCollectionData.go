@@ -12,16 +12,17 @@ import (
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
-	"log"
+	//"log"
 )
 
 /*
-sqlListOfObjectsFromCollection - This method will take in a query struct and return
-an SQL select statement that matches the requirements and parameters given in the
-query struct. We are using the byte array as it is the most efficient way to do
-string concatenation in Go.
+sqlObjectList - This method will return an SQL statement that will
+return a list of objects from a given collection. It will use the query struct to
+determine the requirements and parameters for the where clause of the SQL
+statement. A byte array is used instead of sting concatenation as it is the most
+efficient way to do string concatenation in Go.
 */
-func (ds *Sqlite3DatastoreType) sqlListOfObjectsFromCollection(query datastore.QueryType) (string, error) {
+func (ds *Sqlite3DatastoreType) sqlObjectList(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -74,12 +75,23 @@ func (ds *Sqlite3DatastoreType) sqlListOfObjectsFromCollection(query datastore.Q
 }
 
 /*
-sqlManifestDataFromCollection - This method will take in a query struct and return
-an SQL select statement that matches the requirements and parameters given in the
-query struct. We are using the byte array as it is the most efficient way to do
-string concatenation in Go.
+sqlManifestData - This method will return an SQL statement that will
+return a list of objects from a given collection and all of the information
+needed to create the manifest resource. It will use the query struct to
+determine the requirements and parameters for the where clause of the SQL
+statement. A byte array is used instead of sting concatenation as it is the most
+efficient way to do string concatenation in Go.
+
+Since the manifest resource in TAXII lists out all of the versions of the
+object, we are using a group_concat SQL function to give us a string of values
+separated by a comma. This will prevent us from having to query the database
+multiple times to get all of the needed data.
+
+If you do not use the GROUP BY filter when using the group_concat function then
+you get a single row returned with all of the versions listed in the
+corresponding modified and spec_version fields.
 */
-func (ds *Sqlite3DatastoreType) sqlManifestDataFromCollection(query datastore.QueryType) (string, error) {
+func (ds *Sqlite3DatastoreType) sqlManifestData(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -398,7 +410,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string,
 			b.WriteString(`)`)
 		}
 	}
-	log.Println("DEBUG: \n", b.String())
+	//log.Println("DEBUG: \n", b.String())
 	return nil
 }
 
