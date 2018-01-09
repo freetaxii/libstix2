@@ -10,24 +10,6 @@ package resources
 // Public Create Functions
 // ----------------------------------------------------------------------
 
-// NewAPIRoot - This function will create a new TAXII API Root object.
-func NewAPIRoot() *APIRootType {
-	var obj APIRootType
-	return &obj
-}
-
-// NewCollection - This function will create a new TAXII Collection object.
-func NewCollection() *CollectionType {
-	var obj CollectionType
-	return &obj
-}
-
-// NewCollections - This function will create a new TAXII Collections object.
-func NewCollections() *CollectionsType {
-	var obj CollectionsType
-	return &obj
-}
-
 // NewDiscovery - This function will create a new TAXII Discovery object.
 func NewDiscovery() *DiscoveryType {
 	var obj DiscoveryType
@@ -38,16 +20,6 @@ func NewDiscovery() *DiscoveryType {
 // func NewStatus() StatusType {
 // 	return status.New()
 // }
-
-// NewCollectionRecord - This function will take in a collection ID and a STIX ID
-// and return a collection record type which is used for storying a record in
-// the database in the t_collection_data table.
-func NewCollectionRecord(cid, sid string) *CollectionRecordType {
-	var obj CollectionRecordType
-	obj.CollectionID = cid
-	obj.STIXID = sid
-	return &obj
-}
 
 // NewError - This functions will create a new TAXII Error Message object.
 func NewError() *ErrorType {

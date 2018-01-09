@@ -40,28 +40,49 @@ type APIRootType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitAPIRoot - This function will create a new TAXII API Root object and return
+it as a pointer.
+*/
+func InitAPIRoot() *APIRootType {
+	var obj APIRootType
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - APIRootType
 // ----------------------------------------------------------------------
 
-// AddVersion - This method takes in a string value that represents a version of
-// the TAXII api that is supported and adds it to the versions property.
-func (ezt *APIRootType) AddVersion(s string) {
+/*
+AddVersion - This method takes in a string value that represents a version of
+the TAXII api that is supported and adds it to the versions property.
+*/
+func (ezt *APIRootType) AddVersion(s string) error {
 	if ezt.Versions == nil {
 		a := make([]string, 0)
 		ezt.Versions = a
 	}
 	ezt.Versions = append(ezt.Versions, s)
+	return nil
 }
 
-// SetMaxContentLength - This method takes in an integer value representing the
-// max content length that the server can support and updates the max content
-// length property.
-func (ezt *APIRootType) SetMaxContentLength(i int) {
+/*
+SetMaxContentLength - This method takes in an integer value representing the
+max content length that the server can support and updates the max content
+length property.
+*/
+func (ezt *APIRootType) SetMaxContentLength(i int) error {
 	ezt.MaxContentLength = i
+	return nil
 }
 
-// GetMaxContentLength - This method returns the max content length as an
-// integer.
-func (ezt *APIRootType) GetMaxContentLength() int {
-	return ezt.MaxContentLength
+/*
+GetMaxContentLength - This method returns the max content length as an
+integer.
+*/
+func (ezt *APIRootType) GetMaxContentLength() (int, error) {
+	return ezt.MaxContentLength, nil
 }

@@ -65,19 +65,19 @@ type ManifestEntryType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitManifestObject - This function will create a new TAXII Manifest object and return
+InitManifest - This function will create a new TAXII Manifest object and return
 it as a pointer.
 */
-func InitManifestObject() *ManifestType {
+func InitManifest() *ManifestType {
 	var obj ManifestType
 	return &obj
 }
 
 /*
-InitManifestEntryObject - This function will create a new TAXII Manifest Entry object
+InitManifestEntry - This function will create a new TAXII Manifest Entry object
 and return it as a pointer.
 */
-func InitManifestEntryObject() *ManifestEntryType {
+func InitManifestEntry() *ManifestEntryType {
 	var obj ManifestEntryType
 	return &obj
 }
@@ -100,12 +100,12 @@ func (ezt *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {
 }
 
 /*
-NewManifestEntry - This method is used to create a manifest entry and automatically
+GetNewManifestEntry - This method is used to create a manifest entry and automatically
 add it to the objects array. It returns a resources.ManifestEntryType which is a
 pointer to the actual manifest entry that was created in the manifest slice.
 */
-func (ezt *ManifestType) NewManifestEntry() (*ManifestEntryType, error) {
-	o := InitManifestEntryObject()
+func (ezt *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {
+	o := InitManifestEntry()
 	positionThatAppendWillUse := len(ezt.Objects)
 	ezt.Objects = append(ezt.Objects, *o)
 	return &ezt.Objects[positionThatAppendWillUse], nil
@@ -118,7 +118,7 @@ the version and media type properties can be provided as a comma separated list
 with no spaces in between the values.
 */
 func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
-	m, _ := ezt.NewManifestEntry()
+	m, _ := ezt.GetNewManifestEntry()
 	m.SetID(id)
 	m.SetDateAdded(date)
 
