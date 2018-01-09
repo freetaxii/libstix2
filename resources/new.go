@@ -11,39 +11,27 @@ package resources
 // ----------------------------------------------------------------------
 
 // NewAPIRoot - This function will create a new TAXII API Root object.
-func NewAPIRoot() APIRootType {
+func NewAPIRoot() *APIRootType {
 	var obj APIRootType
-	return obj
+	return &obj
 }
 
 // NewCollection - This function will create a new TAXII Collection object.
-func NewCollection() CollectionType {
+func NewCollection() *CollectionType {
 	var obj CollectionType
-	return obj
+	return &obj
 }
 
 // NewCollections - This function will create a new TAXII Collections object.
-func NewCollections() CollectionsType {
+func NewCollections() *CollectionsType {
 	var obj CollectionsType
-	return obj
+	return &obj
 }
 
 // NewDiscovery - This function will create a new TAXII Discovery object.
-func NewDiscovery() DiscoveryType {
+func NewDiscovery() *DiscoveryType {
 	var obj DiscoveryType
-	return obj
-}
-
-// NewManifest - This function will create a new TAXII Manifest object.
-func NewManifest() ManifestType {
-	var obj ManifestType
-	return obj
-}
-
-// NewManifestEntry - This function will create a new TAXII Manifest Entry object.
-func NewManifestEntry() ManifestEntryType {
-	var obj ManifestEntryType
-	return obj
+	return &obj
 }
 
 // NewStatus - This function will create a new TAXII Status object.
@@ -51,17 +39,18 @@ func NewManifestEntry() ManifestEntryType {
 // 	return status.New()
 // }
 
-// NewCollectionRecord - This function will take in a colleciton ID and a STIX ID
-// and return a colleciton record type.
-func NewCollectionRecord(cid, sid string) CollectionRecordType {
+// NewCollectionRecord - This function will take in a collection ID and a STIX ID
+// and return a collection record type which is used for storying a record in
+// the database in the t_collection_data table.
+func NewCollectionRecord(cid, sid string) *CollectionRecordType {
 	var obj CollectionRecordType
 	obj.CollectionID = cid
 	obj.STIXID = sid
-	return obj
+	return &obj
 }
 
 // NewError - This functions will create a new TAXII Error Message object.
-func NewError() ErrorType {
+func NewError() *ErrorType {
 	var obj ErrorType
-	return obj
+	return &obj
 }

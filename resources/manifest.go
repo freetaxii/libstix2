@@ -8,6 +8,7 @@ package resources
 
 import (
 	"github.com/freetaxii/libstix2/resources/properties"
+	"sort"
 	"strings"
 )
 
@@ -40,73 +41,6 @@ type ManifestType struct {
 	Objects []ManifestEntryType `json:"objects,omitempty"`
 }
 
-// ----------------------------------------------------------------------
-// Public Methods - ManifestType
-// ----------------------------------------------------------------------
-
-// AddManifestEntry - This method takes in an object that represents a manifest entry
-// and adds it to the list in the objects property and returns an integer of
-// the location in the slice where the manifest entry object was added. This method
-// would be used if the manifest entry was created separately and it just needs to be
-// added in whole to the manifest list.
-func (ezt *ManifestType) AddManifestEntry(o ManifestEntryType) int {
-	ezt.initManifestProperty()
-	positionThatAppendWillUse := len(ezt.Objects)
-	ezt.Objects = append(ezt.Objects, o)
-	return positionThatAppendWillUse
-}
-
-// NewManifestEntry - This method is used to create a manifest entry and automatically
-// add it to the objects array. It returns a resources.ManifestEntryType which
-// is a pointer to the actual manifest entry that was created in the manifest
-// slice.
-func (ezt *ManifestType) NewManifestEntry() *ManifestEntryType {
-	ezt.initManifestProperty()
-	o := NewManifestEntry()
-	positionThatAppendWillUse := len(ezt.Objects)
-	ezt.Objects = append(ezt.Objects, o)
-	return &ezt.Objects[positionThatAppendWillUse]
-}
-
-// CreateManifestEntry - This method is used to create and add a manifest entry
-// in a single step, but taking in all of the values as parameters. Multiple
-// values for the version and media type properties can be provided as a comma
-// separated list with no spaces in between the values.
-func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) {
-	m := ezt.NewManifestEntry()
-	m.SetID(id)
-	m.SetDateAdded(date)
-
-	versions := strings.Split(ver, ",")
-	for _, v := range versions {
-		m.AddVersion(v)
-	}
-
-	mediatypes := strings.Split(media, ",")
-	for i, mt := range mediatypes {
-
-		// If the media types are all the same, due to the way the SQL query
-		// returns results, then only record one entry.
-		if i > 0 && mt == mediatypes[i-1] {
-			continue
-		}
-		m.AddMediaType(mt)
-	}
-}
-
-// ----------------------------------------------------------------------
-// Private Methods - ManifestType
-// ----------------------------------------------------------------------
-
-// initManifestProperty - This method will initialize the Manifest
-// slice if it has not already been initialized.
-func (ezt *ManifestType) initManifestProperty() {
-	if ezt.Objects == nil {
-		a := make([]ManifestEntryType, 0)
-		ezt.Objects = a
-	}
-}
-
 /*
 ManifestEntryType - This type implements the TAXII 2 Manifest Entry Type and
 defines all of the properties and methods needed to create and work with the TAXII
@@ -126,28 +60,128 @@ type ManifestEntryType struct {
 	MediaTypes []string `json:"media_types,omitempty"`
 }
 
-// SetDateAdded - This method will add the date added to the manifest entry
-func (ezt *ManifestEntryType) SetDateAdded(s string) {
-	ezt.DateAdded = s
+// ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitManifestObject - This function will create a new TAXII Manifest object and return
+it as a pointer.
+*/
+func InitManifestObject() *ManifestType {
+	var obj ManifestType
+	return &obj
 }
 
-// AddVersion - This method takes in a string value that represents an object
-// version and adds it to the list of versions that are available for this object.
-func (ezt *ManifestEntryType) AddVersion(s string) {
+/*
+InitManifestEntryObject - This function will create a new TAXII Manifest Entry object
+and return it as a pointer.
+*/
+func InitManifestEntryObject() *ManifestEntryType {
+	var obj ManifestEntryType
+	return &obj
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - ManifestType
+// ----------------------------------------------------------------------
+
+/*
+AddManifestEntry - This method takes in an object that represents a manifest
+entry and adds it to the list in the objects property and returns an integer of
+the location in the slice where the manifest entry object was added. This method
+would be used if the manifest entry was created separately and it just needs to
+be added in whole to the manifest list.
+*/
+func (ezt *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {
+	positionThatAppendWillUse := len(ezt.Objects)
+	ezt.Objects = append(ezt.Objects, *o)
+	return positionThatAppendWillUse, nil
+}
+
+/*
+NewManifestEntry - This method is used to create a manifest entry and automatically
+add it to the objects array. It returns a resources.ManifestEntryType which is a
+pointer to the actual manifest entry that was created in the manifest slice.
+*/
+func (ezt *ManifestType) NewManifestEntry() (*ManifestEntryType, error) {
+	o := InitManifestEntryObject()
+	positionThatAppendWillUse := len(ezt.Objects)
+	ezt.Objects = append(ezt.Objects, *o)
+	return &ezt.Objects[positionThatAppendWillUse], nil
+}
+
+/*
+CreateManifestEntry - This method is used to create and add a manifest entry in
+a single step, by taking in all of the values as parameters. Multiple values for
+the version and media type properties can be provided as a comma separated list
+with no spaces in between the values.
+*/
+func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
+	m, _ := ezt.NewManifestEntry()
+	m.SetID(id)
+	m.SetDateAdded(date)
+
+	versions := strings.Split(ver, ",")
+
+	// The specification says that the newest objects should start at index 0 so
+	// lets sorts them in reverse order.
+	if len(versions) > 1 {
+		sort.Sort(sort.Reverse(sort.StringSlice(versions)))
+	}
+
+	for _, v := range versions {
+		m.AddVersion(v)
+	}
+
+	mediatypes := strings.Split(media, ",")
+	for i, mt := range mediatypes {
+
+		// If the media types are all the same, due to the way the SQL query
+		// returns results, then only record one entry.
+		if i > 0 && mt == mediatypes[i-1] {
+			continue
+		}
+		m.AddMediaType(mt)
+	}
+	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - ManifestEntryType
+// ----------------------------------------------------------------------
+
+/*
+SetDateAdded - This method will add the date added to the manifest entry
+*/
+func (ezt *ManifestEntryType) SetDateAdded(s string) error {
+	ezt.DateAdded = s
+	return nil
+}
+
+/*
+AddVersion - This method takes in a string value that represents an object
+version and adds it to the list of versions that are available for this object.
+*/
+func (ezt *ManifestEntryType) AddVersion(s string) error {
 	if ezt.Versions == nil {
 		a := make([]string, 0)
 		ezt.Versions = a
 	}
 	ezt.Versions = append(ezt.Versions, s)
+	return nil
 }
 
-// AddMediaType - This method takes in a string value that represents a version
-// of the STIX specification that is supported and adds it to the list in media types
-// that this object is available in.
-func (ezt *ManifestEntryType) AddMediaType(s string) {
+/*
+AddMediaType - This method takes in a string value that represents a version of
+the STIX specification that is supported and adds it to the list in media types
+that this object is available in.
+*/
+func (ezt *ManifestEntryType) AddMediaType(s string) error {
 	if ezt.MediaTypes == nil {
 		a := make([]string, 0)
 		ezt.MediaTypes = a
 	}
 	ezt.MediaTypes = append(ezt.MediaTypes, s)
+	return nil
 }

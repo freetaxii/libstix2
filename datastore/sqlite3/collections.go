@@ -7,35 +7,65 @@
 package sqlite3
 
 import (
+	"fmt"
 	"github.com/freetaxii/libstix2/resources"
-	"log"
 	"strings"
 )
 
-// GetEnabledCollections - This method will return all of the collections that
+// GetAllCollections - This method will return all collections, even those that
+// are not enabled and hidden
+func (ds *Sqlite3DatastoreType) GetAllCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("all")
+}
+
+// GetAllEnabledCollections - This method will return all enabled collections,
+// even those that are hidden. This is used for setup up the http routers
+func (ds *Sqlite3DatastoreType) GetAllEnabledCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("allEnabled")
+}
+
+// GetCollections - This method will return all enabled and visible collections
+func (ds *Sqlite3DatastoreType) GetCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("enabledVisible")
+}
+
+// getCollections - This method will return all of the collections that
 // are currently enabled.
-func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsType {
+func (ds *Sqlite3DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
 
 	allCollections := resources.NewCollections()
 
-	getAllEnabledCollections, nil := ds.sqlEnabledCollections()
+	getAllCollectionsStmt, _ := ds.sqlAllCollections(whichCollections)
 
 	// Query database for all the collections
-	rows, err := ds.DB.Query(getAllEnabledCollections)
+	rows, err := ds.DB.Query(getAllCollectionsStmt)
 	if err != nil {
-		log.Fatal("ERROR: Database execution error quering collection: ", err)
+		return nil, fmt.Errorf("database execution error querying collection: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var iCanRead, iCanWrite int
-		var id, title, description, mediaType string
-		if err := rows.Scan(&id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
-			log.Fatal(err)
+		var enabled, hidden, iCanRead, iCanWrite int
+		var dateAdded, id, title, description, mediaType string
+		if err := rows.Scan(&dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
+			return nil, fmt.Errorf("database scan error querying collection: ", err)
 		}
 
 		// Add collection information to Collection object
 		c := allCollections.NewCollection()
+		c.DateAdded = dateAdded
+		if enabled == 1 {
+			c.SetEnabled()
+		} else {
+			c.SetDisabled()
+		}
+
+		if hidden == 1 {
+			c.SetHidden()
+		} else {
+			c.SetVisible()
+		}
+
 		c.SetID(id)
 		c.SetTitle(title)
 		c.SetDescription(description)
@@ -59,8 +89,8 @@ func (ds *Sqlite3DatastoreType) GetEnabledCollections() resources.CollectionsTyp
 	}
 
 	if err := rows.Err(); err != nil {
-		log.Fatal(err)
+		return nil, fmt.Errorf("database row error querying collection: ", err)
 	}
 
-	return allCollections
+	return allCollections, nil
 }

@@ -13,18 +13,20 @@ import (
 )
 
 /*
-sqlEnabledCollections - This method will take in a query struct and return
-an SQL select statement that matches the requirements and parameters given in the
-query struct. We are using the byte array as it is the most efficient way to do
-string concatenation in Go.
+sqlAllCollections - This method will return an SQL statement that will return a
+list of collections. A byte array is used instead of sting
+concatenation as it is the most efficient way to do string concatenation in Go.
 */
-func (ds *Sqlite3DatastoreType) sqlEnabledCollections() (string, error) {
+func (ds *Sqlite3DatastoreType) sqlAllCollections(whichCollections string) (string, error) {
 	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
 	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
 	tblMediaTypes := datastore.DB_TABLE_TAXII_MEDIA_TYPES
 
 	/*
 		SELECT
+			t_collections.date_added,
+			t_collections.enabled,
+			t_collections.hidden,
 			t_collections.id,
 			t_collections.title,
 			t_collections.description,
@@ -39,14 +41,17 @@ func (ds *Sqlite3DatastoreType) sqlEnabledCollections() (string, error) {
 		JOIN
 			t_media_types ON
 			t_collection_media_type.media_type_id = t_media_types.row_id
-		WHERE
-			t_collections.enabled == '1' &&
-			t_collections.hidden != '1'
 		GROUP BY
 			t_collections.id
 	*/
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
+	s.WriteString(tblCol)
+	s.WriteString(".date_added, ")
+	s.WriteString(tblCol)
+	s.WriteString(".enabled, ")
+	s.WriteString(tblCol)
+	s.WriteString(".hidden, ")
 	s.WriteString(tblCol)
 	s.WriteString(".id, ")
 	s.WriteString(tblCol)
@@ -80,11 +85,19 @@ func (ds *Sqlite3DatastoreType) sqlEnabledCollections() (string, error) {
 	s.WriteString(tblMediaTypes)
 	s.WriteString(".row_id ")
 
-	s.WriteString("WHERE ")
-	s.WriteString(tblCol)
-	s.WriteString(".enabled == '1' && ")
-	s.WriteString(tblCol)
-	s.WriteString(".hidden != '1' ")
+	if whichCollections == "all" {
+		// do nothing
+	} else if whichCollections == "allEnabled" {
+		s.WriteString("WHERE ")
+		s.WriteString(tblCol)
+		s.WriteString(".enabled = 1 ")
+	} else if whichCollections == "enabledVisible" {
+		s.WriteString("WHERE ")
+		s.WriteString(tblCol)
+		s.WriteString(".enabled = 1 AND ")
+		s.WriteString(tblCol)
+		s.WriteString(".hidden = 0 ")
+	}
 
 	s.WriteString("GROUP BY ")
 	s.WriteString(tblCol)

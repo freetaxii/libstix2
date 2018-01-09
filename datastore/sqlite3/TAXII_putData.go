@@ -18,7 +18,7 @@ import (
 func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION + ` (
+	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTIONS + ` (
 	 	"date_added", 
 	 	"id", 
 	 	"title",
@@ -44,11 +44,16 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 		for _, media := range obj.MediaTypes {
 			var stmt2 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE + ` (
 			"collection_id",
-			"media_type"
+			"media_type_id"
 			)
 			values (?, ?)`
 
-			_, err2 := ds.DB.Exec(stmt2, obj.ID, media)
+			// TODO look up in cache
+			mediavalue := 0
+			if media == "application/vnd.oasis.stix+json" {
+				mediavalue = 1
+			}
+			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
 				log.Println("ERROR: Database execution error collection media type", err2)
@@ -64,7 +69,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj resources.CollectionType) {
 func (ds *Sqlite3DatastoreType) addObjectToCollection(obj resources.CollectionRecordType) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_CONTENT + ` (
+	var stmt1 = `INSERT INTO ` + datastore.DB_TABLE_TAXII_COLLECTION_DATA + ` (
 	 	"date_added", 
 	 	"collection_id", 
 	 	"stix_id"

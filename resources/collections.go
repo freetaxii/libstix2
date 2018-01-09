@@ -55,7 +55,7 @@ func (ezt *CollectionsType) NewCollection() *CollectionType {
 	ezt.initCollectionsProperty()
 	o := NewCollection()
 	positionThatAppendWillUse := len(ezt.Collections)
-	ezt.Collections = append(ezt.Collections, o)
+	ezt.Collections = append(ezt.Collections, *o)
 	return &ezt.Collections[positionThatAppendWillUse]
 }
 

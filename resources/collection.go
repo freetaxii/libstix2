@@ -34,6 +34,9 @@ added to it), and whether the TAXII Client, as authenticated, can get objects
 from the Collection and/or add objects to it.
 */
 type CollectionType struct {
+	DateAdded string `json:"-"`
+	Enabled   bool   `json:"-"`
+	Hidden    bool   `json:"-"`
 	properties.IDPropertyType
 	properties.TitlePropertyType
 	properties.DescriptionPropertyType
@@ -42,7 +45,8 @@ type CollectionType struct {
 	MediaTypes []string `json:"media_types,omitempty"`
 }
 
-// CollectionRecordType - This type will hold the data for adding an object to a collection
+// CollectionRecordType - This type will hold the data for adding an object to
+// a collection and is stored in the t_collection_data database table.
 type CollectionRecordType struct {
 	CollectionID string
 	STIXID       string
@@ -51,6 +55,26 @@ type CollectionRecordType struct {
 // ----------------------------------------------------------------------
 // Public Methods - CollectionType
 // ----------------------------------------------------------------------
+
+// SetEnabled - This method will set the collection to be enabled.
+func (ezt *CollectionType) SetEnabled() {
+	ezt.Enabled = true
+}
+
+// SetDisabled - This method will set the collection to be disabled.
+func (ezt *CollectionType) SetDisabled() {
+	ezt.Enabled = false
+}
+
+// SetHidden - This method will set the collection to be hidden.
+func (ezt *CollectionType) SetHidden() {
+	ezt.Hidden = true
+}
+
+// SetVisible - This method will set the collection to be visible.
+func (ezt *CollectionType) SetVisible() {
+	ezt.Hidden = false
+}
 
 // SetCanRead - This method will set the can_read boolean to true.
 func (ezt *CollectionType) SetCanRead() {
