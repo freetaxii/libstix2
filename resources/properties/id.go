@@ -14,7 +14,9 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
-// IDPropertyType - A property used by one or more TAXII resources.
+/*
+IDPropertyType - A property used by one or more TAXII resources.
+*/
 type IDPropertyType struct {
 	ID string `json:"id,omitempty"`
 }
@@ -23,28 +25,38 @@ type IDPropertyType struct {
 // Public Methods - IdPropertyType
 // ----------------------------------------------------------------------
 
-// CreateID - This method does not take in any parameters. It is used to create
-// a new ID based on the approved TAXII UUIDv4 format.
-func (p *IDPropertyType) CreateID() string {
+/*
+CreateID - This method does not take in any parameters. It is used to create
+a new ID based on the approved TAXII UUIDv4 format.
+*/
+func (p *IDPropertyType) CreateID() (string, error) {
 	id := uuid.New()
-	return id
+	return id, nil
 }
 
-// NewID - This method does not take in any parameters. It is used to create
-// a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
-// property.
-func (p *IDPropertyType) NewID() {
-	// TODO Add check to validate input value
-	p.ID = p.CreateID()
+/*
+GetNewID - This method does not take in any parameters. It is used to create
+a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
+property.
+*/
+func (p *IDPropertyType) GetNewID() error {
+	p.ID, _ = p.CreateID()
+	return nil
 }
 
-// SetID - This method takes in a string value representing a TAXII id and
-// updates the ID property.
-func (p *IDPropertyType) SetID(s string) {
+/*
+SetID - This method takes in a string value representing a TAXII id and
+updates the ID property.
+*/
+func (p *IDPropertyType) SetID(s string) error {
+	// TODO add check to validate input value
 	p.ID = s
+	return nil
 }
 
-// GetID - This method returns the id.
-func (p *IDPropertyType) GetID() string {
-	return p.ID
+/*
+GetID - This method returns the id.
+*/
+func (p *IDPropertyType) GetID() (string, error) {
+	return p.ID, nil
 }

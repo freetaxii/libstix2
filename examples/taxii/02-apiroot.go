@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	d := resources.NewAPIRoot()
+	d := resources.InitAPIRoot()
 
 	d.SetTitle("FreeTAXII API Root 1")
 	d.SetDescription("This API Root contains OSINT.")

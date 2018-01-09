@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	//d := resources.NewDiscovery()
+	//d := resources.InitDiscovery()
 
 	var d resources.DiscoveryType
 

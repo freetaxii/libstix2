@@ -10,7 +10,9 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// DescriptionPropertyType - A property used by one or more TAXII resources.
+/*
+DescriptionPropertyType - A property used by one or more TAXII resources.
+*/
 type DescriptionPropertyType struct {
 	Description string `json:"description,omitempty"`
 }
@@ -19,13 +21,18 @@ type DescriptionPropertyType struct {
 // Public Methods - DescriptionPropertyType
 // ----------------------------------------------------------------------
 
-// SetDescription - This method takes in a string value representing a text
-// description and udpates the description property.
-func (p *DescriptionPropertyType) SetDescription(s string) {
+/*
+SetDescription - This method takes in a string value representing a text
+description and udpates the description property.
+*/
+func (p *DescriptionPropertyType) SetDescription(s string) error {
 	p.Description = s
+	return nil
 }
 
-// GetDescription - This method returns the description.
-func (p *DescriptionPropertyType) GetDescription() string {
-	return p.Description
+/*
+GetDescription - This method returns the description.
+*/
+func (p *DescriptionPropertyType) GetDescription() (string, error) {
+	return p.Description, nil
 }

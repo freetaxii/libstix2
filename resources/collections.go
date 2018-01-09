@@ -125,14 +125,14 @@ func (ezt *CollectionsType) AddCollection(o CollectionType) (int, error) {
 }
 
 /*
-NewCollection - This method is used to create a collection and automatically
+GetNewCollection - This method is used to create a collection and automatically
 add it to the collections array. It returns a resources.CollectionType which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (ezt *CollectionsType) NewCollection() (*CollectionType, error) {
+func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {
 	ezt.initCollectionsProperty()
-	o := NewCollection()
+	o := InitCollection()
 	positionThatAppendWillUse := len(ezt.Collections)
 	ezt.Collections = append(ezt.Collections, *o)
 	return &ezt.Collections[positionThatAppendWillUse], nil
@@ -247,5 +247,5 @@ func NewCollectionRecord(cid, sid string) (*CollectionRecordType, error) {
 	obj := InitCollectionRecord()
 	obj.CollectionID = cid
 	obj.STIXID = sid
-	return &obj, nil
+	return obj, nil
 }

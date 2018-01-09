@@ -13,10 +13,10 @@ import (
 )
 
 func main() {
-	o := resources.NewCollections()
+	o := resources.InitCollections()
 
-	c := o.NewCollection()
-	c.NewID()
+	c, _ := o.GetNewCollection()
+	c.GetNewID()
 	c.SetCanRead()
 
 	// You can do this manually by creating your own Collection object
