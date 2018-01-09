@@ -5,3 +5,19 @@
 // tree.
 
 package resources
+
+// ----------------------------------------------------------------------
+// Define Message Type
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitStatus - This function will create a new TAXII Status object.
+*/
+// func InitStatus() *StatusType {
+// 	var obj StatusType
+// 	return &obj
+// }

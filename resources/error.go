@@ -53,37 +53,62 @@ type ErrorType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitError - This functions will create a new TAXII Error Message object and return
+it as a pointer.
+*/
+func InitError() *ErrorType {
+	var obj ErrorType
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - ErrorType
 // ----------------------------------------------------------------------
 
-// SetErrorID - This methods takes in a string value representing an identifier
-// for this particular error instnace and updates the Error ID property. A TAXII
-// Server might choose to assign each error occurrence it's own identifier in
-// order to facilitate debugging.
-func (ezt *ErrorType) SetErrorID(s string) {
+/*
+SetErrorID - This methods takes in a string value representing an identifier
+for this particular error instnace and updates the Error ID property. A TAXII
+Server might choose to assign each error occurrence it's own identifier in
+order to facilitate debugging.
+*/
+func (ezt *ErrorType) SetErrorID(s string) error {
 	ezt.ErrorID = s
+	return nil
 }
 
-// SetErrorCode - This method takes in a string value representing the error
-// code for this error type and updates the Error Code property. A TAXII Server
-// might choose to assign a common error code to all errors of the same type.
-// Error codes are application-specific and not intended to be meaningful across
-// different TAXII Servers.
-func (ezt *ErrorType) SetErrorCode(s string) {
+/*
+SetErrorCode - This method takes in a string value representing the error
+code for this error type and updates the Error Code property. A TAXII Server
+might choose to assign a common error code to all errors of the same type.
+Error codes are application-specific and not intended to be meaningful across
+different TAXII Servers.
+*/
+func (ezt *ErrorType) SetErrorCode(s string) error {
 	ezt.ErrorCode = s
+	return nil
 }
 
-// SetHTTPStatus - This method takes in a string value representing the HTTP
-// status code applicable to this error and updates the HTTP Status property.
-func (ezt *ErrorType) SetHTTPStatus(s string) {
+/*
+SetHTTPStatus - This method takes in a string value representing the HTTP
+status code applicable to this error and updates the HTTP Status property.
+*/
+func (ezt *ErrorType) SetHTTPStatus(s string) error {
 	ezt.HTTPStatus = s
+	return nil
 }
 
-// SetExternalDetails - This method takes in a string value representing a URL
-// that points to additional details and updates the External Details property.
-// For example, this could be a URL pointing to a knowledge base article
-// describing the error code. Absence of this field indicates that there are no
-// additional details.
-func (ezt *ErrorType) SetExternalDetails(s string) {
+/*
+SetExternalDetails - This method takes in a string value representing a URL
+that points to additional details and updates the External Details property.
+For example, this could be a URL pointing to a knowledge base article
+describing the error code. Absence of this field indicates that there are no
+additional details.
+*/
+func (ezt *ErrorType) SetExternalDetails(s string) error {
 	ezt.ExternalDetails = s
+	return nil
 }

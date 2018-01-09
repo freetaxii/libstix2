@@ -117,11 +117,11 @@ the location in the slice where the collection object was added. This method
 would be used if the collection was created separately and it just needs to be
 added in whole to the collections list.
 */
-func (ezt *CollectionsType) AddCollection(o CollectionType) int {
+func (ezt *CollectionsType) AddCollection(o CollectionType) (int, error) {
 	ezt.initCollectionsProperty()
 	positionThatAppendWillUse := len(ezt.Collections)
 	ezt.Collections = append(ezt.Collections, o)
-	return positionThatAppendWillUse
+	return positionThatAppendWillUse, nil
 }
 
 /*
@@ -130,12 +130,12 @@ add it to the collections array. It returns a resources.CollectionType which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (ezt *CollectionsType) NewCollection() *CollectionType {
+func (ezt *CollectionsType) NewCollection() (*CollectionType, error) {
 	ezt.initCollectionsProperty()
 	o := NewCollection()
 	positionThatAppendWillUse := len(ezt.Collections)
 	ezt.Collections = append(ezt.Collections, *o)
-	return &ezt.Collections[positionThatAppendWillUse]
+	return &ezt.Collections[positionThatAppendWillUse], nil
 }
 
 // ----------------------------------------------------------------------
@@ -146,11 +146,12 @@ func (ezt *CollectionsType) NewCollection() *CollectionType {
 initCollectionsProperty - This method will initialize the Collections
 slice if it has not already been initialized.
 */
-func (ezt *CollectionsType) initCollectionsProperty() {
+func (ezt *CollectionsType) initCollectionsProperty() error {
 	if ezt.Collections == nil {
 		a := make([]CollectionType, 0)
 		ezt.Collections = a
 	}
+	return nil
 }
 
 // ----------------------------------------------------------------------
@@ -192,8 +193,9 @@ func (ezt *CollectionType) SetVisible() error {
 /*
 SetCanRead - This method will set the can_read boolean to true.
 */
-func (ezt *CollectionType) SetCanRead() {
+func (ezt *CollectionType) SetCanRead() error {
 	ezt.CanRead = true
+	return nil
 }
 
 /*
@@ -241,9 +243,9 @@ NewCollectionRecord - This function will take in a collection ID and a STIX ID
 and return a collection record type which is used for storying a record in
 the database in the t_collection_data table.
 */
-func NewCollectionRecord(cid, sid string) *CollectionRecordType {
+func NewCollectionRecord(cid, sid string) (*CollectionRecordType, error) {
 	obj := InitCollectionRecord()
 	obj.CollectionID = cid
 	obj.STIXID = sid
-	return &obj
+	return &obj, nil
 }

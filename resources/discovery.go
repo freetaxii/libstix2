@@ -47,38 +47,64 @@ type DiscoveryType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitDiscovery - This function will create a new TAXII Discovery object and return
+it as a pointer.
+*/
+func InitDiscovery() *DiscoveryType {
+	var obj DiscoveryType
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - DiscoveryType
 // ----------------------------------------------------------------------
 
-// SetContact - This methods takes in a string value representing contact
-// information and updates the contact property.
-func (ezt *DiscoveryType) SetContact(s string) {
+/*
+SetContact - This methods takes in a string value representing contact
+information and updates the contact property.
+*/
+func (ezt *DiscoveryType) SetContact(s string) error {
 	ezt.Contact = s
+	return nil
 }
 
-// GetContact - This method returns the contact information from the contact
-// property.
-func (ezt *DiscoveryType) GetContact() string {
-	return ezt.Contact
+/*
+GetContact - This method returns the contact information from the contact
+property.
+*/
+func (ezt *DiscoveryType) GetContact() (string, error) {
+	return ezt.Contact, nil
 }
 
-// SetDefault - This methods takes in a string value representing a default
-// api-root and updates the default property.
-func (ezt *DiscoveryType) SetDefault(s string) {
+/*
+SetDefault - This methods takes in a string value representing a default
+api-root and updates the default property.
+*/
+func (ezt *DiscoveryType) SetDefault(s string) error {
 	ezt.Default = s
+	return nil
 }
 
-// GetDefault - This methods returns the default api-root.
-func (ezt *DiscoveryType) GetDefault() string {
-	return ezt.Default
+/*
+GetDefault - This methods returns the default api-root.
+*/
+func (ezt *DiscoveryType) GetDefault() (string, error) {
+	return ezt.Default, nil
 }
 
-// AddAPIRoot - This method takes in a string value that represents an api-root
-// and adds it to the list in the APIRoots property.
-func (ezt *DiscoveryType) AddAPIRoot(s string) {
+/*
+AddAPIRoot - This method takes in a string value that represents an api-root
+and adds it to the list in the APIRoots property.
+*/
+func (ezt *DiscoveryType) AddAPIRoot(s string) error {
 	if ezt.APIRoots == nil {
 		a := make([]string, 0)
 		ezt.APIRoots = a
 	}
 	ezt.APIRoots = append(ezt.APIRoots, s)
+	return nil
 }
