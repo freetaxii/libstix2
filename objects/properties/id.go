@@ -30,16 +30,17 @@ CreateSTIXUUID - This method takes in a string value representing a STIX object
 type and create and return a new ID based on the approved STIX UUIDv4 format.
 */
 func (ezt *IDPropertyType) CreateSTIXUUID(s string) (string, error) {
+	// TODO add check to validate that s is a valid type
 	id := s + "--" + uuid.New()
 	return id, nil
 }
 
 /*
-GetNewID - This method takes in a string value representing a STIX object
+CreateNewID - This method takes in a string value representing a STIX object
 type and create a new ID based on the approved STIX UUIDv4 format and update
 the id property for the object.
 */
-func (ezt *IDPropertyType) GetNewID(s string) error {
+func (ezt *IDPropertyType) CreateNewID(s string) error {
 	// TODO Add check to validate input value
 	ezt.ID, _ = ezt.CreateSTIXUUID(s)
 	return nil
@@ -57,6 +58,6 @@ func (ezt *IDPropertyType) SetID(s string) error {
 /*
 GetID - This method will return the id for a given STIX object.
 */
-func (ezt *IDPropertyType) GetID() (string, error) {
-	return ezt.ID, nil
+func (ezt *IDPropertyType) GetID() string {
+	return ezt.ID
 }

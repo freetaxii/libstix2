@@ -34,6 +34,6 @@ func (ezt *ResourceLevelPropertyType) SetResourceLevel(s string) error {
 /*
 GetResourceLevel - This method returns the resource level.
 */
-func (ezt *ResourceLevelPropertyType) GetResourceLevel() (string, error) {
-	return ezt.ResourceLevel, nil
+func (ezt *ResourceLevelPropertyType) GetResourceLevel() string {
+	return ezt.ResourceLevel
 }

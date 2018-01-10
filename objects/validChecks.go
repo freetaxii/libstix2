@@ -19,11 +19,11 @@ func IsValidSTIXID(id string) (bool, error) {
 
 	idparts := strings.Split(id, "--")
 
-	valid = IsValidSTIXObject(idparts[0])
+	valid, _ = IsValidSTIXObject(idparts[0])
 
 	// Short circuit if the STIX type part is wrong
 	if valid == false {
-		return false
+		return false, nil
 	}
 
 	valid = stixid.IsValidUUID(idparts[1])

@@ -52,6 +52,6 @@ GetModified - This method will return the modified timestamp as a string. If
 the value is the same as the created timestamp, then this object is the
 first version of the object.
 */
-func (ezt *ModifiedPropertyType) GetModified() (string, error) {
-	return ezt.Modified, nil
+func (ezt *ModifiedPropertyType) GetModified() string {
+	return ezt.Modified
 }

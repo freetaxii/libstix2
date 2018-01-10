@@ -34,6 +34,6 @@ func (ezt *ObjectIDPropertyType) SetObjectID(s string) error {
 /*
 GetObjectID - This method returns the object ID value as a string.
 */
-func (ezt *ObjectIDPropertyType) GetObjectID() (string, error) {
-	return ezt.ObjectID, nil
+func (ezt *ObjectIDPropertyType) GetObjectID() string {
+	return ezt.ObjectID
 }

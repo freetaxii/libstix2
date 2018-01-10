@@ -34,6 +34,6 @@ func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
 GetCreatedByRef - This method returns the STIX identifier for the identity
 that created this object.
 */
-func (ezt *CreatedByRefPropertyType) GetCreatedByRef() (string, error) {
-	return ezt.CreatedByRef, nil
+func (ezt *CreatedByRefPropertyType) GetCreatedByRef() string {
+	return ezt.CreatedByRef
 }

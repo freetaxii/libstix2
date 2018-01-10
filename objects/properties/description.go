@@ -33,6 +33,6 @@ func (ezt *DescriptionPropertyType) SetDescription(s string) error {
 /*
 GetDescription - This method returns the description for an object as a string.
 */
-func (ezt *DescriptionPropertyType) GetDescription() (string, error) {
-	return ezt.Description, nil
+func (ezt *DescriptionPropertyType) GetDescription() string {
+	return ezt.Description
 }

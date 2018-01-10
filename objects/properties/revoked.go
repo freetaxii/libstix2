@@ -33,6 +33,6 @@ func (ezt *RevokedPropertyType) SetRevoked() error {
 /*
 GetRevoked - This method returns the current value of the revoked property.
 */
-func (ezt *RevokedPropertyType) GetRevoked() (bool, error) {
-	return ezt.Revoked, nil
+func (ezt *RevokedPropertyType) GetRevoked() bool {
+	return ezt.Revoked
 }

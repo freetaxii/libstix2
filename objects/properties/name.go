@@ -33,6 +33,6 @@ func (ezt *NamePropertyType) SetName(s string) error {
 /*
 GetName - This method returns the current name of the object.
 */
-func (ezt *NamePropertyType) GetName() (string, error) {
-	return ezt.Name, nil
+func (ezt *NamePropertyType) GetName() string {
+	return ezt.Name
 }

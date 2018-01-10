@@ -37,7 +37,7 @@ representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
 func (ezt *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) error {
-	k := ezt.GetNewKillChainPhase()
+	k, _ := ezt.GetNewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 	return nil

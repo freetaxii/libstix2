@@ -200,8 +200,8 @@ func (ezt *CollectionType) SetCanRead() error {
 /*
 GetCanRead - This method will return the value of Can Read.
 */
-func (ezt *CollectionType) GetCanRead() (bool, error) {
-	return ezt.CanRead, nil
+func (ezt *CollectionType) GetCanRead() bool {
+	return ezt.CanRead
 }
 
 /*
@@ -215,8 +215,8 @@ func (ezt *CollectionType) SetCanWrite() error {
 /*
 GetCanWrite - This method will return the value of Can Write.
 */
-func (ezt *CollectionType) GetCanWrite() (bool, error) {
-	return ezt.CanWrite, nil
+func (ezt *CollectionType) GetCanWrite() bool {
+	return ezt.CanWrite
 }
 
 /*

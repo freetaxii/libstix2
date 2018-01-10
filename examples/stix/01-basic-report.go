@@ -13,29 +13,39 @@ import (
 )
 
 func main() {
-	r := objects.NewReport("2.0")
+	r := objects.InitReport("2.0")
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")
 	r.SetPublished(time.Now())
 
-	r.AddObject(r.CreateSTIXUUID("malware"))
-	r.AddObject(r.CreateSTIXUUID("campaign"))
-	r.AddObject(r.CreateSTIXUUID("sighting"))
-	r.AddObject(r.CreateSTIXUUID("sighting"))
-	r.AddObject(r.CreateSTIXUUID("threat-actor"))
-	r.AddObject(r.CreateSTIXUUID("threat-actor"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
-	r.AddObject(r.CreateSTIXUUID("relationship"))
+	m, _ := r.CreateSTIXUUID("malware")
+	r.AddObject(m)
+
+	c, _ := r.CreateSTIXUUID("campaign")
+	r.AddObject(c)
+
+	s1, _ := r.CreateSTIXUUID("sighting")
+	r.AddObject(s1)
+
+	s2, _ := r.CreateSTIXUUID("sighting")
+	r.AddObject(s2)
+
+	t1, _ := r.CreateSTIXUUID("threat-actor")
+	r.AddObject(t1)
+
+	t2, _ := r.CreateSTIXUUID("threat-actor")
+	r.AddObject(t2)
+
+	for i := 0; i <= 8; i++ {
+		r1, _ := r.CreateSTIXUUID("relationship")
+		r.AddObject(r1)
+
+	}
 
 	for j := 0; j <= 4; j++ {
-		r.AddObject(r.CreateSTIXUUID("indicator"))
+		i, _ := r.CreateSTIXUUID("indicator")
+		r.AddObject(i)
 	}
 
 	var data []byte

@@ -75,8 +75,8 @@ func (ezt *DiscoveryType) SetContact(s string) error {
 GetContact - This method returns the contact information from the contact
 property.
 */
-func (ezt *DiscoveryType) GetContact() (string, error) {
-	return ezt.Contact, nil
+func (ezt *DiscoveryType) GetContact() string {
+	return ezt.Contact
 }
 
 /*
@@ -91,8 +91,8 @@ func (ezt *DiscoveryType) SetDefault(s string) error {
 /*
 GetDefault - This methods returns the default api-root.
 */
-func (ezt *DiscoveryType) GetDefault() (string, error) {
-	return ezt.Default, nil
+func (ezt *DiscoveryType) GetDefault() string {
+	return ezt.Default
 }
 
 /*

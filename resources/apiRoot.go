@@ -82,6 +82,6 @@ func (ezt *APIRootType) SetMaxContentLength(i int) error {
 GetMaxContentLength - This method returns the max content length as an
 integer.
 */
-func (ezt *APIRootType) GetMaxContentLength() (int, error) {
-	return ezt.MaxContentLength, nil
+func (ezt *APIRootType) GetMaxContentLength() int {
+	return ezt.MaxContentLength
 }

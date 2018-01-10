@@ -46,8 +46,8 @@ func (ezt *GranularMarkingType) SetMarkingRef(s string) error {
 GetMarkingRef - This method returns the STIX identifier of the marking
 definition object that was recorded in this granular marking type.
 */
-func (ezt *GranularMarkingType) GetMarkingRef() (string, error) {
-	return ezt.MarkingRef, nil
+func (ezt *GranularMarkingType) GetMarkingRef() string {
+	return ezt.MarkingRef
 }
 
 /*

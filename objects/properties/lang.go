@@ -34,6 +34,6 @@ func (ezt *LangPropertyType) SetLang(s string) error {
 /*
 GetLang - This method returns the current language code for a given object.
 */
-func (ezt *LangPropertyType) GetLang() (string, error) {
-	return ezt.Lang, nil
+func (ezt *LangPropertyType) GetLang() string {
+	return ezt.Lang
 }

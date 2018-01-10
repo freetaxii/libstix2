@@ -32,6 +32,6 @@ func (ezt *TitlePropertyType) SetTitle(s string) error {
 /*
 GetTitle - This method returns the title.
 */
-func (ezt *TitlePropertyType) GetTitle() (string, error) {
-	return ezt.Title, nil
+func (ezt *TitlePropertyType) GetTitle() string {
+	return ezt.Title
 }

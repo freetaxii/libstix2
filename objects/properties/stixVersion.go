@@ -34,6 +34,6 @@ func (ezt *STIXVersionPropertyType) SetSpecVersion(s string) error {
 /*
 GetSpecVersion - This method returns the version value as a string.
 */
-func (ezt *STIXVersionPropertyType) GetSpecVersion() (string, error) {
-	return ezt.SpecVersion, nil
+func (ezt *STIXVersionPropertyType) GetSpecVersion() string {
+	return ezt.SpecVersion
 }

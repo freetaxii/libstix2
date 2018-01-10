@@ -50,6 +50,6 @@ func (ezt *CreatedPropertyType) SetCreated(t interface{}) error {
 /*
 GetCreated - This method will return the created timestamp as a string.
 */
-func (ezt *CreatedPropertyType) GetCreated() (string, error) {
-	return ezt.Created, nil
+func (ezt *CreatedPropertyType) GetCreated() string {
+	return ezt.Created
 }

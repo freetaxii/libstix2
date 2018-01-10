@@ -33,6 +33,6 @@ func (ezt *ObjectTypePropertyType) SetObjectType(s string) error {
 /*
 GetObjectType - This method returns the object type.
 */
-func (ezt *ObjectTypePropertyType) GetObjectType() (string, error) {
-	return ezt.ObjectType, nil
+func (ezt *ObjectTypePropertyType) GetObjectType() string {
+	return ezt.ObjectType
 }

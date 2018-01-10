@@ -34,6 +34,6 @@ func (ezt *PrimaryMotivationPropertyType) SetPrimaryMotivation(s string) error {
 /*
 GetPrimaryMotivation - This method returns the primary motivation.
 */
-func (ezt *PrimaryMotivationPropertyType) GetPrimaryMotivation() (string, error) {
-	return ezt.PrimaryMotivation, nil
+func (ezt *PrimaryMotivationPropertyType) GetPrimaryMotivation() string {
+	return ezt.PrimaryMotivation
 }

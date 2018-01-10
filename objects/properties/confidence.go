@@ -33,6 +33,6 @@ func (ezt *ConfidencePropertyType) SetConfidence(i int) error {
 /*
 GetConfidence - This method returns the confidence value as an integer.
 */
-func (ezt *ConfidencePropertyType) GetConfidence() (int, error) {
-	return ezt.Confidence, nil
+func (ezt *ConfidencePropertyType) GetConfidence() int {
+	return ezt.Confidence
 }

@@ -68,8 +68,8 @@ func (ezt *ExternalReferenceType) SetSourceName(s string) error {
 /*
 GetSourceName - This method will return the source name.
 */
-func (ezt *ExternalReferenceType) GetSourceName() (string, error) {
-	return ezt.SourceName, nil
+func (ezt *ExternalReferenceType) GetSourceName() string {
+	return ezt.SourceName
 }
 
 /*
@@ -84,8 +84,8 @@ func (ezt *ExternalReferenceType) SetURL(s string) error {
 /*
 GetURL - This method returns the url for this external reference.
 */
-func (ezt *ExternalReferenceType) GetURL() (string, error) {
-	return ezt.URL, nil
+func (ezt *ExternalReferenceType) GetURL() string {
+	return ezt.URL
 }
 
 /*
@@ -116,6 +116,6 @@ func (ezt *ExternalReferenceType) SetExternalID(s string) error {
 /*
 GetExternalID - This method returns the external id for this reference.
 */
-func (ezt *ExternalReferenceType) GetExternalID() (string, error) {
-	return ezt.ExternalID, nil
+func (ezt *ExternalReferenceType) GetExternalID() string {
+	return ezt.ExternalID
 }
