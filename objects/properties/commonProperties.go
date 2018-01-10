@@ -1,8 +1,7 @@
 // Copyright 2017 Bret Jordan, All rights reserved.
 //
-// Use of this source code is governed by an Apache 2.0 license
-// that can be found in the LICENSE file in the root of the source
-// tree.
+// Use of this source code is governed by an Apache 2.0 license that can be
+// found in the LICENSE file in the root of the source tree.
 
 package properties
 
@@ -10,8 +9,10 @@ package properties
 // Common Property Types - Used to populate the common object properties
 // ----------------------------------------------------------------------
 
-// CommonObjectPropertiesType - This type includes all of the common properties
-// that are used by all STIX SDOs and SROs
+/*
+CommonObjectPropertiesType - This type includes all of the common properties
+that are used by all STIX SDOs and SROs
+*/
 type CommonObjectPropertiesType struct {
 	ObjectIDPropertyType
 	STIXVersionPropertyType
@@ -29,8 +30,10 @@ type CommonObjectPropertiesType struct {
 	GranularMarkingsPropertyType
 }
 
-// CommonMarkingDefinitionPropertiesType - This type includes all of the common
-// properties that are used by the STIX Marking Definition object
+/*
+CommonMarkingDefinitionPropertiesType - This type includes all of the common
+properties that are used by the STIX Marking Definition object
+*/
 type CommonMarkingDefinitionPropertiesType struct {
 	STIXVersionPropertyType
 	ObjectTypePropertyType
@@ -42,8 +45,10 @@ type CommonMarkingDefinitionPropertiesType struct {
 	GranularMarkingsPropertyType
 }
 
-// CommonBundlePropertiesType - This type includes all of the common properties
-// that are used by the STIX Bundle object
+/*
+CommonBundlePropertiesType - This type includes all of the common properties
+that are used by the STIX Bundle object
+*/
 type CommonBundlePropertiesType struct {
 	ObjectTypePropertyType
 	IDPropertyType
@@ -59,19 +64,21 @@ type CommonBundlePropertiesType struct {
 // params: objectType - a string value of the STIX object type
 // params: version - the STIX spec version of the object, ex. "2.0". This is
 // 		stored and used in TAXII.
-func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) {
+func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) error {
 	// TODO make sure that the value coming in a a valid STIX object type
 	ezt.SetSpecVersion(version)
 	ezt.SetObjectType(objectType)
 	ezt.GetNewID(objectType)
 	ezt.SetCreatedToCurrentTime()
 	ezt.SetModifiedToCreated()
+	return nil
 }
 
 // SetModifiedToCreated sets the object modified time to be the same as the
 // created time. This has to be done at this level, since at the individual
 // properties type say "ModifiedPropertyType" this.Created does not exist.
 // But it will exist at this level of inheritance
-func (ezt *CommonObjectPropertiesType) SetModifiedToCreated() {
+func (ezt *CommonObjectPropertiesType) SetModifiedToCreated() error {
 	ezt.Modified = ezt.Created
+	return nil
 }

@@ -1,8 +1,7 @@
 // Copyright 2017 Bret Jordan, All rights reserved.
 //
-// Use of this source code is governed by an Apache 2.0 license
-// that can be found in the LICENSE file in the root of the source
-// tree.
+// Use of this source code is governed by an Apache 2.0 license that can be
+// found in the LICENSE file in the root of the source tree.
 
 package properties
 
@@ -10,8 +9,10 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// CreatedByRefPropertyType - A property used by one or more STIX objects that
-// captures the STIX identifier of the identity that created this object.
+/*
+CreatedByRefPropertyType - A property used by one or more STIX objects that
+captures the STIX identifier of the identity that created this object.
+*/
 type CreatedByRefPropertyType struct {
 	CreatedByRef string `json:"created_by_ref,omitempty"`
 }
@@ -20,14 +21,19 @@ type CreatedByRefPropertyType struct {
 // Public Methods - CreatedByRefPropertyType
 // ----------------------------------------------------------------------
 
-// SetCreatedByRef - This method takes in a string value representing a STIX
-// identifier and updates the Created By Ref property.
-func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) {
+/*
+SetCreatedByRef - This method takes in a string value representing a STIX
+identifier and updates the Created By Ref property.
+*/
+func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
 	ezt.CreatedByRef = s
+	return nil
 }
 
-// GetCreatedByRef - This method returns the STIX identifier for the identity
-// that created this object.
-func (ezt *CreatedByRefPropertyType) GetCreatedByRef() string {
-	return ezt.CreatedByRef
+/*
+GetCreatedByRef - This method returns the STIX identifier for the identity
+that created this object.
+*/
+func (ezt *CreatedByRefPropertyType) GetCreatedByRef() (string, error) {
+	return ezt.CreatedByRef, nil
 }
