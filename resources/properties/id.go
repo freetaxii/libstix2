@@ -28,7 +28,7 @@ type IDPropertyType struct {
 CreateTAXIIUUID - This method does not take in any parameters. It is used to create
 a new ID based on the approved TAXII UUIDv4 format.
 */
-func (p *IDPropertyType) CreateTAXIIUUID() (string, error) {
+func (ezt *IDPropertyType) CreateTAXIIUUID() (string, error) {
 	id := uuid.New()
 	return id, nil
 }
@@ -38,8 +38,8 @@ GetNewID - This method does not take in any parameters. It is used to create
 a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
 property.
 */
-func (p *IDPropertyType) GetNewID() error {
-	p.ID, _ = p.CreateTAXIIUUIID()
+func (ezt *IDPropertyType) GetNewID() error {
+	ezt.ID, _ = p.CreateTAXIIUUIID()
 	return nil
 }
 
@@ -47,15 +47,15 @@ func (p *IDPropertyType) GetNewID() error {
 SetID - This method takes in a string value representing a TAXII id and
 updates the ID property.
 */
-func (p *IDPropertyType) SetID(s string) error {
+func (ezt *IDPropertyType) SetID(s string) error {
 	// TODO add check to validate input value
-	p.ID = s
+	ezt.ID = s
 	return nil
 }
 
 /*
 GetID - This method returns the id.
 */
-func (p *IDPropertyType) GetID() (string, error) {
-	return p.ID, nil
+func (ezt *IDPropertyType) GetID() (string, error) {
+	return ezt.ID, nil
 }

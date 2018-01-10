@@ -9,15 +9,19 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// GranularMarkingsPropertyType - A property used by one or more STIX objects
-// that captures a list of granular markings as defined by STIX.
+/*
+GranularMarkingsPropertyType - A property used by one or more STIX objects
+that captures a list of granular markings as defined by STIX.
+*/
 type GranularMarkingsPropertyType struct {
 	GranularMarkings []GranularMarkingType `json:"granular_markings,omitempty"`
 }
 
-// GranularMarkingType -
-// This type defines all of the properties associated with the STIX Granular Marking type.
-// All of the methods not defined local to this type are inherited from the individual properties.
+/*
+GranularMarkingType - This type defines all of the properties associated with
+the STIX Granular Marking type. All of the methods not defined local to this
+type are inherited from the individual properties.
+*/
 type GranularMarkingType struct {
 	LangPropertyType
 	MarkingRef string   `json:"marking_ref,omitempty"`
@@ -28,21 +32,29 @@ type GranularMarkingType struct {
 // Public Methods - GranularMarkingType
 // ----------------------------------------------------------------------
 
-// SetMarkingRef - This method takes in a string value representing a STIX
-// identifier of a marking definition object and sets the marking ref property
-// to that value.
-func (ezt *GranularMarkingType) SetMarkingRef(s string) {
+/*
+SetMarkingRef - This method takes in a string value representing a STIX
+identifier of a marking definition object and sets the marking ref property
+to that value.
+*/
+func (ezt *GranularMarkingType) SetMarkingRef(s string) error {
 	ezt.MarkingRef = s
+	return nil
 }
 
-// GetMarkingRef - This method returns the STIX identifier of the marking
-// definition object that was recorded in this granular marking type.
-func (ezt *GranularMarkingType) GetMarkingRef() string {
-	return ezt.MarkingRef
+/*
+GetMarkingRef - This method returns the STIX identifier of the marking
+definition object that was recorded in this granular marking type.
+*/
+func (ezt *GranularMarkingType) GetMarkingRef() (string, error) {
+	return ezt.MarkingRef, nil
 }
 
-// AddSelector - This method takes in a string value representing a STIX
-// granular marking selector and adds it to the list of selectors.
-func (ezt *GranularMarkingType) AddSelector(s string) {
+/*
+AddSelector - This method takes in a string value representing a STIX
+granular marking selector and adds it to the list of selectors.
+*/
+func (ezt *GranularMarkingType) AddSelector(s string) error {
 	ezt.Selectors = append(ezt.Selectors, s)
+	return nil
 }

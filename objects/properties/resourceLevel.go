@@ -9,8 +9,10 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// ResourceLevelPropertyType - A property used by one or more STIX objects
-// that captures the resource level.
+/*
+ResourceLevelPropertyType - A property used by one or more STIX objects that
+captures the resource level.
+*/
 type ResourceLevelPropertyType struct {
 	ResourceLevel string `json:"resource_level,omitempty"`
 }
@@ -19,14 +21,19 @@ type ResourceLevelPropertyType struct {
 // Public Methods - ResourceLevelPropertyType
 // ----------------------------------------------------------------------
 
-// SetResourceLevel - This method takes in a string value representing a
-// resource level from the attack-resrouce-level-ov vocab and updates the
-// resource level property.
-func (ezt *ResourceLevelPropertyType) SetResourceLevel(s string) {
+/*
+SetResourceLevel - This method takes in a string value representing a resource
+level from the attack-resrouce-level-ov vocab and updates the resource level
+property.
+*/
+func (ezt *ResourceLevelPropertyType) SetResourceLevel(s string) error {
 	ezt.ResourceLevel = s
+	return nil
 }
 
-// GetResourceLevel - This method returns the resource level.
-func (ezt *ResourceLevelPropertyType) GetResourceLevel() string {
-	return ezt.ResourceLevel
+/*
+GetResourceLevel - This method returns the resource level.
+*/
+func (ezt *ResourceLevelPropertyType) GetResourceLevel() (string, error) {
+	return ezt.ResourceLevel, nil
 }

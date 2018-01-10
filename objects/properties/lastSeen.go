@@ -13,9 +13,11 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
-// LastSeenPropertyType - A property used by one or more STIX objects that
-// captures the time that this object was last seen in STIX timestamp format,
-// which is an RFC3339 format.
+/*
+LastSeenPropertyType - A property used by one or more STIX objects that
+captures the time that this object was last seen in STIX timestamp format,
+which is an RFC3339 format.
+*/
 type LastSeenPropertyType struct {
 	LastSeen string `json:"last_seen,omitempty"`
 }
@@ -24,17 +26,23 @@ type LastSeenPropertyType struct {
 // Public Methods - LastSeenPropertyType
 // ----------------------------------------------------------------------
 
-// SetLastSeenToCurrentTime - This methods sets the first seen time to the
-// current time
-func (ezt *LastSeenPropertyType) SetLastSeenToCurrentTime() {
+/*
+SetLastSeenToCurrentTime - This methods sets the first seen time to the
+current time
+*/
+func (ezt *LastSeenPropertyType) SetLastSeenToCurrentTime() error {
 	ezt.LastSeen = timestamp.GetCurrentTime("micro")
+	return nil
 }
 
-// SetLastSeen -  This method takes in a time stamp in either time.Time or string
-// format and updates the last seen property with it. The value is stored as a
-// string, so if the value is in time.Time format, it will be converted to the
-// correct STIX time stamp format.
-func (ezt *LastSeenPropertyType) SetLastSeen(t interface{}) {
+/*
+SetLastSeen -  This method takes in a time stamp in either time.Time or string
+format and updates the last seen property with it. The value is stored as a
+string, so if the value is in time.Time format, it will be converted to the
+correct STIX time stamp format.
+*/
+func (ezt *LastSeenPropertyType) SetLastSeen(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	ezt.LastSeen = ts
+	return nil
 }

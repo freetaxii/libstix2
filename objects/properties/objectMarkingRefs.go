@@ -9,9 +9,11 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// ObjectMarkingRefsPropertyType - A property used by one or more STIX objects
-// that captures a list of STIX identifier that represent marking definition
-// objects.
+/*
+ObjectMarkingRefsPropertyType - A property used by one or more STIX objects
+that captures a list of STIX identifier that represent marking definition
+objects.
+*/
 type ObjectMarkingRefsPropertyType struct {
 	ObjectMarkingRefs []string `json:"object_marking_refs,omitempty"`
 }
@@ -20,9 +22,12 @@ type ObjectMarkingRefsPropertyType struct {
 // Public Methods - ObjectMarkingRefsPropertyType
 // ----------------------------------------------------------------------
 
-// AddObjectMarkingRef - This method takes in a string value that represents a
-// STIX identifer for a marking definition object and adds it to the list of
-// object marking refs.
-func (ezt *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) {
+/*
+AddObjectMarkingRef - This method takes in a string value that represents a
+STIX identifer for a marking definition object and adds it to the list of
+object marking refs.
+*/
+func (ezt *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) error {
 	ezt.ObjectMarkingRefs = append(ezt.ObjectMarkingRefs, s)
+	return nil
 }

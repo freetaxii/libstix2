@@ -9,9 +9,11 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// ObjectIDPropertyType - A property used by one or more STIX objects that
-// captures the unique object ID. This is not included in the JSON
-// serialization, but is used for writing to the database.
+/*
+ObjectIDPropertyType - A property used by one or more STIX objects that captures
+the unique object ID. This is not included in the JSON serialization, but is
+used for writing to the database.
+*/
 type ObjectIDPropertyType struct {
 	ObjectID string `json:"-"`
 }
@@ -20,13 +22,18 @@ type ObjectIDPropertyType struct {
 // Public Methods - ObjectIDPropertyType
 // ----------------------------------------------------------------------
 
-// SetObjectID - This method takes in a string representing an object ID
-// and updates the Version property.
-func (ezt *ObjectIDPropertyType) SetObjectID(s string) {
+/*
+SetObjectID - This method takes in a string representing an object ID and
+updates the Version property.
+*/
+func (ezt *ObjectIDPropertyType) SetObjectID(s string) error {
 	ezt.ObjectID = s
+	return nil
 }
 
-// GetObjectID - This method returns the object ID value as a string.
-func (ezt *ObjectIDPropertyType) GetObjectID() string {
-	return ezt.ObjectID
+/*
+GetObjectID - This method returns the object ID value as a string.
+*/
+func (ezt *ObjectIDPropertyType) GetObjectID() (string, error) {
+	return ezt.ObjectID, nil
 }

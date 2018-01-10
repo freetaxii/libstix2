@@ -24,14 +24,14 @@ type DescriptionPropertyType struct {
 SetDescription - This method takes in a string value representing a text
 description and udpates the description property.
 */
-func (p *DescriptionPropertyType) SetDescription(s string) error {
-	p.Description = s
+func (ezt *DescriptionPropertyType) SetDescription(s string) error {
+	ezt.Description = s
 	return nil
 }
 
 /*
 GetDescription - This method returns the description.
 */
-func (p *DescriptionPropertyType) GetDescription() (string, error) {
-	return p.Description, nil
+func (ezt *DescriptionPropertyType) GetDescription() (string, error) {
+	return ezt.Description, nil
 }

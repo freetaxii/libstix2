@@ -9,9 +9,11 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// STIXVersionPropertyType - A property used by one or more STIX objects that
-// captures the STIX specification version. This is not included in the JSON
-// serialization, but is used for writing to the database.
+/*
+STIXVersionPropertyType - A property used by one or more STIX objects that
+captures the STIX specification version. This is not included in the JSON
+serialization, but is used for writing to the database.
+*/
 type STIXVersionPropertyType struct {
 	SpecVersion string `json:"-"`
 }
@@ -20,13 +22,18 @@ type STIXVersionPropertyType struct {
 // Public Methods - STIXVersionPropertyType
 // ----------------------------------------------------------------------
 
-// SetVersion - This method takes in a string representing a STIX specification
-// version and updates the Version property.
-func (ezt *STIXVersionPropertyType) SetSpecVersion(s string) {
+/*
+SetSpecVersion - This method takes in a string representing a STIX specification
+version and updates the Version property.
+*/
+func (ezt *STIXVersionPropertyType) SetSpecVersion(s string) error {
 	ezt.SpecVersion = s
+	return nil
 }
 
-// GetVersion - This method returns the version value as a string.
-func (ezt *STIXVersionPropertyType) GetSpecVersion() string {
-	return ezt.SpecVersion
+/*
+GetSpecVersion - This method returns the version value as a string.
+*/
+func (ezt *STIXVersionPropertyType) GetSpecVersion() (string, error) {
+	return ezt.SpecVersion, nil
 }

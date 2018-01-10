@@ -9,9 +9,11 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// LabelsPropertyType - A property used by one or more STIX objects that
-// captures a list of labels or tags for a STIX object. On some objects the
-// labels property is defined as coming from an open-vocab.
+/*
+LabelsPropertyType - A property used by one or more STIX objects that
+captures a list of labels or tags for a STIX object. On some objects the
+labels property is defined as coming from an open-vocab.
+*/
 type LabelsPropertyType struct {
 	Labels []string `json:"labels,omitempty"`
 }
@@ -20,8 +22,11 @@ type LabelsPropertyType struct {
 // Public Methods - LabelsPropertyType
 // ----------------------------------------------------------------------
 
-// AddLabel - This method takes in a string value that represents a label for a
-// STIX object and adds it to the list of labels in the lables property.
-func (ezt *LabelsPropertyType) AddLabel(s string) {
+/*
+AddLabel - This method takes in a string value that represents a label for a
+STIX object and adds it to the list of labels in the lables property.
+*/
+func (ezt *LabelsPropertyType) AddLabel(s string) return {
 	ezt.Labels = append(ezt.Labels, s)
+	return nil
 }

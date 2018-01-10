@@ -9,8 +9,10 @@ package properties
 // Types
 // ----------------------------------------------------------------------
 
-// ObjectTypePropertyType - A property used by one or more STIX objects that
-// captures the STIX object type in string format.
+/*
+ObjectTypePropertyType - A property used by one or more STIX objects that
+captures the STIX object type in string format.
+*/
 type ObjectTypePropertyType struct {
 	ObjectType string `json:"type,omitempty"`
 }
@@ -19,13 +21,18 @@ type ObjectTypePropertyType struct {
 // Public Methods - ObjectTypePropertyType
 // ----------------------------------------------------------------------
 
-// SetObjectType - This method takes in a string value representing a STIX
-// object type and updates the type property.
-func (ezt *ObjectTypePropertyType) SetObjectType(s string) {
+/*
+SetObjectType - This method takes in a string value representing a STIX object
+type and updates the type property.
+*/
+func (ezt *ObjectTypePropertyType) SetObjectType(s string) error {
 	ezt.ObjectType = s
+	return nil
 }
 
-// GetObjectType - This method returns the object type.
-func (ezt *ObjectTypePropertyType) GetObjectType() string {
-	return ezt.ObjectType
+/*
+GetObjectType - This method returns the object type.
+*/
+func (ezt *ObjectTypePropertyType) GetObjectType() (string, error) {
+	return ezt.ObjectType, nil
 }
