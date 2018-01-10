@@ -73,37 +73,66 @@ type SightingType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitSighting - This function will create a new STIX Sighting object and return
+it as a pointer.
+*/
+func InitSighting(ver string) *SightingType {
+	var obj SightingType
+	obj.InitObjectProperties("sighting", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - SightingType
 // ----------------------------------------------------------------------
 
-// SetCount - This method takes in an integer that represents the number of
-// sightings and upates the count properties.
-func (ezt *SightingType) SetCount(i int) {
+/*
+SetCount - This method takes in an integer that represents the number of
+sightings and upates the count properties.
+*/
+func (ezt *SightingType) SetCount(i int) error {
 	ezt.Count = i
+	return nil
 }
 
-// SetSightingOfRef - This method takes in a string value that represents a STIX
-// identifier of the object that was sighted and updates the sighting of ref
-// property.
-func (ezt *SightingType) SetSightingOfRef(s string) {
+/*
+SetSightingOfRef - This method takes in a string value that represents a STIX
+identifier of the object that was sighted and updates the sighting of ref
+property.
+*/
+func (ezt *SightingType) SetSightingOfRef(s string) error {
 	ezt.SightingOfRef = s
+	return nil
 }
 
-// AddObservedDataRef - This method takes in a string value that represents a
-// STIX identifier of the STIX Observed Data object that identifies what was
-// sighted and adds it to the observed data refs property.
-func (ezt *SightingType) AddObservedDataRef(s string) {
+/*
+AddObservedDataRef - This method takes in a string value that represents a
+STIX identifier of the STIX Observed Data object that identifies what was
+sighted and adds it to the observed data refs property.
+*/
+func (ezt *SightingType) AddObservedDataRef(s string) error {
 	ezt.ObservedDataRefs = append(ezt.ObservedDataRefs, s)
+	return nil
 }
 
-// AddWhereSightedRef - This method takes in a string value that represents a
-// STIX identifier of the STIX Identity object that identifies where this was
-// sighted (location, sector, etc) and adds it to the where sighted ref property.
-func (ezt *SightingType) AddWhereSightedRef(s string) {
+/*
+AddWhereSightedRef - This method takes in a string value that represents a
+STIX identifier of the STIX Identity object that identifies where this was
+sighted (location, sector, etc) and adds it to the where sighted ref property.
+*/
+func (ezt *SightingType) AddWhereSightedRef(s string) error {
 	ezt.WhereSightedRefs = append(ezt.WhereSightedRefs, s)
+	return nil
 }
 
-// SetSummary - This method set the boolean value of the summary to true.
-func (ezt *SightingType) SetSummary() {
+/*
+SetSummary - This method set the boolean value of the summary to true.
+*/
+func (ezt *SightingType) SetSummary() error {
 	ezt.Summary = true
+	return nil
 }

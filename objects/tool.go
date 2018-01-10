@@ -50,11 +50,28 @@ type ToolType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitTool - This function will create a new STIX Tool object and return it as a
+pointer.
+*/
+func InitTool(ver string) *ToolType {
+	var obj ToolType
+	obj.InitObjectProperties("tool", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - ToolType
 // ----------------------------------------------------------------------
 
-// SetToolVersion - This method takes in a string value representing the version
-// of the tool and updates the tool version property.
-func (ezt *ToolType) SetToolVersion(s string) {
+/*
+SetToolVersion - This method takes in a string value representing the version
+of the tool and updates the tool version property.
+*/
+func (ezt *ToolType) SetToolVersion(s string) error {
 	ezt.ToolVersion = s
+	return nil
 }

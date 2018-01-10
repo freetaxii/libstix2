@@ -11,9 +11,11 @@ import (
 	"strings"
 )
 
-// IsValidSTIXID - This function will take in a STIX ID and return true if the
-// string represents an actual STIX ID in the correct format.
-func IsValidSTIXID(id string) bool {
+/*
+IsValidSTIXID - This function will take in a STIX ID and return true if the
+string represents an actual STIX ID in the correct format.
+*/
+func IsValidSTIXID(id string) (bool, error) {
 	valid := false
 
 	idparts := strings.Split(id, "--")
@@ -27,13 +29,15 @@ func IsValidSTIXID(id string) bool {
 
 	valid = stixid.IsValidUUID(idparts[1])
 
-	return valid
+	return valid, nil
 }
 
-// IsValidSTIXObject - This function will take in a string and return true if the
-// string represents an actual STIX object type. This is used for determining if
-// input from an outside source is actually a defined STIX object or not.
-func IsValidSTIXObject(obj string) bool {
+/*
+IsValidSTIXObject - This function will take in a string and return true if the
+string represents an actual STIX object type. This is used for determining if
+input from an outside source is actually a defined STIX object or not.
+*/
+func IsValidSTIXObject(obj string) (bool, error) {
 	valid := false
 
 	switch obj {
@@ -74,5 +78,5 @@ func IsValidSTIXObject(obj string) bool {
 	case "vulnerability":
 		valid = true
 	}
-	return valid
+	return valid, nil
 }

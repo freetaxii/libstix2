@@ -24,17 +24,17 @@ type IDPropertyType struct {
 // Public Methods - IdPropertyType
 // ----------------------------------------------------------------------
 
-// CreateID - This method takes in a string value representing a STIX object
+// CreateSTIXUUID - This method takes in a string value representing a STIX object
 // type and create and return a new ID based on the approved STIX UUIDv4 format.
 func (ezt *IDPropertyType) CreateSTIXUUID(s string) string {
 	id := s + "--" + uuid.New()
 	return id
 }
 
-// NewID - This method takes in a string value representing a STIX object
+// GetNewID - This method takes in a string value representing a STIX object
 // type and create a new ID based on the approved STIX UUIDv4 format and update
 // the id property for the object.
-func (ezt *IDPropertyType) NewID(s string) {
+func (ezt *IDPropertyType) GetNewID(s string) {
 	// TODO Add check to validate input value
 	ezt.ID = ezt.CreateSTIXUUID(s)
 }

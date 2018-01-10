@@ -30,5 +30,19 @@ type InfrastructureType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitInfrastructure - This function will create a new STIX Infrastructure object
+and return it as a pointer.
+*/
+func InitInfrastructure(ver string) *InfrastructureType {
+	var obj InfrastructureType
+	obj.InitObjectProperties("infrastructure", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - InfrastructureType
 // ----------------------------------------------------------------------

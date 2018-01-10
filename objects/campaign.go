@@ -51,11 +51,28 @@ type CampaignType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitCampaign - This function will create a new STIX Campaign object and return
+it as a pointer.
+*/
+func InitCampaign(ver string) *CampaignType {
+	var obj CampaignType
+	obj.InitObjectProperties("campaign", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - CampaignType
 // ----------------------------------------------------------------------
 
-// SetObjective - This method will take in a string representing an objective,
-// goal, desired outcome, or intended effect and update the objective property.
-func (ezt *CampaignType) SetObjective(s string) {
+/*
+SetObjective - This method will take in a string representing an objective,
+goal, desired outcome, or intended effect and update the objective property.
+*/
+func (ezt *CampaignType) SetObjective(s string) error {
 	ezt.Objective = s
+	return nil
 }

@@ -47,5 +47,19 @@ type AttackPatternType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitAttackPattern - This function will create a new STIX Attack Pattern object
+and return it as a pointer.
+*/
+func InitAttackPattern(ver string) *AttackPatternType {
+	var obj AttackPatternType
+	obj.InitObjectProperties("attack-pattern", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - AttackPatternType
 // ----------------------------------------------------------------------

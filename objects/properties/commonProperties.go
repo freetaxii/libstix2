@@ -53,17 +53,17 @@ type CommonBundlePropertiesType struct {
 // Public Methods - CommonObjectPropertiesType
 // ----------------------------------------------------------------------
 
-// InitNewObject is a helper function to initialize a new object with common
+// InitObjectProperties is a helper function to initialize a new object with common
 // elements.
 //
 // params: objectType - a string value of the STIX object type
 // params: version - the STIX spec version of the object, ex. "2.0". This is
 // 		stored and used in TAXII.
-func (ezt *CommonObjectPropertiesType) InitNewObject(objectType, version string) {
+func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) {
 	// TODO make sure that the value coming in a a valid STIX object type
 	ezt.SetSpecVersion(version)
 	ezt.SetObjectType(objectType)
-	ezt.NewID(objectType)
+	ezt.GetNewID(objectType)
 	ezt.SetCreatedToCurrentTime()
 	ezt.SetModifiedToCreated()
 }

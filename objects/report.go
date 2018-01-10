@@ -47,18 +47,38 @@ type ReportType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitReport - This function will create a new STIX Report object and return it as
+a pointer.
+*/
+func InitReport(ver string) *ReportType {
+	var obj ReportType
+	obj.InitObjectProperties("report", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - ReportType
 // ----------------------------------------------------------------------
 
-// SetPublished - This method takes in a timestamp in either time.Time or string
-// format and updates the published timestamp property.
-func (ezt *ReportType) SetPublished(t interface{}) {
+/*
+SetPublished - This method takes in a timestamp in either time.Time or string
+format and updates the published timestamp property.
+*/
+func (ezt *ReportType) SetPublished(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	ezt.Published = ts
+	return nil
 }
 
-// AddObject - This methods takes in a string value that represents a STIX
-// identifier and adds it to the objects ref property.
-func (ezt *ReportType) AddObject(s string) {
+/*
+AddObject - This methods takes in a string value that represents a STIX
+identifier and adds it to the objects ref property.
+*/
+func (ezt *ReportType) AddObject(s string) error {
 	ezt.ObjectRefs = append(ezt.ObjectRefs, s)
+	return nil
 }

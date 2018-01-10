@@ -59,34 +59,60 @@ type RelationshipType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitRelationship - This function will create a new STIX Relationship object
+and return it as a pointer.
+*/
+func InitRelationship(ver string) *RelationshipType {
+	var obj RelationshipType
+	obj.InitObjectProperties("relationship", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - RelationshipType
 // ----------------------------------------------------------------------
 
-// SetRelationshipType - This method takes in a string value that represents the
-// type name of the releationship and updates the relationship type property.
-func (ezt *RelationshipType) SetRelationshipType(s string) {
+/*
+SetRelationshipType - This method takes in a string value that represents the
+type name of the releationship and updates the relationship type property.
+*/
+func (ezt *RelationshipType) SetRelationshipType(s string) error {
 	ezt.RelationshipType = s
+	return nil
 }
 
-// SetSourceRef - This method takes in a string value that represents a STIX
-// identifier of the source STIX object in the relationship and updates the
-// source ref property.
-func (ezt *RelationshipType) SetSourceRef(s string) {
+/*
+SetSourceRef - This method takes in a string value that represents a STIX
+identifier of the source STIX object in the relationship and updates the
+source ref property.
+*/
+func (ezt *RelationshipType) SetSourceRef(s string) error {
 	ezt.SourceRef = s
+	return nil
 }
 
-// SetTargetRef - This method takes in a string value that represents a STIX
-// identifier of the target STIX object in the relationship and updates the
-// target ref property.
-func (ezt *RelationshipType) SetTargetRef(s string) {
+/*
+SetTargetRef - This method takes in a string value that represents a STIX
+identifier of the target STIX object in the relationship and updates the
+target ref property.
+*/
+func (ezt *RelationshipType) SetTargetRef(s string) error {
 	ezt.TargetRef = s
+	return nil
 }
 
-// SetSourceTarget - This methods takes in two string values where both
-// represent a STIX identifier. This is a convenience function for setting both
-// ends of the relationship at the same time. The first identifier is for the
-// source and the second is for the target.
-func (ezt *RelationshipType) SetSourceTarget(s, t string) {
+/*
+SetSourceTarget - This methods takes in two string values where both
+represent a STIX identifier. This is a convenience function for setting both
+ends of the relationship at the same time. The first identifier is for the
+source and the second is for the target.
+*/
+func (ezt *RelationshipType) SetSourceTarget(s, t string) error {
 	ezt.SourceRef = s
 	ezt.TargetRef = t
+	return nil
 }

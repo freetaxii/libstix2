@@ -26,10 +26,10 @@ type IDPropertyType struct {
 // ----------------------------------------------------------------------
 
 /*
-CreateID - This method does not take in any parameters. It is used to create
+CreateTAXIIUUID - This method does not take in any parameters. It is used to create
 a new ID based on the approved TAXII UUIDv4 format.
 */
-func (p *IDPropertyType) CreateID() (string, error) {
+func (p *IDPropertyType) CreateTAXIIUUID() (string, error) {
 	id := uuid.New()
 	return id, nil
 }
@@ -40,7 +40,7 @@ a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
 property.
 */
 func (p *IDPropertyType) GetNewID() error {
-	p.ID, _ = p.CreateID()
+	p.ID, _ = p.CreateTAXIIUUIID()
 	return nil
 }
 

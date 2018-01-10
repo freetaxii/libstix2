@@ -56,5 +56,19 @@ type IntrusionSetType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitIntrusionSet - This function will create a new STIX Intrusion Set object
+and return it as a pointer.
+*/
+func InitIntrusionSet(ver string) *IntrusionSetType {
+	var obj IntrusionSetType
+	obj.InitObjectProperties("intrusion-set", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - IntrusionSetType
 // ----------------------------------------------------------------------

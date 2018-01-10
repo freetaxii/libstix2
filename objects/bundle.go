@@ -39,16 +39,39 @@ type BundleType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitBundle - This function will create a new STIX Bundle object and return it as
+a pointer. This function can not use the InitNewObject() function as a Bundle
+does not have all of the fields that are common to a standard object.
+*/
+func InitBundle() *BundleType {
+	var obj BundleType
+	obj.SetObjectType("bundle")
+	obj.GetNewID("bundle")
+	obj.SetSpecVersion20()
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - BundleType
 // ----------------------------------------------------------------------
 
-// SetSpecVersion20 - This method will set the specification version to 2.1.
-func (ezt *BundleType) SetSpecVersion20() {
+/*
+SetSpecVersion20 - This method will set the specification version to 2.0.
+*/
+func (ezt *BundleType) SetSpecVersion20() error {
 	ezt.SpecVersion = "2.0"
+	return nil
 }
 
-// AddObject - This method will take in an object as an interface and add it to
-// the list of objects in the bundle.
-func (ezt *BundleType) AddObject(i interface{}) {
+/*
+AddObject - This method will take in an object as an interface and add it to
+the list of objects in the bundle.
+*/
+func (ezt *BundleType) AddObject(i interface{}) error {
 	ezt.Objects = append(ezt.Objects, i)
+	return nil
 }

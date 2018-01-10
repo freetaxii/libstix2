@@ -41,25 +41,48 @@ type IdentityType struct {
 }
 
 // ----------------------------------------------------------------------
+// Initialization Functions
+// ----------------------------------------------------------------------
+
+/*
+InitIdentity - This function will create a new STIX Identity object and return
+it as a pointer.
+*/
+func InitIdentity(ver string) *IdentityType {
+	var obj IdentityType
+	obj.InitObjectProperties("identity", ver)
+	return &obj
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - IdentityType
 // ----------------------------------------------------------------------
 
-// SetIdentityClass - This method takes in a string value representing a STIX
-// identity class from the vocab identity-class-ov and updates the identity class
-// property.
-func (ezt *IdentityType) SetIdentityClass(s string) {
+/*
+SetIdentityClass - This method takes in a string value representing a STIX
+identity class from the vocab identity-class-ov and updates the identity class
+property.
+*/
+func (ezt *IdentityType) SetIdentityClass(s string) error {
 	ezt.IdentityClass = s
+	return nil
 }
 
-// AddSector - This method takes in a string value that represents a STIX sector
-// from the vocab industry-sector-ov and adds it to the identity object.
-func (ezt *IdentityType) AddSector(s string) {
+/*
+AddSector - This method takes in a string value that represents a STIX sector
+from the vocab industry-sector-ov and adds it to the identity object.
+*/
+func (ezt *IdentityType) AddSector(s string) error {
 	ezt.Sectors = append(ezt.Sectors, s)
+	return nil
 }
 
-// SetContactInformation - This method takes in a string value representing
-// contact information as a text string and updates the contact information
-// property.
-func (ezt *IdentityType) SetContactInformation(s string) {
+/*
+SetContactInformation - This method takes in a string value representing
+contact information as a text string and updates the contact information
+property.
+*/
+func (ezt *IdentityType) SetContactInformation(s string) error {
 	ezt.ContactInformation = s
+	return nil
 }
