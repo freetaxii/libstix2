@@ -42,10 +42,10 @@ object located at that slice location.
 func (ezt *ExternalReferencesPropertyType) GetNewExternalReference() (*ExternalReferenceType, error) {
 	var s ExternalReferenceType
 
-	if ezt.ExternalReferences == nil {
-		a := make([]ExternalReferenceType, 0)
-		ezt.ExternalReferences = a
-	}
+	// if ezt.ExternalReferences == nil {
+	// 	a := make([]ExternalReferenceType, 0)
+	// 	ezt.ExternalReferences = a
+	// }
 
 	positionThatAppendWillUse := len(ezt.ExternalReferences)
 	ezt.ExternalReferences = append(ezt.ExternalReferences, s)

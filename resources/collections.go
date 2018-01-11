@@ -97,11 +97,14 @@ func InitCollection() *CollectionType {
 }
 
 /*
-InitCollectionRecord - This function will create a new TAXII Collection object and return
-it as a pointer.
+InitCollectionRecord - This function will take in a collection ID and a STIX ID
+and create a new TAXII Collection Record object and return it as a pointer. This
+is used for storying a record in the database in the t_collection_data table.
 */
-func InitCollectionRecord() *CollectionRecordType {
+func InitCollectionRecord(cid, sid string) *CollectionRecordType {
 	var obj CollectionRecordType
+	obj.CollectionID = cid
+	obj.STIXID = sid
 	return &obj
 }
 
@@ -116,10 +119,10 @@ the location in the slice where the collection object was added. This method
 would be used if the collection was created separately and it just needs to be
 added in whole to the collections list.
 */
-func (ezt *CollectionsType) AddCollection(o CollectionType) (int, error) {
-	ezt.initCollectionsProperty()
+func (ezt *CollectionsType) AddCollection(o *CollectionType) (int, error) {
+	//ezt.initCollectionsProperty()
 	positionThatAppendWillUse := len(ezt.Collections)
-	ezt.Collections = append(ezt.Collections, o)
+	ezt.Collections = append(ezt.Collections, *o)
 	return positionThatAppendWillUse, nil
 }
 
@@ -130,7 +133,7 @@ is a pointer to the actual Collection that was created in the collections
 slice.
 */
 func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {
-	ezt.initCollectionsProperty()
+	//ezt.initCollectionsProperty()
 	o := InitCollection()
 	positionThatAppendWillUse := len(ezt.Collections)
 	ezt.Collections = append(ezt.Collections, *o)
@@ -145,13 +148,13 @@ func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {
 initCollectionsProperty - This method will initialize the Collections
 slice if it has not already been initialized.
 */
-func (ezt *CollectionsType) initCollectionsProperty() error {
-	if ezt.Collections == nil {
-		a := make([]CollectionType, 0)
-		ezt.Collections = a
-	}
-	return nil
-}
+// func (ezt *CollectionsType) initCollectionsProperty() error {
+// 	if ezt.Collections == nil {
+// 		a := make([]CollectionType, 0)
+// 		ezt.Collections = a
+// 	}
+// 	return nil
+// }
 
 // ----------------------------------------------------------------------
 // Public Methods - CollectionType
@@ -231,20 +234,4 @@ func (ezt *CollectionType) AddMediaType(s string) error {
 	}
 	ezt.MediaTypes = append(ezt.MediaTypes, s)
 	return nil
-}
-
-// ----------------------------------------------------------------------
-// Public Methods - CollectionRecordType
-// ----------------------------------------------------------------------
-
-/*
-NewCollectionRecord - This function will take in a collection ID and a STIX ID
-and return a collection record type which is used for storying a record in
-the database in the t_collection_data table.
-*/
-func NewCollectionRecord(cid, sid string) (*CollectionRecordType, error) {
-	obj := InitCollectionRecord()
-	obj.CollectionID = cid
-	obj.STIXID = sid
-	return obj, nil
 }

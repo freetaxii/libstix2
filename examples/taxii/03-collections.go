@@ -15,7 +15,7 @@ func main() {
 	o := resources.InitCollections()
 
 	c, _ := o.GetNewCollection()
-	c.CreateNewID()
+	c.SetNewID()
 	c.SetCanRead()
 
 	// You can do this manually by creating your own Collection object

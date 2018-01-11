@@ -34,11 +34,11 @@ func (ezt *IDPropertyType) CreateTAXIIUUID() (string, error) {
 }
 
 /*
-CreateNewID - This method does not take in any parameters. It is used to create
+SetNewID - This method does not take in any parameters. It is used to create
 a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
 property.
 */
-func (ezt *IDPropertyType) CreateNewID() error {
+func (ezt *IDPropertyType) SetNewID() error {
 	ezt.ID, _ = ezt.CreateTAXIIUUID()
 	return nil
 }

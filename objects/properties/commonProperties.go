@@ -68,7 +68,7 @@ func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version 
 	// TODO make sure that the value coming in a a valid STIX object type
 	ezt.SetSpecVersion(version)
 	ezt.SetObjectType(objectType)
-	ezt.CreateNewID(objectType)
+	ezt.SetNewID(objectType)
 	ezt.SetCreatedToCurrentTime()
 	ezt.SetModifiedToCreated()
 	return nil

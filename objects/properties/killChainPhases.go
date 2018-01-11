@@ -31,12 +31,12 @@ type KillChainPhaseType struct {
 // ----------------------------------------------------------------------
 
 /*
-AddKillChainPhase - This method takes in two parameters and creates a adds
+CreateKillChainPhase - This method takes in two parameters and creates and adds
 a new kill chain phase to the list. The first value is a string value
 representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
-func (ezt *KillChainPhasesPropertyType) AddKillChainPhase(name, phase string) error {
+func (ezt *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {
 	k, _ := ezt.GetNewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
@@ -54,10 +54,10 @@ will enable the code to update an object located at that slice location.
 func (ezt *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseType, error) {
 	var s KillChainPhaseType
 
-	if ezt.KillChainPhases == nil {
-		a := make([]KillChainPhaseType, 0)
-		ezt.KillChainPhases = a
-	}
+	// if ezt.KillChainPhases == nil {
+	// 	a := make([]KillChainPhaseType, 0)
+	// 	ezt.KillChainPhases = a
+	// }
 
 	positionThatAppendWillUse := len(ezt.KillChainPhases)
 	ezt.KillChainPhases = append(ezt.KillChainPhases, s)

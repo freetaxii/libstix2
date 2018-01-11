@@ -23,7 +23,7 @@ func main() {
 	//i.SetModified(modifiedTime)
 
 	i.SetValidFrom(time.Now())
-	i.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
+	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
 	var data []byte
 	data, _ = json.MarshalIndent(i, "", "    ")

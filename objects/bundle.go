@@ -49,7 +49,7 @@ does not have all of the fields that are common to a standard object.
 func InitBundle() *BundleType {
 	var obj BundleType
 	obj.SetObjectType("bundle")
-	obj.CreateNewID("bundle")
+	obj.SetNewID("bundle")
 	obj.SetSpecVersion20()
 	return &obj
 }
