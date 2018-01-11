@@ -71,7 +71,7 @@ TAXII Features
 - [ ] Authentication
 - [ ] Persistent storage
 - [ ] Version checking
-- [ ] URL parameters
+- [x] URL parameters
 - [x] Object by ID
 
 TAXII Resources
@@ -83,6 +83,40 @@ TAXII Resources
 - [x] Manifest
 - [ ] Status
 - [x] Error
+
+
+## Naming Conventions ##
+
+While Go does not require getters and setters, setters are used in libstix2 to enable validation and verification checks. All setters in libstix2 return an error type, even if they currently just return “nil”. This will ensure that the API will not change if/when additional validation / verification checks are added in the future. 
+
+Libstix2 uses the following naming conventions for methods on objects and resources.
+
+* Methods that setup / create a new object have a name of "Init" + object type.
+* Methods that are setting a value have a name of “Set” + the property name. Example: “SetConfidence” is used for setting a value on the Confidence property.
+* Methods that are getting a value have a name of “Get” + the property name. Example: “GetConfidence” is used for getting the value stored in the Confidence property.
+* Methods that take in a value and add that value to a slice have a name of “Add” + the property name in the singular. Example: “AddLabel” is used to add a sting label to the labels property. 
+* Methods that take in an object and add that object to a slice have a name of “Add” + the object type in the singular. Example: “AddManifestEntry” is used to add a Manifest Entry to the Objects slice in the Manifest resource. It is important to note that these methods take in a pointer to the object instead of a copy of the object itself. Some examples with full signatures:
+
+```
+func (ezt *CollectionsType) AddCollection(o *CollectionType) (int, error) {}
+func (ezt *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {}
+```
+
+* Methods that create a new object and return a pointer to a slice location for a new object have a name of “GetNew” + the object type in the singular. Example: “GetNewManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource. Some examples with full signatures:
+
+```
+func (ezt *ExternalReferencesPropertyType) GetNewExternalReference() (*ExternalReferenceType, error) {}
+func (ezt *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseType, error) {}
+func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {}
+func (ezt *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {}
+```
+
+* Methods that create and populate a new object in a single step have a name of “Create” + the object type in the singular. Example: “CreateManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource and populates it in one step. Some examples with full signatures:
+
+```
+func (ezt *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {}
+func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {}
+```
 
 
 ## License ##

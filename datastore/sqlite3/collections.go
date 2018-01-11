@@ -32,7 +32,7 @@ func (ds *Sqlite3DatastoreType) GetCollections() (*resources.CollectionsType, er
 // are currently enabled.
 func (ds *Sqlite3DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
 
-	allCollections := resources.NewCollections()
+	allCollections := resources.InitCollections()
 
 	getAllCollectionsStmt, _ := ds.sqlAllCollections(whichCollections)
 
@@ -51,7 +51,7 @@ func (ds *Sqlite3DatastoreType) getCollections(whichCollections string) (*resour
 		}
 
 		// Add collection information to Collection object
-		c := allCollections.NewCollection()
+		c, _ := allCollections.GetNewCollection()
 		c.DateAdded = dateAdded
 		if enabled == 1 {
 			c.SetEnabled()

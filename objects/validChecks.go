@@ -14,21 +14,21 @@ import (
 IsValidSTIXID - This function will take in a STIX ID and return true if the
 string represents an actual STIX ID in the correct format.
 */
-func IsValidSTIXID(id string) (bool, error) {
+func IsValidSTIXID(id string) bool {
 	valid := false
 
 	idparts := strings.Split(id, "--")
 
-	valid, _ = IsValidSTIXObject(idparts[0])
+	valid = IsValidSTIXObject(idparts[0])
 
 	// Short circuit if the STIX type part is wrong
 	if valid == false {
-		return false, nil
+		return false
 	}
 
 	valid = stixid.IsValidUUID(idparts[1])
 
-	return valid, nil
+	return valid
 }
 
 /*
@@ -36,7 +36,7 @@ IsValidSTIXObject - This function will take in a string and return true if the
 string represents an actual STIX object type. This is used for determining if
 input from an outside source is actually a defined STIX object or not.
 */
-func IsValidSTIXObject(obj string) (bool, error) {
+func IsValidSTIXObject(obj string) bool {
 	valid := false
 
 	switch obj {
@@ -77,5 +77,5 @@ func IsValidSTIXObject(obj string) (bool, error) {
 	case "vulnerability":
 		valid = true
 	}
-	return valid, nil
+	return valid
 }

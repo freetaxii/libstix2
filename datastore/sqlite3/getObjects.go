@@ -36,7 +36,7 @@ parameters.
 */
 func (ds *Sqlite3DatastoreType) GetBundle(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
 
-	stixBundle := objects.NewBundle()
+	stixBundle := objects.InitBundle()
 
 	rangeCollectionRawData, metaData, err := ds.GetObjectList(query)
 	if err != nil {
@@ -53,7 +53,7 @@ func (ds *Sqlite3DatastoreType) GetBundle(query datastore.QueryType) (*objects.B
 		stixBundle.AddObject(obj)
 	}
 
-	return &stixBundle, metaData, nil
+	return stixBundle, metaData, nil
 }
 
 /*
@@ -126,8 +126,8 @@ parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
 func (ds *Sqlite3DatastoreType) GetManifestData(query datastore.QueryType) (*resources.ManifestType, *datastore.QueryReturnDataType, error) {
-	manifest := resources.NewManifest()
-	rangeManifest := resources.NewManifest()
+	manifest := resources.InitManifest()
+	rangeManifest := resources.InitManifest()
 	var metaData datastore.QueryReturnDataType
 	var first, last int
 	var errRange error
@@ -168,7 +168,7 @@ func (ds *Sqlite3DatastoreType) GetManifestData(query datastore.QueryType) (*res
 	metaData.DateAddedFirst = rangeManifest.Objects[0].DateAdded
 	metaData.DateAddedLast = rangeManifest.Objects[len(rangeManifest.Objects)-1].DateAdded
 
-	return &rangeManifest, &metaData, nil
+	return rangeManifest, &metaData, nil
 }
 
 // ----------------------------------------------------------------------

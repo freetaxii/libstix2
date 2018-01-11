@@ -126,7 +126,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjectExternalReferences(objectID string)
 
 	for rows.Next() {
 		var sourceName, description, url, externalID string
-		e := extrefs.NewExternalReference()
+		e, _ := extrefs.GetNewExternalReference()
 
 		err := rows.Scan(&sourceName, &description, &url, &externalID)
 		if err != nil {
