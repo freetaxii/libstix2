@@ -6,12 +6,12 @@
 package sqlite3
 
 import (
+	"errors"
 	"fmt"
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
-	"log"
+	"strings"
 	"time"
 )
 
@@ -135,22 +135,20 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	return objectID, nil
 }
 
-// addKillChainPhases
-func (ds *Sqlite3DatastoreType) addKillChainPhases(objectID int64, obj properties.KillChainPhasesPropertyType) {
+/*
+addKillChainPhases - This method will add a kill chain phase for a given object
+to the database.
+*/
+func (ds *Sqlite3DatastoreType) addKillChainPhases(objectID int64, obj properties.KillChainPhasesPropertyType) error {
 	for _, v := range obj.KillChainPhases {
-		var stmt = `INSERT INTO "` + datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES + `" (
-			"object_id",
-			"kill_chain_name",
-			"phase_name"
-			)
-			values (?, ?, ?)`
-
+		stmt, _ := ds.sqlAddKillChainPhase()
 		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
 
 		if err != nil {
-			log.Println("ERROR: Database execution error inserting kill chain phases", err)
+			return fmt.Errorf("database execution error inserting kill chain phase: ", err)
 		}
 	}
+	return nil
 }
 
 // addIndicator
@@ -161,17 +159,8 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 		return fmt.Errorf("database error inserting base object: ", err)
 	}
 
-	var stmt1 = `INSERT INTO "` + datastore.DB_TABLE_STIX_INDICATOR + `" (
-		"object_id",
-		"name",
-		"description",
-		"pattern",
-		"valid_from",
-		"valid_until"
-		)
-		values (?, ?, ?, ?, ?, ?)`
-
-	_, err1 := ds.DB.Exec(stmt1,
+	stmt, _ := ds.sqlAddIndicatorObject()
+	_, err1 := ds.DB.Exec(stmt,
 		objectID,
 		obj.Name,
 		obj.Description,
@@ -181,12 +170,15 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
 	// TODO if there is an error, we probably need to back out all of the INSERTS
 	if err1 != nil {
-		return err1
+		return fmt.Errorf("database error inserting indicator: ", err)
 	}
 
 	if obj.KillChainPhases != nil {
-		ds.addKillChainPhases(objectID, obj.KillChainPhasesPropertyType)
-	}
+		err2 := ds.addKillChainPhases(objectID, obj.KillChainPhasesPropertyType)
 
+		if err2 != nil {
+			return err2
+		}
+	}
 	return nil
 }

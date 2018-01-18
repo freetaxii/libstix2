@@ -18,8 +18,8 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-sqlAddBaseObject - This method will return an SQL statement that will
-add the base object properties to the database.
+sqlAddBaseObject - This method will return an SQL statement that will add the
+base object properties to the database.
 */
 func (ds *Sqlite3DatastoreType) sqlAddBaseObject() (string, error) {
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
@@ -50,6 +50,41 @@ func (ds *Sqlite3DatastoreType) sqlAddBaseObject() (string, error) {
 	s.WriteString("\"type\", \"id\", \"created_by_ref\", \"created\", ")
 	s.WriteString("\"modified\", \"revoked\", \"confidence\", \"lang\") ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Returning SQL statement:", s.String())
+	}
+
+	return s.String(), nil
+}
+
+/*
+sqlAddIndicatorObject - This method will return an SQL statement that will add
+an indicator to the database.
+*/
+func (ds *Sqlite3DatastoreType) sqlAddIndicatorObject() (string, error) {
+	tblInd := datastore.DB_TABLE_STIX_INDICATOR
+
+	/*
+		INSERT INTO
+			s_indicator (
+				"object_id",
+				"name",
+				"description",
+				"pattern",
+				"valid_from",
+				"valid_until"
+			)
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblInd)
+	s.WriteString(" (")
+	s.WriteString("\"object_id\", \"name\", \"description\", ")
+	s.WriteString("\"pattern\", \"valid_from\", \"valid_until\") ")
+	s.WriteString("values (?, ?, ?, ?, ?, ?)")
 
 	if ds.LogLevel >= 5 {
 		log.Println("DEBUG: Returning SQL statement:", s.String())
@@ -137,6 +172,35 @@ func (ds *Sqlite3DatastoreType) sqlAddObjectMarkingRef() (string, error) {
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblObjMarking)
 	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Returning SQL statement:", s.String())
+	}
+
+	return s.String(), nil
+}
+
+/*
+sqlAddKillChainPhase - This method will return an SQL statement that will add a
+kill chain phase to the database for a given object.
+*/
+func (ds *Sqlite3DatastoreType) sqlAddKillChainPhase() (string, error) {
+	tblKillChain := datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES
+
+	/*
+		INSERT INTO
+			s_kill_chain_phases (
+				"object_id",
+				"kill_chain_name",
+				"phase_name"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblKillChain)
+	s.WriteString(" (\"object_id\", \"kill_chain_name\", \"phase_name\") values (?, ?, ?)")
 
 	if ds.LogLevel >= 5 {
 		log.Println("DEBUG: Returning SQL statement:", s.String())
