@@ -15,6 +15,45 @@ import (
 	"time"
 )
 
+// ----------------------------------------------------------------------
+//
+// Public Methods
+//
+// ----------------------------------------------------------------------
+
+/*
+GetObject - This method will take in a STIX ID and version timestamp (the
+modified timestamp from a STIX object) and return the STIX object.
+*/
+func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, error) {
+	idparts := strings.Split(stixid, "--")
+
+	if ds.StrictSTIXIDs == true {
+		if !objects.IsValidID(stixid) {
+			return nil, errors.New("get object error, invalid STIX ID")
+		}
+	}
+
+	if ds.StrictSTIXTypes == true {
+		if !objects.IsValidSTIXObject(stixid) {
+			return nil, errors.New("get object error, invalid STIX type")
+		}
+	}
+
+	switch idparts[0] {
+	case "indicator":
+		return ds.getIndicator(stixid, version)
+	}
+
+	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
+}
+
+// ----------------------------------------------------------------------
+//
+// Private Methods
+//
+// ----------------------------------------------------------------------
+
 /*
 addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
