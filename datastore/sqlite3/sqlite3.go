@@ -27,10 +27,11 @@ When StrictSTIXIDs = false, then the system will allow vanity STIX IDs like:
 indicator--1, indicator--2
 */
 type Sqlite3DatastoreType struct {
-	Filename      string
-	DB            *sql.DB
-	LogLevel      int
-	StrictSTIXIDs bool
+	Filename        string
+	DB              *sql.DB
+	LogLevel        int
+	StrictSTIXIDs   bool
+	StrictSTIXTypes bool
 }
 
 // ----------------------------------------------------------------------
@@ -43,6 +44,7 @@ func New(filename string) Sqlite3DatastoreType {
 	ds.Filename = filename
 	ds.LogLevel = 1
 	ds.StrictSTIXIDs = false
+	ds.StrictSTIXTypes = true
 
 	err := ds.connect()
 	if err != nil {

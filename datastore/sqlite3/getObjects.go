@@ -29,12 +29,14 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, 
 
 	if ds.StrictSTIXIDs == true {
 		if !objects.IsValidID(stixid) {
-			return nil, fmt.Errorf("invalid STIX ID")
+			return nil, fmt.Errorf("get object error, invalid STIX ID")
 		}
 	}
 
-	if !objects.IsValidSTIXObject(stixid) {
-		return nil, fmt.Errorf("invalid STIX type")
+	if ds.StrictSTIXTypes == true {
+		if !objects.IsValidSTIXObject(stixid) {
+			return nil, fmt.Errorf("get object error, invalid STIX type")
+		}
 	}
 
 	switch idparts[0] {

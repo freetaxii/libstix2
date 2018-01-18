@@ -332,11 +332,13 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 		if len(id) == 1 {
 			if ds.StrictSTIXIDs == true {
 				if !objects.IsValidID(id[0]) {
-					return errors.New("the provided object id is invalid")
+					return errors.New("invalid SQL where statement, the provided object id is invalid")
 				}
 			}
-			if !objects.IsValidSTIXObject(id[0]) {
-				return errors.New("the provided object type is invalid")
+			if ds.StrictSTIXTypes == true {
+				if !objects.IsValidSTIXObject(id[0]) {
+					return errors.New("invalid SQL where statement, the provided object type is invalid")
+				}
 			}
 			b.WriteString(" AND ")
 			b.WriteString(tblColData)
@@ -357,11 +359,13 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 				// Lets make sure the value that was passed in is actually a valid id
 				if ds.StrictSTIXIDs == true {
 					if !objects.IsValidID(v) {
-						return errors.New("the provided object id is invalid")
+						return errors.New("invalid SQL where statement, the provided object id is invalid")
 					}
 				}
-				if !objects.IsValidSTIXObject(v) {
-					return errors.New("the provided object type is invalid")
+				if ds.StrictSTIXTypes == true {
+					if !objects.IsValidSTIXObject(v) {
+						return errors.New("invalid SQL where statement, the provided object type is invalid")
+					}
 				}
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id = "`)
