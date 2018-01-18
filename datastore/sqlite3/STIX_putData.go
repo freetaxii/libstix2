@@ -6,8 +6,7 @@
 package sqlite3
 
 import (
-	"crypto/sha1"
-	"encoding/base64"
+	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
@@ -16,31 +15,21 @@ import (
 	"time"
 )
 
-func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) string {
+/*
+addBaseObject - This method will add the base properties of an object to the
+database and return an integer that tracks the record number for parent child
+relationships.
+*/
+func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) (int64, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
-	objectID := "id" + obj.ID + "created" + obj.Created + "modified" + obj.Modified
 
-	h := sha1.New()
-	h.Write([]byte(objectID))
-	hashID := base64.URLEncoding.EncodeToString(h.Sum(nil))
+	objectID := ds.Index
+	ds.Index++
 
-	var stmt1 = `INSERT INTO "` + datastore.DB_TABLE_STIX_BASE_OBJECT + `" (
-	 	"object_id", 
-	 	"spec_version", 
-	 	"date_added", 
-	 	"type", 
-	 	"id", 
-	 	"created_by_ref",
-	 	"created", 
-	 	"modified", 
-	 	"revoked", 
-	 	"confidence", 
-	 	"lang"
-	 	)
-		values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	stmt1, _ := ds.sqlAddBaseObject()
 
 	_, err1 := ds.DB.Exec(stmt1,
-		hashID,
+		objectID,
 		obj.SpecVersion,
 		dateAdded,
 		obj.ObjectType,
@@ -53,70 +42,62 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 		obj.Lang)
 
 	if err1 != nil {
-		log.Println("ERROR: Database execution error inserting base record", err1)
+		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
 	}
 
+	// ----------------------------------------------------------------------
+	// Add Labels
+	// ----------------------------------------------------------------------
 	if obj.Labels != nil {
 		for _, label := range obj.Labels {
-			var stmt2 = `INSERT INTO "` + datastore.DB_TABLE_STIX_LABELS + `" (
-			"object_id",
-			"labels"
-			)
-			values (?, ?)`
-
-			_, err2 := ds.DB.Exec(stmt2, hashID, label)
+			stmt2, _ := ds.sqlAddObjectLabel()
+			_, err2 := ds.DB.Exec(stmt2, objectID, label)
 
 			if err2 != nil {
-				log.Println("ERROR: Database execution error inserting labels", err2)
+				return 0, fmt.Errorf("database execution error inserting object label: ", err2)
 			}
 		}
 	}
 
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
 	if obj.ExternalReferences != nil {
 		for _, reference := range obj.ExternalReferences {
-			var stmt3 = `INSERT INTO "` + datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES + `" (
-			"object_id",
-			"source_name",
-			"description",
-			"url",
-			"external_id"
-			)
-			values (?, ?, ?, ?, ?)`
+			stmt3, _ := ds.sqlAddExternalReference()
 
 			_, err3 := ds.DB.Exec(stmt3,
-				hashID,
+				objectID,
 				reference.SourceName,
 				reference.Description,
 				reference.URL,
 				reference.ExternalID)
 
 			if err3 != nil {
-				log.Println("ERROR: Database execution error inserting external references", err3)
+				return 0, fmt.Errorf("database execution error inserting external reference: ", err3)
 			}
 		}
 	}
 
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
 	if obj.ObjectMarkingRefs != nil {
 		for _, marking := range obj.ObjectMarkingRefs {
-			var stmt4 = `INSERT INTO "` + datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS + `" (
-			"object_id",
-			"object_marking_refs"
-			)
-			values (?, ?)`
-
-			_, err4 := ds.DB.Exec(stmt4, hashID, marking)
+			stmt4, _ := ds.sqlAddObjectMarkingRef()
+			_, err4 := ds.DB.Exec(stmt4, objectID, marking)
 
 			if err4 != nil {
-				log.Println("ERROR: Database execution error inserting object marking refs", err4)
+				return 0, fmt.Errorf("database execution error inserting object marking ref: ", err4)
 			}
 		}
 	}
 
-	return hashID
+	return objectID, nil
 }
 
 // addKillChainPhases
-func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties.KillChainPhasesPropertyType) {
+func (ds *Sqlite3DatastoreType) addKillChainPhases(objectID int64, obj properties.KillChainPhasesPropertyType) {
 	for _, v := range obj.KillChainPhases {
 		var stmt = `INSERT INTO "` + datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES + `" (
 			"object_id",
@@ -125,7 +106,7 @@ func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties
 			)
 			values (?, ?, ?)`
 
-		_, err := ds.DB.Exec(stmt, hashID, v.KillChainName, v.PhaseName)
+		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
 
 		if err != nil {
 			log.Println("ERROR: Database execution error inserting kill chain phases", err)
@@ -136,7 +117,10 @@ func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties
 // addIndicator
 func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
-	hashID := ds.addBaseObject(obj.CommonObjectPropertiesType)
+	objectID, err := ds.addBaseObject(obj.CommonObjectPropertiesType)
+	if err != nil {
+		return fmt.Errorf("database error inserting base object: ", err)
+	}
 
 	var stmt1 = `INSERT INTO "` + datastore.DB_TABLE_STIX_INDICATOR + `" (
 		"object_id",
@@ -149,7 +133,7 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 		values (?, ?, ?, ?, ?, ?)`
 
 	_, err1 := ds.DB.Exec(stmt1,
-		hashID,
+		objectID,
 		obj.Name,
 		obj.Description,
 		obj.Pattern,
@@ -162,7 +146,7 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 	}
 
 	if obj.KillChainPhases != nil {
-		ds.addKillChainPhases(hashID, obj.KillChainPhasesPropertyType)
+		ds.addKillChainPhases(objectID, obj.KillChainPhasesPropertyType)
 	}
 
 	return nil

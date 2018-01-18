@@ -29,13 +29,13 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, 
 
 	if ds.StrictSTIXIDs == true {
 		if !objects.IsValidID(stixid) {
-			return nil, fmt.Errorf("get object error, invalid STIX ID")
+			return nil, errors.New("get object error, invalid STIX ID")
 		}
 	}
 
 	if ds.StrictSTIXTypes == true {
 		if !objects.IsValidSTIXObject(stixid) {
-			return nil, fmt.Errorf("get object error, invalid STIX type")
+			return nil, errors.New("get object error, invalid STIX type")
 		}
 	}
 
@@ -44,7 +44,7 @@ func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, 
 		return ds.getIndicator(stixid, version)
 	}
 
-	return nil, fmt.Errorf("the following STIX type is not currently supported", idparts[0])
+	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
 }
 
 /*

@@ -84,7 +84,7 @@ func (ds *Sqlite3DatastoreType) getBaseObjectLabels(objectID string) properties.
 	var objectLabels properties.LabelsPropertyType
 
 	var getLabelForObject = `
-		SELECT labels
+		SELECT label
 		FROM ` + datastore.DB_TABLE_STIX_LABELS + `
 		WHERE object_id = $1`
 

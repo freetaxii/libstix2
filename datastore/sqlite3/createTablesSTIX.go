@@ -91,7 +91,7 @@ func (ds *Sqlite3DatastoreType) createSTIXIndexes(name string) {
 func baseProperties() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
- 	"object_id" TEXT NOT NULL,`
+ 	"object_id" INTEGER NOT NULL,`
 }
 
 // baseObjectProperties - This method will return the the common properties
@@ -377,7 +377,7 @@ func commonKillChainPhasesProperties() string {
 //   All SDOs and SROs
 func commonLabelsProperties() string {
 	return baseProperties() + `
-	"labels" TEXT NOT NULL
+	"label" TEXT NOT NULL
 	`
 }
 

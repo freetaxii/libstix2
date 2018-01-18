@@ -21,10 +21,11 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-addObjectToColleciton - This method will add an object to a collection
-by adding an entry in the taxii_collection_data table. In this table
-we use the STIX ID not the Object ID because we need to make sure we
-include all versions of an object. So we need to store just the STIX ID
+sqlAddObjectToColleciton - This method will return an SQL statement that will
+add an object to a collection by adding an entry in the
+taxii_collection_data table. In this table we use the STIX ID not the Object ID
+because we need to make sure we include all versions of an object. So we need to
+store just the STIX ID
 */
 func (ds *Sqlite3DatastoreType) sqlAddObjectToCollection() (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA

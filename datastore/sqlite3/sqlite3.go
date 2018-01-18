@@ -32,6 +32,7 @@ type Sqlite3DatastoreType struct {
 	LogLevel        int
 	StrictSTIXIDs   bool
 	StrictSTIXTypes bool
+	Index           int64
 }
 
 // ----------------------------------------------------------------------
@@ -42,9 +43,14 @@ type Sqlite3DatastoreType struct {
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename
-	ds.LogLevel = 1
+	ds.LogLevel = 5
 	ds.StrictSTIXIDs = false
 	ds.StrictSTIXTypes = true
+
+	// TODO get current index from database or other stored area
+	// we also need a way of updating the database or getting the value
+	// from the database somehow.
+	ds.Index = 1
 
 	err := ds.connect()
 	if err != nil {
@@ -55,7 +61,9 @@ func New(filename string) Sqlite3DatastoreType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods
+//
 // ----------------------------------------------------------------------
 
 func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
@@ -82,7 +90,9 @@ func (ds *Sqlite3DatastoreType) Close() error {
 }
 
 // ----------------------------------------------------------------------
+//
 // Private Methods
+//
 // ----------------------------------------------------------------------
 
 // connect - This method is used to connect to an sqlite3 database
