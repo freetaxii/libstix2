@@ -92,9 +92,13 @@ While Go does not require getters and setters, setters are used in libstix2 to e
 Libstix2 uses the following naming conventions for methods on objects and resources.
 
 * Methods that setup / create a new object have a name of "Init" + object type.
+
 * Methods that are setting a value have a name of “Set” + the property name. Example: “SetConfidence” is used for setting a value on the Confidence property.
+
 * Methods that are getting a value have a name of “Get” + the property name. Example: “GetConfidence” is used for getting the value stored in the Confidence property.
+
 * Methods that take in a value and add that value to a slice have a name of “Add” + the property name in the singular. Example: “AddLabel” is used to add a sting label to the labels property. 
+
 * Methods that take in an object and add that object to a slice have a name of “Add” + the object type in the singular. Example: “AddManifestEntry” is used to add a Manifest Entry to the Objects slice in the Manifest resource. It is important to note that these methods take in a pointer to the object instead of a copy of the object itself. Some examples with full signatures:
 
 ```

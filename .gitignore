@@ -24,4 +24,5 @@ _testmain.go
 *~
 *.sublime-workspace
 .DS_Store
+c.out
 

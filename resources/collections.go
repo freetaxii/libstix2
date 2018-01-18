@@ -97,11 +97,11 @@ func InitCollection() *CollectionType {
 }
 
 /*
-InitCollectionRecord - This function will take in a collection ID and a STIX ID
+CreateCollectionRecord - This function will take in a collection ID and a STIX ID
 and create a new TAXII Collection Record object and return it as a pointer. This
 is used for storying a record in the database in the t_collection_data table.
 */
-func InitCollectionRecord(cid, sid string) *CollectionRecordType {
+func CreateCollectionRecord(cid, sid string) *CollectionRecordType {
 	var obj CollectionRecordType
 	obj.CollectionID = cid
 	obj.STIXID = sid

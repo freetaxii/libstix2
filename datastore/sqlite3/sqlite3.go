@@ -24,6 +24,7 @@ import (
 type Sqlite3DatastoreType struct {
 	Filename string
 	DB       *sql.DB
+	LogLevel int
 }
 
 // ----------------------------------------------------------------------
@@ -34,6 +35,7 @@ type Sqlite3DatastoreType struct {
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename
+	ds.LogLevel = 5
 
 	err := ds.connect()
 	if err != nil {
@@ -49,13 +51,16 @@ func New(filename string) Sqlite3DatastoreType {
 
 func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
 	switch o := obj.(type) {
-	case resources.CollectionType:
+	case *resources.CollectionType:
 		ds.addCollection(o)
-	case resources.CollectionRecordType:
+	case *resources.CollectionRecordType:
 		ds.addObjectToCollection(o)
-	case objects.IndicatorType:
+	case *objects.IndicatorType:
 		ds.addIndicator(o)
+	default:
+		log.Println("ERROR: Does not match any known types ", o)
 	}
+
 }
 
 // Close - This method will close the database connection

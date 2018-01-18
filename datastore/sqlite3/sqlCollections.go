@@ -8,8 +8,74 @@ package sqlite3
 import (
 	"bytes"
 	"github.com/freetaxii/libstix2/datastore"
-	//"log"
+	"log"
 )
+
+// ----------------------------------------------------------------------
+//
+// Private Methods
+//
+// ----------------------------------------------------------------------
+
+/*
+sqlAddCollection - This method will return an SQL statement that will insert
+a new collection in to the t_collections table in the database.
+*/
+func (ds *Sqlite3DatastoreType) sqlAddCollection() (string, error) {
+	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
+
+	/*
+		INSERT INTO
+			t_collections (
+				"date_added",
+				"id",
+				"title",
+				"description",
+				"can_read",
+				"can_write"
+			)
+			values (?, ?, ?, ?, ?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblCol)
+	s.WriteString(" (\"date_added\", \"id\", \"title\", \"description\", \"can_read\", \"can_write\") values (?, ?, ?, ?, ?, ?) ")
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Returning SQL statement:", s.String())
+	}
+
+	return s.String(), nil
+}
+
+/*
+sqlAddCollectionMediaType - This method will return an SQL statement that will
+insert a media type for a given collection.
+*/
+func (ds *Sqlite3DatastoreType) sqlAddCollectionMediaType() (string, error) {
+	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+
+	/*
+		INSERT INTO
+			t_collection_media_type (
+				"collection_id",
+				"media_type_id"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblColMedia)
+	s.WriteString(" (\"collection_id\", \"media_type_id\") values (?, ?) ")
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Returning SQL statement:", s.String())
+	}
+
+	return s.String(), nil
+}
 
 /*
 sqlAllCollections - This method will return an SQL statement that will return a
@@ -102,6 +168,9 @@ func (ds *Sqlite3DatastoreType) sqlAllCollections(whichCollections string) (stri
 	s.WriteString(tblCol)
 	s.WriteString(".id")
 
-	//log.Println("DEBUG: \n", s.String())
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Returning SQL statement:", s.String())
+	}
+
 	return s.String(), nil
 }
