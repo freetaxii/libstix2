@@ -19,12 +19,18 @@ import (
 // Types
 // ----------------------------------------------------------------------
 
-// Sqlite3DatastoreType defines all of the properties and information associated
-// with connecting and talking to the database.
+/*
+Sqlite3DatastoreType defines all of the properties and information associated
+with connecting and talking to the database.
+
+When StrictSTIXIDs = false, then the system will allow vanity STIX IDs like:
+indicator--1, indicator--2
+*/
 type Sqlite3DatastoreType struct {
-	Filename string
-	DB       *sql.DB
-	LogLevel int
+	Filename      string
+	DB            *sql.DB
+	LogLevel      int
+	StrictSTIXIDs bool
 }
 
 // ----------------------------------------------------------------------
@@ -35,7 +41,8 @@ type Sqlite3DatastoreType struct {
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename
-	ds.LogLevel = 5
+	ds.LogLevel = 1
+	ds.StrictSTIXIDs = false
 
 	err := ds.connect()
 	if err != nil {

@@ -51,13 +51,13 @@ func (ds *Sqlite3DatastoreType) sqlAddObjectToCollection() (string, error) {
 }
 
 /*
-sqlObjectList - This method will return an SQL statement that will
+sqlGetObjectList - This method will return an SQL statement that will
 return a list of objects from a given collection. It will use the query struct to
 determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
-func (ds *Sqlite3DatastoreType) sqlObjectList(query datastore.QueryType) (string, error) {
+func (ds *Sqlite3DatastoreType) sqlGetObjectList(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -115,7 +115,7 @@ func (ds *Sqlite3DatastoreType) sqlObjectList(query datastore.QueryType) (string
 }
 
 /*
-sqlManifestData - This method will return an SQL statement that will
+sqlGetManifestData - This method will return an SQL statement that will
 return a list of objects from a given collection and all of the information
 needed to create the manifest resource. It will use the query struct to
 determine the requirements and parameters for the where clause of the SQL
@@ -131,7 +131,7 @@ If you do not use the GROUP BY filter when using the group_concat function then
 you get a single row returned with all of the versions listed in the
 corresponding modified and spec_version fields.
 */
-func (ds *Sqlite3DatastoreType) sqlManifestData(query datastore.QueryType) (string, error) {
+func (ds *Sqlite3DatastoreType) sqlGetManifestData(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -330,15 +330,20 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 	*/
 	if id != nil {
 		if len(id) == 1 {
-			if objects.IsValidSTIXID(id[0]) {
-				b.WriteString(" AND ")
-				b.WriteString(tblColData)
-				b.WriteString(`.stix_id = "`)
-				b.WriteString(id[0])
-				b.WriteString(`"`)
-			} else {
-				return errors.New("the provided object id is invalid")
+			if ds.StrictSTIXIDs == true {
+				if !objects.IsValidID(id[0]) {
+					return errors.New("the provided object id is invalid")
+				}
 			}
+			if !objects.IsValidSTIXObject(id[0]) {
+				return errors.New("the provided object type is invalid")
+			}
+			b.WriteString(" AND ")
+			b.WriteString(tblColData)
+			b.WriteString(`.stix_id = "`)
+			b.WriteString(id[0])
+			b.WriteString(`"`)
+
 		} else if len(id) > 1 {
 			b.WriteString(" AND (")
 			addOR := false
@@ -350,15 +355,19 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid id
-				if objects.IsValidSTIXID(v) {
-					b.WriteString(tblColData)
-					b.WriteString(`.stix_id = "`)
-					b.WriteString(v)
-					b.WriteString(`"`)
-					addOR = true
-				} else {
-					return errors.New("the provided object id is invalid")
+				if ds.StrictSTIXIDs == true {
+					if !objects.IsValidID(v) {
+						return errors.New("the provided object id is invalid")
+					}
 				}
+				if !objects.IsValidSTIXObject(v) {
+					return errors.New("the provided object type is invalid")
+				}
+				b.WriteString(tblColData)
+				b.WriteString(`.stix_id = "`)
+				b.WriteString(v)
+				b.WriteString(`"`)
+				addOR = true
 			}
 			b.WriteString(")")
 		}

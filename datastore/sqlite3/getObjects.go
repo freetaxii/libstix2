@@ -11,21 +11,38 @@ import (
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"strings"
 )
+
+// ----------------------------------------------------------------------
+//
+// Public Methods
+//
+// ----------------------------------------------------------------------
 
 /*
 GetObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the STIX object.
 */
 func (ds *Sqlite3DatastoreType) GetObject(stixid, version string) (interface{}, error) {
+	idparts := strings.Split(stixid, "--")
 
-	// TODO
-	// We first need to look at the STIX ID that was passed in to see what type
-	// of object it is. Basically split the ID to get the type and then do a
-	// switch statement
-	// Need to also be able to handle multiple versions
-	i, err := ds.getIndicator(stixid, version)
-	return i, err
+	if ds.StrictSTIXIDs == true {
+		if !objects.IsValidID(stixid) {
+			return nil, fmt.Errorf("invalid STIX ID")
+		}
+	}
+
+	if !objects.IsValidSTIXObject(stixid) {
+		return nil, fmt.Errorf("invalid STIX type")
+	}
+
+	switch idparts[0] {
+	case "indicator":
+		return ds.getIndicator(stixid, version)
+	}
+
+	return nil, fmt.Errorf("the following STIX type is not currently supported", idparts[0])
 }
 
 /*
@@ -67,7 +84,7 @@ func (ds *Sqlite3DatastoreType) GetObjectList(query datastore.QueryType) (*[]dat
 	var collectionRawData []datastore.CollectionRawDataType
 	var rangeCollectionRawData []datastore.CollectionRawDataType
 
-	sqlStmt, err := ds.sqlObjectList(query)
+	sqlStmt, err := ds.sqlGetObjectList(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -132,7 +149,7 @@ func (ds *Sqlite3DatastoreType) GetManifestData(query datastore.QueryType) (*res
 	var first, last int
 	var errRange error
 
-	sqlStmt, err := ds.sqlManifestData(query)
+	sqlStmt, err := ds.sqlGetManifestData(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.

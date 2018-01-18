@@ -127,7 +127,7 @@ func (ds *Sqlite3DatastoreType) getCollections(whichCollections string) (*resour
 
 	allCollections := resources.InitCollections()
 
-	getAllCollectionsStmt, _ := ds.sqlAllCollections(whichCollections)
+	getAllCollectionsStmt, _ := ds.sqlGetAllCollections(whichCollections)
 
 	// Query database for all the collections
 	rows, err := ds.DB.Query(getAllCollectionsStmt)

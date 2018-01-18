@@ -134,7 +134,7 @@ func (ds *Sqlite3DatastoreType) addKillChainPhases(hashID string, obj properties
 }
 
 // addIndicator
-func (ds *Sqlite3DatastoreType) addIndicator(obj objects.IndicatorType) error {
+func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
 	hashID := ds.addBaseObject(obj.CommonObjectPropertiesType)
 

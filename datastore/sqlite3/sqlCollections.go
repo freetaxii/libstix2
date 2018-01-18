@@ -78,11 +78,11 @@ func (ds *Sqlite3DatastoreType) sqlAddCollectionMediaType() (string, error) {
 }
 
 /*
-sqlAllCollections - This method will return an SQL statement that will return a
+sqlGetAllCollections - This method will return an SQL statement that will return a
 list of collections. A byte array is used instead of sting
 concatenation as it is the most efficient way to do string concatenation in Go.
 */
-func (ds *Sqlite3DatastoreType) sqlAllCollections(whichCollections string) (string, error) {
+func (ds *Sqlite3DatastoreType) sqlGetAllCollections(whichCollections string) (string, error) {
 	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
 	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
 	tblMediaTypes := datastore.DB_TABLE_TAXII_MEDIA_TYPES

@@ -16,10 +16,9 @@ string represents an actual STIX ID in the correct format.
 */
 func IsValidSTIXID(id string) bool {
 	valid := false
-
 	idparts := strings.Split(id, "--")
 
-	valid = IsValidSTIXObject(idparts[0])
+	valid = IsValidSTIXObject(id)
 
 	// Short circuit if the STIX type part is wrong
 	if valid == false {
@@ -32,14 +31,24 @@ func IsValidSTIXID(id string) bool {
 }
 
 /*
-IsValidSTIXObject - This function will take in a string and return true if the
+IsValidID - This function will take in a STIX ID and return true if the UUID
+string portion represents an actual STIX ID in the correct format.
+*/
+func IsValidID(id string) bool {
+	idparts := strings.Split(id, "--")
+	return stixid.IsValidUUID(idparts[1])
+}
+
+/*
+IsValidSTIXObject - This function will take in a STIX ID and return true if the
 string represents an actual STIX object type. This is used for determining if
 input from an outside source is actually a defined STIX object or not.
 */
-func IsValidSTIXObject(obj string) bool {
+func IsValidSTIXObject(id string) bool {
 	valid := false
+	idparts := strings.Split(id, "--")
 
-	switch obj {
+	switch idparts[0] {
 	case "attack-pattern":
 		valid = true
 	case "campaign":
