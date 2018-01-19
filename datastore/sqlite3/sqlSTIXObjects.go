@@ -13,44 +13,79 @@ import (
 // ----------------------------------------------------------------------
 //
 // Private Function
+// Each of these functions either returns a list of fields that are used for
+// creating a database tables or the SQL statements for interacting with that
+// table.
+//
+// ----------------------------------------------------------------------
+
+// attackPatternProperties  - This method will return the properties for attack pattern SDOs
+func attackPatternProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
+	`
+	// kill_chain_phases
+}
+
+// campaignProperties  - This method will return the properties for campaign SDOs
+func campaignProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"first_seen" TEXT,
+	"last_seen" TEXT,
+	"objective" TEXT
+	`
+	// aliases
+}
+
+// courseOfActionProperties  - This method will return the properties for course of action SDOs
+func courseOfActionProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
+	`
+}
+
+// identityProperties  - This method will return the properties for identity SDOs
+func identityProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"identity_class" TEXT NOT NULL,
+	"contact_information" TEXT
+	`
+	// sectors
+}
+
+// identitySectorsProperties  - This method will return the properties for identity sectors
+// Used by:
+//   identity
+func identitySectorsProperties() string {
+	return baseProperties() + `
+	"sectors" TEXT NOT NULL
+	`
+}
+
+// ----------------------------------------------------------------------
+//
+// Indicator Table
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddBaseObject - This function will return an SQL statement that will add the
-base object properties to the database.
+indicatorProperties  - This method will return the properties for indicator SDOs
 */
-func sqlAddBaseObject() (string, error) {
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
-
-	/*
-		INSERT INTO
-			s_base_object (
-				"object_id",
-				"spec_version",
-				"date_added",
-				"type",
-				"id",
-				"created_by_ref",
-				"created",
-				"modified",
-				"revoked",
-				"confidence",
-				"lang"
-			)
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", \"spec_version\", \"date_added\", ")
-	s.WriteString("\"type\", \"id\", \"created_by_ref\", \"created\", ")
-	s.WriteString("\"modified\", \"revoked\", \"confidence\", \"lang\") ")
-	s.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-
-	return s.String(), nil
+func indicatorProperties() string {
+	return baseProperties() + `
+	"name" TEXT,
+	"description" TEXT,
+	"pattern" TEXT NOT NULL,
+	"valid_from" TEXT NOT NULL,
+	"valid_until" TEXT
+	`
+	// kill_chain_phases
 }
 
 /*
@@ -77,86 +112,218 @@ func sqlAddIndicatorObject() (string, error) {
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblInd)
 	s.WriteString(" (")
-	s.WriteString("\"object_id\", \"name\", \"description\", ")
-	s.WriteString("\"pattern\", \"valid_from\", \"valid_until\") ")
+	s.WriteString("\"object_id\", ")
+	s.WriteString("\"name\", ")
+	s.WriteString("\"description\", ")
+	s.WriteString("\"pattern\", ")
+	s.WriteString("\"valid_from\", ")
+	s.WriteString("\"valid_until\") ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?)")
 
 	return s.String(), nil
 }
 
-/*
-sqlAddObjectLabel - This function will return an SQL statement that will add a
-label to the database for a given object.
-*/
-func sqlAddObjectLabel() (string, error) {
-	tblLabels := datastore.DB_TABLE_STIX_LABELS
-
-	/*
-		INSERT INTO
-			s_labels (
-				"object_id",
-				"label"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblLabels)
-	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
-
-	return s.String(), nil
+// intrusionSetProperties  - This method will return the properties for intrusion set SDOs
+func intrusionSetProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"first_seen" TEXT,
+	"last_seen" TEXT,
+	"resource_level" TEXT,
+	"primary_motivation" TEXT
+	`
+	// aliases
+	// goals
+	// secondary_motivations
 }
 
-/*
-sqlAddExternalReference - This function will return an SQL statement that will add
-an external reference to the database for a given object.
-*/
-func sqlAddExternalReference() (string, error) {
-	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
-
-	/*
-		INSERT INTO
-			s_external_references (
-				"object_id",
-				"source_name",
-				"description",
-				"url",
-				"external_id"
-			)
-			values (?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblExtRef)
-	s.WriteString(" (\"object_id\", \"source_name\", \"description\", \"url\", \"external_id\") values (?, ?, ?, ?, ?)")
-
-	return s.String(), nil
+// locationProperties - This method will return the properties for location SDOs
+func locationProperties() string {
+	return baseProperties() + `
+	"description" TEXT,
+	"latitude" TEXT,
+	"longitude" TEXT,
+	"precision" TEXT,
+	"region" TEXT,
+	"country" TEXT,
+	"administrative_area" TEXT,
+	"city" TEXT,
+	"street_address" TEXT,
+	"postal_code" TEXT
+	`
 }
 
+// malwareProperties  - This method will return the properties for malware SDOs
+func malwareProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
+	`
+	// kill_chain_phases
+}
+
+// noteProperties  - This method will return the properties for note SDOs
+func noteProperties() string {
+	return baseProperties() + `
+	"summary" TEXT,
+	"description" TEXT NOT NULL
+	`
+	// authors
+	// object_refs
+}
+
+// observedDataProperties  - This method will return the properties for observed data SDOs
+func observedDataProperties() string {
+	return baseProperties() + `
+	"first_observed" TEXT NOT NULL,
+	"last_observed" TEXT NOT NULL,
+	"number_observed" INTEGER NOT NULL,
+	"objects" TEXT NOT NULL
+	`
+}
+
+// opinionProperties - This method will return the properties for opinion SDOs
+func opinionProperties() string {
+	return baseProperties() + `
+	"description" TEXT,
+	"opinion" TEXT
+	`
+	// authors
+	// object_refs
+}
+
+// reportProperties  - This method will return the properties for report SDOs
+func reportProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"published" TEXT NOT NULL
+	`
+	// object_refs
+}
+
+// threatActorProperties  - This method will return the properties for threat actor SDOs
+func threatActorProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"sophistication" TEXT,
+	"resource_level" TEXT,
+	"primary_motivation" TEXT
+	`
+	// aliases
+	// roles
+	// goals
+	// secondary_motivations
+	// personal_motivations
+}
+
+// threatActorRolesProperties  - This method will return the properties for threat actor roles
+// Used by:
+//   threat actor
+func threatActorRolesProperties() string {
+	return baseProperties() + `
+	"roles" TEXT NOT NULL
+	`
+}
+
+// toolProperties  - This method will return the properties for tool SDOs
+func toolProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT,
+	"tool_version" TEXT
+	`
+	// kill_chain_phases
+}
+
+// vocabProperties  - This method will return the properties for attack patterns
+func vocabProperties() string {
+	return `
+	"row_id" INTEGER PRIMARY KEY,
+	"value" text NOT NULL
+	`
+}
+
+// vulnerabilityProperties  - This method will return the properties for vulnerability SDOs
+func vulnerabilityProperties() string {
+	return baseProperties() + `
+	"name" TEXT NOT NULL,
+	"description" TEXT
+	`
+}
+
+// ----------------------------------------------------------------------
+//
+// Begin Secondary STIX Tables
+//
+// ----------------------------------------------------------------------
+
+// commonAliasesProperties - This method will return the properties for aliases
+// Used by:
+//   campaign
+//   intrusion set
+//   threat actor
+func commonAliasesProperties() string {
+	return baseProperties() + `
+	"aliases" TEXT NOT NULL
+	`
+}
+
+// commonAuthorsProperties - This method will return the properties for common authors
+// Used by:
+//   note
+//   opinion
+func commonAuthorsProperties() string {
+	return baseProperties() + `
+	"authors" TEXT NOT NULL
+	`
+}
+
+// commonGoalsProperties  - This method will return the properties for goals
+// Used by:
+//   intrusion set
+//   threat actor
+func commonGoalsProperties() string {
+	return baseProperties() + `
+	"goals" TEXT NOT NULL
+	`
+}
+
+// commonHashesProperties - This method will return the properties for hashes
+// Used by:
+//
+//   external references
+// TODO need find a way to link this back to an actual external reference instance
+// maybe this should be called external references hashes.  Otherwise  how will you
+// know which object in the database it is tied to.
+func commonHashesProperties() string {
+	return baseProperties() + `
+	"hash" TEXT NOT NULL,
+	"value" TEXT NOT NULL
+	`
+}
+
+// ----------------------------------------------------------------------
+//
+// Kill Chain Phases Table
+//
+// ----------------------------------------------------------------------
+
 /*
-sqlAddObjectMarkingRef - This function will return an SQL statement that will add
-an object marking ref to the database for a given object.
+commonKillChainPhasesProperties - This method will return the properties for kill chain phases
+Used by:
+  attack pattern
+  indicator
+  malware
+  tool
 */
-func sqlAddObjectMarkingRef() (string, error) {
-	tblObjMarking := datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS
-
-	/*
-		INSERT INTO
-			s_object_marking_refs (
-				"object_id",
-				"object_marking_refs"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblObjMarking)
-	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
-
-	return s.String(), nil
+func commonKillChainPhasesProperties() string {
+	return baseProperties() + `
+	"kill_chain_name" TEXT NOT NULL,
+	"phase_name" TEXT NOT NULL
+	`
 }
 
 /*
@@ -179,7 +346,41 @@ func sqlAddKillChainPhase() (string, error) {
 	var s bytes.Buffer
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblKillChain)
-	s.WriteString(" (\"object_id\", \"kill_chain_name\", \"phase_name\") values (?, ?, ?)")
+	s.WriteString(" (")
+	s.WriteString("\"object_id\", ")
+	s.WriteString("\"kill_chain_name\", ")
+	s.WriteString("\"phase_name\") ")
+	s.WriteString("values (?, ?, ?)")
 
 	return s.String(), nil
+}
+
+// commonObjectRefsProperties - This method will return the properties for object refs
+// Used by:
+//   note
+//   opinion
+//   report
+func commonObjectRefsProperties() string {
+	return baseProperties() + `
+	"object_refs" TEXT NOT NULL
+	`
+}
+
+// commonPersonalMotivationsProperties - This method will return the properties for personal motivations
+// Used by:
+//   threat actor
+func commonPersonalMotivationsProperties() string {
+	return baseProperties() + `
+	"personal_motivations" TEXT NOT NULL
+	`
+}
+
+// commonSecondaryMotivationsProperties - This method will return the properties for secondary motivations
+// Used by:
+//   intrusion set
+//   threat actor
+func commonSecondaryMotivationsProperties() string {
+	return baseProperties() + `
+	"secondary_motivations" TEXT NOT NULL
+	`
 }
