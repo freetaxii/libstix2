@@ -11,23 +11,22 @@ import (
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
-	"log"
 )
 
 // ----------------------------------------------------------------------
 //
-// Private Methods
+// Private Functions
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddObjectToColleciton - This method will return an SQL statement that will
+sqlAddObjectToColleciton - This function will return an SQL statement that will
 add an object to a collection by adding an entry in the
 taxii_collection_data table. In this table we use the STIX ID not the Object ID
 because we need to make sure we include all versions of an object. So we need to
 store just the STIX ID
 */
-func (ds *Sqlite3DatastoreType) sqlAddObjectToCollection() (string, error) {
+func sqlAddObjectToCollection() (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
@@ -44,25 +43,21 @@ func (ds *Sqlite3DatastoreType) sqlAddObjectToCollection() (string, error) {
 	s.WriteString(tblColData)
 	s.WriteString(" (\"date_added\", \"collection_id\", \"stix_id\") values (?, ?, ?) ")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlGetObjectList - This method will return an SQL statement that will
+sqlGetObjectList - This function will return an SQL statement that will
 return a list of objects from a given collection. It will use the query struct to
 determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
-func (ds *Sqlite3DatastoreType) sqlGetObjectList(query datastore.QueryType) (string, error) {
+func sqlGetObjectList(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
-	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
+	whereQuery, err := sqlCollectionDataQueryOptions(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -108,15 +103,11 @@ func (ds *Sqlite3DatastoreType) sqlGetObjectList(query datastore.QueryType) (str
 	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlGetManifestData - This method will return an SQL statement that will
+sqlGetManifestData - This function will return an SQL statement that will
 return a list of objects from a given collection and all of the information
 needed to create the manifest resource. It will use the query struct to
 determine the requirements and parameters for the where clause of the SQL
@@ -132,11 +123,11 @@ If you do not use the GROUP BY filter when using the group_concat function then
 you get a single row returned with all of the versions listed in the
 corresponding modified and spec_version fields.
 */
-func (ds *Sqlite3DatastoreType) sqlGetManifestData(query datastore.QueryType) (string, error) {
+func sqlGetManifestData(query datastore.QueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
-	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
+	whereQuery, err := sqlCollectionDataQueryOptions(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -191,10 +182,6 @@ func (ds *Sqlite3DatastoreType) sqlGetManifestData(query datastore.QueryType) (s
 	s.WriteString(tblColData)
 	s.WriteString(".date_added")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
@@ -205,17 +192,17 @@ func (ds *Sqlite3DatastoreType) sqlGetManifestData(query datastore.QueryType) (s
 // ----------------------------------------------------------------------
 
 /*
-sqlCollectionDataQueryOptions - This method will take in a query struct and
+sqlCollectionDataQueryOptions - This function will take in a query struct and
 build an SQL where statement based on all of the provided query parameters.
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error) {
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error) {
 	var wherestmt bytes.Buffer
 	var err error
 
 	// ----------------------------------------------------------------------
 	// Lets first add the collection ID to the where clause.
 	// ----------------------------------------------------------------------
-	if err = ds.sqlCollectionDataWhereCollectionID(query.CollectionID, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereCollectionID(query.CollectionID, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -223,7 +210,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.Qu
 	// Check to see if an added after query was supplied. There can only be one
 	// added after option, it does not make sense to have multiple.
 	// ----------------------------------------------------------------------
-	if err = ds.sqlCollectionDataWhereAddedAfter(query.AddedAfter, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereAddedAfter(query.AddedAfter, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -232,7 +219,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.Qu
 	// If there is more than one option given we need to enclose the options in
 	// parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------
-	if err = ds.sqlCollectionDataWhereSTIXID(query.STIXID, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereSTIXID(query.STIXID, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -241,7 +228,7 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.Qu
 	// If there is more than one option given we need to enclose the options in
 	// parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------
-	if err = ds.sqlCollectionDataWhereSTIXType(query.STIXType, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereSTIXType(query.STIXType, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -250,22 +237,19 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.Qu
 	// If there is more than one option given, we need to enclose the options in
 	// parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------
-	if err = ds.sqlCollectionDataWhereSTIXVersion(query.STIXVersion, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereSTIXVersion(query.STIXVersion, &wherestmt); err != nil {
 		return "", err
-	}
-
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL WHERE statement:", wherestmt.String())
 	}
 
 	return wherestmt.String(), nil
 }
 
 /*
-sqlCollectionDataWhereCollectionID - This method will build the correct WHERE
-statement for a provided collection ID value.
+sqlCollectionDataWhereCollectionID - This function will build the correct WHERE
+statement for a provided collection ID value and is called from
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereCollectionID(id string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereCollectionID(id string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
@@ -284,11 +268,14 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereCollectionID(id string, b 
 }
 
 /*
-sqlCollectionDataWhereAddedAfter - This method will build the correct WHERE
-statement for a provided added after value. This method only supports a single
-added after value, since more than one does not make sense.
+sqlCollectionDataWhereAddedAfter - This function will build the correct WHERE
+statement for a provided added after value and is called from
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+
+This method only supports a single added after value, since more than one does
+not make sense.
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
@@ -313,10 +300,11 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereAddedAfter(date []string, 
 }
 
 /*
-sqlCollectionDataWhereSTIXID - This method will build the correct WHERE
-statement when one or more STIX IDs is provided.
+sqlCollectionDataWhereSTIXID - This function will build the correct WHERE
+statement when one or more STIX IDs is provided and is called from
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
@@ -331,22 +319,15 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 	*/
 	if id != nil {
 		if len(id) == 1 {
-			if ds.StrictSTIXIDs == true {
-				if !objects.IsValidID(id[0]) {
-					return errors.New("invalid SQL where statement, the provided object id is invalid")
-				}
+			if objects.IsValidSTIXID(id[0]) {
+				b.WriteString(" AND ")
+				b.WriteString(tblColData)
+				b.WriteString(`.stix_id = "`)
+				b.WriteString(id[0])
+				b.WriteString(`"`)
+			} else {
+				return errors.New("invalid SQL where statement, the provided object id is invalid")
 			}
-			if ds.StrictSTIXTypes == true {
-				if !objects.IsValidSTIXObject(id[0]) {
-					return errors.New("invalid SQL where statement, the provided object type is invalid")
-				}
-			}
-			b.WriteString(" AND ")
-			b.WriteString(tblColData)
-			b.WriteString(`.stix_id = "`)
-			b.WriteString(id[0])
-			b.WriteString(`"`)
-
 		} else if len(id) > 1 {
 			b.WriteString(" AND (")
 			addOR := false
@@ -358,21 +339,16 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid id
-				if ds.StrictSTIXIDs == true {
-					if !objects.IsValidID(v) {
-						return errors.New("invalid SQL where statement, the provided object id is invalid")
-					}
+
+				if objects.IsValidSTIXID(v) {
+					b.WriteString(tblColData)
+					b.WriteString(`.stix_id = "`)
+					b.WriteString(v)
+					b.WriteString(`"`)
+					addOR = true
+				} else {
+					return errors.New("invalid SQL where statement, the provided object id is invalid")
 				}
-				if ds.StrictSTIXTypes == true {
-					if !objects.IsValidSTIXObject(v) {
-						return errors.New("invalid SQL where statement, the provided object type is invalid")
-					}
-				}
-				b.WriteString(tblColData)
-				b.WriteString(`.stix_id = "`)
-				b.WriteString(v)
-				b.WriteString(`"`)
-				addOR = true
 			}
 			b.WriteString(")")
 		}
@@ -381,10 +357,11 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXID(id []string, b *byt
 }
 
 /*
-sqlCollectionDataWhereSTIXType - This method will build the correct WHERE
-statement when one or more STIX types is provided.
+sqlCollectionDataWhereSTIXType - This function will build the correct WHERE
+statement when one or more STIX types is provided and is called from
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
@@ -436,11 +413,13 @@ func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXType(t []string, b *by
 }
 
 /*
-sqlCollectionDataWhereSTIXVersion - This method will build the correct WHERE
-statement when one or more STIX versions is provided. It will return an error
-if multiple "all", "first", or "last" values is provided.
+sqlCollectionDataWhereSTIXVersion - This function will build the correct WHERE
+statement when one or more STIX versions is provided and is called from
+func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error).
+
+It will return an error if multiple "all", "first", or "last" values is provided.
 */
-func (ds *Sqlite3DatastoreType) sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 

@@ -87,7 +87,7 @@ func (ds *Sqlite3DatastoreType) GetObjectList(query datastore.QueryType) (*[]dat
 	var collectionRawData []datastore.CollectionRawDataType
 	var rangeCollectionRawData []datastore.CollectionRawDataType
 
-	sqlStmt, err := ds.sqlGetObjectList(query)
+	sqlStmt, err := sqlGetObjectList(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -152,7 +152,7 @@ func (ds *Sqlite3DatastoreType) GetManifestData(query datastore.QueryType) (*res
 	var first, last int
 	var errRange error
 
-	sqlStmt, err := ds.sqlGetManifestData(query)
+	sqlStmt, err := sqlGetManifestData(query)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -204,7 +204,7 @@ the database.
 func (ds *Sqlite3DatastoreType) addCollection(obj *resources.CollectionType) error {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	stmt1, _ := ds.sqlAddCollection()
+	stmt1, _ := sqlAddCollection()
 
 	_, err1 := ds.DB.Exec(stmt1,
 		dateAdded,
@@ -220,7 +220,7 @@ func (ds *Sqlite3DatastoreType) addCollection(obj *resources.CollectionType) err
 
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
-			stmt2, _ := ds.sqlAddCollectionMediaType()
+			stmt2, _ := sqlAddCollectionMediaType()
 
 			// TODO look up in cache
 			mediavalue := 0
@@ -246,7 +246,7 @@ object. So we need to store just the STIX ID.
 func (ds *Sqlite3DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	stmt, _ := ds.sqlAddObjectToCollection()
+	stmt, _ := sqlAddObjectToCollection()
 	_, err := ds.DB.Exec(stmt, dateAdded, obj.CollectionID, obj.STIXID)
 
 	if err != nil {
@@ -273,7 +273,7 @@ func (ds *Sqlite3DatastoreType) getCollections(whichCollections string) (*resour
 
 	allCollections := resources.InitCollections()
 
-	getAllCollectionsStmt, _ := ds.sqlGetAllCollections(whichCollections)
+	getAllCollectionsStmt, _ := sqlGetAllCollections(whichCollections)
 
 	// Query database for all the collections
 	rows, err := ds.DB.Query(getAllCollectionsStmt)

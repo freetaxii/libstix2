@@ -59,13 +59,13 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropertiesType) (int64, error) {
+func (ds *Sqlite3DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int64, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	objectID := ds.Index
 	ds.Index++
 
-	stmt1, _ := ds.sqlAddBaseObject()
+	stmt1, _ := sqlAddBaseObject()
 
 	_, err1 := ds.DB.Exec(stmt1,
 		objectID,
@@ -89,7 +89,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	// ----------------------------------------------------------------------
 	if obj.Labels != nil {
 		for _, label := range obj.Labels {
-			stmt2, _ := ds.sqlAddObjectLabel()
+			stmt2, _ := sqlAddObjectLabel()
 			_, err2 := ds.DB.Exec(stmt2, objectID, label)
 
 			if err2 != nil {
@@ -103,7 +103,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	// ----------------------------------------------------------------------
 	if obj.ExternalReferences != nil {
 		for _, reference := range obj.ExternalReferences {
-			stmt3, _ := ds.sqlAddExternalReference()
+			stmt3, _ := sqlAddExternalReference()
 
 			_, err3 := ds.DB.Exec(stmt3,
 				objectID,
@@ -123,7 +123,7 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 	// ----------------------------------------------------------------------
 	if obj.ObjectMarkingRefs != nil {
 		for _, marking := range obj.ObjectMarkingRefs {
-			stmt4, _ := ds.sqlAddObjectMarkingRef()
+			stmt4, _ := sqlAddObjectMarkingRef()
 			_, err4 := ds.DB.Exec(stmt4, objectID, marking)
 
 			if err4 != nil {
@@ -136,30 +136,16 @@ func (ds *Sqlite3DatastoreType) addBaseObject(obj properties.CommonObjectPropert
 }
 
 /*
-addKillChainPhases - This method will add a kill chain phase for a given object
-to the database.
+addIndicator - This method will add an indicator to the database.
 */
-func (ds *Sqlite3DatastoreType) addKillChainPhases(objectID int64, obj properties.KillChainPhasesPropertyType) error {
-	for _, v := range obj.KillChainPhases {
-		stmt, _ := ds.sqlAddKillChainPhase()
-		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
-
-		if err != nil {
-			return fmt.Errorf("database execution error inserting kill chain phase: ", err)
-		}
-	}
-	return nil
-}
-
-// addIndicator
 func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
-	objectID, err := ds.addBaseObject(obj.CommonObjectPropertiesType)
+	objectID, err := ds.addBaseObject(&obj.CommonObjectPropertiesType)
 	if err != nil {
-		return fmt.Errorf("database error inserting base object: ", err)
+		return err
 	}
 
-	stmt, _ := ds.sqlAddIndicatorObject()
+	stmt, _ := sqlAddIndicatorObject()
 	_, err1 := ds.DB.Exec(stmt,
 		objectID,
 		obj.Name,
@@ -174,10 +160,26 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 	}
 
 	if obj.KillChainPhases != nil {
-		err2 := ds.addKillChainPhases(objectID, obj.KillChainPhasesPropertyType)
+		err2 := ds.addKillChainPhases(objectID, &obj.KillChainPhasesPropertyType)
 
 		if err2 != nil {
 			return err2
+		}
+	}
+	return nil
+}
+
+/*
+addKillChainPhases - This method will add a kill chain phase for a given object
+to the database.
+*/
+func (ds *Sqlite3DatastoreType) addKillChainPhases(objectID int64, obj *properties.KillChainPhasesPropertyType) error {
+	for _, v := range obj.KillChainPhases {
+		stmt, _ := sqlAddKillChainPhase()
+		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
+
+		if err != nil {
+			return fmt.Errorf("database execution error inserting kill chain phase: ", err)
 		}
 	}
 	return nil

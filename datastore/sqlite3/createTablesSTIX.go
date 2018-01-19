@@ -11,7 +11,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Public Methods
+//
 // ----------------------------------------------------------------------
 
 // CreateAllSTIXTables - This method will create all of the tables needed to store
@@ -49,7 +51,9 @@ func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
 }
 
 // ----------------------------------------------------------------------
+//
 // Private Methods
+//
 // ----------------------------------------------------------------------
 
 func (ds *Sqlite3DatastoreType) createSTIXTable(name, properties string) {

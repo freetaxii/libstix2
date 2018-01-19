@@ -8,20 +8,19 @@ package sqlite3
 import (
 	"bytes"
 	"github.com/freetaxii/libstix2/datastore"
-	"log"
 )
 
 // ----------------------------------------------------------------------
 //
-// Private Methods
+// Private Function
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddBaseObject - This method will return an SQL statement that will add the
+sqlAddBaseObject - This function will return an SQL statement that will add the
 base object properties to the database.
 */
-func (ds *Sqlite3DatastoreType) sqlAddBaseObject() (string, error) {
+func sqlAddBaseObject() (string, error) {
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
 	/*
@@ -51,18 +50,14 @@ func (ds *Sqlite3DatastoreType) sqlAddBaseObject() (string, error) {
 	s.WriteString("\"modified\", \"revoked\", \"confidence\", \"lang\") ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlAddIndicatorObject - This method will return an SQL statement that will add
+sqlAddIndicatorObject - This function will return an SQL statement that will add
 an indicator to the database.
 */
-func (ds *Sqlite3DatastoreType) sqlAddIndicatorObject() (string, error) {
+func sqlAddIndicatorObject() (string, error) {
 	tblInd := datastore.DB_TABLE_STIX_INDICATOR
 
 	/*
@@ -86,18 +81,14 @@ func (ds *Sqlite3DatastoreType) sqlAddIndicatorObject() (string, error) {
 	s.WriteString("\"pattern\", \"valid_from\", \"valid_until\") ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?)")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlAddObjectLabel - This method will return an SQL statement that will add a
+sqlAddObjectLabel - This function will return an SQL statement that will add a
 label to the database for a given object.
 */
-func (ds *Sqlite3DatastoreType) sqlAddObjectLabel() (string, error) {
+func sqlAddObjectLabel() (string, error) {
 	tblLabels := datastore.DB_TABLE_STIX_LABELS
 
 	/*
@@ -114,18 +105,14 @@ func (ds *Sqlite3DatastoreType) sqlAddObjectLabel() (string, error) {
 	s.WriteString(tblLabels)
 	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlAddExternalReference - This method will return an SQL statement that will add
+sqlAddExternalReference - This function will return an SQL statement that will add
 an external reference to the database for a given object.
 */
-func (ds *Sqlite3DatastoreType) sqlAddExternalReference() (string, error) {
+func sqlAddExternalReference() (string, error) {
 	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
 
 	/*
@@ -145,18 +132,14 @@ func (ds *Sqlite3DatastoreType) sqlAddExternalReference() (string, error) {
 	s.WriteString(tblExtRef)
 	s.WriteString(" (\"object_id\", \"source_name\", \"description\", \"url\", \"external_id\") values (?, ?, ?, ?, ?)")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlAddObjectMarkingRef - This method will return an SQL statement that will add
+sqlAddObjectMarkingRef - This function will return an SQL statement that will add
 an object marking ref to the database for a given object.
 */
-func (ds *Sqlite3DatastoreType) sqlAddObjectMarkingRef() (string, error) {
+func sqlAddObjectMarkingRef() (string, error) {
 	tblObjMarking := datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS
 
 	/*
@@ -173,18 +156,14 @@ func (ds *Sqlite3DatastoreType) sqlAddObjectMarkingRef() (string, error) {
 	s.WriteString(tblObjMarking)
 	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
-
 	return s.String(), nil
 }
 
 /*
-sqlAddKillChainPhase - This method will return an SQL statement that will add a
+sqlAddKillChainPhase - This function will return an SQL statement that will add a
 kill chain phase to the database for a given object.
 */
-func (ds *Sqlite3DatastoreType) sqlAddKillChainPhase() (string, error) {
+func sqlAddKillChainPhase() (string, error) {
 	tblKillChain := datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES
 
 	/*
@@ -201,10 +180,6 @@ func (ds *Sqlite3DatastoreType) sqlAddKillChainPhase() (string, error) {
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblKillChain)
 	s.WriteString(" (\"object_id\", \"kill_chain_name\", \"phase_name\") values (?, ?, ?)")
-
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Returning SQL statement:", s.String())
-	}
 
 	return s.String(), nil
 }
