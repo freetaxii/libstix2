@@ -17,8 +17,23 @@ import (
 //
 // ----------------------------------------------------------------------
 
-// CreateAllSTIXTables - This method will create all of the tables needed to store
-// STIX content in the database.
+/*
+CreateAllTAXIITables - This method will create all of the tables needed to store
+STIX content in the database.
+*/
+func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
+	ds.createTAXIITable(datastore.DB_TABLE_TAXII_MEDIA_TYPES, mediaTypeProperties())
+	ds.createTAXIIIndexes(datastore.DB_TABLE_TAXII_COLLECTION_DATA)
+	ds.insertMediaTypes(datastore.DB_TABLE_TAXII_MEDIA_TYPES)
+}
+
+/*
+CreateAllSTIXTables - This method will create all of the tables needed to store
+STIX content in the database.
+*/
 func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
@@ -51,8 +66,10 @@ func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, commonPersonalMotivationsProperties())
 }
 
-// CreateAllVocabTables - This method will create all of the tables needed to store
-// STIX content in the database.
+/*
+CreateAllVocabTables - This method will create all of the tables needed to store
+STIX content in the database.
+*/
 func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
@@ -67,8 +84,10 @@ func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_TOOL_LABEL, vocabProperties())
 }
 
-// PopulateAllVocabTables - This method will insert all of the vocabulary data
-// into the right database tables.
+/*
+PopulateAllVocabTables - This method will insert all of the vocabulary data
+into the right database tables.
+*/
 func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
@@ -88,6 +107,42 @@ func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
 // Private Methods
 //
 // ----------------------------------------------------------------------
+
+func (ds *Sqlite3DatastoreType) createTAXIITable(name, properties string) {
+	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
+	_, err := ds.DB.Exec(stmt)
+
+	if err != nil {
+		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+	}
+}
+
+func (ds *Sqlite3DatastoreType) createTAXIIIndexes(name string) {
+	var stmt string
+
+	if name == datastore.DB_TABLE_TAXII_COLLECTION_DATA {
+		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("collection_id" COLLATE BINARY ASC, "stix_id" COLLATE BINARY ASC)`
+	}
+
+	if stmt != "" {
+		_, err := ds.DB.Exec(stmt)
+
+		if err != nil {
+			log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+		}
+	}
+}
+
+func (ds *Sqlite3DatastoreType) insertMediaTypes(name string) {
+	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
+
+	var err error
+	_, err = ds.DB.Exec(stmt, "application/vnd.oasis.stix+json")
+
+	if err != nil {
+		log.Println("ERROR: The media type item could not be inserted in to the", name, "table")
+	}
+}
 
 func (ds *Sqlite3DatastoreType) createSTIXTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`

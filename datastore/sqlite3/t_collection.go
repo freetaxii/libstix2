@@ -7,14 +7,58 @@ package sqlite3
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
 //
-// Private Functions
+// Collection Table Private Functions and Methods
 //
 // ----------------------------------------------------------------------
+
+/*
+collectionProperties - This function will return the properties that make up the
+collection table.
+
+date_added  = The date that this collection was added to the system
+enabled     = Is this collection currently enabled
+hidden      = Is this collection currently hidden for this directory listing
+id 		    = The collection ID, a UUIDv4 value
+title 	    = The title of this collection
+description = A long description about this collection
+can_read    = A boolean flag that indicates if one can read from this collection
+can_write   = A boolean flag that indicates if one can write to this collection
+*/
+func collectionProperties() string {
+	return `
+	"row_id" INTEGER PRIMARY KEY,
+	"date_added" TEXT NOT NULL,
+	"enabled" INTEGER(1,0) NOT NULL DEFAULT 1,
+	"hidden" INTEGER(1,0) NOT NULL DEFAULT 0,
+	"id" TEXT NOT NULL,
+	"title" TEXT NOT NULL,
+	"description" TEXT,
+	"can_read" INTEGER(1,0) NOT NULL DEFAULT 0,
+	"can_write" INTEGER(1,0) NOT NULL DEFAULT 0
+	`
+}
+
+/*
+collectionMediaTypeProperties  - This function will return the properties that
+make up the collection media type table
+
+collection_id = The collection ID, a UUIDv4 value
+media_type_id = The media types supported on this collection
+*/
+func collectionMediaTypeProperties() string {
+	return `
+	"row_id" INTEGER PRIMARY KEY,
+	"collection_id" TEXT NOT NULL,
+	"media_type_id" INTEGER NOT NULL
+	`
+}
 
 /*
 sqlAddCollection - This function will return an SQL statement that will insert
@@ -39,7 +83,14 @@ func sqlAddCollection() (string, error) {
 	var s bytes.Buffer
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblCol)
-	s.WriteString(" (\"date_added\", \"id\", \"title\", \"description\", \"can_read\", \"can_write\") values (?, ?, ?, ?, ?, ?) ")
+	s.WriteString(" (")
+	s.WriteString("\"date_added\", ")
+	s.WriteString("\"id\", ")
+	s.WriteString("\"title\", ")
+	s.WriteString("\"description\", ")
+	s.WriteString("\"can_read\", ")
+	s.WriteString("\"can_write\") ")
+	s.WriteString("values (?, ?, ?, ?, ?, ?)")
 
 	return s.String(), nil
 }
@@ -63,7 +114,10 @@ func sqlAddCollectionMediaType() (string, error) {
 	var s bytes.Buffer
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblColMedia)
-	s.WriteString(" (\"collection_id\", \"media_type_id\") values (?, ?) ")
+	s.WriteString(" (")
+	s.WriteString("\"collection_id\", ")
+	s.WriteString("\"media_type_id\") ")
+	s.WriteString("values (?, ?)")
 
 	return s.String(), nil
 }
