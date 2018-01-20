@@ -7,6 +7,7 @@ package sqlite3
 
 import (
 	"github.com/freetaxii/libstix2/datastore"
+	"github.com/freetaxii/libstix2/vocabs"
 	"log"
 )
 

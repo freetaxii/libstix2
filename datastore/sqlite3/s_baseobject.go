@@ -7,16 +7,16 @@ package sqlite3
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
+	"github.com/freetaxii/libstix2/defs"
+	"github.com/freetaxii/libstix2/objects/properties"
+	"time"
 )
 
 // ----------------------------------------------------------------------
 //
-// Private Function
-// Each of these functions either returns a list of fields that are used for
-// creating a database tables or the SQL statements for interacting with that
-// table. They are all put here, since these are most likely to be database
-// dependent, and thus they can easily all be updated in one place.
+// Base Object Table Private Functions and Methods
 //
 // ----------------------------------------------------------------------
 
@@ -30,12 +30,6 @@ func baseProperties() string {
 	"row_id" INTEGER PRIMARY KEY,
  	"object_id" INTEGER NOT NULL,`
 }
-
-// ----------------------------------------------------------------------
-//
-// Base Object Table
-//
-// ----------------------------------------------------------------------
 
 /*
 baseObjectProperties - This method will return the the common properties
@@ -104,6 +98,87 @@ func sqlAddBaseObject() (string, error) {
 	return s.String(), nil
 }
 
+/*
+addBaseObject - This method will add the base properties of an object to the
+database and return an integer that tracks the record number for parent child
+relationships.
+*/
+func (ds *Sqlite3DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int64, error) {
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	objectID := ds.Index
+	ds.Index++
+
+	stmt1, _ := sqlAddBaseObject()
+
+	_, err1 := ds.DB.Exec(stmt1,
+		objectID,
+		obj.SpecVersion,
+		dateAdded,
+		obj.ObjectType,
+		obj.ID,
+		obj.CreatedByRef,
+		obj.Created,
+		obj.Modified,
+		obj.Revoked,
+		obj.Confidence,
+		obj.Lang)
+
+	if err1 != nil {
+		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
+	}
+
+	// ----------------------------------------------------------------------
+	// Add Labels
+	// ----------------------------------------------------------------------
+	if obj.Labels != nil {
+		for _, label := range obj.Labels {
+			stmt2, _ := sqlAddLabel()
+			_, err2 := ds.DB.Exec(stmt2, objectID, label)
+
+			if err2 != nil {
+				return 0, fmt.Errorf("database execution error inserting object label: ", err2)
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
+	if obj.ExternalReferences != nil {
+		for _, reference := range obj.ExternalReferences {
+			stmt3, _ := sqlAddExternalReference()
+
+			_, err3 := ds.DB.Exec(stmt3,
+				objectID,
+				reference.SourceName,
+				reference.Description,
+				reference.URL,
+				reference.ExternalID)
+
+			if err3 != nil {
+				return 0, fmt.Errorf("database execution error inserting external reference: ", err3)
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
+	if obj.ObjectMarkingRefs != nil {
+		for _, marking := range obj.ObjectMarkingRefs {
+			stmt4, _ := sqlAddObjectMarkingRef()
+			_, err4 := ds.DB.Exec(stmt4, objectID, marking)
+
+			if err4 != nil {
+				return 0, fmt.Errorf("database execution error inserting object marking ref: ", err4)
+			}
+		}
+	}
+
+	return objectID, nil
+}
+
 // ----------------------------------------------------------------------
 //
 // Labels Table
@@ -121,10 +196,10 @@ func commonLabelsProperties() string {
 }
 
 /*
-sqlAddObjectLabel - This function will return an SQL statement that will add a
+sqlAddLabel - This function will return an SQL statement that will add a
 label to the database for a given object.
 */
-func sqlAddObjectLabel() (string, error) {
+func sqlAddLabel() (string, error) {
 	tblLabels := datastore.DB_TABLE_STIX_LABELS
 
 	/*

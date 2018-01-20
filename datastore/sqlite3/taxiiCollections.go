@@ -65,7 +65,7 @@ func (ds *Sqlite3DatastoreType) GetBundle(query datastore.QueryType) (*objects.B
 
 	for _, v := range *rangeCollectionRawData {
 		// Only get the objects that are part of the response
-		obj, err := ds.GetObject(v.STIXID, v.STIXVersion)
+		obj, err := ds.GetSTIXObject(v.STIXID, v.STIXVersion)
 
 		if err != nil {
 			return nil, nil, err

@@ -7,12 +7,14 @@ package sqlite3
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+	"strings"
 )
 
 // ----------------------------------------------------------------------
@@ -36,10 +38,14 @@ type Sqlite3DatastoreType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Create Functions
+//
 // ----------------------------------------------------------------------
 
-// New - This function will return a Sqlite3DatastoreType.
+/*
+New - This function will return a Sqlite3DatastoreType.
+*/
 func New(filename string) Sqlite3DatastoreType {
 	var ds Sqlite3DatastoreType
 	ds.Filename = filename
@@ -60,11 +66,49 @@ func New(filename string) Sqlite3DatastoreType {
 	return ds
 }
 
+/*
+Close - This method will close the database connection
+*/
+func (ds *Sqlite3DatastoreType) Close() error {
+	err := ds.DB.Close()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // ----------------------------------------------------------------------
 //
 // Public Methods
 //
 // ----------------------------------------------------------------------
+
+/*
+GetSTIXObject - This method will take in a STIX ID and version timestamp (the
+modified timestamp from a STIX object) and return the STIX object.
+*/
+func (ds *Sqlite3DatastoreType) GetSTIXObject(stixid, version string) (interface{}, error) {
+	idparts := strings.Split(stixid, "--")
+
+	if ds.StrictSTIXIDs == true {
+		if !objects.IsValidID(stixid) {
+			return nil, errors.New("get object error, invalid STIX ID")
+		}
+	}
+
+	if ds.StrictSTIXTypes == true {
+		if !objects.IsValidSTIXObject(stixid) {
+			return nil, errors.New("get object error, invalid STIX type")
+		}
+	}
+
+	switch idparts[0] {
+	case "indicator":
+		return ds.getIndicator(stixid, version)
+	}
+
+	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
+}
 
 func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
 	switch o := obj.(type) {
@@ -78,15 +122,6 @@ func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
 		log.Println("ERROR: Does not match any known types ", o)
 	}
 
-}
-
-// Close - This method will close the database connection
-func (ds *Sqlite3DatastoreType) Close() error {
-	err := ds.DB.Close()
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // ----------------------------------------------------------------------
