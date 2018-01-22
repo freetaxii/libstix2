@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Threat Actor Table
+// Private Functions - Threat Actor Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

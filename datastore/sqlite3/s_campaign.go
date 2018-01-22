@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Campaign Table
+// Private Functions - Campaign Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

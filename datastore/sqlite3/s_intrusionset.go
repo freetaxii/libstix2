@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Intrusion Set Table
+// Private Functions - Intrusion Set Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

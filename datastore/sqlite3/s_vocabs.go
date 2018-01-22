@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Vocab Tables
+// Private Functions - Vocab Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

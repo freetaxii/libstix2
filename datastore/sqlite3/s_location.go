@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Location Table
+// Private Functions - Location Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

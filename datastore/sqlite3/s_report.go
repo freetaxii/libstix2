@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Report Table
+// Private Functions - Report Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

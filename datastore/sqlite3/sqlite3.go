@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
 	_ "github.com/mattn/go-sqlite3"
@@ -22,13 +23,13 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-Sqlite3DatastoreType defines all of the properties and information associated
+DatastoreType defines all of the properties and information associated
 with connecting and talking to the database.
 
 When StrictSTIXIDs = false, then the system will allow vanity STIX IDs like:
 indicator--1, indicator--2
 */
-type Sqlite3DatastoreType struct {
+type DatastoreType struct {
 	Filename        string
 	DB              *sql.DB
 	LogLevel        int
@@ -44,10 +45,10 @@ type Sqlite3DatastoreType struct {
 // ----------------------------------------------------------------------
 
 /*
-New - This function will return a Sqlite3DatastoreType.
+New - This function will return a DatastoreType.
 */
-func New(filename string) Sqlite3DatastoreType {
-	var ds Sqlite3DatastoreType
+func New(filename string) DatastoreType {
+	var ds DatastoreType
 	ds.Filename = filename
 	ds.LogLevel = 5
 	ds.StrictSTIXIDs = false
@@ -69,7 +70,7 @@ func New(filename string) Sqlite3DatastoreType {
 /*
 Close - This method will close the database connection
 */
-func (ds *Sqlite3DatastoreType) Close() error {
+func (ds *DatastoreType) Close() error {
 	err := ds.DB.Close()
 	if err != nil {
 		return err
@@ -85,20 +86,21 @@ func (ds *Sqlite3DatastoreType) Close() error {
 
 /*
 GetSTIXObject - This method will take in a STIX ID and version timestamp (the
-modified timestamp from a STIX object) and return the STIX object.
+modified timestamp from a STIX object) and return the matching STIX object.
 */
-func (ds *Sqlite3DatastoreType) GetSTIXObject(stixid, version string) (interface{}, error) {
+func (ds *DatastoreType) GetSTIXObject(stixid, version string) (interface{}, error) {
+
 	idparts := strings.Split(stixid, "--")
 
 	if ds.StrictSTIXIDs == true {
 		if !objects.IsValidID(stixid) {
-			return nil, errors.New("get object error, invalid STIX ID")
+			return nil, errors.New("get STIX object error, invalid STIX ID")
 		}
 	}
 
 	if ds.StrictSTIXTypes == true {
 		if !objects.IsValidSTIXObject(stixid) {
-			return nil, errors.New("get object error, invalid STIX type")
+			return nil, errors.New("get STIX object error, invalid STIX type")
 		}
 	}
 
@@ -110,7 +112,7 @@ func (ds *Sqlite3DatastoreType) GetSTIXObject(stixid, version string) (interface
 	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
 }
 
-func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
+func (ds *DatastoreType) Add(obj interface{}) {
 	switch o := obj.(type) {
 	case *resources.CollectionType:
 		ds.addCollection(o)
@@ -126,12 +128,193 @@ func (ds *Sqlite3DatastoreType) Add(obj interface{}) {
 
 // ----------------------------------------------------------------------
 //
+// Collection Table Public Methods
+//
+// ----------------------------------------------------------------------
+
+/*
+GetAllCollections - This method will return all collections, even those that
+are disabled and hidden. This is primarily used for administration tools that
+need to see all collections.
+*/
+func (ds *DatastoreType) GetAllCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("all")
+}
+
+/*
+GetAllEnabledCollections - This method will return only enabled collections,
+even those that are hidden. This is used for setup up the HTTP MUX routers.
+*/
+func (ds *DatastoreType) GetAllEnabledCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("allEnabled")
+}
+
+/*
+GetCollections - This method will return just those collections that are both
+enabled and visible. This is primarily used for client that pull a collections
+resource.
+*/
+func (ds *DatastoreType) GetCollections() (*resources.CollectionsType, error) {
+	return ds.getCollections("enabledVisible")
+}
+
+// ----------------------------------------------------------------------
+//
+// Collection Data Table Public Methods
+//
+// ----------------------------------------------------------------------
+
+/*
+GetBundle - This method will take in a query struct with range
+parameters for a collection and will return a STIX Bundle that contains all
+of the STIX objects that are in that collection that meet those query or range
+parameters.
+*/
+func (ds *DatastoreType) GetBundle(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
+
+	stixBundle := objects.InitBundle()
+
+	rangeCollectionRawData, metaData, err := ds.GetObjectList(query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	for _, v := range *rangeCollectionRawData {
+		// Only get the objects that are part of the response
+		obj, err := ds.GetSTIXObject(v.STIXID, v.STIXVersion)
+
+		if err != nil {
+			return nil, nil, err
+		}
+		stixBundle.AddObject(obj)
+	}
+
+	return stixBundle, metaData, nil
+}
+
+/*
+GetObjectList - This method will take in a query struct with range
+parameters for a collection and will return a datastore collection raw data type
+that contains all of the STIX IDs and their associated meta data that are in
+that collection that meet those query or range parameters.
+*/
+func (ds *DatastoreType) GetObjectList(query datastore.QueryType) (*[]datastore.CollectionRawDataType, *datastore.QueryReturnDataType, error) {
+	var metaData datastore.QueryReturnDataType
+	var collectionRawData []datastore.CollectionRawDataType
+	var rangeCollectionRawData []datastore.CollectionRawDataType
+
+	sqlStmt, err := sqlGetObjectList(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+	if err != nil {
+		return nil, nil, fmt.Errorf("database execution error querying collection content: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var dateAdded, stixid, modified, specVersion string
+		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			return nil, nil, fmt.Errorf("database scan error: ", err)
+		}
+		var rawData datastore.CollectionRawDataType
+		rawData.STIXID = stixid
+		rawData.DateAdded = dateAdded
+		rawData.STIXVersion = modified
+		rawData.SpecVersion = specVersion
+
+		collectionRawData = append(collectionRawData, rawData)
+	}
+
+	metaData.Size = len(collectionRawData)
+
+	// If no records are returned, then return an error before processing anything else.
+	if metaData.Size == 0 {
+		return nil, nil, errors.New("no records returned")
+	}
+
+	first, last, errRange := ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+
+	if errRange != nil {
+		return nil, nil, errRange
+	}
+
+	// Get a new slice based on the range of records
+	rangeCollectionRawData = collectionRawData[first:last]
+	metaData.DateAddedFirst = rangeCollectionRawData[0].DateAdded
+	metaData.DateAddedLast = rangeCollectionRawData[len(rangeCollectionRawData)-1].DateAdded
+	metaData.RangeBegin = first
+	metaData.RangeEnd = last - 1
+
+	// metaData is already a pointer
+	return &rangeCollectionRawData, &metaData, nil
+}
+
+/*
+GetManifestData - This method will take in query struct with range
+parameters for a collection and will return a TAXII manifest that contains all
+of the records that match the query and range parameters.
+*/
+func (ds *DatastoreType) GetManifestData(query datastore.QueryType) (*resources.ManifestType, *datastore.QueryReturnDataType, error) {
+	manifest := resources.InitManifest()
+	rangeManifest := resources.InitManifest()
+	var metaData datastore.QueryReturnDataType
+	var first, last int
+	var errRange error
+
+	sqlStmt, err := sqlGetManifestData(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+	if err != nil {
+		return nil, nil, fmt.Errorf("database execution error querying collection content: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var dateAdded, stixid, modified, specVersion string
+		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			return nil, nil, fmt.Errorf("database scan error: ", err)
+		}
+		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+	}
+
+	metaData.Size = len(manifest.Objects)
+
+	first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
+
+	if errRange != nil {
+		return nil, nil, errRange
+	}
+
+	// Get a new slice based on the range of records
+	rangeManifest.Objects = manifest.Objects[first:last]
+	metaData.DateAddedFirst = rangeManifest.Objects[0].DateAdded
+	metaData.DateAddedLast = rangeManifest.Objects[len(rangeManifest.Objects)-1].DateAdded
+
+	return rangeManifest, &metaData, nil
+}
+
+// ----------------------------------------------------------------------
+//
 // Private Methods
 //
 // ----------------------------------------------------------------------
 
 // connect - This method is used to connect to an sqlite3 database
-func (ds *Sqlite3DatastoreType) connect() error {
+func (ds *DatastoreType) connect() error {
 	var err error
 
 	if ds.Filename == "" {
@@ -155,7 +338,7 @@ func (ds *Sqlite3DatastoreType) connect() error {
 }
 
 // verifyFileExists - This method will check to make sure the file is found on the filesystem
-func (ds *Sqlite3DatastoreType) verifyFileExists() error {
+func (ds *DatastoreType) verifyFileExists() error {
 	if _, err := os.Stat(ds.Filename); os.IsNotExist(err) {
 		w, err2 := os.Create(ds.Filename)
 		w.Close()

@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Opinion Table
+// Private Functions - Opinion Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

@@ -21,7 +21,7 @@ import (
 CreateAllTAXIITables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
+func (ds *DatastoreType) CreateAllTAXIITables() {
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
@@ -34,7 +34,7 @@ func (ds *Sqlite3DatastoreType) CreateAllTAXIITables() {
 CreateAllSTIXTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
+func (ds *DatastoreType) CreateAllSTIXTables() {
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, campaignProperties())
@@ -70,7 +70,7 @@ func (ds *Sqlite3DatastoreType) CreateAllSTIXTables() {
 CreateAllVocabTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
+func (ds *DatastoreType) CreateAllVocabTables() {
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
@@ -88,7 +88,7 @@ func (ds *Sqlite3DatastoreType) CreateAllVocabTables() {
 PopulateAllVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
-func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
+func (ds *DatastoreType) PopulateAllVocabTables() {
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
@@ -108,7 +108,7 @@ func (ds *Sqlite3DatastoreType) PopulateAllVocabTables() {
 //
 // ----------------------------------------------------------------------
 
-func (ds *Sqlite3DatastoreType) createTAXIITable(name, properties string) {
+func (ds *DatastoreType) createTAXIITable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -117,7 +117,7 @@ func (ds *Sqlite3DatastoreType) createTAXIITable(name, properties string) {
 	}
 }
 
-func (ds *Sqlite3DatastoreType) createTAXIIIndexes(name string) {
+func (ds *DatastoreType) createTAXIIIndexes(name string) {
 	var stmt string
 
 	if name == datastore.DB_TABLE_TAXII_COLLECTION_DATA {
@@ -133,7 +133,7 @@ func (ds *Sqlite3DatastoreType) createTAXIIIndexes(name string) {
 	}
 }
 
-func (ds *Sqlite3DatastoreType) insertMediaTypes(name string) {
+func (ds *DatastoreType) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
 	var err error
@@ -144,7 +144,7 @@ func (ds *Sqlite3DatastoreType) insertMediaTypes(name string) {
 	}
 }
 
-func (ds *Sqlite3DatastoreType) createSTIXTable(name, properties string) {
+func (ds *DatastoreType) createSTIXTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -154,7 +154,7 @@ func (ds *Sqlite3DatastoreType) createSTIXTable(name, properties string) {
 	ds.createSTIXIndexes(name)
 }
 
-func (ds *Sqlite3DatastoreType) createSTIXIndexes(name string) {
+func (ds *DatastoreType) createSTIXIndexes(name string) {
 	var stmt string
 
 	if name == datastore.DB_TABLE_STIX_BASE_OBJECT {
@@ -170,7 +170,7 @@ func (ds *Sqlite3DatastoreType) createSTIXIndexes(name string) {
 	}
 }
 
-func (ds *Sqlite3DatastoreType) createVocabTable(name, properties string) {
+func (ds *DatastoreType) createVocabTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -180,7 +180,7 @@ func (ds *Sqlite3DatastoreType) createVocabTable(name, properties string) {
 }
 
 // InsertVocabData - This method will add a vocabulary item to its table
-func (ds *Sqlite3DatastoreType) insertVocabData(name string, data []string) {
+func (ds *DatastoreType) insertVocabData(name string, data []string) {
 	var stmt = `INSERT INTO "` + name + `" (value) values (?)`
 
 	var err error

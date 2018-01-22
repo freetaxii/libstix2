@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Course of Action Table
+// Private Functions - Course of Action Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

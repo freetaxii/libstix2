@@ -7,6 +7,8 @@ package sqlite3
 
 import (
 	"bytes"
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
@@ -16,7 +18,8 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Base Object Table Private Functions and Methods
+// Private Functions - Base Object Tables
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 
@@ -51,6 +54,39 @@ func baseObjectProperties() string {
 	// labels
 	// external_references
 	// object_marking_refs
+}
+
+/*
+commonLabelsProperties - This method will return the properties for labels
+Used by: All SDOs and SROs
+*/
+func commonLabelsProperties() string {
+	return baseProperties() + `
+	"label" TEXT NOT NULL
+	`
+}
+
+/*
+commonExternalReferencesProperties - This method will return the properties for external references
+Used by: All SDOs and SROs
+*/
+func commonExternalReferencesProperties() string {
+	return baseProperties() + `
+	"source_name" TEXT NOT NULL,
+	"description" TEXT,
+	"url" TEXT,
+	"external_id" TEXT
+	`
+}
+
+/*
+commonObjectMarkingRefsProperties - This method will return the properties for object markings
+Used by: All SDOs and SROs
+*/
+func commonObjectMarkingRefsProperties() string {
+	return baseProperties() + `
+	"object_marking_refs" TEXT NOT NULL
+	`
 }
 
 /*
@@ -99,103 +135,6 @@ func sqlAddBaseObject() (string, error) {
 }
 
 /*
-addBaseObject - This method will add the base properties of an object to the
-database and return an integer that tracks the record number for parent child
-relationships.
-*/
-func (ds *Sqlite3DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int64, error) {
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
-
-	objectID := ds.Index
-	ds.Index++
-
-	stmt1, _ := sqlAddBaseObject()
-
-	_, err1 := ds.DB.Exec(stmt1,
-		objectID,
-		obj.SpecVersion,
-		dateAdded,
-		obj.ObjectType,
-		obj.ID,
-		obj.CreatedByRef,
-		obj.Created,
-		obj.Modified,
-		obj.Revoked,
-		obj.Confidence,
-		obj.Lang)
-
-	if err1 != nil {
-		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
-	}
-
-	// ----------------------------------------------------------------------
-	// Add Labels
-	// ----------------------------------------------------------------------
-	if obj.Labels != nil {
-		for _, label := range obj.Labels {
-			stmt2, _ := sqlAddLabel()
-			_, err2 := ds.DB.Exec(stmt2, objectID, label)
-
-			if err2 != nil {
-				return 0, fmt.Errorf("database execution error inserting object label: ", err2)
-			}
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	// Add External References
-	// ----------------------------------------------------------------------
-	if obj.ExternalReferences != nil {
-		for _, reference := range obj.ExternalReferences {
-			stmt3, _ := sqlAddExternalReference()
-
-			_, err3 := ds.DB.Exec(stmt3,
-				objectID,
-				reference.SourceName,
-				reference.Description,
-				reference.URL,
-				reference.ExternalID)
-
-			if err3 != nil {
-				return 0, fmt.Errorf("database execution error inserting external reference: ", err3)
-			}
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	// Add External References
-	// ----------------------------------------------------------------------
-	if obj.ObjectMarkingRefs != nil {
-		for _, marking := range obj.ObjectMarkingRefs {
-			stmt4, _ := sqlAddObjectMarkingRef()
-			_, err4 := ds.DB.Exec(stmt4, objectID, marking)
-
-			if err4 != nil {
-				return 0, fmt.Errorf("database execution error inserting object marking ref: ", err4)
-			}
-		}
-	}
-
-	return objectID, nil
-}
-
-// ----------------------------------------------------------------------
-//
-// Labels Table
-//
-// ----------------------------------------------------------------------
-
-/*
-commonLabelsProperties - This method will return the properties for labels
-Used by: All SDOs and SROs
-*/
-func commonLabelsProperties() string {
-	return baseProperties() + `
-	"label" TEXT NOT NULL
-	`
-}
-
-/*
 sqlAddLabel - This function will return an SQL statement that will add a
 label to the database for a given object.
 */
@@ -217,25 +156,6 @@ func sqlAddLabel() (string, error) {
 	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
 
 	return s.String(), nil
-}
-
-// ----------------------------------------------------------------------
-//
-// External References Table
-//
-// ----------------------------------------------------------------------
-
-/*
-commonExternalReferencesProperties - This method will return the properties for external references
-Used by: All SDOs and SROs
-*/
-func commonExternalReferencesProperties() string {
-	return baseProperties() + `
-	"source_name" TEXT NOT NULL,
-	"description" TEXT,
-	"url" TEXT,
-	"external_id" TEXT
-	`
 }
 
 /*
@@ -271,22 +191,6 @@ func sqlAddExternalReference() (string, error) {
 	return s.String(), nil
 }
 
-// ----------------------------------------------------------------------
-//
-// Object Marking Refs Table
-//
-// ----------------------------------------------------------------------
-
-/*
-commonObjectMarkingRefsProperties - This method will return the properties for object markings
-Used by: All SDOs and SROs
-*/
-func commonObjectMarkingRefsProperties() string {
-	return baseProperties() + `
-	"object_marking_refs" TEXT NOT NULL
-	`
-}
-
 /*
 sqlAddObjectMarkingRef - This function will return an SQL statement that will add
 an object marking ref to the database for a given object.
@@ -309,4 +213,262 @@ func sqlAddObjectMarkingRef() (string, error) {
 	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
 
 	return s.String(), nil
+}
+
+/*
+sqlGetbaseObject - This function will return an SQL statement that will get a
+specific base object from the database.
+*/
+func sqlGetBaseObject() (string, error) {
+	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblLabels := datastore.DB_TABLE_STIX_LABELS
+
+	/*
+		SELECT
+			s_base_object.object_id,
+			s_base_object.spec_version,
+			s_base_object.date_added,
+			s_base_object.type,
+			s_base_object.id,
+			s_base_object.created_by_ref,
+			s_base_object.created,
+			s_base_object.modified,
+			s_base_object.revoked,
+			s_base_object.confidence,
+			s_base_object.lang,
+			group_concat(s_labels.label)
+		FROM
+			s_base_object
+		JOIN
+			s_labels ON
+			s_base_object.object_id = s_labels.object_id
+		WHERE
+			s_base_object.id = $1 AND
+			s_base_object.modified = $2
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("SELECT ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".object_id, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".spec_version, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".date_added, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".type, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".id, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".created_by_ref, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".created, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".modified, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".revoked, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".confidence, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".lang, ")
+	s.WriteString("group_concat(")
+	s.WriteString(tblLabels)
+	s.WriteString(".label) ")
+	s.WriteString("FROM ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(" JOIN ")
+	s.WriteString(tblLabels)
+	s.WriteString(" ON ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".object_id = ")
+	s.WriteString(tblLabels)
+	s.WriteString(".object_id ")
+	s.WriteString("WHERE ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".id = $1 AND ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".modified = $2")
+
+	return s.String(), nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Private Methods - Base Object Table
+//
+// ----------------------------------------------------------------------
+
+/*
+addBaseObject - This method will add the base properties of an object to the
+database and return an integer that tracks the record number for parent child
+relationships.
+*/
+func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int64, error) {
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	objectID := ds.Index
+	ds.Index++
+
+	stmt1, _ := sqlAddBaseObject()
+
+	_, err1 := ds.DB.Exec(stmt1,
+		objectID,
+		obj.SpecVersion,
+		dateAdded,
+		obj.ObjectType,
+		obj.ID,
+		obj.CreatedByRef,
+		obj.Created,
+		obj.Modified,
+		obj.Revoked,
+		obj.Confidence,
+		obj.Lang)
+
+	if err1 != nil {
+		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
+	}
+
+	// ----------------------------------------------------------------------
+	// Add Labels
+	// ----------------------------------------------------------------------
+	if obj.Labels != nil {
+		for _, label := range obj.Labels {
+			err2 := ds.addLabel(objectID, label)
+			if err2 != nil {
+				return 0, err2
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
+	if obj.ExternalReferences != nil {
+		for _, reference := range obj.ExternalReferences {
+			err3 := ds.addExternalReference(objectID, reference)
+			if err3 != nil {
+				return 0, err3
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// Add External References
+	// ----------------------------------------------------------------------
+	if obj.ObjectMarkingRefs != nil {
+		for _, marking := range obj.ObjectMarkingRefs {
+			err4 := ds.addObjectMarkingRef(objectID, marking)
+
+			if err4 != nil {
+				return 0, err4
+			}
+		}
+	}
+
+	return objectID, nil
+}
+
+/*
+getbaseObject - This method will get a specific base object based on the STIX ID
+and the version (modified timestamp).  This method is most often called from
+a get method on a STIX object (for example: getIndicator).
+*/
+func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.CommonObjectPropertiesType, error) {
+
+	var baseObject properties.CommonObjectPropertiesType
+	var objectID int64
+	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang, label string
+	var revoked, confidence int
+
+	stmt, _ := sqlGetBaseObject()
+	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&objectID, &specVersion, &dateAdded, &objectType, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New("no base object record found")
+		}
+		return nil, fmt.Errorf("database execution error getting base object: ", err)
+	}
+	baseObject.SetObjectID(objectID)
+	baseObject.SetSpecVersion(specVersion)
+	baseObject.SetObjectType(objectType)
+	baseObject.SetID(id)
+	baseObject.SetCreatedByRef(createdByRef)
+	baseObject.SetCreated(created)
+	baseObject.SetModified(modified)
+	if revoked == 1 {
+		baseObject.SetRevoked()
+	}
+	baseObject.SetConfidence(confidence)
+	baseObject.SetLang(lang)
+	baseObject.AddLabels(label)
+
+	//baseObject.LabelsPropertyType = ds.getBaseObjectLabels(objectID)
+	baseObject.ExternalReferencesPropertyType = ds.getBaseObjectExternalReferences(objectID)
+
+	return &baseObject, nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Labels Table
+//
+// ----------------------------------------------------------------------
+
+/*
+addLabel - This method will add a label to the database for a specific object ID.
+*/
+func (ds *DatastoreType) addLabel(objectID int64, label string) error {
+	stmt, _ := sqlAddLabel()
+	_, err := ds.DB.Exec(stmt, objectID, label)
+
+	if err != nil {
+		return fmt.Errorf("database execution error inserting object label: ", err)
+	}
+	return nil
+}
+
+// ----------------------------------------------------------------------
+//
+// External References Table
+//
+// ----------------------------------------------------------------------
+
+/*
+addExternalReference - This method will add an external reference to the
+database for a specific object ID.
+*/
+func (ds *DatastoreType) addExternalReference(objectID int64, reference properties.ExternalReferenceType) error {
+	stmt, _ := sqlAddExternalReference()
+
+	_, err := ds.DB.Exec(stmt,
+		objectID,
+		reference.SourceName,
+		reference.Description,
+		reference.URL,
+		reference.ExternalID)
+
+	if err != nil {
+		return fmt.Errorf("database execution error inserting external reference: ", err)
+	}
+	return nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Object Marking Refs Table
+//
+// ----------------------------------------------------------------------
+
+/*
+addObjectMarkingRef - This method will add an object marking ref to the
+database for a specific object ID.
+*/
+func (ds *DatastoreType) addObjectMarkingRef(objectID int64, marking string) error {
+	stmt, _ := sqlAddObjectMarkingRef()
+	_, err := ds.DB.Exec(stmt, objectID, marking)
+
+	if err != nil {
+		return fmt.Errorf("database execution error inserting object marking ref: ", err)
+	}
+	return nil
 }

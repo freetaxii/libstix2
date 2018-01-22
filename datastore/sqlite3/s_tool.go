@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Tool Table
+// Private Functions - Tool Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

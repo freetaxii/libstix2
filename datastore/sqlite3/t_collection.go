@@ -9,12 +9,16 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/defs"
+	"github.com/freetaxii/libstix2/resources"
+	"strings"
+	"time"
 )
 
 // ----------------------------------------------------------------------
 //
-// Collection Table Private Functions and Methods
+// Private Functions - Collection Tables
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 
@@ -96,38 +100,11 @@ func sqlAddCollection() (string, error) {
 }
 
 /*
-sqlAddCollectionMediaType - This function will return an SQL statement that will
-insert a media type for a given collection.
-*/
-func sqlAddCollectionMediaType() (string, error) {
-	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
-
-	/*
-		INSERT INTO
-			t_collection_media_type (
-				"collection_id",
-				"media_type_id"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblColMedia)
-	s.WriteString(" (")
-	s.WriteString("\"collection_id\", ")
-	s.WriteString("\"media_type_id\") ")
-	s.WriteString("values (?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-sqlGetAllCollections - This function will return an SQL statement that will return a
+sqlGetCollections - This function will return an SQL statement that will return a
 list of collections. A byte array is used instead of sting
 concatenation as it is the most efficient way to do string concatenation in Go.
 */
-func sqlGetAllCollections(whichCollections string) (string, error) {
+func sqlGetCollections(whichCollections string) (string, error) {
 	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
 	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
 	tblMediaTypes := datastore.DB_TABLE_TAXII_MEDIA_TYPES
@@ -214,4 +191,155 @@ func sqlGetAllCollections(whichCollections string) (string, error) {
 	s.WriteString(".id")
 
 	return s.String(), nil
+}
+
+/*
+sqlAddCollectionMediaType - This function will return an SQL statement that will
+insert a media type for a given collection.
+*/
+func sqlAddCollectionMediaType() (string, error) {
+	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+
+	/*
+		INSERT INTO
+			t_collection_media_type (
+				"collection_id",
+				"media_type_id"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblColMedia)
+	s.WriteString(" (")
+	s.WriteString("\"collection_id\", ")
+	s.WriteString("\"media_type_id\") ")
+	s.WriteString("values (?, ?)")
+
+	return s.String(), nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Private Methods - Collection Table
+//
+// ----------------------------------------------------------------------
+
+/*
+addCollection - This method will add a collection to the t_collections table in
+the database.
+*/
+func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	stmt1, _ := sqlAddCollection()
+
+	_, err1 := ds.DB.Exec(stmt1,
+		dateAdded,
+		obj.ID,
+		obj.Title,
+		obj.Description,
+		obj.CanRead,
+		obj.CanWrite)
+
+	if err1 != nil {
+		return fmt.Errorf("database execution error inserting collection", err1)
+	}
+
+	if obj.MediaTypes != nil {
+		for _, media := range obj.MediaTypes {
+			stmt2, _ := sqlAddCollectionMediaType()
+
+			// TODO look up in cache
+			mediavalue := 0
+			if media == "application/vnd.oasis.stix+json" {
+				mediavalue = 1
+			}
+			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
+
+			if err2 != nil {
+				return fmt.Errorf("database execution error inserting collection media type", err2)
+			}
+		}
+	}
+	return nil
+}
+
+/*
+getCollections - This method is called from either GetAllCollections(),
+GetAllEnabledCollections(), or GetCollections() and will return all of the
+collections that are asked for based on the method that called it.  The options
+that can be passed in are: "all", "allEnabled", and "enabledVisible". The "all"
+option returns every collection, even those that are hidden or disabled.
+"allEnabled" will return all enabled collections, even those that are hidden.
+"enabledVisible" will return all collections that are both enabled and not
+hidden (aka those that are visible). Administration tools using the database
+will probably want to see all collections. The HTTP Router MUX needs to know
+about all enabled collections, even those that are hidden, so that it can start
+an HTTP router for it. The enabled and visible list is what would be displayed
+to a client that is pulling a collections resource.
+*/
+func (ds *DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
+
+	allCollections := resources.InitCollections()
+
+	stmt, _ := sqlGetCollections(whichCollections)
+
+	// Query database for all the collections
+	rows, err := ds.DB.Query(stmt)
+	if err != nil {
+		return nil, fmt.Errorf("database execution error getting collection: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var enabled, hidden, iCanRead, iCanWrite int
+		var dateAdded, id, title, description, mediaType string
+		if err := rows.Scan(&dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
+			return nil, fmt.Errorf("database scan error getting collection: ", err)
+		}
+
+		// Add collection information to Collection object
+		c, _ := allCollections.GetNewCollection()
+		c.DateAdded = dateAdded
+		if enabled == 1 {
+			c.SetEnabled()
+		} else {
+			c.SetDisabled()
+		}
+
+		if hidden == 1 {
+			c.SetHidden()
+		} else {
+			c.SetVisible()
+		}
+
+		c.SetID(id)
+		c.SetTitle(title)
+		c.SetDescription(description)
+		if iCanRead == 1 {
+			c.SetCanRead()
+		}
+		if iCanWrite == 1 {
+			c.SetCanWrite()
+		}
+
+		mediatypes := strings.Split(mediaType, ",")
+		for i, mt := range mediatypes {
+
+			// If the media types are all the same, due to the way the SQL query
+			// returns results, then only record one entry.
+			if i > 0 && mt == mediatypes[i-1] {
+				continue
+			}
+			c.AddMediaType(mt)
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("database row error getting collection: ", err)
+	}
+
+	return allCollections, nil
 }

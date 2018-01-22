@@ -5,6 +5,10 @@
 
 package properties
 
+import (
+	"strings"
+)
+
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
@@ -23,10 +27,16 @@ type LabelsPropertyType struct {
 // ----------------------------------------------------------------------
 
 /*
-AddLabel - This method takes in a string value that represents a label for a
-STIX object and adds it to the list of labels in the lables property.
+AddLabels - This method takes in a string value that represents one or more
+labels separated by a command for a STIX object and adds it to the list of
+labels in the labels property.
 */
-func (ezt *LabelsPropertyType) AddLabel(s string) error {
-	ezt.Labels = append(ezt.Labels, s)
+func (ezt *LabelsPropertyType) AddLabels(s string) error {
+
+	labels := strings.Split(s, ",")
+	for _, label := range labels {
+		ezt.Labels = append(ezt.Labels, label)
+	}
+
 	return nil
 }

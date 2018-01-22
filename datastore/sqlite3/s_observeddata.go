@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Observed Data Table
+// Private Functions - Observed Data Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

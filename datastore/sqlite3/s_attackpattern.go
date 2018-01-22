@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Attack Pattern Table
+// Private Functions - Attack Pattern Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Note Table
+// Private Functions - Note Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

@@ -12,7 +12,8 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Identity Table
+// Private Functions - Identity Tables
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 

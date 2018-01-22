@@ -7,6 +7,8 @@ package sqlite3
 
 import (
 	"bytes"
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
@@ -14,7 +16,8 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Indicator Table Private Functions and Methods
+// Private Functions - Indicator Table
+// Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
 
@@ -33,8 +36,8 @@ func indicatorProperties() string {
 }
 
 /*
-sqlAddIndicatorObject - This function will return an SQL statement that will add
-an indicator to the database.
+sqlAddIndicator - This function will return an SQL statement that will add an
+indicator to the database.
 */
 func sqlAddIndicator() (string, error) {
 	tblInd := datastore.DB_TABLE_STIX_INDICATOR
@@ -68,9 +71,49 @@ func sqlAddIndicator() (string, error) {
 }
 
 /*
+sqlGetIndicator - This function will return an SQL statement that will get an
+indicator from the database.
+*/
+func sqlGetIndicator() (string, error) {
+	tblInd := datastore.DB_TABLE_STIX_INDICATOR
+
+	/*
+		SELECT
+			name,
+			description,
+			pattern,
+			valid_from,
+			valid_until
+		FROM
+			s_indicator
+		WHERE
+			object_id =
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("SELECT ")
+	s.WriteString("name, ")
+	s.WriteString("description, ")
+	s.WriteString("pattern, ")
+	s.WriteString("valid_from, ")
+	s.WriteString("valid_until ")
+	s.WriteString("FROM ")
+	s.WriteString(tblInd)
+	s.WriteString(" WHERE object_id = ?")
+
+	return s.String(), nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Private Methods - Indicator Table
+//
+// ----------------------------------------------------------------------
+
+/*
 addIndicator - This method will add an indicator to the database.
 */
-func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
+func (ds *DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
 	objectID, err := ds.addBaseObject(&obj.CommonObjectPropertiesType)
 	if err != nil {
@@ -88,7 +131,7 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 
 	// TODO if there is an error, we probably need to back out all of the INSERTS
 	if err1 != nil {
-		return fmt.Errorf("database error inserting indicator: ", err)
+		return fmt.Errorf("database execution error inserting indicator: ", err)
 	}
 
 	if obj.KillChainPhases != nil {
@@ -99,4 +142,36 @@ func (ds *Sqlite3DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 		}
 	}
 	return nil
+}
+
+/*
+getIndicator - This method will get a specific indicator from the database.
+*/
+func (ds *DatastoreType) getIndicator(stixid, version string) (*objects.IndicatorType, error) {
+	var i objects.IndicatorType
+	var description, pattern, validFrom, validUntil string
+
+	// Lets first get the base object so we know the objectID
+	baseObject, errBase := ds.getBaseObject(stixid, version)
+	if errBase != nil {
+		return nil, errBase
+	}
+
+	// Copy base object data in to the Indicator
+	i.CommonObjectPropertiesType = *baseObject
+
+	stmt, _ := sqlGetIndicator()
+	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&i.Name, &description, &pattern, &validFrom, &validUntil)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New("no indicator record found")
+		}
+		return nil, fmt.Errorf("database execution error getting indicator: ", err)
+	}
+	//i.SetName(name)
+	i.SetDescription(description)
+	i.SetPattern(pattern)
+	i.SetValidFrom(validFrom)
+	i.SetValidUntil(validUntil)
+	return &i, nil
 }
