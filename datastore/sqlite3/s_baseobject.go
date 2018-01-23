@@ -276,7 +276,7 @@ func sqlGetBaseObject() (string, error) {
 	s.WriteString(".label) ")
 	s.WriteString("FROM ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(" JOIN ")
+	s.WriteString(" LEFT JOIN ")
 	s.WriteString(tblLabels)
 	s.WriteString(" ON ")
 	s.WriteString(tblBaseObj)
@@ -377,7 +377,11 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 
 	var baseObject properties.CommonObjectPropertiesType
 	var objectID int64
-	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang, label string
+	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
+
+	// Since not every object will have a label, and since we are using group_concat
+	// we need to define the label as a pointer so it can be a null value.
+	var label *string
 	var revoked, confidence int
 
 	stmt, _ := sqlGetBaseObject()
@@ -400,7 +404,9 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 	}
 	baseObject.SetConfidence(confidence)
 	baseObject.SetLang(lang)
-	baseObject.AddLabels(label)
+	if label != nil {
+		baseObject.AddLabels(*label)
+	}
 
 	//baseObject.LabelsPropertyType = ds.getBaseObjectLabels(objectID)
 	baseObject.ExternalReferencesPropertyType = ds.getBaseObjectExternalReferences(objectID)
