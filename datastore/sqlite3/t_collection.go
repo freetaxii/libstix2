@@ -297,6 +297,7 @@ func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Col
 		var enabled, hidden, iCanRead, iCanWrite int
 		var dateAdded, id, title, description, mediaType string
 		if err := rows.Scan(&dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
+			rows.Close()
 			return nil, fmt.Errorf("database scan error getting collection: ", err)
 		}
 
@@ -338,6 +339,7 @@ func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Col
 	}
 
 	if err := rows.Err(); err != nil {
+		rows.Close()
 		return nil, fmt.Errorf("database row error getting collection: ", err)
 	}
 

@@ -135,87 +135,6 @@ func sqlAddBaseObject() (string, error) {
 }
 
 /*
-sqlAddLabel - This function will return an SQL statement that will add a
-label to the database for a given object.
-*/
-func sqlAddLabel() (string, error) {
-	tblLabels := datastore.DB_TABLE_STIX_LABELS
-
-	/*
-		INSERT INTO
-			s_labels (
-				"object_id",
-				"label"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblLabels)
-	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-sqlAddExternalReference - This function will return an SQL statement that will add
-an external reference to the database for a given object.
-*/
-func sqlAddExternalReference() (string, error) {
-	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
-
-	/*
-		INSERT INTO
-			s_external_references (
-				"object_id",
-				"source_name",
-				"description",
-				"url",
-				"external_id"
-			)
-			values (?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblExtRef)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", ")
-	s.WriteString("\"source_name\", ")
-	s.WriteString("\"description\", ")
-	s.WriteString("\"url\", ")
-	s.WriteString("\"external_id\") ")
-	s.WriteString("values (?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-sqlAddObjectMarkingRef - This function will return an SQL statement that will add
-an object marking ref to the database for a given object.
-*/
-func sqlAddObjectMarkingRef() (string, error) {
-	tblObjMarking := datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS
-
-	/*
-		INSERT INTO
-			s_object_marking_refs (
-				"object_id",
-				"object_marking_refs"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblObjMarking)
-	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
-
-	return s.String(), nil
-}
-
-/*
 sqlGetbaseObject - This function will return an SQL statement that will get a
 specific base object from the database.
 */
@@ -288,6 +207,119 @@ func sqlGetBaseObject() (string, error) {
 	s.WriteString(".id = $1 AND ")
 	s.WriteString(tblBaseObj)
 	s.WriteString(".modified = $2")
+
+	return s.String(), nil
+}
+
+/*
+sqlAddLabel - This function will return an SQL statement that will add a
+label to the database for a given object.
+*/
+func sqlAddLabel() (string, error) {
+	tblLabels := datastore.DB_TABLE_STIX_LABELS
+
+	/*
+		INSERT INTO
+			s_labels (
+				"object_id",
+				"label"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblLabels)
+	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
+
+	return s.String(), nil
+}
+
+/*
+sqlAddExternalReference - This function will return an SQL statement that will add
+an external reference to the database for a given object.
+*/
+func sqlAddExternalReference() (string, error) {
+	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
+
+	/*
+		INSERT INTO
+			s_external_references (
+				"object_id",
+				"source_name",
+				"description",
+				"url",
+				"external_id"
+			)
+			values (?, ?, ?, ?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblExtRef)
+	s.WriteString(" (")
+	s.WriteString("\"object_id\", ")
+	s.WriteString("\"source_name\", ")
+	s.WriteString("\"description\", ")
+	s.WriteString("\"url\", ")
+	s.WriteString("\"external_id\") ")
+	s.WriteString("values (?, ?, ?, ?, ?)")
+
+	return s.String(), nil
+}
+
+/*
+sqlGetExternalReference - This function will return an SQL statement that will
+get an external reference from the database for a specific object ID.
+*/
+func sqlGetExternalReference() (string, error) {
+	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
+
+	/*
+		SELECT
+			source_name,
+			description,
+			url,
+			external_id
+		FROM
+			s_external_references
+		WHERE
+			object_id = $1
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("SELECT ")
+	s.WriteString("source_name, ")
+	s.WriteString("description, ")
+	s.WriteString("url, ")
+	s.WriteString("external_id ")
+	s.WriteString("FROM ")
+	s.WriteString(tblExtRef)
+	s.WriteString(" WHERE object_id = $1")
+
+	return s.String(), nil
+}
+
+/*
+sqlAddObjectMarkingRef - This function will return an SQL statement that will add
+an object marking ref to the database for a given object.
+*/
+func sqlAddObjectMarkingRef() (string, error) {
+	tblObjMarking := datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS
+
+	/*
+		INSERT INTO
+			s_object_marking_refs (
+				"object_id",
+				"object_marking_refs"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblObjMarking)
+	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
 
 	return s.String(), nil
 }
@@ -457,6 +489,44 @@ func (ds *DatastoreType) addExternalReference(objectID int64, reference properti
 		return fmt.Errorf("database execution error inserting external reference: ", err)
 	}
 	return nil
+}
+
+/*
+getExternalReferences - This method will return all external references that are
+part of a specific object ID.
+*/
+func (ds *DatastoreType) getExternalReferences(objectID int64) (*properties.ExternalReferencesPropertyType, error) {
+	var extrefs properties.ExternalReferencesPropertyType
+	stmt, _ := sqlGetExternalReference()
+
+	rows, err := ds.DB.Query(stmt, objectID)
+	if err != nil {
+		return nil, fmt.Errorf("database execution error getting external reference: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var sourceName, description, url, externalID string
+		e, _ := extrefs.GetNewExternalReference()
+
+		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("database scan error getting external references: ", err)
+		}
+		e.SetSourceName(sourceName)
+		e.SetDescription(description)
+		e.SetURL(url)
+		e.SetExternalID(externalID)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting external references: ", err)
+	}
+
+	return &extrefs, nil
 }
 
 // ----------------------------------------------------------------------

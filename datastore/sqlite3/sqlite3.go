@@ -223,6 +223,7 @@ func (ds *DatastoreType) GetObjectList(query datastore.QueryType) (*[]datastore.
 	for rows.Next() {
 		var dateAdded, stixid, modified, specVersion string
 		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			rows.Close()
 			return nil, nil, fmt.Errorf("database scan error: ", err)
 		}
 		var rawData datastore.CollectionRawDataType
@@ -232,6 +233,13 @@ func (ds *DatastoreType) GetObjectList(query datastore.QueryType) (*[]datastore.
 		rawData.SpecVersion = specVersion
 
 		collectionRawData = append(collectionRawData, rawData)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting objects: ", err)
 	}
 
 	metaData.Size = len(collectionRawData)
@@ -288,9 +296,17 @@ func (ds *DatastoreType) GetManifestData(query datastore.QueryType) (*resources.
 	for rows.Next() {
 		var dateAdded, stixid, modified, specVersion string
 		if err := rows.Scan(&dateAdded, &stixid, &modified, &specVersion); err != nil {
+			rows.Close()
 			return nil, nil, fmt.Errorf("database scan error: ", err)
 		}
 		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
 	metaData.Size = len(manifest.Objects)
