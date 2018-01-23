@@ -5,8 +5,8 @@
 
 /*
 Package vocabs implements the STIX 2 Vocabularies.
-This package defines variables that contain all of the values for each vocabulary.
 
+This package defines variables that contain all of the values for each vocabulary.
 The following information comes directly from the STIX 2 specification documents.
 
 The following sections provide object-specific listings for each of the

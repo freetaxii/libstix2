@@ -4,7 +4,7 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package datastore defines various datastores for use with STIX 2 and TAXII 2.
+Package objects implements the STIX 2 object model.
 
 */
-package datastore
+package objects
