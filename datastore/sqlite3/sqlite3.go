@@ -151,7 +151,7 @@ func (ds *DatastoreType) GetAllEnabledCollections() (*resources.CollectionsType,
 
 /*
 GetCollections - This method will return just those collections that are both
-enabled and visible. This is primarily used for client that pull a collections
+enabled and visible. This is primarily used for clients that pull a collections
 resource.
 */
 func (ds *DatastoreType) GetCollections() (*resources.CollectionsType, error) {
@@ -171,16 +171,18 @@ of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
 func (ds *DatastoreType) GetBundle(query datastore.QueryType) (*objects.BundleType, *datastore.QueryReturnDataType, error) {
-
 	stixBundle := objects.InitBundle()
 
+	// First get a list of all of the objects that are in the collection that
+	// meet the query requirements
 	rangeCollectionRawData, metaData, err := ds.GetObjectList(query)
 	if err != nil {
 		return nil, nil, err
 	}
 
+	// Loop through all of the STIX IDs in the list and get the actual object
 	for _, v := range *rangeCollectionRawData {
-		// Only get the objects that are part of the response
+		log.Println("STIX ID: ", v.STIXID, " Version: ", v.STIXVersion)
 		obj, err := ds.GetSTIXObject(v.STIXID, v.STIXVersion)
 
 		if err != nil {

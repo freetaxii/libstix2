@@ -18,10 +18,10 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-CreateAllTAXIITables - This method will create all of the tables needed to store
+CreateTAXIITables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateAllTAXIITables() {
+func (ds *DatastoreType) CreateTAXIITables() {
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
 	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
@@ -31,10 +31,10 @@ func (ds *DatastoreType) CreateAllTAXIITables() {
 }
 
 /*
-CreateAllSTIXTables - This method will create all of the tables needed to store
+CreateSTIXTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateAllSTIXTables() {
+func (ds *DatastoreType) CreateSTIXTables() {
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
 	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, campaignProperties())
@@ -67,10 +67,10 @@ func (ds *DatastoreType) CreateAllSTIXTables() {
 }
 
 /*
-CreateAllVocabTables - This method will create all of the tables needed to store
+CreateVocabTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateAllVocabTables() {
+func (ds *DatastoreType) CreateVocabTables() {
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
 	ds.createVocabTable(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
@@ -85,10 +85,10 @@ func (ds *DatastoreType) CreateAllVocabTables() {
 }
 
 /*
-PopulateAllVocabTables - This method will insert all of the vocabulary data
+PopulateVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
-func (ds *DatastoreType) PopulateAllVocabTables() {
+func (ds *DatastoreType) PopulateVocabTables() {
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
 	ds.insertVocabData(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)

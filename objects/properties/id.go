@@ -37,7 +37,7 @@ func (ezt *IDPropertyType) CreateSTIXUUID(s string) (string, error) {
 
 /*
 SetNewID - This method takes in a string value representing a STIX object
-type and create a new ID based on the approved STIX UUIDv4 format and update
+type and creates a new ID based on the approved STIX UUIDv4 format and update
 the id property for the object.
 */
 func (ezt *IDPropertyType) SetNewID(s string) error {
