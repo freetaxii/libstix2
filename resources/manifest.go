@@ -7,8 +7,6 @@ package resources
 
 import (
 	"github.com/freetaxii/libstix2/resources/properties"
-	"sort"
-	"strings"
 )
 
 // ----------------------------------------------------------------------
@@ -47,16 +45,17 @@ Manifest Entry.
 
 The following information comes directly from the TAXII 2 specification documents.
 
-The manifest-entry type captures metadata about a single object, indicated by
-the id property. The metadata includes information such as when the object was
-added to the Collection, what versions of the object are available, and what
-media types the object is available in.
+The manifest-entry type captures metadata about a single versions of an object,
+indicated by the id property. The metadata includes information such as when that
+versions of the object was added to the Collection, the version of the object
+itself, and the media type that this specific version of the object is available
+in.
 */
 type ManifestEntryType struct {
 	properties.IDPropertyType
-	DateAdded  string   `json:"date_added,omitempty"`
-	Versions   []string `json:"versions,omitempty"`
-	MediaTypes []string `json:"media_types,omitempty"`
+	DateAdded string `json:"date_added,omitempty"`
+	Version   string `json:"version,omitempty"`
+	MediaType string `json:"media_type,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -112,37 +111,14 @@ func (ezt *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {
 
 /*
 CreateManifestEntry - This method is used to create and add a manifest entry in
-a single step, by taking in all of the values as parameters. Multiple values for
-the version and media type properties can be provided as a comma separated list
-with no spaces in between the values.
+a single step, by taking in all of the values as parameters.
 */
 func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
 	m, _ := ezt.GetNewManifestEntry()
 	m.SetID(id)
 	m.SetDateAdded(date)
-
-	versions := strings.Split(ver, ",")
-
-	// The specification says that the newest objects should start at index 0 so
-	// lets sorts them in reverse order.
-	if len(versions) > 1 {
-		sort.Sort(sort.Reverse(sort.StringSlice(versions)))
-	}
-
-	for _, v := range versions {
-		m.AddVersion(v)
-	}
-
-	mediatypes := strings.Split(media, ",")
-	for i, mt := range mediatypes {
-
-		// If the media types are all the same, due to the way the SQL query
-		// returns results, then only record one entry.
-		if i > 0 && mt == mediatypes[i-1] {
-			continue
-		}
-		m.AddMediaType(mt)
-	}
+	m.SetVersion(ver)
+	m.SetMediaType(media)
 	return nil
 }
 
@@ -159,28 +135,17 @@ func (ezt *ManifestEntryType) SetDateAdded(s string) error {
 }
 
 /*
-AddVersion - This method takes in a string value that represents an object
-version and adds it to the list of versions that are available for this object.
+SetVersion - This method will add the version to the manifest entry
 */
-func (ezt *ManifestEntryType) AddVersion(s string) error {
-	if ezt.Versions == nil {
-		a := make([]string, 0)
-		ezt.Versions = a
-	}
-	ezt.Versions = append(ezt.Versions, s)
+func (ezt *ManifestEntryType) SetVersion(s string) error {
+	ezt.Version = s
 	return nil
 }
 
 /*
-AddMediaType - This method takes in a string value that represents a version of
-the STIX specification that is supported and adds it to the list in media types
-that this object is available in.
+SetMediaType - This method will add the media type to the manifest entry
 */
-func (ezt *ManifestEntryType) AddMediaType(s string) error {
-	if ezt.MediaTypes == nil {
-		a := make([]string, 0)
-		ezt.MediaTypes = a
-	}
-	ezt.MediaTypes = append(ezt.MediaTypes, s)
+func (ezt *ManifestEntryType) SetMediaType(s string) error {
+	ezt.MediaType = s
 	return nil
 }

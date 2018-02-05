@@ -54,9 +54,11 @@ added to it), and whether the TAXII Client, as authenticated, can get objects
 from the Collection and/or add objects to it.
 */
 type CollectionType struct {
-	DateAdded string `json:"-"`
-	Enabled   bool   `json:"-"`
-	Hidden    bool   `json:"-"`
+	DatastoreID int    `json:"-"`
+	DateAdded   string `json:"-"`
+	Enabled     bool   `json:"-"`
+	Hidden      bool   `json:"-"`
+	Size        int    `json:"-"`
 	properties.IDPropertyType
 	properties.TitlePropertyType
 	properties.DescriptionPropertyType

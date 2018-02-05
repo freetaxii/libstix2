@@ -148,7 +148,7 @@ func sqlAddKillChainPhase() (string, error) {
 addKillChainPhases - This method will add a kill chain phase for a given object
 to the database.
 */
-func (ds *DatastoreType) addKillChainPhases(objectID int64, obj *properties.KillChainPhasesPropertyType) error {
+func (ds *DatastoreType) addKillChainPhases(objectID int, obj *properties.KillChainPhasesPropertyType) error {
 	for _, v := range obj.KillChainPhases {
 		stmt, _ := sqlAddKillChainPhase()
 		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)

@@ -39,8 +39,8 @@ stix_id       = The STIX ID for the object that is being mapped to a collection.
 func collectionDataProperties() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
-	"date_added" TEXT NOT NULL,
- 	"collection_id" TEXT NOT NULL,
+ 	"date_added" TEXT NOT NULL,
+ 	"collection_id" INTEGER NOT NULL,
  	"stix_id" TEXT NOT NULL
  	`
 }
@@ -67,7 +67,11 @@ func sqlAddObjectToCollection() (string, error) {
 	var s bytes.Buffer
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblColData)
-	s.WriteString(" (\"date_added\", \"collection_id\", \"stix_id\") values (?, ?, ?) ")
+	s.WriteString(" (")
+	s.WriteString("\"date_added\", ")
+	s.WriteString("\"collection_id\", ")
+	s.WriteString("\"stix_id\") ")
+	s.WriteString("values (?, ?, ?) ")
 
 	return s.String(), nil
 }
@@ -79,7 +83,7 @@ determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
-func sqlGetObjectList(query datastore.QueryType) (string, error) {
+func sqlGetObjectList(query datastore.CollectionQueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -93,8 +97,8 @@ func sqlGetObjectList(query datastore.QueryType) (string, error) {
 
 	/*
 		SELECT
-			t_collection_data.date_added,
 			t_collection_data.stix_id,
+			s.base_object.date_added,
 			s_base_object.modified,
 			s_base_object.spec_version
 		FROM
@@ -103,13 +107,14 @@ func sqlGetObjectList(query datastore.QueryType) (string, error) {
 			s_base_object ON
 			t_collection_data.stix_id = s_base_object.id
 		WHERE
+			t_collection_data.collection_id = "aa"
 	*/
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
 	s.WriteString(tblColData)
-	s.WriteString(".date_added, ")
-	s.WriteString(tblColData)
 	s.WriteString(".stix_id, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".date_added, ")
 	s.WriteString(tblBaseObj)
 	s.WriteString(".modified, ")
 	s.WriteString(tblBaseObj)
@@ -139,17 +144,8 @@ needed to create the manifest resource. It will use the query struct to
 determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
-
-Since the manifest resource in TAXII lists out all of the versions of the
-object, we are using a group_concat SQL function to give us a string of values
-separated by a comma. This will prevent us from having to query the database
-multiple times to get all of the needed data.
-
-If you do not use the GROUP BY filter when using the group_concat function then
-you get a single row returned with all of the versions listed in the
-corresponding modified and spec_version fields.
 */
-func sqlGetManifestData(query datastore.QueryType) (string, error) {
+func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -163,10 +159,10 @@ func sqlGetManifestData(query datastore.QueryType) (string, error) {
 
 	/*
 		SELECT
-			t_collection_data.date_added,
 			t_collection_data.stix_id,
-			group_concat(s_base_object.modified),
-			group_concat(s_base_object.spec_version)
+			s.base_object.date_added,
+			s_base_object.modified,
+			s_base_object.spec_version
 		FROM
 			t_collection_data
 		JOIN
@@ -174,21 +170,17 @@ func sqlGetManifestData(query datastore.QueryType) (string, error) {
 			t_collection_data.stix_id = s_base_object.id
 		WHERE
 			t_collection_data.collection_id = "aa"
-		GROUP BY
-			t_collection_data.date_added
 	*/
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
 	s.WriteString(tblColData)
-	s.WriteString(".date_added, ")
-	s.WriteString(tblColData)
 	s.WriteString(".stix_id, ")
-	s.WriteString("group_concat(")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".modified), ")
-	s.WriteString("group_concat(")
+	s.WriteString(".date_added, ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version) ")
+	s.WriteString(".modified, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".spec_version ")
 
 	s.WriteString("FROM ")
 	s.WriteString(tblColData)
@@ -204,10 +196,6 @@ func sqlGetManifestData(query datastore.QueryType) (string, error) {
 	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
 
-	s.WriteString(" GROUP BY ")
-	s.WriteString(tblColData)
-	s.WriteString(".date_added")
-
 	return s.String(), nil
 }
 
@@ -221,7 +209,7 @@ func sqlGetManifestData(query datastore.QueryType) (string, error) {
 sqlCollectionDataQueryOptions - This function will take in a query struct and
 build an SQL where statement based on all of the provided query parameters.
 */
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error) {
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error) {
 	var wherestmt bytes.Buffer
 	var err error
 
@@ -273,7 +261,7 @@ func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error) {
 /*
 sqlCollectionDataWhereCollectionID - This function will build the correct WHERE
 statement for a provided collection ID value and is called from
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereCollectionID(id string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -296,13 +284,13 @@ func sqlCollectionDataWhereCollectionID(id string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereAddedAfter - This function will build the correct WHERE
 statement for a provided added after value and is called from
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
 
 This method only supports a single added after value, since more than one does
 not make sense.
 */
 func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
 	/*
 		This sql where statement should look like:
@@ -314,7 +302,7 @@ func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 		// not make sense.
 		if timestamp.Valid(date[0]) {
 			b.WriteString(" AND ")
-			b.WriteString(tblColData)
+			b.WriteString(tblBaseObj)
 			b.WriteString(`.date_added > "`)
 			b.WriteString(date[0])
 			b.WriteString(`"`)
@@ -328,7 +316,7 @@ func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXID - This function will build the correct WHERE
 statement when one or more STIX IDs is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -385,7 +373,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXType - This function will build the correct WHERE
 statement when one or more STIX types is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -441,7 +429,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXVersion - This function will build the correct WHERE
 statement when one or more STIX versions is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error).
+func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error).
 
 It will return an error if multiple "all", "first", or "last" values is provided.
 */
@@ -603,13 +591,76 @@ object. So we need to store just the STIX ID.
 func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	stmt, _ := sqlAddObjectToCollection()
-	_, err := ds.DB.Exec(stmt, dateAdded, obj.CollectionID, obj.STIXID)
+	collectionIndex := ds.Cache.Collections[obj.CollectionID].DatastoreID
+
+	sqlStmt, _ := sqlAddObjectToCollection()
+	_, err := ds.DB.Exec(sqlStmt, dateAdded, collectionIndex, obj.STIXID)
 
 	if err != nil {
 		return fmt.Errorf("database execution error inserting collection data", err)
 	}
 	return nil
+}
+
+/*
+getManifestData - This method will return manifest data based on the query provided.
+*/
+func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+	var resultData datastore.CollectionQueryResultType
+	var first, last int
+	var errRange error
+
+	manifest := resources.InitManifest()
+
+	sqlStmt, err := sqlGetManifestData(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+
+	if err != nil {
+		return nil, fmt.Errorf("database execution error getting manifest data: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var stixid, dateAdded, modified, specVersion string
+		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("database scan error getting manifest data: ", err)
+		}
+		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
+	}
+
+	resultData.Size = len(manifest.Objects)
+	if resultData.Size == 0 {
+		return nil, fmt.Errorf("no records returned getting manifest data")
+	}
+
+	first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.ServerRecordLimit, resultData.Size)
+
+	if errRange != nil {
+		return nil, errRange
+	}
+
+	// Get a new slice based on the range of records
+	resultData.ManifestData.Objects = manifest.Objects[first:last]
+	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
+	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
+
+	return &resultData, nil
 }
 
 /*

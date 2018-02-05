@@ -27,11 +27,11 @@ type LabelsPropertyType struct {
 // ----------------------------------------------------------------------
 
 /*
-AddLabels - This method takes in a string value that represents one or more
+AddLabel - This method takes in a string value that represents one or more
 labels separated by a command for a STIX object and adds it to the list of
 labels in the labels property.
 */
-func (ezt *LabelsPropertyType) AddLabels(s string) error {
+func (ezt *LabelsPropertyType) AddLabel(s string) error {
 
 	labels := strings.Split(s, ",")
 	for _, label := range labels {

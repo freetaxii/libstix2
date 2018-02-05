@@ -12,7 +12,7 @@ package sqlite3
 
 // ----------------------------------------------------------------------
 //
-// Collection Table Private Functions and Methods
+// Media Type Table Private Functions and Methods
 //
 // ----------------------------------------------------------------------
 

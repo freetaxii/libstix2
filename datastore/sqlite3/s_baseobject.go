@@ -90,6 +90,23 @@ func commonObjectMarkingRefsProperties() string {
 }
 
 /*
+sqlGetBaseObjectIndex - This function will return an SQL statement that will
+get the last object_id in the base objects table to be used as an index for
+new records.
+*/
+func sqlGetBaseObjectIndex() (string, error) {
+	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	var s bytes.Buffer
+	s.WriteString("SELECT ")
+	s.WriteString("object_id ")
+	s.WriteString("FROM ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(" ORDER BY object_id DESC LIMIT 1")
+
+	return s.String(), nil
+}
+
+/*
 sqlAddBaseObject - This function will return an SQL statement that will add the
 base object properties to the database.
 */
@@ -331,15 +348,36 @@ func sqlAddObjectMarkingRef() (string, error) {
 // ----------------------------------------------------------------------
 
 /*
+getBaseObjectIndex - This method will populate the Index value on the object with the
+next value that can be used for inserting records into the database.
+*/
+func (ds *DatastoreType) getBaseObjectIndex() error {
+	var index int
+	stmt, _ := sqlGetBaseObjectIndex()
+
+	err := ds.DB.QueryRow(stmt).Scan(&index)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("no base object record found")
+		}
+		ds.Cache.BaseObjectIDIndex = 1
+		return fmt.Errorf("database execution error getting base object: ", err)
+	}
+	ds.Cache.BaseObjectIDIndex = index + 1
+
+	return nil
+}
+
+/*
 addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int64, error) {
+func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	objectID := ds.Index
-	ds.Index++
+	objectID := ds.Cache.BaseObjectIDIndex
+	ds.Cache.BaseObjectIDIndex++
 
 	stmt1, _ := sqlAddBaseObject()
 
@@ -408,7 +446,7 @@ a get method on a STIX object (for example: getIndicator).
 func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.CommonObjectPropertiesType, error) {
 
 	var baseObject properties.CommonObjectPropertiesType
-	var objectID int64
+	var objectID int
 	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
 
 	// Since not every object will have a label, and since we are using group_concat
@@ -437,11 +475,14 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 	baseObject.SetConfidence(confidence)
 	baseObject.SetLang(lang)
 	if label != nil {
-		baseObject.AddLabels(*label)
+		baseObject.AddLabel(*label)
 	}
 
-	//baseObject.LabelsPropertyType = ds.getBaseObjectLabels(objectID)
-	baseObject.ExternalReferencesPropertyType = ds.getBaseObjectExternalReferences(objectID)
+	externalRefData, err1 := ds.getExternalReferences(objectID)
+	if err1 != nil {
+		return nil, err1
+	}
+	baseObject.ExternalReferencesPropertyType = *externalRefData
 
 	return &baseObject, nil
 }
@@ -455,7 +496,7 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 /*
 addLabel - This method will add a label to the database for a specific object ID.
 */
-func (ds *DatastoreType) addLabel(objectID int64, label string) error {
+func (ds *DatastoreType) addLabel(objectID int, label string) error {
 	stmt, _ := sqlAddLabel()
 	_, err := ds.DB.Exec(stmt, objectID, label)
 
@@ -475,7 +516,7 @@ func (ds *DatastoreType) addLabel(objectID int64, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *DatastoreType) addExternalReference(objectID int64, reference properties.ExternalReferenceType) error {
+func (ds *DatastoreType) addExternalReference(objectID int, reference properties.ExternalReferenceType) error {
 	stmt, _ := sqlAddExternalReference()
 
 	_, err := ds.DB.Exec(stmt,
@@ -495,7 +536,7 @@ func (ds *DatastoreType) addExternalReference(objectID int64, reference properti
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *DatastoreType) getExternalReferences(objectID int64) (*properties.ExternalReferencesPropertyType, error) {
+func (ds *DatastoreType) getExternalReferences(objectID int) (*properties.ExternalReferencesPropertyType, error) {
 	var extrefs properties.ExternalReferencesPropertyType
 	stmt, _ := sqlGetExternalReference()
 
@@ -539,7 +580,7 @@ func (ds *DatastoreType) getExternalReferences(objectID int64) (*properties.Exte
 addObjectMarkingRef - This method will add an object marking ref to the
 database for a specific object ID.
 */
-func (ds *DatastoreType) addObjectMarkingRef(objectID int64, marking string) error {
+func (ds *DatastoreType) addObjectMarkingRef(objectID int, marking string) error {
 	stmt, _ := sqlAddObjectMarkingRef()
 	_, err := ds.DB.Exec(stmt, objectID, marking)
 

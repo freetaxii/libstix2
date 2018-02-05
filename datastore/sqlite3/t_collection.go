@@ -134,6 +134,8 @@ func sqlGetCollections(whichCollections string) (string, error) {
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
 	s.WriteString(tblCol)
+	s.WriteString(".row_id, ")
+	s.WriteString(tblCol)
 	s.WriteString(".date_added, ")
 	s.WriteString(tblCol)
 	s.WriteString(".enabled, ")
@@ -231,11 +233,18 @@ addCollection - This method will add a collection to the t_collections table in
 the database.
 */
 func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	// Lets first make sure the collection does not already exist in the cache
+	if _, found := ds.Cache.Collections[obj.ID]; found {
+		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
+	}
+	// If the object ID is not found in the cache, then lets initialize it
+	ds.Cache.Collections[obj.ID] = resources.InitCollection()
 
 	stmt1, _ := sqlAddCollection()
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	_, err1 := ds.DB.Exec(stmt1,
+	val, err1 := ds.DB.Exec(stmt1,
 		dateAdded,
 		obj.ID,
 		obj.Title,
@@ -246,6 +255,9 @@ func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
 	if err1 != nil {
 		return fmt.Errorf("database execution error inserting collection", err1)
 	}
+
+	indexID, _ := val.LastInsertId()
+	ds.Cache.Collections[obj.ID].DatastoreID = int(indexID)
 
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
@@ -294,15 +306,16 @@ func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Col
 	defer rows.Close()
 
 	for rows.Next() {
-		var enabled, hidden, iCanRead, iCanWrite int
+		var datastoreID, enabled, hidden, iCanRead, iCanWrite int
 		var dateAdded, id, title, description, mediaType string
-		if err := rows.Scan(&dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
+		if err := rows.Scan(&datastoreID, &dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("database scan error getting collection: ", err)
 		}
 
 		// Add collection information to Collection object
 		c, _ := allCollections.GetNewCollection()
+		c.DatastoreID = datastoreID
 		c.DateAdded = dateAdded
 		if enabled == 1 {
 			c.SetEnabled()

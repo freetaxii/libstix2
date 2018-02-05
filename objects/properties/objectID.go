@@ -15,7 +15,7 @@ the unique object ID. This is not included in the JSON serialization, but is
 used for writing to the database.
 */
 type ObjectIDPropertyType struct {
-	ObjectID int64 `json:"-"`
+	ObjectID int `json:"-"`
 }
 
 // ----------------------------------------------------------------------
@@ -26,7 +26,7 @@ type ObjectIDPropertyType struct {
 SetObjectID - This method takes in a int64 representing an object ID and
 updates the Version property.
 */
-func (ezt *ObjectIDPropertyType) SetObjectID(i int64) error {
+func (ezt *ObjectIDPropertyType) SetObjectID(i int) error {
 	ezt.ObjectID = i
 	return nil
 }
@@ -34,6 +34,6 @@ func (ezt *ObjectIDPropertyType) SetObjectID(i int64) error {
 /*
 GetObjectID - This method returns the object ID value as a int64.
 */
-func (ezt *ObjectIDPropertyType) GetObjectID() int64 {
+func (ezt *ObjectIDPropertyType) GetObjectID() int {
 	return ezt.ObjectID
 }
