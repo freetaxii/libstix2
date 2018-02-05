@@ -37,15 +37,16 @@ CollectionQueryType - This struct will hold all of the variables that a user can
 query a collection on.
 */
 type CollectionQueryType struct {
-	CollectionID      string
-	STIXID            []string // Passed in from the URL
-	STIXType          []string // Passed in from the URL
-	STIXVersion       []string // Passed in from the URL
-	AddedAfter        []string // Passed in from the URL
-	RangeBegin        int      // Passed in from Range Headers
-	RangeEnd          int      // Passed in from Range Headers
-	ServerRecordLimit int      // Server defined value in the configuration file
-	ClientRecordLimit int      // Passed in from Range Headers
+	CollectionID          string
+	CollectionDatastoreID int
+	STIXID                []string // Passed in from the URL
+	STIXType              []string // Passed in from the URL
+	STIXVersion           []string // Passed in from the URL
+	AddedAfter            []string // Passed in from the URL
+	RangeBegin            int      // Passed in from Range Headers
+	RangeEnd              int      // Passed in from Range Headers
+	ServerRecordLimit     int      // Server defined value in the configuration file
+	ClientRecordLimit     int      // Passed in from Range Headers
 }
 
 /*

@@ -356,6 +356,12 @@ func (ds *DatastoreType) initCache() error {
 
 	for _, c := range allCollections.Collections {
 		ds.Cache.Collections[c.ID] = &c
+		// get the size of the collection
+		size, err3 := ds.getCollectionSize(c.ID)
+		if err3 != nil {
+			return err3
+		}
+		ds.Cache.Collections[c.ID].Size = size
 	}
 	return nil
 }

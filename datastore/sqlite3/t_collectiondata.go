@@ -7,6 +7,7 @@ package sqlite3
 
 import (
 	"bytes"
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/freetaxii/libstix2/common/timestamp"
@@ -14,12 +15,13 @@ import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"strconv"
 	"time"
 )
 
 // ----------------------------------------------------------------------
 //
-// Private Functions - Collection Data Table
+// Collection Data Table Private Functions
 // Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
@@ -43,37 +45,6 @@ func collectionDataProperties() string {
  	"collection_id" INTEGER NOT NULL,
  	"stix_id" TEXT NOT NULL
  	`
-}
-
-/*
-sqlAddObjectToColleciton - This function will return an SQL statement that will
-add an object to a collection by adding an entry in the
-taxii_collection_data table. In this table we use the STIX ID not the Object ID
-because we need to make sure we include all versions of an object. So we need to
-store just the STIX ID
-*/
-func sqlAddObjectToCollection() (string, error) {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
-
-	/*
-		INSERT INTO
-			t_collection_data (
-				"date_added",
-				"collection_id",
-				"stix_id"
-			)
-			values (?, ?, ?)
-	*/
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblColData)
-	s.WriteString(" (")
-	s.WriteString("\"date_added\", ")
-	s.WriteString("\"collection_id\", ")
-	s.WriteString("\"stix_id\") ")
-	s.WriteString("values (?, ?, ?) ")
-
-	return s.String(), nil
 }
 
 /*
@@ -137,6 +108,128 @@ func sqlGetObjectList(query datastore.CollectionQueryType) (string, error) {
 	return s.String(), nil
 }
 
+// ----------------------------------------------------------------------
+//
+// Collection Data Table Private Functions and Methods
+// getCollectionSize
+//
+// ----------------------------------------------------------------------
+
+/*
+sqlGetCollectionSize - This function will return an SQL statement that will
+get the size of a collection from the t_collection_data table.
+*/
+func sqlGetCollectionSize() (string, error) {
+	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+
+	/*
+		SELECT
+			count(row_id)
+		FROM
+			t_collection_data
+		WHERE
+			collection_id = ?
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("SELECT count(row_id) FROM ")
+	s.WriteString(tblColData)
+	s.WriteString(" WHERE collection_id = ?")
+
+	return s.String(), nil
+}
+
+/*
+getCollectionSize - This method will return the size of a given collection
+*/
+func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
+	var index int
+
+	sqlStmt, _ := sqlGetCollectionSize()
+
+	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
+	err := ds.DB.QueryRow(sqlStmt, collectionDatastoreID).Scan(&index)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, errors.New("no base object record found")
+		}
+		return 0, fmt.Errorf("database execution error getting collection size: ", err)
+	}
+
+	return index, nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Collection Data Table Private Functions and Methods
+// addObjectToCollection
+//
+// ----------------------------------------------------------------------
+
+/*
+sqlAddObjectToColleciton - This function will return an SQL statement that will
+add an object to a collection by adding an entry in the taxii_collection_data
+table. In this table we use the STIX ID not the Object ID because we need to
+make sure we include all versions of an object. So we need to store just the
+STIX ID
+*/
+func sqlAddObjectToCollection() (string, error) {
+	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+
+	/*
+		INSERT INTO
+			t_collection_data (
+				"date_added",
+				"collection_id",
+				"stix_id"
+			)
+			values (?, ?, ?)
+	*/
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblColData)
+	s.WriteString(" (")
+	s.WriteString("date_added, ")
+	s.WriteString("collection_id, ")
+	s.WriteString("stix_id) ")
+	s.WriteString("values (?, ?, ?) ")
+
+	return s.String(), nil
+}
+
+/*
+addObjectToColleciton - This method will add an object to a collection by adding
+an entry in the taxii_collection_data table. In this table we use the STIX ID
+not the Object ID because we need to make sure we include all versions of an
+object. So we need to store just the STIX ID.
+*/
+func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	// We are storing the Collection DatastoreID which is an integer instead
+	// of the long collection ID string (UUID). So lets get the DatastoreID from
+	// the cache.
+	collectionDatastoreID := ds.Cache.Collections[obj.CollectionID].DatastoreID
+
+	sqlStmt, _ := sqlAddObjectToCollection()
+	_, err := ds.DB.Exec(sqlStmt, dateAdded, collectionDatastoreID, obj.STIXID)
+
+	if err != nil {
+		return fmt.Errorf("database execution error inserting collection data: ", err)
+	}
+
+	// If the operation was successful, lets increment the collection cache size
+	ds.Cache.Collections[obj.CollectionID].Size++
+	return nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Collection Data Table Private Functions and Methods
+// getManifestData
+//
+// ----------------------------------------------------------------------
+
 /*
 sqlGetManifestData - This function will return an SQL statement that will
 return a list of objects from a given collection and all of the information
@@ -169,7 +262,7 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 			s_base_object ON
 			t_collection_data.stix_id = s_base_object.id
 		WHERE
-			t_collection_data.collection_id = "aa"
+			t_collection_data.collection_id = 1
 	*/
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
@@ -199,6 +292,117 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 	return s.String(), nil
 }
 
+/*
+getManifestData - This method will return manifest data based on the query provided.
+*/
+func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+	var resultData datastore.CollectionQueryResultType
+	var first, last int
+	var errRange error
+
+	manifest := resources.InitManifest()
+
+	// Lets first make sure the collection does not already exist in the cache
+	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
+		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
+	}
+
+	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
+
+	sqlStmt, err := sqlGetManifestData(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option.
+	if err != nil {
+		return nil, err
+	}
+
+	// Query database for all the collection entries
+	rows, err := ds.DB.Query(sqlStmt)
+
+	if err != nil {
+		return nil, fmt.Errorf("database execution error getting manifest data: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var stixid, dateAdded, modified, specVersion string
+		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("database scan error getting manifest data: ", err)
+		}
+		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
+	}
+
+	if len(manifest.Objects) == 0 {
+		return nil, fmt.Errorf("no records returned getting manifest data")
+	}
+
+	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
+
+	first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.ServerRecordLimit, resultData.Size)
+
+	if errRange != nil {
+		return nil, errRange
+	}
+
+	// Get a new slice based on the range of records
+	resultData.ManifestData.Objects = manifest.Objects[first:last]
+	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
+	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
+
+	return &resultData, nil
+}
+
+/*
+processRangeValues - This method will take in the various range parameters and size
+of the dataset and will return the correct first and last index values to be used.
+*/
+func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, int, error) {
+
+	if first < 0 {
+		return 0, 0, errors.New("the starting value can not be negative")
+	}
+
+	if first > last {
+		return 0, 0, errors.New("the starting range value is larger than the ending range value")
+	}
+
+	if first >= size {
+		return 0, 0, errors.New("the starting range value is out of scope")
+	}
+
+	// If no range is requested and the server is not forcing it, do nothing.
+	if last == 0 && first == 0 && max != 0 {
+		last = first + max
+	} else {
+		// We need to be inclusive of the last value that was provided
+		last++
+	}
+
+	// If the last record requested is bigger than the total size of the data
+	// set the last size to be the size of the data
+	if last > size {
+		last = size
+	}
+
+	// If the request is for more records than the max size will allow, then
+	// compute where the new last record should be, but only if the server is
+	// forcing a max size.
+	if max != 0 && (last-first) > max {
+		last = first + max
+	}
+
+	return first, last, nil
+}
+
 // ----------------------------------------------------------------------
 //
 // WHERE statements for Collection Data Queries
@@ -216,7 +420,7 @@ func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string,
 	// ----------------------------------------------------------------------
 	// Lets first add the collection ID to the where clause.
 	// ----------------------------------------------------------------------
-	if err = sqlCollectionDataWhereCollectionID(query.CollectionID, &wherestmt); err != nil {
+	if err = sqlCollectionDataWhereCollectionID(query.CollectionDatastoreID, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -263,17 +467,17 @@ sqlCollectionDataWhereCollectionID - This function will build the correct WHERE
 statement for a provided collection ID value and is called from
 func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
 */
-func sqlCollectionDataWhereCollectionID(id string, b *bytes.Buffer) error {
+func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		This sql where statement should look like:
 		t_collection_data.collection_id = "some collection id"
 	*/
-	if id != "" {
+	if id != 0 {
 		b.WriteString(tblColData)
 		b.WriteString(`.collection_id = "`)
-		b.WriteString(id)
+		b.WriteString(strconv.Itoa(id))
 		b.WriteString(`"`)
 	} else {
 		return errors.New("no collection ID was provided")
@@ -574,133 +778,4 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 	}
 
 	return nil
-}
-
-// ----------------------------------------------------------------------
-//
-// Collection Data Table Private Functions and Methods
-//
-// ----------------------------------------------------------------------
-
-/*
-addObjectToColleciton - This method will add an object to a collection by adding
-an entry in the taxii_collection_data table. In this table we use the STIX ID
-not the Object ID because we need to make sure we include all versions of an
-object. So we need to store just the STIX ID.
-*/
-func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
-
-	collectionIndex := ds.Cache.Collections[obj.CollectionID].DatastoreID
-
-	sqlStmt, _ := sqlAddObjectToCollection()
-	_, err := ds.DB.Exec(sqlStmt, dateAdded, collectionIndex, obj.STIXID)
-
-	if err != nil {
-		return fmt.Errorf("database execution error inserting collection data", err)
-	}
-	return nil
-}
-
-/*
-getManifestData - This method will return manifest data based on the query provided.
-*/
-func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
-	var resultData datastore.CollectionQueryResultType
-	var first, last int
-	var errRange error
-
-	manifest := resources.InitManifest()
-
-	sqlStmt, err := sqlGetManifestData(query)
-
-	// If an error is found, that means a query parameter was passed incorrectly
-	// and we should return an error versus just skipping the option.
-	if err != nil {
-		return nil, err
-	}
-
-	// Query database for all the collection entries
-	rows, err := ds.DB.Query(sqlStmt)
-
-	if err != nil {
-		return nil, fmt.Errorf("database execution error getting manifest data: ", err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var stixid, dateAdded, modified, specVersion string
-		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
-			rows.Close()
-			return nil, fmt.Errorf("database scan error getting manifest data: ", err)
-		}
-		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
-	}
-
-	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
-	// check for the error and handle it.
-	if err := rows.Err(); err != nil {
-		rows.Close()
-		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
-	}
-
-	resultData.Size = len(manifest.Objects)
-	if resultData.Size == 0 {
-		return nil, fmt.Errorf("no records returned getting manifest data")
-	}
-
-	first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.ServerRecordLimit, resultData.Size)
-
-	if errRange != nil {
-		return nil, errRange
-	}
-
-	// Get a new slice based on the range of records
-	resultData.ManifestData.Objects = manifest.Objects[first:last]
-	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
-	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-
-	return &resultData, nil
-}
-
-/*
-processRangeValues - This method will take in the various range parameters and size
-of the dataset and will return the correct first and last index values to be used.
-*/
-func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, int, error) {
-
-	if first < 0 {
-		return 0, 0, errors.New("the starting value can not be negative")
-	}
-
-	if first > last {
-		return 0, 0, errors.New("the starting range value is larger than the ending range value")
-	}
-
-	if first >= size {
-		return 0, 0, errors.New("the starting range value is out of scope")
-	}
-
-	// If no range is requested and the server is not forcing it, do nothing.
-	if last == 0 && first == 0 && max != 0 {
-		last = first + max
-	} else {
-		// We need to be inclusive of the last value that was provided
-		last++
-	}
-
-	// If the last record requested is bigger than the total size of the data
-	// set the last size to be the size of the data
-	if last > size {
-		last = size
-	}
-
-	// If the request is for more records than the max size will allow, then
-	// compute where the new last record should be, but only if the server is
-	// forcing a max size.
-	if max != 0 && (last-first) > max {
-		last = first + max
-	}
-
-	return first, last, nil
 }

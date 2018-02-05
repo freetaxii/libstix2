@@ -17,7 +17,7 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Private Functions - Collection Tables
+// Collection Table Private Functions
 // Table property names and SQL statements
 //
 // ----------------------------------------------------------------------
@@ -64,6 +64,13 @@ func collectionMediaTypeProperties() string {
 	`
 }
 
+// ----------------------------------------------------------------------
+//
+// Collection Table Private Functions and Methods
+// addCollection
+//
+// ----------------------------------------------------------------------
+
 /*
 sqlAddCollection - This function will return an SQL statement that will insert
 a new collection in to the t_collections table in the database.
@@ -88,16 +95,102 @@ func sqlAddCollection() (string, error) {
 	s.WriteString("INSERT INTO ")
 	s.WriteString(tblCol)
 	s.WriteString(" (")
-	s.WriteString("\"date_added\", ")
-	s.WriteString("\"id\", ")
-	s.WriteString("\"title\", ")
-	s.WriteString("\"description\", ")
-	s.WriteString("\"can_read\", ")
-	s.WriteString("\"can_write\") ")
+	s.WriteString("date_added, ")
+	s.WriteString("id, ")
+	s.WriteString("title, ")
+	s.WriteString("description, ")
+	s.WriteString("can_read, ")
+	s.WriteString("can_write) ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?)")
 
 	return s.String(), nil
 }
+
+/*
+sqlAddCollectionMediaType - This function will return an SQL statement that will
+insert a media type for a given collection.
+*/
+func sqlAddCollectionMediaType() (string, error) {
+	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+
+	/*
+		INSERT INTO
+			t_collection_media_type (
+				"collection_id",
+				"media_type_id"
+			)
+			values (?, ?)
+	*/
+
+	var s bytes.Buffer
+	s.WriteString("INSERT INTO ")
+	s.WriteString(tblColMedia)
+	s.WriteString(" (")
+	s.WriteString("\"collection_id\", ")
+	s.WriteString("\"media_type_id\") ")
+	s.WriteString("values (?, ?)")
+
+	return s.String(), nil
+}
+
+/*
+addCollection - This method will add a collection to the t_collections table in
+the database.
+*/
+func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
+
+	// Lets first make sure the collection does not already exist in the cache
+	if _, found := ds.Cache.Collections[obj.ID]; found {
+		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
+	}
+	// If the object ID is not found in the cache, then lets initialize it with
+	// a TAXII collection object. This InitColleciton() function will return a
+	// pointer, which is what we need here.
+	ds.Cache.Collections[obj.ID] = resources.InitCollection()
+
+	stmt1, _ := sqlAddCollection()
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	val, err1 := ds.DB.Exec(stmt1,
+		dateAdded,
+		obj.ID,
+		obj.Title,
+		obj.Description,
+		obj.CanRead,
+		obj.CanWrite)
+
+	if err1 != nil {
+		return fmt.Errorf("database execution error inserting collection", err1)
+	}
+
+	indexID, _ := val.LastInsertId()
+	ds.Cache.Collections[obj.ID].DatastoreID = int(indexID)
+
+	if obj.MediaTypes != nil {
+		for _, media := range obj.MediaTypes {
+			stmt2, _ := sqlAddCollectionMediaType()
+
+			// TODO look up in cache
+			mediavalue := 0
+			if media == "application/vnd.oasis.stix+json" {
+				mediavalue = 1
+			}
+			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
+
+			if err2 != nil {
+				return fmt.Errorf("database execution error inserting collection media type", err2)
+			}
+		}
+	}
+	return nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Collection Table Private Functions and Methods
+// getCollection
+//
+// ----------------------------------------------------------------------
 
 /*
 sqlGetCollections - This function will return an SQL statement that will return a
@@ -193,89 +286,6 @@ func sqlGetCollections(whichCollections string) (string, error) {
 	s.WriteString(".id")
 
 	return s.String(), nil
-}
-
-/*
-sqlAddCollectionMediaType - This function will return an SQL statement that will
-insert a media type for a given collection.
-*/
-func sqlAddCollectionMediaType() (string, error) {
-	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
-
-	/*
-		INSERT INTO
-			t_collection_media_type (
-				"collection_id",
-				"media_type_id"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblColMedia)
-	s.WriteString(" (")
-	s.WriteString("\"collection_id\", ")
-	s.WriteString("\"media_type_id\") ")
-	s.WriteString("values (?, ?)")
-
-	return s.String(), nil
-}
-
-// ----------------------------------------------------------------------
-//
-// Private Methods - Collection Table
-//
-// ----------------------------------------------------------------------
-
-/*
-addCollection - This method will add a collection to the t_collections table in
-the database.
-*/
-func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
-
-	// Lets first make sure the collection does not already exist in the cache
-	if _, found := ds.Cache.Collections[obj.ID]; found {
-		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
-	}
-	// If the object ID is not found in the cache, then lets initialize it
-	ds.Cache.Collections[obj.ID] = resources.InitCollection()
-
-	stmt1, _ := sqlAddCollection()
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
-
-	val, err1 := ds.DB.Exec(stmt1,
-		dateAdded,
-		obj.ID,
-		obj.Title,
-		obj.Description,
-		obj.CanRead,
-		obj.CanWrite)
-
-	if err1 != nil {
-		return fmt.Errorf("database execution error inserting collection", err1)
-	}
-
-	indexID, _ := val.LastInsertId()
-	ds.Cache.Collections[obj.ID].DatastoreID = int(indexID)
-
-	if obj.MediaTypes != nil {
-		for _, media := range obj.MediaTypes {
-			stmt2, _ := sqlAddCollectionMediaType()
-
-			// TODO look up in cache
-			mediavalue := 0
-			if media == "application/vnd.oasis.stix+json" {
-				mediavalue = 1
-			}
-			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
-
-			if err2 != nil {
-				return fmt.Errorf("database execution error inserting collection media type", err2)
-			}
-		}
-	}
-	return nil
 }
 
 /*
