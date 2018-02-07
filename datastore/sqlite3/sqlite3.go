@@ -53,7 +53,7 @@ func New(filename string) DatastoreType {
 	ds.Filename = filename
 	ds.StrictSTIXIDs = false
 	ds.StrictSTIXTypes = true
-	ds.LogLevel = 5
+	ds.LogLevel = 0
 
 	err = ds.connect()
 	if err != nil {
@@ -194,29 +194,9 @@ parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-// func (ds *DatastoreType) GetBundle(query datastore.CollectionQueryType) (*objects.BundleType, *datastore.CollectionQueryResultType, error) {
-// 	stixBundle := objects.InitBundle()
-
-// 	// First get a list of all of the objects that are in the collection that
-// 	// meet the query requirements
-// 	rangeCollectionRawData, metaData, err := ds.GetObjectList(query)
-// 	if err != nil {
-// 		return nil, nil, err
-// 	}
-
-// 	// Loop through all of the STIX IDs in the list and get the actual object
-// 	for _, v := range *rangeCollectionRawData {
-// 		log.Println("STIX ID: ", v.STIXID, " Version: ", v.STIXVersion)
-// 		obj, err := ds.GetSTIXObject(v.STIXID, v.STIXVersion)
-
-// 		if err != nil {
-// 			return nil, nil, err
-// 		}
-// 		stixBundle.AddObject(obj)
-// 	}
-
-// 	return stixBundle, metaData, nil
-// }
+func (ds *DatastoreType) GetBundle(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+	return ds.getBundle(query)
+}
 
 /*
 GetManifestData - This method will take in query struct with range

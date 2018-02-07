@@ -193,6 +193,43 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 // ----------------------------------------------------------------------
 //
 // Collection Data Table Private Functions and Methods
+// getBundle
+//
+// ----------------------------------------------------------------------
+
+/*
+getBundle - This method will return a STIX bundle based on the query provided.
+*/
+func (ds *DatastoreType) getBundle(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Entering getManifestData()")
+	}
+
+	stixBundle := objects.InitBundle()
+
+	// First get a list of all of the objects that are in the collection that
+	// meet the query requirements. This is done with the manifest records.
+	resultData, err := ds.getManifestData(query)
+	if err != nil {
+		return nil, err
+	}
+
+	// Loop through all of the STIX IDs in the list and get the actual object
+	for _, v := range resultData.ManifestData.Objects {
+		obj, err := ds.GetSTIXObject(v.ID, v.Version)
+
+		if err != nil {
+			return nil, err
+		}
+		stixBundle.AddObject(obj)
+	}
+	resultData.BundleData = *stixBundle
+	return resultData, nil
+}
+
+// ----------------------------------------------------------------------
+//
+// Collection Data Table Private Functions and Methods
 // getManifestData
 //
 // ----------------------------------------------------------------------
