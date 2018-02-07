@@ -24,10 +24,10 @@ type Datastorer interface {
 }
 
 /*
-DatabaseCacheType - This struct will hold a cache of various database elements
+DatastoreCacheType - This struct will hold a cache of various database elements
 that will be loaded during initialization and updated along the way.
 */
-type DatabaseCacheType struct {
+type DatastoreCacheType struct {
 	BaseObjectIDIndex int
 	Collections       map[string]*resources.CollectionType
 }
@@ -43,10 +43,12 @@ type CollectionQueryType struct {
 	STIXType              []string // Passed in from the URL
 	STIXVersion           []string // Passed in from the URL
 	AddedAfter            []string // Passed in from the URL
+	AddedBefore           []string // Passed in from the URL
+	Limit                 []string // Passed in from the URL
 	RangeBegin            int      // Passed in from Range Headers
 	RangeEnd              int      // Passed in from Range Headers
-	ServerRecordLimit     int      // Server defined value in the configuration file
 	ClientRecordLimit     int      // Passed in from Range Headers
+	ServerRecordLimit     int      // Server defined value in the configuration file
 }
 
 /*

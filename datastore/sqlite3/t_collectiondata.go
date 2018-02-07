@@ -15,6 +15,7 @@ import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"log"
 	"strconv"
 	"time"
 )
@@ -47,67 +48,6 @@ func collectionDataProperties() string {
  	`
 }
 
-/*
-sqlGetObjectList - This function will return an SQL statement that will
-return a list of objects from a given collection. It will use the query struct to
-determine the requirements and parameters for the where clause of the SQL
-statement. A byte array is used instead of sting concatenation as it is the most
-efficient way to do string concatenation in Go.
-*/
-func sqlGetObjectList(query datastore.CollectionQueryType) (string, error) {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
-
-	whereQuery, err := sqlCollectionDataQueryOptions(query)
-
-	// If an error is found, that means a query parameter was passed incorrectly
-	// and we should return an error versus just skipping the option.
-	if err != nil {
-		return "", err
-	}
-
-	/*
-		SELECT
-			t_collection_data.stix_id,
-			s.base_object.date_added,
-			s_base_object.modified,
-			s_base_object.spec_version
-		FROM
-			t_collection_data
-		JOIN
-			s_base_object ON
-			t_collection_data.stix_id = s_base_object.id
-		WHERE
-			t_collection_data.collection_id = "aa"
-	*/
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString(tblColData)
-	s.WriteString(".stix_id, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".date_added, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".modified, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version ")
-
-	s.WriteString("FROM ")
-	s.WriteString(tblColData)
-
-	s.WriteString(" JOIN ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" ON ")
-	s.WriteString(tblColData)
-	s.WriteString(".stix_id = ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".id ")
-
-	s.WriteString("WHERE ")
-	s.WriteString(whereQuery)
-
-	return s.String(), nil
-}
-
 // ----------------------------------------------------------------------
 //
 // Collection Data Table Private Functions and Methods
@@ -121,20 +61,37 @@ get the size of a collection from the t_collection_data table.
 */
 func sqlGetCollectionSize() (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
 	/*
 		SELECT
-			count(row_id)
+			count(t_collection_data.row_id)
 		FROM
 			t_collection_data
+		JOIN
+			s_base_object ON
+			t_collection_data.stix_id = s_base_object.id
 		WHERE
-			collection_id = ?
+			t_collection_data.collection_id = 3
 	*/
 
 	var s bytes.Buffer
-	s.WriteString("SELECT count(row_id) FROM ")
+	s.WriteString("SELECT ")
+	s.WriteString("count(")
 	s.WriteString(tblColData)
-	s.WriteString(" WHERE collection_id = ?")
+	s.WriteString(".row_id) ")
+	s.WriteString("FROM ")
+	s.WriteString(tblColData)
+	s.WriteString(" JOIN ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(" ON ")
+	s.WriteString(tblColData)
+	s.WriteString(".stix_id = ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".id ")
+	s.WriteString("WHERE ")
+	s.WriteString(tblColData)
+	s.WriteString(".collection_id = ?")
 
 	return s.String(), nil
 }
@@ -143,19 +100,29 @@ func sqlGetCollectionSize() (string, error) {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Entering getManifestData()")
+	}
 	var index int
 
 	sqlStmt, _ := sqlGetCollectionSize()
+
+	if ds.LogLevel >= 10 {
+		log.Println("DEBUG: SQL Statement", sqlStmt)
+	}
 
 	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
 	err := ds.DB.QueryRow(sqlStmt, collectionDatastoreID).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return 0, errors.New("no base object record found")
+			return 0, errors.New("no collection data found")
 		}
 		return 0, fmt.Errorf("database execution error getting collection size: ", err)
 	}
 
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Collection ID", collectionID, "has a size of", index)
+	}
 	return index, nil
 }
 
@@ -243,12 +210,21 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
 	whereQuery, err := sqlCollectionDataQueryOptions(query)
-
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
 	if err != nil {
 		return "", err
 	}
+
+	limitQuery, _ := sqlCollectionDataQueryLimit(query)
+
+	// If an error is found, that means a query parameter was passed incorrectly
+	// and we should return an error versus just skipping the option. We probably
+	// do not need this error checking here, since we are doing it in the  function
+	// maybe we could log the message though since it might be useful for troubleshooting
+	// if err1 != nil {
+	// 	return "", err1
+	// }
 
 	/*
 		SELECT
@@ -262,7 +238,8 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 			s_base_object ON
 			t_collection_data.stix_id = s_base_object.id
 		WHERE
-			t_collection_data.collection_id = 1
+			t_collection_data.collection_id = ?
+		LIMIT 5
 	*/
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
@@ -289,6 +266,12 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
 
+	if limitQuery != 0 {
+		s.WriteString(" LIMIT ")
+		i := strconv.Itoa(limitQuery)
+		s.WriteString(i)
+	}
+
 	return s.String(), nil
 }
 
@@ -296,9 +279,13 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 getManifestData - This method will return manifest data based on the query provided.
 */
 func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Entering getManifestData()")
+	}
+
 	var resultData datastore.CollectionQueryResultType
-	var first, last int
-	var errRange error
+	// var first, last int
+	// var errRange error
 
 	manifest := resources.InitManifest()
 
@@ -310,6 +297,10 @@ func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
 
 	sqlStmt, err := sqlGetManifestData(query)
+
+	if ds.LogLevel >= 10 {
+		log.Println("DEBUG: SQL Statement", sqlStmt)
+	}
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -347,19 +338,36 @@ func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*
 
 	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
 
-	first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.ServerRecordLimit, resultData.Size)
-
-	if errRange != nil {
-		return nil, errRange
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Query Collection ID", query.CollectionID)
+		log.Println("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
 	}
 
+	resultData.ManifestData.Objects = manifest.Objects
+
+	// ----------------------------------------------------------------------
+	// This is the old pagination code
+	// first, last, errRange = ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.ServerRecordLimit, resultData.Size)
+
+	// if errRange != nil {
+	// 	return nil, errRange
+	// }
+
 	// Get a new slice based on the range of records
-	resultData.ManifestData.Objects = manifest.Objects[first:last]
+	// resultData.ManifestData.Objects = manifest.Objects[first:last]
+	// ----------------------------------------------------------------------
+
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
 
 	return &resultData, nil
 }
+
+// ----------------------------------------------------------------------
+//
+// HTTP Range Values for Collection Data Queries
+//
+// ----------------------------------------------------------------------
 
 /*
 processRangeValues - This method will take in the various range parameters and size
@@ -401,6 +409,44 @@ func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, in
 	}
 
 	return first, last, nil
+}
+
+// ----------------------------------------------------------------------
+//
+// LIMIT statements for Collection Data Queries
+//
+// ----------------------------------------------------------------------
+/*
+sqlCollectionDataQueryLimit - This function will take in a query struct and
+build an SQL LIMIT statement based on the values provided in query object.
+*/
+func sqlCollectionDataQueryLimit(query datastore.CollectionQueryType) (int, error) {
+	srv := 0
+	client := 0
+	var err error
+
+	if query.ServerRecordLimit > 0 {
+		srv = query.ServerRecordLimit
+	}
+
+	if query.Limit != nil {
+		client, err = strconv.Atoi(query.Limit[0])
+	}
+	if err != nil {
+		return srv, fmt.Errorf("client limit value is not valid: ", err)
+	}
+
+	if client > srv {
+		return srv, fmt.Errorf("client limit value is greater than the server limit, using server limit")
+	} else if client == 0 {
+		return srv, nil
+	} else if client == srv {
+		return srv, nil
+	} else if client < srv {
+		return client, nil
+	}
+
+	return 0, nil
 }
 
 // ----------------------------------------------------------------------
@@ -476,9 +522,8 @@ func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
 	*/
 	if id != 0 {
 		b.WriteString(tblColData)
-		b.WriteString(`.collection_id = "`)
+		b.WriteString(`.collection_id = `)
 		b.WriteString(strconv.Itoa(id))
-		b.WriteString(`"`)
 	} else {
 		return errors.New("no collection ID was provided")
 	}
@@ -641,8 +686,9 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
+	// If no version parameter was supplied, then set "last" as the default
 	if vers == nil {
-		return nil
+		vers = append(vers, "last")
 	}
 
 	// Lets check the multiple version use case and see if the options are valid

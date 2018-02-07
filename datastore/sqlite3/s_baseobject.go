@@ -114,24 +114,22 @@ func sqlGetBaseObjectIndex() (string, error) {
 }
 
 /*
-getBaseObjectIndex - This method will populate the Index value on the object with the
-next value that can be used for inserting records into the database.
+getBaseObjectIndex - This method will return the last object index value.
 */
-func (ds *DatastoreType) getBaseObjectIndex() error {
+func (ds *DatastoreType) getBaseObjectIndex() (int, error) {
 	var index int
-	stmt, _ := sqlGetBaseObjectIndex()
+	sqlStmt, _ := sqlGetBaseObjectIndex()
 
-	err := ds.DB.QueryRow(stmt).Scan(&index)
+	err := ds.DB.QueryRow(sqlStmt).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return errors.New("no base object record found")
+			return 0, errors.New("no base object record found")
 		}
 		ds.Cache.BaseObjectIDIndex = 1
-		return fmt.Errorf("database execution error getting base object: ", err)
+		return 0, fmt.Errorf("database execution error getting base object: ", err)
 	}
-	ds.Cache.BaseObjectIDIndex = index + 1
 
-	return nil
+	return index, nil
 }
 
 // ----------------------------------------------------------------------

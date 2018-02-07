@@ -34,7 +34,8 @@ type DatastoreType struct {
 	DB              *sql.DB
 	StrictSTIXIDs   bool
 	StrictSTIXTypes bool
-	Cache           datastore.DatabaseCacheType
+	LogLevel        int
+	Cache           datastore.DatastoreCacheType
 }
 
 // ----------------------------------------------------------------------
@@ -52,14 +53,15 @@ func New(filename string) DatastoreType {
 	ds.Filename = filename
 	ds.StrictSTIXIDs = false
 	ds.StrictSTIXTypes = true
+	ds.LogLevel = 5
 
 	err = ds.connect()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// Get current index value so new records being added can use it.
-	ds.getBaseObjectIndex()
+	// Initialize the datastore cache which will have the current object ID
+	// and the collections data.
 	err = ds.initCache()
 	if err != nil {
 		log.Fatalln(err)
@@ -186,12 +188,12 @@ func (ds *DatastoreType) GetCollections() (*resources.CollectionsType, error) {
 //
 // ----------------------------------------------------------------------
 
-// /*
-// GetBundle - This method will take in a query struct with range
-// parameters for a collection and will return a STIX Bundle that contains all
-// of the STIX objects that are in that collection that meet those query or range
-// parameters.
-// */
+/*
+GetBundle - This method will take in a query struct with range
+parameters for a collection and will return a STIX Bundle that contains all
+of the STIX objects that are in that collection that meet those query or range
+parameters.
+*/
 // func (ds *DatastoreType) GetBundle(query datastore.CollectionQueryType) (*objects.BundleType, *datastore.CollectionQueryResultType, error) {
 // 	stixBundle := objects.InitBundle()
 
@@ -214,78 +216,6 @@ func (ds *DatastoreType) GetCollections() (*resources.CollectionsType, error) {
 // 	}
 
 // 	return stixBundle, metaData, nil
-// }
-
-// /*
-// GetObjectList - This method will take in a query struct with range
-// parameters for a collection and will return a datastore collection raw data type
-// that contains all of the STIX IDs and their associated meta data that are in
-// that collection that meet those query or range parameters.
-// */
-// func (ds *DatastoreType) GetObjectList(query datastore.CollectionQueryType) (*[]datastore.CollectionRawDataType, *datastore.CollectionQueryResultType, error) {
-// 	var metaData datastore.CollectionQueryResultType
-// 	var collectionRawData []datastore.CollectionRawDataType
-// 	var rangeCollectionRawData []datastore.CollectionRawDataType
-
-// 	sqlStmt, err := sqlGetObjectList(query)
-
-// 	// If an error is found, that means a query parameter was passed incorrectly
-// 	// and we should return an error versus just skipping the option.
-// 	if err != nil {
-// 		return nil, nil, err
-// 	}
-
-// 	// Query database for all the collection entries
-// 	rows, err := ds.DB.Query(sqlStmt)
-// 	if err != nil {
-// 		return nil, nil, fmt.Errorf("database execution error getting collection data: ", err)
-// 	}
-// 	defer rows.Close()
-
-// 	for rows.Next() {
-// 		var dateAdded, stixid, modified, specVersion string
-// 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
-// 			rows.Close()
-// 			return nil, nil, fmt.Errorf("database scan error: ", err)
-// 		}
-// 		var rawData datastore.CollectionRawDataType
-// 		rawData.STIXID = stixid
-// 		rawData.DateAdded = dateAdded
-// 		rawData.STIXVersion = modified
-// 		rawData.SpecVersion = specVersion
-
-// 		collectionRawData = append(collectionRawData, rawData)
-// 	}
-
-// 	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
-// 	// check for the error and handle it.
-// 	if err := rows.Err(); err != nil {
-// 		rows.Close()
-// 		return nil, nil, fmt.Errorf("database rows error getting collection data: ", err)
-// 	}
-
-// 	metaData.Size = len(collectionRawData)
-
-// 	// If no records are returned, then return an error before processing anything else.
-// 	if metaData.Size == 0 {
-// 		return nil, nil, errors.New("no records returned")
-// 	}
-
-// 	first, last, errRange := ds.processRangeValues(query.RangeBegin, query.RangeEnd, query.RangeMax, metaData.Size)
-
-// 	if errRange != nil {
-// 		return nil, nil, errRange
-// 	}
-
-// 	// Get a new slice based on the range of records
-// 	rangeCollectionRawData = collectionRawData[first:last]
-// 	metaData.DateAddedFirst = rangeCollectionRawData[0].DateAdded
-// 	metaData.DateAddedLast = rangeCollectionRawData[len(rangeCollectionRawData)-1].DateAdded
-// 	metaData.RangeBegin = first
-// 	metaData.RangeEnd = last - 1
-
-// 	// metaData is already a pointer
-// 	return &rangeCollectionRawData, &metaData, nil
 // }
 
 /*
@@ -344,7 +274,28 @@ func (ds *DatastoreType) verifyFileExists() error {
 	return nil
 }
 
+/*
+initCache - This method will populate the datastore cache.
+*/
 func (ds *DatastoreType) initCache() error {
+	ds.Cache.Collections = make(map[string]*resources.CollectionType)
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Entering initCache()")
+	}
+
+	// Get current index value so new records being added can use it.
+	objectIndex, err := ds.getBaseObjectIndex()
+	if err != nil && err.Error() != "no base object record found" {
+		return err
+	}
+	ds.Cache.BaseObjectIDIndex = objectIndex + 1
+
+	if ds.LogLevel >= 5 {
+		log.Println("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
+	}
+
+	// Populate the collections cache
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
 
 	// Lets initialize the collections cache from the datastore
@@ -354,14 +305,22 @@ func (ds *DatastoreType) initCache() error {
 		return err
 	}
 
-	for _, c := range allCollections.Collections {
-		ds.Cache.Collections[c.ID] = &c
+	for k, c := range allCollections.Collections {
+		ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
 		// get the size of the collection
 		size, err3 := ds.getCollectionSize(c.ID)
 		if err3 != nil {
 			return err3
 		}
+		// If there was no error, set the size of the collection in the cache
 		ds.Cache.Collections[c.ID].Size = size
 	}
+
+	if ds.LogLevel >= 5 {
+		for k, v := range ds.Cache.Collections {
+			log.Println("DEBUG: Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
+		}
+	}
+
 	return nil
 }
