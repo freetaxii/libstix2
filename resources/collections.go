@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -77,7 +79,9 @@ type CollectionRecordType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -111,7 +115,9 @@ func CreateCollectionRecord(cid, sid string) *CollectionRecordType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - CollectionsType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -121,10 +127,10 @@ the location in the slice where the collection object was added. This method
 would be used if the collection was created separately and it just needs to be
 added in whole to the collections list.
 */
-func (ezt *CollectionsType) AddCollection(o *CollectionType) (int, error) {
-	//ezt.initCollectionsProperty()
-	positionThatAppendWillUse := len(ezt.Collections)
-	ezt.Collections = append(ezt.Collections, *o)
+func (r *CollectionsType) AddCollection(o *CollectionType) (int, error) {
+	//r.initCollectionsProperty()
+	positionThatAppendWillUse := len(r.Collections)
+	r.Collections = append(r.Collections, *o)
 	return positionThatAppendWillUse, nil
 }
 
@@ -134,12 +140,12 @@ add it to the collections array. It returns a resources.CollectionType which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {
-	//ezt.initCollectionsProperty()
+func (r *CollectionsType) GetNewCollection() (*CollectionType, error) {
+	//r.initCollectionsProperty()
 	o := InitCollection()
-	positionThatAppendWillUse := len(ezt.Collections)
-	ezt.Collections = append(ezt.Collections, *o)
-	return &ezt.Collections[positionThatAppendWillUse], nil
+	positionThatAppendWillUse := len(r.Collections)
+	r.Collections = append(r.Collections, *o)
+	return &r.Collections[positionThatAppendWillUse], nil
 }
 
 // ----------------------------------------------------------------------
@@ -150,10 +156,10 @@ func (ezt *CollectionsType) GetNewCollection() (*CollectionType, error) {
 initCollectionsProperty - This method will initialize the Collections
 slice if it has not already been initialized.
 */
-// func (ezt *CollectionsType) initCollectionsProperty() error {
-// 	if ezt.Collections == nil {
+// func (r *CollectionsType) initCollectionsProperty() error {
+// 	if r.Collections == nil {
 // 		a := make([]CollectionType, 0)
-// 		ezt.Collections = a
+// 		r.Collections = a
 // 	}
 // 	return nil
 // }
@@ -165,63 +171,63 @@ slice if it has not already been initialized.
 /*
 SetEnabled - This method will set the collection to be enabled.
 */
-func (ezt *CollectionType) SetEnabled() error {
-	ezt.Enabled = true
+func (r *CollectionType) SetEnabled() error {
+	r.Enabled = true
 	return nil
 }
 
 /*
 SetDisabled - This method will set the collection to be disabled.
 */
-func (ezt *CollectionType) SetDisabled() error {
-	ezt.Enabled = false
+func (r *CollectionType) SetDisabled() error {
+	r.Enabled = false
 	return nil
 }
 
 /*
 SetHidden - This method will set the collection to be hidden.
 */
-func (ezt *CollectionType) SetHidden() error {
-	ezt.Hidden = true
+func (r *CollectionType) SetHidden() error {
+	r.Hidden = true
 	return nil
 }
 
 /*
 SetVisible - This method will set the collection to be visible.
 */
-func (ezt *CollectionType) SetVisible() error {
-	ezt.Hidden = false
+func (r *CollectionType) SetVisible() error {
+	r.Hidden = false
 	return nil
 }
 
 /*
 SetCanRead - This method will set the can_read boolean to true.
 */
-func (ezt *CollectionType) SetCanRead() error {
-	ezt.CanRead = true
+func (r *CollectionType) SetCanRead() error {
+	r.CanRead = true
 	return nil
 }
 
 /*
 GetCanRead - This method will return the value of Can Read.
 */
-func (ezt *CollectionType) GetCanRead() bool {
-	return ezt.CanRead
+func (r *CollectionType) GetCanRead() bool {
+	return r.CanRead
 }
 
 /*
 SetCanWrite - This method will set the can_write boolean to true.
 */
-func (ezt *CollectionType) SetCanWrite() error {
-	ezt.CanWrite = true
+func (r *CollectionType) SetCanWrite() error {
+	r.CanWrite = true
 	return nil
 }
 
 /*
 GetCanWrite - This method will return the value of Can Write.
 */
-func (ezt *CollectionType) GetCanWrite() bool {
-	return ezt.CanWrite
+func (r *CollectionType) GetCanWrite() bool {
+	return r.CanWrite
 }
 
 /*
@@ -229,11 +235,11 @@ AddMediaType - This method takes in a string value that represents a version
 of the TAXII api that is supported and adds it to the list in media types
 property.
 */
-func (ezt *CollectionType) AddMediaType(s string) error {
-	if ezt.MediaTypes == nil {
+func (r *CollectionType) AddMediaType(s string) error {
+	if r.MediaTypes == nil {
 		a := make([]string, 0)
-		ezt.MediaTypes = a
+		r.MediaTypes = a
 	}
-	ezt.MediaTypes = append(ezt.MediaTypes, s)
+	r.MediaTypes = append(r.MediaTypes, s)
 	return nil
 }

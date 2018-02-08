@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -52,7 +54,9 @@ type ErrorType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -65,7 +69,9 @@ func InitError() *ErrorType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ErrorType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -74,8 +80,8 @@ for this particular error instnace and updates the Error ID property. A TAXII
 Server might choose to assign each error occurrence it's own identifier in
 order to facilitate debugging.
 */
-func (ezt *ErrorType) SetErrorID(s string) error {
-	ezt.ErrorID = s
+func (r *ErrorType) SetErrorID(s string) error {
+	r.ErrorID = s
 	return nil
 }
 
@@ -86,8 +92,8 @@ might choose to assign a common error code to all errors of the same type.
 Error codes are application-specific and not intended to be meaningful across
 different TAXII Servers.
 */
-func (ezt *ErrorType) SetErrorCode(s string) error {
-	ezt.ErrorCode = s
+func (r *ErrorType) SetErrorCode(s string) error {
+	r.ErrorCode = s
 	return nil
 }
 
@@ -95,8 +101,8 @@ func (ezt *ErrorType) SetErrorCode(s string) error {
 SetHTTPStatus - This method takes in a string value representing the HTTP
 status code applicable to this error and updates the HTTP Status property.
 */
-func (ezt *ErrorType) SetHTTPStatus(s string) error {
-	ezt.HTTPStatus = s
+func (r *ErrorType) SetHTTPStatus(s string) error {
+	r.HTTPStatus = s
 	return nil
 }
 
@@ -107,7 +113,7 @@ For example, this could be a URL pointing to a knowledge base article
 describing the error code. Absence of this field indicates that there are no
 additional details.
 */
-func (ezt *ErrorType) SetExternalDetails(s string) error {
-	ezt.ExternalDetails = s
+func (r *ErrorType) SetExternalDetails(s string) error {
+	r.ExternalDetails = s
 	return nil
 }

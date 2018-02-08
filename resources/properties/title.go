@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -17,21 +19,23 @@ type TitlePropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - TitlePropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetTitle - This method takes in a string value representing a title or name
 and updates the title property.
 */
-func (ezt *TitlePropertyType) SetTitle(s string) error {
-	ezt.Title = s
+func (p *TitlePropertyType) SetTitle(s string) error {
+	p.Title = s
 	return nil
 }
 
 /*
 GetTitle - This method returns the title.
 */
-func (ezt *TitlePropertyType) GetTitle() string {
-	return ezt.Title
+func (p *TitlePropertyType) GetTitle() string {
+	return p.Title
 }

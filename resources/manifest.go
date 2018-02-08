@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -59,7 +61,9 @@ type ManifestEntryType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -81,7 +85,9 @@ func InitManifestEntry() *ManifestEntryType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ManifestType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -91,9 +97,9 @@ the location in the slice where the manifest entry object was added. This method
 would be used if the manifest entry was created separately and it just needs to
 be added in whole to the manifest list.
 */
-func (ezt *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {
-	positionThatAppendWillUse := len(ezt.Objects)
-	ezt.Objects = append(ezt.Objects, *o)
+func (r *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {
+	positionThatAppendWillUse := len(r.Objects)
+	r.Objects = append(r.Objects, *o)
 	return positionThatAppendWillUse, nil
 }
 
@@ -102,19 +108,19 @@ GetNewManifestEntry - This method is used to create a manifest entry and automat
 add it to the objects array. It returns a resources.ManifestEntryType which is a
 pointer to the actual manifest entry that was created in the manifest slice.
 */
-func (ezt *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {
+func (r *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {
 	o := InitManifestEntry()
-	positionThatAppendWillUse := len(ezt.Objects)
-	ezt.Objects = append(ezt.Objects, *o)
-	return &ezt.Objects[positionThatAppendWillUse], nil
+	positionThatAppendWillUse := len(r.Objects)
+	r.Objects = append(r.Objects, *o)
+	return &r.Objects[positionThatAppendWillUse], nil
 }
 
 /*
 CreateManifestEntry - This method is used to create and add a manifest entry in
 a single step, by taking in all of the values as parameters.
 */
-func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
-	m, _ := ezt.GetNewManifestEntry()
+func (r *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
+	m, _ := r.GetNewManifestEntry()
 	m.SetID(id)
 	m.SetDateAdded(date)
 	m.SetVersion(ver)
@@ -129,23 +135,23 @@ func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error 
 /*
 SetDateAdded - This method will add the date added to the manifest entry
 */
-func (ezt *ManifestEntryType) SetDateAdded(s string) error {
-	ezt.DateAdded = s
+func (r *ManifestEntryType) SetDateAdded(s string) error {
+	r.DateAdded = s
 	return nil
 }
 
 /*
 SetVersion - This method will add the version to the manifest entry
 */
-func (ezt *ManifestEntryType) SetVersion(s string) error {
-	ezt.Version = s
+func (r *ManifestEntryType) SetVersion(s string) error {
+	r.Version = s
 	return nil
 }
 
 /*
 SetMediaType - This method will add the media type to the manifest entry
 */
-func (ezt *ManifestEntryType) SetMediaType(s string) error {
-	ezt.MediaType = s
+func (r *ManifestEntryType) SetMediaType(s string) error {
+	r.MediaType = s
 	return nil
 }

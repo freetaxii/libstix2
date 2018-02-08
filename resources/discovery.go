@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -46,7 +48,9 @@ type DiscoveryType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -59,15 +63,17 @@ func InitDiscovery() *DiscoveryType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - DiscoveryType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetContact - This methods takes in a string value representing contact
 information and updates the contact property.
 */
-func (ezt *DiscoveryType) SetContact(s string) error {
-	ezt.Contact = s
+func (r *DiscoveryType) SetContact(s string) error {
+	r.Contact = s
 	return nil
 }
 
@@ -75,35 +81,35 @@ func (ezt *DiscoveryType) SetContact(s string) error {
 GetContact - This method returns the contact information from the contact
 property.
 */
-func (ezt *DiscoveryType) GetContact() string {
-	return ezt.Contact
+func (r *DiscoveryType) GetContact() string {
+	return r.Contact
 }
 
 /*
 SetDefault - This methods takes in a string value representing a default
 api-root and updates the default property.
 */
-func (ezt *DiscoveryType) SetDefault(s string) error {
-	ezt.Default = s
+func (r *DiscoveryType) SetDefault(s string) error {
+	r.Default = s
 	return nil
 }
 
 /*
 GetDefault - This methods returns the default api-root.
 */
-func (ezt *DiscoveryType) GetDefault() string {
-	return ezt.Default
+func (r *DiscoveryType) GetDefault() string {
+	return r.Default
 }
 
 /*
 AddAPIRoot - This method takes in a string value that represents an api-root
 and adds it to the list in the APIRoots property.
 */
-func (ezt *DiscoveryType) AddAPIRoot(s string) error {
-	if ezt.APIRoots == nil {
+func (r *DiscoveryType) AddAPIRoot(s string) error {
+	if r.APIRoots == nil {
 		a := make([]string, 0)
-		ezt.APIRoots = a
+		r.APIRoots = a
 	}
-	ezt.APIRoots = append(ezt.APIRoots, s)
+	r.APIRoots = append(r.APIRoots, s)
 	return nil
 }

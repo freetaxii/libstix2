@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -17,21 +19,23 @@ type DescriptionPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - DescriptionPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetDescription - This method takes in a string value representing a text
 description and udpates the description property.
 */
-func (ezt *DescriptionPropertyType) SetDescription(s string) error {
-	ezt.Description = s
+func (p *DescriptionPropertyType) SetDescription(s string) error {
+	p.Description = s
 	return nil
 }
 
 /*
 GetDescription - This method returns the description.
 */
-func (ezt *DescriptionPropertyType) GetDescription() string {
-	return ezt.Description
+func (p *DescriptionPropertyType) GetDescription() string {
+	return p.Description
 }
