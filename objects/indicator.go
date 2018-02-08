@@ -11,7 +11,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Indicator Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -53,7 +55,9 @@ type IndicatorType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -67,15 +71,17 @@ func InitIndicator(ver string) *IndicatorType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - IndicatorType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetPattern - This method will take in a string value representing a complete
 and valid STIX pattern and set the pattern property to that value.
 */
-func (ezt *IndicatorType) SetPattern(s string) error {
-	ezt.Pattern = s
+func (o *IndicatorType) SetPattern(s string) error {
+	o.Pattern = s
 	return nil
 }
 
@@ -83,8 +89,8 @@ func (ezt *IndicatorType) SetPattern(s string) error {
 SetValidFromToCurrentTime - This methods sets the valid from time to the
 current time
 */
-func (ezt *IndicatorType) SetValidFromToCurrentTime() error {
-	ezt.ValidFrom = timestamp.GetCurrentTime("micro")
+func (o *IndicatorType) SetValidFromToCurrentTime() error {
+	o.ValidFrom = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -92,9 +98,9 @@ func (ezt *IndicatorType) SetValidFromToCurrentTime() error {
 SetValidFrom - This method will take in a timestamp in either time.Time or
 string format and will set the valid from property to that value.
 */
-func (ezt *IndicatorType) SetValidFrom(t interface{}) error {
+func (o *IndicatorType) SetValidFrom(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.ValidFrom = ts
+	o.ValidFrom = ts
 	return nil
 }
 
@@ -102,8 +108,8 @@ func (ezt *IndicatorType) SetValidFrom(t interface{}) error {
 SetValidUntilToCurrentTime - This methods sets the valid until time to the
 current time
 */
-func (ezt *IndicatorType) SetValidUntilToCurrentTime() error {
-	ezt.ValidUntil = timestamp.GetCurrentTime("micro")
+func (o *IndicatorType) SetValidUntilToCurrentTime() error {
+	o.ValidUntil = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -111,10 +117,10 @@ func (ezt *IndicatorType) SetValidUntilToCurrentTime() error {
 SetValidUntil - This method will take in a timestamp in either time.Time or
 string format and will set the valid until property to that value.
 */
-func (ezt *IndicatorType) SetValidUntil(t interface{}) error {
+func (o *IndicatorType) SetValidUntil(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 
 	// TODO check to make sure this is later than the vaild_from
-	ezt.ValidUntil = ts
+	o.ValidUntil = ts
 	return nil
 }

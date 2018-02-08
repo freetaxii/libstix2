@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -18,15 +20,17 @@ type CreatedByRefPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - CreatedByRefPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetCreatedByRef - This method takes in a string value representing a STIX
 identifier and updates the Created By Ref property.
 */
-func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
-	ezt.CreatedByRef = s
+func (p *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
+	p.CreatedByRef = s
 	return nil
 }
 
@@ -34,6 +38,6 @@ func (ezt *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
 GetCreatedByRef - This method returns the STIX identifier for the identity
 that created this object.
 */
-func (ezt *CreatedByRefPropertyType) GetCreatedByRef() string {
-	return ezt.CreatedByRef
+func (p *CreatedByRefPropertyType) GetCreatedByRef() string {
+	return p.CreatedByRef
 }

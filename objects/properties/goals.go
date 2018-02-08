@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -18,18 +20,20 @@ type GoalsPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - GoalsType
+//
 // ----------------------------------------------------------------------
 
 /*
 AddGoal - This method takes in a string value that represents a goal and adds
 it to the list of goals in the goals property.
 */
-func (ezt *GoalsPropertyType) AddGoal(s string) error {
+func (p *GoalsPropertyType) AddGoal(s string) error {
 	// if this.Goals == nil {
 	// 	a := make([]string, 0)
 	// 	this.Goals = a
 	// }
-	ezt.Goals = append(ezt.Goals, s)
+	p.Goals = append(p.Goals, s)
 	return nil
 }

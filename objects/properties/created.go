@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -23,15 +25,17 @@ type CreatedPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - CreatedPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetCreatedToCurrentTime - This methods sets the object created time to the
 current time
 */
-func (ezt *CreatedPropertyType) SetCreatedToCurrentTime() error {
-	ezt.Created = timestamp.GetCurrentTime("milli")
+func (p *CreatedPropertyType) SetCreatedToCurrentTime() error {
+	p.Created = timestamp.GetCurrentTime("milli")
 	return nil
 }
 
@@ -41,15 +45,15 @@ format and updates the created property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
-func (ezt *CreatedPropertyType) SetCreated(t interface{}) error {
+func (p *CreatedPropertyType) SetCreated(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
-	ezt.Created = ts
+	p.Created = ts
 	return nil
 }
 
 /*
 GetCreated - This method will return the created timestamp as a string.
 */
-func (ezt *CreatedPropertyType) GetCreated() string {
-	return ezt.Created
+func (p *CreatedPropertyType) GetCreated() string {
+	return p.Created
 }

@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -38,7 +40,9 @@ type BundleType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -55,14 +59,16 @@ func InitBundle() *BundleType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - BundleType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetSpecVersion20 - This method will set the specification version to 2.0.
 */
-func (ezt *BundleType) SetSpecVersion20() error {
-	ezt.SpecVersion = "2.0"
+func (o *BundleType) SetSpecVersion20() error {
+	o.SpecVersion = "2.0"
 	return nil
 }
 
@@ -70,7 +76,7 @@ func (ezt *BundleType) SetSpecVersion20() error {
 AddObject - This method will take in an object as an interface and add it to
 the list of objects in the bundle.
 */
-func (ezt *BundleType) AddObject(i interface{}) error {
-	ezt.Objects = append(ezt.Objects, i)
+func (o *BundleType) AddObject(i interface{}) error {
+	o.Objects = append(o.Objects, i)
 	return nil
 }

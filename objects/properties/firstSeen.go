@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -23,15 +25,17 @@ type FirstSeenPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - FirstSeenPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetFirstSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
-func (ezt *FirstSeenPropertyType) SetFirstSeenToCurrentTime() error {
-	ezt.FirstSeen = timestamp.GetCurrentTime("micro")
+func (p *FirstSeenPropertyType) SetFirstSeenToCurrentTime() error {
+	p.FirstSeen = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -41,8 +45,8 @@ format and updates the first seen property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
-func (ezt *FirstSeenPropertyType) SetFirstSeen(t interface{}) error {
+func (p *FirstSeenPropertyType) SetFirstSeen(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.FirstSeen = ts
+	p.FirstSeen = ts
 	return nil
 }

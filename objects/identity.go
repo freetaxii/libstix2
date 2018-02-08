@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -40,7 +42,9 @@ type IdentityType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -54,7 +58,9 @@ func InitIdentity(ver string) *IdentityType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - IdentityType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -62,8 +68,8 @@ SetIdentityClass - This method takes in a string value representing a STIX
 identity class from the vocab identity-class-ov and updates the identity class
 property.
 */
-func (ezt *IdentityType) SetIdentityClass(s string) error {
-	ezt.IdentityClass = s
+func (o *IdentityType) SetIdentityClass(s string) error {
+	o.IdentityClass = s
 	return nil
 }
 
@@ -71,8 +77,8 @@ func (ezt *IdentityType) SetIdentityClass(s string) error {
 AddSector - This method takes in a string value that represents a STIX sector
 from the vocab industry-sector-ov and adds it to the identity object.
 */
-func (ezt *IdentityType) AddSector(s string) error {
-	ezt.Sectors = append(ezt.Sectors, s)
+func (o *IdentityType) AddSector(s string) error {
+	o.Sectors = append(o.Sectors, s)
 	return nil
 }
 
@@ -81,7 +87,7 @@ SetContactInformation - This method takes in a string value representing
 contact information as a text string and updates the contact information
 property.
 */
-func (ezt *IdentityType) SetContactInformation(s string) error {
-	ezt.ContactInformation = s
+func (o *IdentityType) SetContactInformation(s string) error {
+	o.ContactInformation = s
 	return nil
 }

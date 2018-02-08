@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,7 +21,9 @@ type ObjectMarkingRefsPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ObjectMarkingRefsPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -27,7 +31,7 @@ AddObjectMarkingRef - This method takes in a string value that represents a
 STIX identifer for a marking definition object and adds it to the list of
 object marking refs.
 */
-func (ezt *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) error {
-	ezt.ObjectMarkingRefs = append(ezt.ObjectMarkingRefs, s)
+func (p *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) error {
+	p.ObjectMarkingRefs = append(p.ObjectMarkingRefs, s)
 	return nil
 }

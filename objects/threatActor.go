@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -48,7 +50,9 @@ type ThreatActorType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -62,15 +66,17 @@ func InitThreatActor(ver string) *ThreatActorType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ThreatActorType
+//
 // ----------------------------------------------------------------------
 
 /*
 AddRole - This method takes in a string value representing a threat actor
 role from the threat-actor-role-ov and adds it to the role property.
 */
-func (ezt *ThreatActorType) AddRole(s string) error {
-	ezt.Roles = append(ezt.Roles, s)
+func (o *ThreatActorType) AddRole(s string) error {
+	o.Roles = append(o.Roles, s)
 	return nil
 }
 
@@ -79,8 +85,8 @@ SetSophistication - This method takes in a string value representing the
 sophistication level of a threat actor from the threat-actor-sophistication-ov
 and adds it to the sophistication property.
 */
-func (ezt *ThreatActorType) SetSophistication(s string) error {
-	ezt.Sophistication = s
+func (o *ThreatActorType) SetSophistication(s string) error {
+	o.Sophistication = s
 	return nil
 }
 
@@ -89,7 +95,7 @@ AddPersonalMotivation - This method takes in a string value representing the
 motivation of a threat actor from the threat-actor-motivation-ov and adds it
 to the personal motivations property.
 */
-func (ezt *ThreatActorType) AddPersonalMotivation(s string) error {
-	ezt.PersonalMotivations = append(ezt.PersonalMotivations, s)
+func (o *ThreatActorType) AddPersonalMotivation(s string) error {
+	o.PersonalMotivations = append(o.PersonalMotivations, s)
 	return nil
 }

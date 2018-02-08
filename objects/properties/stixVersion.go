@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,21 +21,23 @@ type STIXVersionPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - STIXVersionPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetSpecVersion - This method takes in a string representing a STIX specification
 version and updates the Version property.
 */
-func (ezt *STIXVersionPropertyType) SetSpecVersion(s string) error {
-	ezt.SpecVersion = s
+func (p *STIXVersionPropertyType) SetSpecVersion(s string) error {
+	p.SpecVersion = s
 	return nil
 }
 
 /*
 GetSpecVersion - This method returns the version value as a string.
 */
-func (ezt *STIXVersionPropertyType) GetSpecVersion() string {
-	return ezt.SpecVersion
+func (p *STIXVersionPropertyType) GetSpecVersion() string {
+	return p.SpecVersion
 }

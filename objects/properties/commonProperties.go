@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Common Property Types - Used to populate the common object properties
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -55,7 +57,9 @@ type CommonBundlePropertiesType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - CommonObjectPropertiesType
+//
 // ----------------------------------------------------------------------
 
 // InitObjectProperties is a helper function to initialize a new object with common
@@ -64,13 +68,13 @@ type CommonBundlePropertiesType struct {
 // params: objectType - a string value of the STIX object type
 // params: version - the STIX spec version of the object, ex. "2.0". This is
 // 		stored and used in TAXII.
-func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) error {
+func (p *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) error {
 	// TODO make sure that the value coming in a a valid STIX object type
-	ezt.SetSpecVersion(version)
-	ezt.SetObjectType(objectType)
-	ezt.SetNewID(objectType)
-	ezt.SetCreatedToCurrentTime()
-	ezt.SetModifiedToCreated()
+	p.SetSpecVersion(version)
+	p.SetObjectType(objectType)
+	p.SetNewID(objectType)
+	p.SetCreatedToCurrentTime()
+	p.SetModifiedToCreated()
 	return nil
 }
 
@@ -78,7 +82,7 @@ func (ezt *CommonObjectPropertiesType) InitObjectProperties(objectType, version 
 // created time. This has to be done at this level, since at the individual
 // properties type say "ModifiedPropertyType" this.Created does not exist.
 // But it will exist at this level of inheritance
-func (ezt *CommonObjectPropertiesType) SetModifiedToCreated() error {
-	ezt.Modified = ezt.Created
+func (p *CommonObjectPropertiesType) SetModifiedToCreated() error {
+	p.Modified = p.Created
 	return nil
 }

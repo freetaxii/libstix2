@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -18,21 +20,23 @@ type ConfidencePropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ConfidencePropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetConfidence - This method takes in an integer representing a STIX
 confidence level 0-100 and updates the Confidence property.
 */
-func (ezt *ConfidencePropertyType) SetConfidence(i int) error {
-	ezt.Confidence = i
+func (p *ConfidencePropertyType) SetConfidence(i int) error {
+	p.Confidence = i
 	return nil
 }
 
 /*
 GetConfidence - This method returns the confidence value as an integer.
 */
-func (ezt *ConfidencePropertyType) GetConfidence() int {
-	return ezt.Confidence
+func (p *ConfidencePropertyType) GetConfidence() int {
+	return p.Confidence
 }

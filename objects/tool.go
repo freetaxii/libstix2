@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -49,7 +51,9 @@ type ToolType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -63,14 +67,16 @@ func InitTool(ver string) *ToolType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ToolType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetToolVersion - This method takes in a string value representing the version
 of the tool and updates the tool version property.
 */
-func (ezt *ToolType) SetToolVersion(s string) error {
-	ezt.ToolVersion = s
+func (o *ToolType) SetToolVersion(s string) error {
+	o.ToolVersion = s
 	return nil
 }

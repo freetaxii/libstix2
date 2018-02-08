@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,21 +21,23 @@ type ObjectIDPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ObjectIDPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetObjectID - This method takes in a int64 representing an object ID and
 updates the Version property.
 */
-func (ezt *ObjectIDPropertyType) SetObjectID(i int) error {
-	ezt.ObjectID = i
+func (p *ObjectIDPropertyType) SetObjectID(i int) error {
+	p.ObjectID = i
 	return nil
 }
 
 /*
 GetObjectID - This method returns the object ID value as a int64.
 */
-func (ezt *ObjectIDPropertyType) GetObjectID() int {
-	return ezt.ObjectID
+func (p *ObjectIDPropertyType) GetObjectID() int {
+	return p.ObjectID
 }

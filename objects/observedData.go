@@ -11,7 +11,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -62,7 +64,9 @@ type ObservedDataType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -76,15 +80,17 @@ func InitObservedData(ver string) *ObservedDataType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ObservedDataType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetFirstObservedToCurrentTime - This methods sets the first observed time to the
 current time
 */
-func (ezt *ObservedDataType) SetFirstObservedToCurrentTime() error {
-	ezt.FirstObserved = timestamp.GetCurrentTime("micro")
+func (o *ObservedDataType) SetFirstObservedToCurrentTime() error {
+	o.FirstObserved = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -92,9 +98,9 @@ func (ezt *ObservedDataType) SetFirstObservedToCurrentTime() error {
 SetFirstObserved - This method takes in a timestamp in either time.Time or
 string format and updates the first observed property.
 */
-func (ezt *ObservedDataType) SetFirstObserved(t interface{}) error {
+func (o *ObservedDataType) SetFirstObserved(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.FirstObserved = ts
+	o.FirstObserved = ts
 	return nil
 }
 
@@ -102,8 +108,8 @@ func (ezt *ObservedDataType) SetFirstObserved(t interface{}) error {
 SetLastObservedToCurrentTime - This methods sets the last observed time to the
 current time
 */
-func (ezt *ObservedDataType) SetLastObservedToCurrentTime() error {
-	ezt.LastObserved = timestamp.GetCurrentTime("micro")
+func (o *ObservedDataType) SetLastObservedToCurrentTime() error {
+	o.LastObserved = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -111,9 +117,9 @@ func (ezt *ObservedDataType) SetLastObservedToCurrentTime() error {
 SetLastObserved - This method takes in a timestamp in either time.Time or
 string format and updates the last observed property.
 */
-func (ezt *ObservedDataType) SetLastObserved(t interface{}) error {
+func (o *ObservedDataType) SetLastObserved(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.LastObserved = ts
+	o.LastObserved = ts
 	return nil
 }
 
@@ -121,8 +127,8 @@ func (ezt *ObservedDataType) SetLastObserved(t interface{}) error {
 SetNumberObserved - This method takes in an integer that represents the
 number of objects that were observed and updates the number observed property.
 */
-func (ezt *ObservedDataType) SetNumberObserved(i int) error {
-	ezt.NumberObserved = i
+func (o *ObservedDataType) SetNumberObserved(i int) error {
+	o.NumberObserved = i
 	return nil
 }
 
@@ -130,7 +136,7 @@ func (ezt *ObservedDataType) SetNumberObserved(i int) error {
 SetObjects - This takes in a string value that represents represents a cyber
 observable JSON object and updates the objects property.
 */
-func (ezt *ObservedDataType) SetObjects(s string) error {
-	ezt.Objects = s
+func (o *ObservedDataType) SetObjects(s string) error {
+	o.Objects = s
 	return nil
 }

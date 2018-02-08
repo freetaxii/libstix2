@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -18,21 +20,23 @@ type ObjectTypePropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ObjectTypePropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetObjectType - This method takes in a string value representing a STIX object
 type and updates the type property.
 */
-func (ezt *ObjectTypePropertyType) SetObjectType(s string) error {
-	ezt.ObjectType = s
+func (p *ObjectTypePropertyType) SetObjectType(s string) error {
+	p.ObjectType = s
 	return nil
 }
 
 /*
 GetObjectType - This method returns the object type.
 */
-func (ezt *ObjectTypePropertyType) GetObjectType() string {
-	return ezt.ObjectType
+func (p *ObjectTypePropertyType) GetObjectType() string {
+	return p.ObjectType
 }

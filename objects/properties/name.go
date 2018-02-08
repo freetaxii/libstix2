@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -18,21 +20,23 @@ type NamePropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - NamePropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetName - This method takes in a string value representing a name of the object
 and updates the name property.
 */
-func (ezt *NamePropertyType) SetName(s string) error {
-	ezt.Name = s
+func (p *NamePropertyType) SetName(s string) error {
+	p.Name = s
 	return nil
 }
 
 /*
 GetName - This method returns the current name of the object.
 */
-func (ezt *NamePropertyType) GetName() string {
-	return ezt.Name
+func (p *NamePropertyType) GetName() string {
+	return p.Name
 }

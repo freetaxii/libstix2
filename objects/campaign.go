@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -50,7 +52,9 @@ type CampaignType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -64,14 +68,16 @@ func InitCampaign(ver string) *CampaignType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - CampaignType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetObjective - This method will take in a string representing an objective,
 goal, desired outcome, or intended effect and update the objective property.
 */
-func (ezt *CampaignType) SetObjective(s string) error {
-	ezt.Objective = s
+func (o *CampaignType) SetObjective(s string) error {
+	o.Objective = s
 	return nil
 }

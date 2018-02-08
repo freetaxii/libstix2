@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -23,15 +25,17 @@ type ModifiedPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ModifiedPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetModifiedToCurrentTime - This methods sets the object modified time to the
 current time
 */
-func (ezt *ModifiedPropertyType) SetModifiedToCurrentTime() error {
-	ezt.Modified = timestamp.GetCurrentTime("milli")
+func (p *ModifiedPropertyType) SetModifiedToCurrentTime() error {
+	p.Modified = timestamp.GetCurrentTime("milli")
 	return nil
 }
 
@@ -41,9 +45,9 @@ format and updates the modifed property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
-func (ezt *ModifiedPropertyType) SetModified(t interface{}) error {
+func (p *ModifiedPropertyType) SetModified(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
-	ezt.Modified = ts
+	p.Modified = ts
 	return nil
 }
 
@@ -52,6 +56,6 @@ GetModified - This method will return the modified timestamp as a string. If
 the value is the same as the created timestamp, then this object is the
 first version of the object.
 */
-func (ezt *ModifiedPropertyType) GetModified() string {
-	return ezt.Modified
+func (p *ModifiedPropertyType) GetModified() string {
+	return p.Modified
 }

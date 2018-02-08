@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -58,7 +60,9 @@ type RelationshipType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -72,15 +76,17 @@ func InitRelationship(ver string) *RelationshipType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - RelationshipType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetRelationshipType - This method takes in a string value that represents the
 type name of the releationship and updates the relationship type property.
 */
-func (ezt *RelationshipType) SetRelationshipType(s string) error {
-	ezt.RelationshipType = s
+func (o *RelationshipType) SetRelationshipType(s string) error {
+	o.RelationshipType = s
 	return nil
 }
 
@@ -89,8 +95,8 @@ SetSourceRef - This method takes in a string value that represents a STIX
 identifier of the source STIX object in the relationship and updates the
 source ref property.
 */
-func (ezt *RelationshipType) SetSourceRef(s string) error {
-	ezt.SourceRef = s
+func (o *RelationshipType) SetSourceRef(s string) error {
+	o.SourceRef = s
 	return nil
 }
 
@@ -99,8 +105,8 @@ SetTargetRef - This method takes in a string value that represents a STIX
 identifier of the target STIX object in the relationship and updates the
 target ref property.
 */
-func (ezt *RelationshipType) SetTargetRef(s string) error {
-	ezt.TargetRef = s
+func (o *RelationshipType) SetTargetRef(s string) error {
+	o.TargetRef = s
 	return nil
 }
 
@@ -110,8 +116,8 @@ represent a STIX identifier. This is a convenience function for setting both
 ends of the relationship at the same time. The first identifier is for the
 source and the second is for the target.
 */
-func (ezt *RelationshipType) SetSourceTarget(s, t string) error {
-	ezt.SourceRef = s
-	ezt.TargetRef = t
+func (o *RelationshipType) SetSourceTarget(s, t string) error {
+	o.SourceRef = s
+	o.TargetRef = t
 	return nil
 }

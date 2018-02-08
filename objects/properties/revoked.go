@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,20 +21,22 @@ type RevokedPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - RevokedPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetRevoked - This method sets the revoked boolean to true
 */
-func (ezt *RevokedPropertyType) SetRevoked() error {
-	ezt.Revoked = true
+func (p *RevokedPropertyType) SetRevoked() error {
+	p.Revoked = true
 	return nil
 }
 
 /*
 GetRevoked - This method returns the current value of the revoked property.
 */
-func (ezt *RevokedPropertyType) GetRevoked() bool {
-	return ezt.Revoked
+func (p *RevokedPropertyType) GetRevoked() bool {
+	return p.Revoked
 }

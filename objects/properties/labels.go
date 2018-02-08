@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -23,7 +25,9 @@ type LabelsPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - LabelsPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -31,11 +35,11 @@ AddLabel - This method takes in a string value that represents one or more
 labels separated by a command for a STIX object and adds it to the list of
 labels in the labels property.
 */
-func (ezt *LabelsPropertyType) AddLabel(s string) error {
+func (p *LabelsPropertyType) AddLabel(s string) error {
 
 	labels := strings.Split(s, ",")
 	for _, label := range labels {
-		ezt.Labels = append(ezt.Labels, label)
+		p.Labels = append(p.Labels, label)
 	}
 
 	return nil

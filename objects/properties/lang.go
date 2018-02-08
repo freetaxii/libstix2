@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,21 +21,23 @@ type LangPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - LangPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetLang - This method takes in a string value representing an ISO 639-2
 encoded language code as defined in RFC 5646 and updates the lang property.
 */
-func (ezt *LangPropertyType) SetLang(s string) error {
-	ezt.Lang = s
+func (p *LangPropertyType) SetLang(s string) error {
+	p.Lang = s
 	return nil
 }
 
 /*
 GetLang - This method returns the current language code for a given object.
 */
-func (ezt *LangPropertyType) GetLang() string {
-	return ezt.Lang
+func (p *LangPropertyType) GetLang() string {
+	return p.Lang
 }

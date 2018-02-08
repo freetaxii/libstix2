@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -29,7 +31,9 @@ type GranularMarkingType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - GranularMarkingType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -37,8 +41,8 @@ SetMarkingRef - This method takes in a string value representing a STIX
 identifier of a marking definition object and sets the marking ref property
 to that value.
 */
-func (ezt *GranularMarkingType) SetMarkingRef(s string) error {
-	ezt.MarkingRef = s
+func (p *GranularMarkingType) SetMarkingRef(s string) error {
+	p.MarkingRef = s
 	return nil
 }
 
@@ -46,15 +50,15 @@ func (ezt *GranularMarkingType) SetMarkingRef(s string) error {
 GetMarkingRef - This method returns the STIX identifier of the marking
 definition object that was recorded in this granular marking type.
 */
-func (ezt *GranularMarkingType) GetMarkingRef() string {
-	return ezt.MarkingRef
+func (p *GranularMarkingType) GetMarkingRef() string {
+	return p.MarkingRef
 }
 
 /*
 AddSelector - This method takes in a string value representing a STIX
 granular marking selector and adds it to the list of selectors.
 */
-func (ezt *GranularMarkingType) AddSelector(s string) error {
-	ezt.Selectors = append(ezt.Selectors, s)
+func (p *GranularMarkingType) AddSelector(s string) error {
+	p.Selectors = append(p.Selectors, s)
 	return nil
 }

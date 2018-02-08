@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -17,14 +19,16 @@ type AliasesPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - AliasesType
+//
 // ----------------------------------------------------------------------
 
 /*
 AddAlias - This method takes in a takes in a string value that represents an
 alias for something in STIX and adds it to the property.
 */
-func (ezt *AliasesPropertyType) AddAlias(s string) error {
-	ezt.Aliases = append(ezt.Aliases, s)
+func (p *AliasesPropertyType) AddAlias(s string) error {
+	p.Aliases = append(p.Aliases, s)
 	return nil
 }

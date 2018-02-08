@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -72,7 +74,9 @@ type SightingType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -86,15 +90,17 @@ func InitSighting(ver string) *SightingType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - SightingType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetCount - This method takes in an integer that represents the number of
 sightings and upates the count properties.
 */
-func (ezt *SightingType) SetCount(i int) error {
-	ezt.Count = i
+func (o *SightingType) SetCount(i int) error {
+	o.Count = i
 	return nil
 }
 
@@ -103,8 +109,8 @@ SetSightingOfRef - This method takes in a string value that represents a STIX
 identifier of the object that was sighted and updates the sighting of ref
 property.
 */
-func (ezt *SightingType) SetSightingOfRef(s string) error {
-	ezt.SightingOfRef = s
+func (o *SightingType) SetSightingOfRef(s string) error {
+	o.SightingOfRef = s
 	return nil
 }
 
@@ -113,8 +119,8 @@ AddObservedDataRef - This method takes in a string value that represents a
 STIX identifier of the STIX Observed Data object that identifies what was
 sighted and adds it to the observed data refs property.
 */
-func (ezt *SightingType) AddObservedDataRef(s string) error {
-	ezt.ObservedDataRefs = append(ezt.ObservedDataRefs, s)
+func (o *SightingType) AddObservedDataRef(s string) error {
+	o.ObservedDataRefs = append(o.ObservedDataRefs, s)
 	return nil
 }
 
@@ -123,15 +129,15 @@ AddWhereSightedRef - This method takes in a string value that represents a
 STIX identifier of the STIX Identity object that identifies where this was
 sighted (location, sector, etc) and adds it to the where sighted ref property.
 */
-func (ezt *SightingType) AddWhereSightedRef(s string) error {
-	ezt.WhereSightedRefs = append(ezt.WhereSightedRefs, s)
+func (o *SightingType) AddWhereSightedRef(s string) error {
+	o.WhereSightedRefs = append(o.WhereSightedRefs, s)
 	return nil
 }
 
 /*
 SetSummary - This method set the boolean value of the summary to true.
 */
-func (ezt *SightingType) SetSummary() error {
-	ezt.Summary = true
+func (o *SightingType) SetSummary() error {
+	o.Summary = true
 	return nil
 }

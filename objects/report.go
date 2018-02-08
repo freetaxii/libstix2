@@ -11,7 +11,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Define Message Type
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -46,7 +48,9 @@ type ReportType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Initialization Functions
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -60,16 +64,18 @@ func InitReport(ver string) *ReportType {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - ReportType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetPublished - This method takes in a timestamp in either time.Time or string
 format and updates the published timestamp property.
 */
-func (ezt *ReportType) SetPublished(t interface{}) error {
+func (o *ReportType) SetPublished(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.Published = ts
+	o.Published = ts
 	return nil
 }
 
@@ -77,7 +83,7 @@ func (ezt *ReportType) SetPublished(t interface{}) error {
 AddObject - This methods takes in a string value that represents a STIX
 identifier and adds it to the objects ref property.
 */
-func (ezt *ReportType) AddObject(s string) error {
-	ezt.ObjectRefs = append(ezt.ObjectRefs, s)
+func (o *ReportType) AddObject(s string) error {
+	o.ObjectRefs = append(o.ObjectRefs, s)
 	return nil
 }

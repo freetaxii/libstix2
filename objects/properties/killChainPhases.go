@@ -6,7 +6,9 @@
 package properties
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -27,7 +29,9 @@ type KillChainPhaseType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - KillChainPhasesPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -36,32 +40,34 @@ a new kill chain phase to the list. The first value is a string value
 representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
-func (ezt *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {
-	k, _ := ezt.GetNewKillChainPhase()
+func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {
+	k, _ := p.GetNewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 	return nil
 }
 
 // ----------------------------------------------------------------------
+//
 // Private Methods - KillChainPhasesPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 GetNewKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (ezt *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseType, error) {
+func (p *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseType, error) {
 	var s KillChainPhaseType
 
-	// if ezt.KillChainPhases == nil {
+	// if p.KillChainPhases == nil {
 	// 	a := make([]KillChainPhaseType, 0)
-	// 	ezt.KillChainPhases = a
+	// 	p.KillChainPhases = a
 	// }
 
-	positionThatAppendWillUse := len(ezt.KillChainPhases)
-	ezt.KillChainPhases = append(ezt.KillChainPhases, s)
-	return &ezt.KillChainPhases[positionThatAppendWillUse], nil
+	positionThatAppendWillUse := len(p.KillChainPhases)
+	p.KillChainPhases = append(p.KillChainPhases, s)
+	return &p.KillChainPhases[positionThatAppendWillUse], nil
 }
 
 // ----------------------------------------------------------------------
@@ -72,8 +78,8 @@ func (ezt *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseT
 SetName - This method takes in a string value representing the name of a kill
 chain and updates the kill chain name property.
 */
-func (ezt *KillChainPhaseType) SetName(s string) error {
-	ezt.KillChainName = s
+func (p *KillChainPhaseType) SetName(s string) error {
+	p.KillChainName = s
 	return nil
 }
 
@@ -81,7 +87,7 @@ func (ezt *KillChainPhaseType) SetName(s string) error {
 SetPhase - This method takes in a string value representing the phase of a
 kill chain and updates the phase name property.
 */
-func (ezt *KillChainPhaseType) SetPhase(s string) error {
-	ezt.PhaseName = s
+func (p *KillChainPhaseType) SetPhase(s string) error {
+	p.PhaseName = s
 	return nil
 }

@@ -10,7 +10,9 @@ import (
 )
 
 // ----------------------------------------------------------------------
+//
 // Types
+//
 // ----------------------------------------------------------------------
 
 /*
@@ -23,15 +25,17 @@ type LastSeenPropertyType struct {
 }
 
 // ----------------------------------------------------------------------
+//
 // Public Methods - LastSeenPropertyType
+//
 // ----------------------------------------------------------------------
 
 /*
 SetLastSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
-func (ezt *LastSeenPropertyType) SetLastSeenToCurrentTime() error {
-	ezt.LastSeen = timestamp.GetCurrentTime("micro")
+func (p *LastSeenPropertyType) SetLastSeenToCurrentTime() error {
+	p.LastSeen = timestamp.GetCurrentTime("micro")
 	return nil
 }
 
@@ -41,8 +45,8 @@ format and updates the last seen property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX time stamp format.
 */
-func (ezt *LastSeenPropertyType) SetLastSeen(t interface{}) error {
+func (p *LastSeenPropertyType) SetLastSeen(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	ezt.LastSeen = ts
+	p.LastSeen = ts
 	return nil
 }
