@@ -35,7 +35,7 @@ type DatastoreType struct {
 	StrictSTIXIDs   bool
 	StrictSTIXTypes bool
 	LogLevel        int
-	Cache           datastore.DatastoreCacheType
+	Cache           datastore.CacheType
 }
 
 // ----------------------------------------------------------------------

@@ -24,10 +24,10 @@ type Datastorer interface {
 }
 
 /*
-DatastoreCacheType - This struct will hold a cache of various database elements
+CacheType - This struct will hold a cache of various database elements
 that will be loaded during initialization and updated along the way.
 */
-type DatastoreCacheType struct {
+type CacheType struct {
 	BaseObjectIDIndex int
 	Collections       map[string]*resources.CollectionType
 }
@@ -65,6 +65,8 @@ RangeBegin     = The range value of the first record being sent to the client.
 RangeEnd       = The range value of the last record being sent to the client.
 DateAddedFirst = The added date of the first record being sent to the client.
 DateAddedLast  = The added date of the last record being sent to the client.
+BundleData     = The STIX bundle that contains the requested data from the collection.
+ManifestData   = The TAXII manifest resource that contains the requested data from the collection.
 */
 type CollectionQueryResultType struct {
 	Size           int
