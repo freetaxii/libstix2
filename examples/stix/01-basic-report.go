@@ -8,12 +8,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/freetaxii/libstix2/objects"
 	"time"
+
+	"github.com/freetaxii/libstix2/objects"
 )
 
 func main() {
-	r := objects.InitReport("2.0")
+	r := objects.NewReport("2.0")
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")

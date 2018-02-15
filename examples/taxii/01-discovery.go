@@ -8,6 +8,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/freetaxii/libstix2/resources"
 )
 

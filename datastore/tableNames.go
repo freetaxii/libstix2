@@ -5,6 +5,11 @@
 
 package datastore
 
+/*
+The following constants define database tables names for a relational database.
+All of the SQL statements and other code uses these constants, so it should be
+pretty safe, if needed, to change the actual table names without problems.
+*/
 const (
 	DB_TABLE_STIX_BASE_OBJECT           = "s_base_object"
 	DB_TABLE_STIX_ATTACK_PATTERN        = "s_attack_pattern"

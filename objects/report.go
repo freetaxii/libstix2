@@ -54,10 +54,10 @@ type ReportType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitReport - This function will create a new STIX Report object and return it as
+NewReport - This function will create a new STIX Report object and return it as
 a pointer.
 */
-func InitReport(ver string) *ReportType {
+func NewReport(ver string) *ReportType {
 	var obj ReportType
 	obj.InitObjectProperties("report", ver)
 	return &obj

@@ -10,10 +10,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects/properties"
-	"time"
 )
 
 // ----------------------------------------------------------------------
@@ -546,7 +547,7 @@ func (ds *DatastoreType) getExternalReferences(objectID int) (*properties.Extern
 
 	for rows.Next() {
 		var sourceName, description, url, externalID string
-		e, _ := extrefs.GetNewExternalReference()
+		e, _ := extrefs.NewExternalReference()
 
 		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
 			rows.Close()

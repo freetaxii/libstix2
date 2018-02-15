@@ -70,10 +70,10 @@ type ObservedDataType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitObservedData - This function will create a new STIX Observed Data object
+NewObservedData - This function will create a new STIX Observed Data object
 and return it as a pointer.
 */
-func InitObservedData(ver string) *ObservedDataType {
+func NewObservedData(ver string) *ObservedDataType {
 	var obj ObservedDataType
 	obj.InitObjectProperties("observed-data", ver)
 	return &obj

@@ -8,13 +8,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/freetaxii/libstix2/resources"
 )
 
 func main() {
-	o := resources.InitCollections()
+	o := resources.NewCollections()
 
-	c, _ := o.GetNewCollection()
+	c, _ := o.NewCollection()
 	c.SetNewID()
 	c.SetCanRead()
 

@@ -49,10 +49,10 @@ type CourseOfActionType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitCourseOfAction - This function will create a new STIX Course of Action
+NewCourseOfAction - This function will create a new STIX Course of Action
 object and return it as a pointer.
 */
-func InitCourseOfAction(ver string) *CourseOfActionType {
+func NewCourseOfAction(ver string) *CourseOfActionType {
 	var obj CourseOfActionType
 	obj.InitObjectProperties("course-of-action", ver)
 	return &obj

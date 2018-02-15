@@ -47,10 +47,10 @@ type APIRootType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitAPIRoot - This function will create a new TAXII API Root object and return
+NewAPIRoot - This function will create a new TAXII API Root object and return
 it as a pointer.
 */
-func InitAPIRoot() *APIRootType {
+func NewAPIRoot() *APIRootType {
 	var obj APIRootType
 	return &obj
 }

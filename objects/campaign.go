@@ -58,10 +58,10 @@ type CampaignType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitCampaign - This function will create a new STIX Campaign object and return
+NewCampaign - This function will create a new STIX Campaign object and return
 it as a pointer.
 */
-func InitCampaign(ver string) *CampaignType {
+func NewCampaign(ver string) *CampaignType {
 	var obj CampaignType
 	obj.InitObjectProperties("campaign", ver)
 	return &obj

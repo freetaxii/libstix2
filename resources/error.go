@@ -60,10 +60,10 @@ type ErrorType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitError - This functions will create a new TAXII Error Message object and return
+NewError - This functions will create a new TAXII Error Message object and return
 it as a pointer.
 */
-func InitError() *ErrorType {
+func NewError() *ErrorType {
 	var obj ErrorType
 	return &obj
 }

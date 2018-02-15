@@ -10,14 +10,15 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
-	"log"
-	"strconv"
-	"time"
+	"github.com/gologme/log"
 )
 
 // ----------------------------------------------------------------------
@@ -100,16 +101,11 @@ func sqlGetCollectionSize() (string, error) {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Entering getManifestData()")
-	}
+	log.Debugln("DEBUG getCollectionSize(): Start")
 	var index int
 
 	sqlStmt, _ := sqlGetCollectionSize()
-
-	if ds.LogLevel >= 10 {
-		log.Println("DEBUG: SQL Statement", sqlStmt)
-	}
+	//log.Debugln("DEBUG getCollectionSize(): SQL Statement", sqlStmt)
 
 	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
 	err := ds.DB.QueryRow(sqlStmt, collectionDatastoreID).Scan(&index)
@@ -117,12 +113,11 @@ func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
 		if err == sql.ErrNoRows {
 			return 0, errors.New("no collection data found")
 		}
-		return 0, fmt.Errorf("database execution error getting collection size: ", err)
+		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Collection ID", collectionID, "has a size of", index)
-	}
+	log.Debugln("DEBUG getCollectionSize(): Collection ID", collectionID, "has a size of", index)
+
 	return index, nil
 }
 
@@ -201,11 +196,9 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 getBundle - This method will return a STIX bundle based on the query provided.
 */
 func (ds *DatastoreType) getBundle(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Entering getManifestData()")
-	}
+	log.Debugln("DEBUG getBundle(): Start")
 
-	stixBundle := objects.InitBundle()
+	stixBundle := objects.NewBundle()
 
 	// First get a list of all of the objects that are in the collection that
 	// meet the query requirements. This is done with the manifest records.
@@ -316,15 +309,13 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 getManifestData - This method will return manifest data based on the query provided.
 */
 func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Entering getManifestData()")
-	}
+	log.Debugln("DEBUG getManifestData(): Start")
 
 	var resultData datastore.CollectionQueryResultType
 	// var first, last int
 	// var errRange error
 
-	manifest := resources.InitManifest()
+	manifest := resources.NewManifest()
 
 	// Lets first make sure the collection does not already exist in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
@@ -334,10 +325,7 @@ func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
 
 	sqlStmt, err := sqlGetManifestData(query)
-
-	if ds.LogLevel >= 10 {
-		log.Println("DEBUG: SQL Statement", sqlStmt)
-	}
+	//log.Debugln("DEBUG getManifestData(): SQL Statement", sqlStmt)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -375,10 +363,8 @@ func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*
 
 	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Query Collection ID", query.CollectionID)
-		log.Println("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
-	}
+	log.Debugln("DEBUG getManifestData(): Query Collection ID", query.CollectionID)
+	log.Debugln("DEBUG getManifestData(): Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
 
 	resultData.ManifestData.Objects = manifest.Objects
 

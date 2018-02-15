@@ -57,10 +57,10 @@ type ToolType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitTool - This function will create a new STIX Tool object and return it as a
+NewTool - This function will create a new STIX Tool object and return it as a
 pointer.
 */
-func InitTool(ver string) *ToolType {
+func NewTool(ver string) *ToolType {
 	var obj ToolType
 	obj.InitObjectProperties("tool", ver)
 	return &obj

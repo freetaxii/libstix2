@@ -85,19 +85,19 @@ type CollectionRecordType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitCollections - This function will create a new TAXII Collections object and return
+NewCollections - This function will create a new TAXII Collections object and return
 it as a pointer.
 */
-func InitCollections() *CollectionsType {
+func NewCollections() *CollectionsType {
 	var obj CollectionsType
 	return &obj
 }
 
 /*
-InitCollection - This function will create a new TAXII Collection object and return
+NewCollection - This function will create a new TAXII Collection object and return
 it as a pointer.
 */
-func InitCollection() *CollectionType {
+func NewCollection() *CollectionType {
 	var obj CollectionType
 	return &obj
 }
@@ -135,14 +135,14 @@ func (r *CollectionsType) AddCollection(o *CollectionType) (int, error) {
 }
 
 /*
-GetNewCollection - This method is used to create a collection and automatically
+NewCollection - This method is used to create a collection and automatically
 add it to the collections array. It returns a resources.CollectionType which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (r *CollectionsType) GetNewCollection() (*CollectionType, error) {
+func (r *CollectionsType) NewCollection() (*CollectionType, error) {
 	//r.initCollectionsProperty()
-	o := InitCollection()
+	o := NewCollection()
 	positionThatAppendWillUse := len(r.Collections)
 	r.Collections = append(r.Collections, *o)
 	return &r.Collections[positionThatAppendWillUse], nil

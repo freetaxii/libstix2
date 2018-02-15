@@ -41,7 +41,7 @@ representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
 func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {
-	k, _ := p.GetNewKillChainPhase()
+	k, _ := p.NewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 	return nil
@@ -54,10 +54,10 @@ func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) e
 // ----------------------------------------------------------------------
 
 /*
-GetNewKillChainPhase - This method returns a reference to a slice location. This
+NewKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (p *KillChainPhasesPropertyType) GetNewKillChainPhase() (*KillChainPhaseType, error) {
+func (p *KillChainPhasesPropertyType) NewKillChainPhase() (*KillChainPhaseType, error) {
 	var s KillChainPhaseType
 
 	// if p.KillChainPhases == nil {

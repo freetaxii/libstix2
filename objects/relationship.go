@@ -66,10 +66,10 @@ type RelationshipType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitRelationship - This function will create a new STIX Relationship object
+NewRelationship - This function will create a new STIX Relationship object
 and return it as a pointer.
 */
-func InitRelationship(ver string) *RelationshipType {
+func NewRelationship(ver string) *RelationshipType {
 	var obj RelationshipType
 	obj.InitObjectProperties("relationship", ver)
 	return &obj

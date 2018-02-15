@@ -9,13 +9,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"github.com/gologme/log"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
-	"os"
-	"strings"
 )
 
 // ----------------------------------------------------------------------
@@ -34,7 +35,6 @@ type DatastoreType struct {
 	DB              *sql.DB
 	StrictSTIXIDs   bool
 	StrictSTIXTypes bool
-	LogLevel        int
 	Cache           datastore.CacheType
 }
 
@@ -47,13 +47,12 @@ type DatastoreType struct {
 /*
 New - This function will return a DatastoreType.
 */
-func New(filename string) DatastoreType {
+func New(filename string) *DatastoreType {
 	var err error
 	var ds DatastoreType
 	ds.Filename = filename
 	ds.StrictSTIXIDs = false
 	ds.StrictSTIXTypes = true
-	ds.LogLevel = 0
 
 	err = ds.connect()
 	if err != nil {
@@ -67,7 +66,7 @@ func New(filename string) DatastoreType {
 		log.Fatalln(err)
 	}
 
-	return ds
+	return &ds
 }
 
 /*
@@ -155,6 +154,8 @@ func (ds *DatastoreType) AddTAXIIObject(obj interface{}) error {
 // Collection Table Public Methods
 //
 // ----------------------------------------------------------------------
+
+// TODO - These probably need to be done by API Root
 
 /*
 GetAllCollections - This method will return all collections, even those that
@@ -258,11 +259,8 @@ func (ds *DatastoreType) verifyFileExists() error {
 initCache - This method will populate the datastore cache.
 */
 func (ds *DatastoreType) initCache() error {
+	log.Debugln("DEBUG initCache(): Start ")
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
-
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Entering initCache()")
-	}
 
 	// Get current index value so new records being added can use it.
 	objectIndex, err := ds.getBaseObjectIndex()
@@ -271,9 +269,7 @@ func (ds *DatastoreType) initCache() error {
 	}
 	ds.Cache.BaseObjectIDIndex = objectIndex + 1
 
-	if ds.LogLevel >= 5 {
-		log.Println("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
-	}
+	log.Debugln("DEBUG initCache(): Base object index ID", ds.Cache.BaseObjectIDIndex)
 
 	// Populate the collections cache
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
@@ -296,10 +292,8 @@ func (ds *DatastoreType) initCache() error {
 		ds.Cache.Collections[c.ID].Size = size
 	}
 
-	if ds.LogLevel >= 5 {
-		for k, v := range ds.Cache.Collections {
-			log.Println("DEBUG: Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
-		}
+	for k, v := range ds.Cache.Collections {
+		log.Debugln("DEBUG initCache(): Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
 	}
 
 	return nil

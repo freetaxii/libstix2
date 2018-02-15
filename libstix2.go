@@ -12,4 +12,4 @@ built to support STIX 2.x.
 */
 package libstix2
 
-// Version = "0.1"
+// Version = "0.2"

@@ -63,10 +63,10 @@ type IntrusionSetType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitIntrusionSet - This function will create a new STIX Intrusion Set object
+NewIntrusionSet - This function will create a new STIX Intrusion Set object
 and return it as a pointer.
 */
-func InitIntrusionSet(ver string) *IntrusionSetType {
+func NewIntrusionSet(ver string) *IntrusionSetType {
 	var obj IntrusionSetType
 	obj.InitObjectProperties("intrusion-set", ver)
 	return &obj

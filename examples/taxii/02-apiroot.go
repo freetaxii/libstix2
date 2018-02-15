@@ -8,11 +8,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/freetaxii/libstix2/resources"
 )
 
 func main() {
-	d := resources.InitAPIRoot()
+	d := resources.NewAPIRoot()
 
 	d.SetTitle("FreeTAXII API Root 1")
 	d.SetDescription("This API Root contains OSINT.")

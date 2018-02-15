@@ -54,10 +54,10 @@ type DiscoveryType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitDiscovery - This function will create a new TAXII Discovery object and return
+NewDiscovery - This function will create a new TAXII Discovery object and return
 it as a pointer.
 */
-func InitDiscovery() *DiscoveryType {
+func NewDiscovery() *DiscoveryType {
 	var obj DiscoveryType
 	return &obj
 }

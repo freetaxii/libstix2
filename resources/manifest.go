@@ -67,19 +67,19 @@ type ManifestEntryType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitManifest - This function will create a new TAXII Manifest object and return
+NewManifest - This function will create a new TAXII Manifest object and return
 it as a pointer.
 */
-func InitManifest() *ManifestType {
+func NewManifest() *ManifestType {
 	var obj ManifestType
 	return &obj
 }
 
 /*
-InitManifestEntry - This function will create a new TAXII Manifest Entry object
+NewManifestEntry - This function will create a new TAXII Manifest Entry object
 and return it as a pointer.
 */
-func InitManifestEntry() *ManifestEntryType {
+func NewManifestEntry() *ManifestEntryType {
 	var obj ManifestEntryType
 	return &obj
 }
@@ -104,12 +104,12 @@ func (r *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {
 }
 
 /*
-GetNewManifestEntry - This method is used to create a manifest entry and automatically
+NewManifestEntry - This method is used to create a manifest entry and automatically
 add it to the objects array. It returns a resources.ManifestEntryType which is a
 pointer to the actual manifest entry that was created in the manifest slice.
 */
-func (r *ManifestType) GetNewManifestEntry() (*ManifestEntryType, error) {
-	o := InitManifestEntry()
+func (r *ManifestType) NewManifestEntry() (*ManifestEntryType, error) {
+	o := NewManifestEntry()
 	positionThatAppendWillUse := len(r.Objects)
 	r.Objects = append(r.Objects, *o)
 	return &r.Objects[positionThatAppendWillUse], nil
@@ -120,7 +120,7 @@ CreateManifestEntry - This method is used to create and add a manifest entry in
 a single step, by taking in all of the values as parameters.
 */
 func (r *ManifestType) CreateManifestEntry(id, date, ver, media string) error {
-	m, _ := r.GetNewManifestEntry()
+	m, _ := r.NewManifestEntry()
 	m.SetID(id)
 	m.SetDateAdded(date)
 	m.SetVersion(ver)

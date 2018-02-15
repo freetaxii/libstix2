@@ -39,11 +39,11 @@ type ExternalReferenceType struct {
 // ----------------------------------------------------------------------
 
 /*
-GetNewExternalReference - This method creates a new external reference and
+NewExternalReference - This method creates a new external reference and
 returns a reference to a slice location. This will enable the code to update an
 object located at that slice location.
 */
-func (p *ExternalReferencesPropertyType) GetNewExternalReference() (*ExternalReferenceType, error) {
+func (p *ExternalReferencesPropertyType) NewExternalReference() (*ExternalReferenceType, error) {
 	var s ExternalReferenceType
 
 	// if p.ExternalReferences == nil {

@@ -61,10 +61,10 @@ type IndicatorType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitIndicator - This function will create a new STIX Indicator object and return
+NewIndicator - This function will create a new STIX Indicator object and return
 it as a pointer.
 */
-func InitIndicator(ver string) *IndicatorType {
+func NewIndicator(ver string) *IndicatorType {
 	var obj IndicatorType
 	obj.InitObjectProperties("indicator", ver)
 	return &obj

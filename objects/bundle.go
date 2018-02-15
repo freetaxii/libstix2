@@ -46,11 +46,11 @@ type BundleType struct {
 // ----------------------------------------------------------------------
 
 /*
-InitBundle - This function will create a new STIX Bundle object and return it as
+NewBundle - This function will create a new STIX Bundle object and return it as
 a pointer. This function can not use the InitNewObject() function as a Bundle
 does not have all of the fields that are common to a standard object.
 */
-func InitBundle() *BundleType {
+func NewBundle() *BundleType {
 	var obj BundleType
 	obj.SetObjectType("bundle")
 	obj.SetNewID("bundle")

@@ -8,11 +8,13 @@ package sqlite3
 import (
 	"bytes"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources"
-	"strings"
-	"time"
+	"github.com/gologme/log"
 )
 
 // ----------------------------------------------------------------------
@@ -138,15 +140,16 @@ addCollection - This method will add a collection to the t_collections table in
 the database.
 */
 func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
+	log.Debugln("DEBUG addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
 	if _, found := ds.Cache.Collections[obj.ID]; found {
 		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
 	}
 	// If the object ID is not found in the cache, then lets initialize it with
-	// a TAXII collection object. This InitColleciton() function will return a
+	// a TAXII collection object. This NewColleciton() function will return a
 	// pointer, which is what we need here.
-	ds.Cache.Collections[obj.ID] = resources.InitCollection()
+	ds.Cache.Collections[obj.ID] = resources.NewCollection()
 
 	stmt1, _ := sqlAddCollection()
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
@@ -303,8 +306,10 @@ an HTTP router for it. The enabled and visible list is what would be displayed
 to a client that is pulling a collections resource.
 */
 func (ds *DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
+	log.Debugln("DEBUG getCollections(): Start")
+	log.Debugln("DEBUG getCollections(): Which Collections", whichCollections)
 
-	allCollections := resources.InitCollections()
+	allCollections := resources.NewCollections()
 
 	stmt, _ := sqlGetCollections(whichCollections)
 
@@ -324,7 +329,7 @@ func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Col
 		}
 
 		// Add collection information to Collection object
-		c, _ := allCollections.GetNewCollection()
+		c, _ := allCollections.NewCollection()
 		c.DatastoreID = datastoreID
 		c.DateAdded = dateAdded
 		if enabled == 1 {
