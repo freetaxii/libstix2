@@ -6,6 +6,7 @@
 package resources
 
 import (
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources/properties"
 )
 
@@ -38,9 +39,21 @@ type CollectionsType struct {
 
 /*
 CollectionType - This type implements the TAXII 2 Collection Resource and defines
-all of the properties and methods needed to create and work with the TAXII Collection
-Resource. All of the methods not defined local to this type are inherited from
-the individual properties.
+all of the properties and methods needed to create and work with the TAXII
+Collection Resource. All of the methods not defined local to this type are
+inherited from the individual properties.
+
+DatastireID = A unique integer that represents this collection
+DateAdded   = The date that this collection was added to the system
+Enabled     = Is this collection currently enabled
+Hidden      = Is this collection currently hidden for this directory listing
+Size        = The current size of the collection
+ID 		    = The collection ID, a UUIDv4 value
+Title 	    = The title of this collection
+Description = A long description about this collection
+CanRead     = A boolean flag that indicates if one can read from this collection
+CanWrite    = A boolean flag that indicates if one can write to this collection
+MediaTypes  = A slice of strings of the media types that are found in this collection
 
 The following information comes directly from the TAXII 2 specification documents.
 
@@ -72,10 +85,58 @@ type CollectionType struct {
 /*
 CollectionRecordType - This type will hold the data for adding an object to
 a collection and is stored in the t_collection_data database table.
+
+CollectionID - The collection ID, a UUIDv4 value.  The database will store a DatastoreID integer.
+STIXID       - The STIX object ID. This is done so all versions of an object show up in the collection.
 */
 type CollectionRecordType struct {
 	CollectionID string
 	STIXID       string
+}
+
+/*
+CollectionQueryType - This struct will hold all of the variables that a user can
+use to query a collection.
+*/
+type CollectionQueryType struct {
+	CollectionID          string
+	CollectionDatastoreID int
+	STIXID                []string // Passed in from the URL
+	STIXType              []string // Passed in from the URL
+	STIXVersion           []string // Passed in from the URL
+	AddedAfter            []string // Passed in from the URL
+	AddedBefore           []string // Passed in from the URL
+	Limit                 []string // Passed in from the URL
+	ServerRecordLimit     int      // Server defined value in the configuration file
+	// RangeBegin            int      // Passed in from Range Headers
+	// RangeEnd              int      // Passed in from Range Headers
+}
+
+/*
+CollectionQueryResultType - This struct contains the various bits of meta data
+that are returned from a query against a collection on a TAXII server. This is
+done so that the method signatures do not need to change as time goes on and we
+add more meta data that needs to be returned. It is important to note that a
+collection may have more entries than the server or client wants to transmit. So
+it is important to keep track of which records are actually being delivered to
+the client.
+
+Size           = The total size of the dataset returned from the database query.
+DateAddedFirst = The added date of the first record being sent to the client.
+DateAddedLast  = The added date of the last record being sent to the client.
+BundleData     = The STIX bundle that contains the requested data from the collection.
+ManifestData   = The TAXII manifest resource that contains the requested data from the collection.
+RangeBegin     = The range value of the first record being sent to the client.
+RangeEnd       = The range value of the last record being sent to the client.
+*/
+type CollectionQueryResultType struct {
+	Size           int
+	DateAddedFirst string
+	DateAddedLast  string
+	BundleData     objects.BundleType
+	ManifestData   ManifestType
+	// RangeBegin     int
+	// RangeEnd       int
 }
 
 // ----------------------------------------------------------------------
@@ -241,5 +302,34 @@ func (r *CollectionType) AddMediaType(s string) error {
 		r.MediaTypes = a
 	}
 	r.MediaTypes = append(r.MediaTypes, s)
+	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - CollectionQueryType
+// ----------------------------------------------------------------------
+
+/*
+ProcessURLParameters - This method will process all of the URL parameters from
+an HTTP request.
+*/
+func (q *CollectionQueryType) ProcessURLParameters(values map[string][]string) error {
+
+	if values["match[id]"] != nil {
+		q.STIXID = values["match[id]"]
+	}
+
+	if values["match[type]"] != nil {
+		q.STIXType = values["match[type]"]
+	}
+
+	if values["match[version]"] != nil {
+		q.STIXVersion = values["match[version]"]
+	}
+
+	if values["added_after"] != nil {
+		q.AddedAfter = values["added_after"]
+	}
+
 	return nil
 }

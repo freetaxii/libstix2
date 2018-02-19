@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/freetaxii/libstix2/common/stixid"
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
@@ -195,7 +196,7 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 /*
 getBundle - This method will return a STIX bundle based on the query provided.
 */
-func (ds *DatastoreType) getBundle(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+func (ds *DatastoreType) getBundle(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
 	log.Debugln("DEBUG getBundle(): Start")
 
 	stixBundle := objects.NewBundle()
@@ -235,7 +236,7 @@ determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
-func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
+func sqlGetManifestData(query resources.CollectionQueryType) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -308,10 +309,10 @@ func sqlGetManifestData(query datastore.CollectionQueryType) (string, error) {
 /*
 getManifestData - This method will return manifest data based on the query provided.
 */
-func (ds *DatastoreType) getManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
 	log.Debugln("DEBUG getManifestData(): Start")
 
-	var resultData datastore.CollectionQueryResultType
+	var resultData resources.CollectionQueryResultType
 	// var first, last int
 	// var errRange error
 
@@ -443,7 +444,7 @@ func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, in
 sqlCollectionDataQueryLimit - This function will take in a query struct and
 build an SQL LIMIT statement based on the values provided in query object.
 */
-func sqlCollectionDataQueryLimit(query datastore.CollectionQueryType) (int, error) {
+func sqlCollectionDataQueryLimit(query resources.CollectionQueryType) (int, error) {
 	srv := 0
 	client := 0
 	var err error
@@ -482,7 +483,7 @@ func sqlCollectionDataQueryLimit(query datastore.CollectionQueryType) (int, erro
 sqlCollectionDataQueryOptions - This function will take in a query struct and
 build an SQL where statement based on all of the provided query parameters.
 */
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error) {
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error) {
 	var wherestmt bytes.Buffer
 	var err error
 
@@ -534,7 +535,7 @@ func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string,
 /*
 sqlCollectionDataWhereCollectionID - This function will build the correct WHERE
 statement for a provided collection ID value and is called from
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -556,7 +557,7 @@ func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereAddedAfter - This function will build the correct WHERE
 statement for a provided added after value and is called from
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 
 This method only supports a single added after value, since more than one does
 not make sense.
@@ -588,7 +589,7 @@ func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXID - This function will build the correct WHERE
 statement when one or more STIX IDs is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -605,7 +606,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	*/
 	if id != nil {
 		if len(id) == 1 {
-			if objects.IsValidSTIXID(id[0]) {
+			if stixid.ValidSTIXID(id[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id = "`)
@@ -626,7 +627,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 				}
 				// Lets make sure the value that was passed in is actually a valid id
 
-				if objects.IsValidSTIXID(v) {
+				if stixid.ValidSTIXID(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id = "`)
 					b.WriteString(v)
@@ -645,7 +646,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXType - This function will build the correct WHERE
 statement when one or more STIX types is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error)
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
@@ -662,7 +663,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	*/
 	if t != nil {
 		if len(t) == 1 {
-			if objects.IsValidSTIXObject(t[0]) {
+			if stixid.ValidSTIXObjectType(t[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id LIKE "`)
@@ -682,7 +683,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid object
-				if objects.IsValidSTIXObject(v) {
+				if stixid.ValidSTIXObjectType(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id LIKE "`)
 					b.WriteString(v)
@@ -701,7 +702,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 /*
 sqlCollectionDataWhereSTIXVersion - This function will build the correct WHERE
 statement when one or more STIX versions is provided and is called from
-func sqlCollectionDataQueryOptions(query datastore.CollectionQueryType) (string, error).
+func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error).
 
 It will return an error if multiple "all", "first", or "last" values is provided.
 */

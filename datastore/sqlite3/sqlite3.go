@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/freetaxii/libstix2/common/stixid"
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
@@ -27,15 +28,19 @@ import (
 DatastoreType defines all of the properties and information associated
 with connecting and talking to the database.
 
-When StrictSTIXIDs = false, then the system will allow vanity STIX IDs like:
+When Strict.IDs = false, then the system will allow vanity STIX IDs like:
 indicator--1, indicator--2
+
+When Strict.Types = false, then the system will allow un-known STIX types
 */
 type DatastoreType struct {
-	Filename        string
-	DB              *sql.DB
-	StrictSTIXIDs   bool
-	StrictSTIXTypes bool
-	Cache           datastore.CacheType
+	Filename string
+	DB       *sql.DB
+	Cache    datastore.CacheType
+	Strict   struct {
+		IDs   bool
+		Types bool
+	}
 }
 
 // ----------------------------------------------------------------------
@@ -51,8 +56,8 @@ func New(filename string) *DatastoreType {
 	var err error
 	var ds DatastoreType
 	ds.Filename = filename
-	ds.StrictSTIXIDs = false
-	ds.StrictSTIXTypes = true
+	ds.Strict.IDs = false
+	ds.Strict.Types = true
 
 	err = ds.connect()
 	if err != nil {
@@ -90,25 +95,27 @@ func (ds *DatastoreType) Close() error {
 GetSTIXObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the matching STIX object.
 */
-func (ds *DatastoreType) GetSTIXObject(stixid, version string) (interface{}, error) {
+func (ds *DatastoreType) GetSTIXObject(id, version string) (interface{}, error) {
 
-	idparts := strings.Split(stixid, "--")
+	idparts := strings.Split(id, "--")
 
-	if ds.StrictSTIXIDs == true {
-		if !objects.IsValidID(stixid) {
+	// If the datastore requires the id portion of the STIX id to be a valid
+	// UUIDv4, then lets test that.
+	if ds.Strict.IDs == true {
+		if !stixid.ValidUUID(idparts[1]) {
 			return nil, errors.New("get STIX object error, invalid STIX ID")
 		}
 	}
 
-	if ds.StrictSTIXTypes == true {
-		if !objects.IsValidSTIXObject(stixid) {
+	if ds.Strict.Types == true {
+		if !stixid.ValidSTIXObjectType(idparts[0]) {
 			return nil, errors.New("get STIX object error, invalid STIX type")
 		}
 	}
 
 	switch idparts[0] {
 	case "indicator":
-		return ds.getIndicator(stixid, version)
+		return ds.getIndicator(id, version)
 	}
 
 	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
@@ -195,7 +202,7 @@ parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *DatastoreType) GetBundle(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+func (ds *DatastoreType) GetBundle(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
 	return ds.getBundle(query)
 }
 
@@ -204,7 +211,7 @@ GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
-func (ds *DatastoreType) GetManifestData(query datastore.CollectionQueryType) (*datastore.CollectionQueryResultType, error) {
+func (ds *DatastoreType) GetManifestData(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
 	return ds.getManifestData(query)
 }
 
@@ -259,10 +266,11 @@ func (ds *DatastoreType) verifyFileExists() error {
 initCache - This method will populate the datastore cache.
 */
 func (ds *DatastoreType) initCache() error {
-	log.Debugln("DEBUG initCache(): Start ")
+	log.Traceln("TRACE initCache(): Start ")
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
 
 	// Get current index value so new records being added can use it.
+	// TODO - fix this once I setup my own error type
 	objectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
 		return err
