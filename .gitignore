@@ -23,6 +23,7 @@ _testmain.go
 #*
 *~
 *.sublime-workspace
+*.sublime-project
 .DS_Store
 c.out
 
