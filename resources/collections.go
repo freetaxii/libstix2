@@ -175,6 +175,17 @@ func CreateCollectionRecord(cid, sid string) *CollectionRecordType {
 	return &obj
 }
 
+/*
+NewCollectionQuery - This function will take in a collection ID as a string
+and the Server Record Limit and return a CollectionQueryType object.
+*/
+func NewCollectionQuery(id string, limit int) *CollectionQueryType {
+	var obj CollectionQueryType
+	obj.CollectionID = id
+	obj.ServerRecordLimit = limit
+	return &obj
+}
+
 // ----------------------------------------------------------------------
 //
 // Public Methods - CollectionsType
