@@ -19,7 +19,6 @@ import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
-	"github.com/gologme/log"
 )
 
 // ----------------------------------------------------------------------
@@ -102,11 +101,11 @@ func sqlGetCollectionSize() (string, error) {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
-	log.Debugln("DEBUG getCollectionSize(): Start")
+	ds.Logger.Traceln("TRACE getCollectionSize(): Start")
 	var index int
 
 	sqlStmt, _ := sqlGetCollectionSize()
-	//log.Debugln("DEBUG getCollectionSize(): SQL Statement", sqlStmt)
+	//ds.Logger.Traceln("TRACE getCollectionSize(): SQL Statement", sqlStmt)
 
 	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
 	err := ds.DB.QueryRow(sqlStmt, collectionDatastoreID).Scan(&index)
@@ -117,7 +116,7 @@ func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
 		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
-	log.Debugln("DEBUG getCollectionSize(): Collection ID", collectionID, "has a size of", index)
+	ds.Logger.Traceln("TRACE getCollectionSize(): Collection ID", collectionID, "has a size of", index)
 
 	return index, nil
 }
@@ -197,7 +196,7 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 getBundle - This method will return a STIX bundle based on the query provided.
 */
 func (ds *DatastoreType) getBundle(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
-	log.Debugln("DEBUG getBundle(): Start")
+	ds.Logger.Traceln("TRACE getBundle(): Start")
 
 	stixBundle := objects.NewBundle()
 
@@ -310,7 +309,7 @@ func sqlGetManifestData(query resources.CollectionQueryType) (string, error) {
 getManifestData - This method will return manifest data based on the query provided.
 */
 func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
-	log.Debugln("DEBUG getManifestData(): Start")
+	ds.Logger.Traceln("TRACE getManifestData(): Start")
 
 	var resultData resources.CollectionQueryResultType
 	// var first, last int
@@ -326,7 +325,7 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
 
 	sqlStmt, err := sqlGetManifestData(query)
-	//log.Debugln("DEBUG getManifestData(): SQL Statement", sqlStmt)
+	//ds.Logger.Traceln("TRACE getManifestData(): SQL Statement", sqlStmt)
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
@@ -348,6 +347,7 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*
 			rows.Close()
 			return nil, fmt.Errorf("database scan error getting manifest data: ", err)
 		}
+		specVersion = "application/stix+json; version=" + specVersion
 		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
 	}
 
@@ -364,8 +364,8 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*
 
 	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
 
-	log.Debugln("DEBUG getManifestData(): Query Collection ID", query.CollectionID)
-	log.Debugln("DEBUG getManifestData(): Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
+	ds.Logger.Traceln("TRACE getManifestData(): Query Collection ID", query.CollectionID)
+	ds.Logger.Traceln("TRACE getManifestData(): Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
 
 	resultData.ManifestData.Objects = manifest.Objects
 
@@ -440,6 +440,7 @@ func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, in
 // LIMIT statements for Collection Data Queries
 //
 // ----------------------------------------------------------------------
+
 /*
 sqlCollectionDataQueryLimit - This function will take in a query struct and
 build an SQL LIMIT statement based on the values provided in query object.

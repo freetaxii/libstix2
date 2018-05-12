@@ -8,7 +8,6 @@ package sqlite3
 import (
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/vocabs"
-	"log"
 )
 
 // ----------------------------------------------------------------------
@@ -113,7 +112,7 @@ func (ds *DatastoreType) createTAXIITable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
 	}
 }
 
@@ -128,7 +127,7 @@ func (ds *DatastoreType) createTAXIIIndexes(name string) {
 		_, err := ds.DB.Exec(stmt)
 
 		if err != nil {
-			log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+			ds.Logger.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
 		}
 	}
 }
@@ -137,10 +136,13 @@ func (ds *DatastoreType) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
 	var err error
-	_, err = ds.DB.Exec(stmt, "application/vnd.oasis.stix+json")
+	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.0")
+	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.1")
+	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.2")
+	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.3")
 
 	if err != nil {
-		log.Println("ERROR: The media type item could not be inserted in to the", name, "table")
+		ds.Logger.Println("ERROR: The media type item could not be inserted in to the", name, "table")
 	}
 }
 
@@ -149,7 +151,7 @@ func (ds *DatastoreType) createSTIXTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
 	}
 	ds.createSTIXIndexes(name)
 }
@@ -166,7 +168,7 @@ func (ds *DatastoreType) createSTIXIndexes(name string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		log.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+		ds.Logger.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
 	}
 }
 
@@ -175,7 +177,7 @@ func (ds *DatastoreType) createVocabTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		log.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
 	}
 }
 
@@ -189,6 +191,6 @@ func (ds *DatastoreType) insertVocabData(name string, data []string) {
 	}
 
 	if err != nil {
-		log.Println("ERROR: The vocabulary item could not be inserted in to the", name, "table")
+		ds.Logger.Println("ERROR: The vocabulary item could not be inserted in to the", name, "table")
 	}
 }

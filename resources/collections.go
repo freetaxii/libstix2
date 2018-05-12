@@ -46,7 +46,7 @@ inherited from the individual properties.
 DatastireID = A unique integer that represents this collection
 DateAdded   = The date that this collection was added to the system
 Enabled     = Is this collection currently enabled
-Hidden      = Is this collection currently hidden for this directory listing
+Hidden      = Is this collection currently hidden for the directory listing
 Size        = The current size of the collection
 ID 		    = The collection ID, a UUIDv4 value
 Title 	    = The title of this collection

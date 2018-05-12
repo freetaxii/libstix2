@@ -36,6 +36,7 @@ When Strict.Types = false, then the system will allow un-known STIX types
 type DatastoreType struct {
 	Filename string
 	DB       *sql.DB
+	Logger   *log.Logger
 	Cache    datastore.CacheType
 	Strict   struct {
 		IDs   bool
@@ -52,12 +53,18 @@ type DatastoreType struct {
 /*
 New - This function will return a DatastoreType.
 */
-func New(filename string) *DatastoreType {
+func New(logger *log.Logger, filename string) *DatastoreType {
 	var err error
 	var ds DatastoreType
 	ds.Filename = filename
 	ds.Strict.IDs = false
 	ds.Strict.Types = true
+
+	if logger == nil {
+		ds.Logger = log.New(os.Stderr, "", log.LstdFlags)
+	} else {
+		ds.Logger = logger
+	}
 
 	err = ds.connect()
 	if err != nil {
@@ -236,7 +243,7 @@ func (ds *DatastoreType) connect() error {
 		return err
 	}
 
-	//log.Println("Connecting to sqlite3 datastore at filename", ds.Filename)
+	//ds.Logger.Println("Connecting to sqlite3 datastore at filename", ds.Filename)
 
 	db, sqlerr := sql.Open("sqlite3", ds.Filename)
 	if sqlerr != nil {
@@ -266,7 +273,7 @@ func (ds *DatastoreType) verifyFileExists() error {
 initCache - This method will populate the datastore cache.
 */
 func (ds *DatastoreType) initCache() error {
-	log.Traceln("TRACE initCache(): Start ")
+	ds.Logger.Traceln("TRACE initCache(): Start ")
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
 
 	// Get current index value so new records being added can use it.
@@ -277,7 +284,7 @@ func (ds *DatastoreType) initCache() error {
 	}
 	ds.Cache.BaseObjectIDIndex = objectIndex + 1
 
-	log.Debugln("DEBUG initCache(): Base object index ID", ds.Cache.BaseObjectIDIndex)
+	ds.Logger.Debugln("DEBUG initCache(): Base object index ID", ds.Cache.BaseObjectIDIndex)
 
 	// Populate the collections cache
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
@@ -301,7 +308,7 @@ func (ds *DatastoreType) initCache() error {
 	}
 
 	for k, v := range ds.Cache.Collections {
-		log.Debugln("DEBUG initCache(): Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
+		ds.Logger.Debugln("DEBUG initCache(): Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
 	}
 
 	return nil

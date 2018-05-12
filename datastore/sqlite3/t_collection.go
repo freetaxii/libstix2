@@ -14,7 +14,6 @@ import (
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources"
-	"github.com/gologme/log"
 )
 
 // ----------------------------------------------------------------------
@@ -140,7 +139,7 @@ addCollection - This method will add a collection to the t_collections table in
 the database.
 */
 func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
-	log.Debugln("DEBUG addCollection(): Start")
+	ds.Logger.Traceln("TRACE addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
 	if _, found := ds.Cache.Collections[obj.ID]; found {
@@ -175,9 +174,17 @@ func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
 
 			// TODO look up in cache
 			mediavalue := 0
-			if media == "application/vnd.oasis.stix+json" {
+			switch media {
+			case "application/stix+json; version=2.0":
 				mediavalue = 1
+			case "application/stix+json; version=2.1":
+				mediavalue = 2
+			case "application/stix+json; version=2.2":
+				mediavalue = 3
+			case "application/stix+json; version=2.3":
+				mediavalue = 4
 			}
+
 			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
@@ -295,19 +302,24 @@ func sqlGetCollections(whichCollections string) (string, error) {
 getCollections - This method is called from either GetAllCollections(),
 GetAllEnabledCollections(), or GetCollections() and will return all of the
 collections that are asked for based on the method that called it.  The options
-that can be passed in are: "all", "allEnabled", and "enabledVisible". The "all"
-option returns every collection, even those that are hidden or disabled.
+that can be passed in are:
+    "all"
+    "allEnabled"
+    "enabledVisible"
+
+The "all" option returns every collection, even those that are hidden or disabled.
 "allEnabled" will return all enabled collections, even those that are hidden.
 "enabledVisible" will return all collections that are both enabled and not
-hidden (aka those that are visible). Administration tools using the database
-will probably want to see all collections. The HTTP Router MUX needs to know
-about all enabled collections, even those that are hidden, so that it can start
-an HTTP router for it. The enabled and visible list is what would be displayed
-to a client that is pulling a collections resource.
+hidden (aka those that are visible).
+
+Administration tools using the database will probably want to see all collections.
+The HTTP Router MUX needs to know about all enabled collections, even those that
+are hidden, so that it can start an HTTP router for it. The enabled and visible
+list is what would be displayed to a client that is pulling a collections resource.
 */
 func (ds *DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
-	log.Debugln("DEBUG getCollections(): Start")
-	log.Debugln("DEBUG getCollections(): Which Collections", whichCollections)
+	ds.Logger.Traceln("TRACE getCollections(): Start")
+	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
 
 	allCollections := resources.NewCollections()
 
