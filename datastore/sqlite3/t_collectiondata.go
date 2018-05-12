@@ -504,7 +504,7 @@ func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string,
 	}
 
 	// ----------------------------------------------------------------------
-	// Check to see if one or more STIX ID, to query on, was supplied.
+	// Check to see if one or more STIX IDs was supplied.
 	// If there is more than one option given we need to enclose the options in
 	// parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------

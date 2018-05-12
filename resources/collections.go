@@ -304,32 +304,3 @@ func (r *CollectionType) AddMediaType(s string) error {
 	r.MediaTypes = append(r.MediaTypes, s)
 	return nil
 }
-
-// ----------------------------------------------------------------------
-// Public Methods - CollectionQueryType
-// ----------------------------------------------------------------------
-
-/*
-ProcessURLParameters - This method will process all of the URL parameters from
-an HTTP request.
-*/
-func (q *CollectionQueryType) ProcessURLParameters(values map[string][]string) error {
-
-	if values["match[id]"] != nil {
-		q.STIXID = values["match[id]"]
-	}
-
-	if values["match[type]"] != nil {
-		q.STIXType = values["match[type]"]
-	}
-
-	if values["match[version]"] != nil {
-		q.STIXVersion = values["match[version]"]
-	}
-
-	if values["added_after"] != nil {
-		q.AddedAfter = values["added_after"]
-	}
-
-	return nil
-}
