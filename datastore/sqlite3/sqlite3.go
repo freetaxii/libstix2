@@ -276,13 +276,16 @@ func (ds *DatastoreType) initCache() error {
 	ds.Logger.Traceln("TRACE initCache(): Start ")
 	ds.Cache.Collections = make(map[string]*resources.CollectionType)
 
-	// Get current index value so new records being added can use it.
+	// Get current index value of the s_base_object table so new records being
+	// added can use it as their object_id. By using an integer here instead
+	// of the full STIX ID, we can save significant amounts of space.
 	// TODO - fix this once I setup my own error type
-	objectIndex, err := ds.getBaseObjectIndex()
+	ds.Logger.Traceln("TRACE: Start getBaseObjectIndex()")
+	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
 		return err
 	}
-	ds.Cache.BaseObjectIDIndex = objectIndex + 1
+	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
 
 	ds.Logger.Debugln("DEBUG initCache(): Base object index ID", ds.Cache.BaseObjectIDIndex)
 
@@ -299,6 +302,7 @@ func (ds *DatastoreType) initCache() error {
 	for k, c := range allCollections.Collections {
 		ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
 		// get the size of the collection
+		ds.Logger.Traceln("TRACE: Start getCollectionSize() for collection", c.ID)
 		size, err3 := ds.getCollectionSize(c.ID)
 		if err3 != nil {
 			return err3

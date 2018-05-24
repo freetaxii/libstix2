@@ -62,16 +62,12 @@ get the size of a collection from the t_collection_data table.
 */
 func sqlGetCollectionSize() (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
 	/*
 		SELECT
-			count(t_collection_data.row_id)
+			count(t_collection_data.collection_id)
 		FROM
 			t_collection_data
-		JOIN
-			s_base_object ON
-			t_collection_data.stix_id = s_base_object.id
 		WHERE
 			t_collection_data.collection_id = 3
 	*/
@@ -80,17 +76,10 @@ func sqlGetCollectionSize() (string, error) {
 	s.WriteString("SELECT ")
 	s.WriteString("count(")
 	s.WriteString(tblColData)
-	s.WriteString(".row_id) ")
+	s.WriteString(".collection_id) ")
 	s.WriteString("FROM ")
 	s.WriteString(tblColData)
-	s.WriteString(" JOIN ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" ON ")
-	s.WriteString(tblColData)
-	s.WriteString(".stix_id = ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".id ")
-	s.WriteString("WHERE ")
+	s.WriteString(" WHERE ")
 	s.WriteString(tblColData)
 	s.WriteString(".collection_id = ?")
 
@@ -101,11 +90,8 @@ func sqlGetCollectionSize() (string, error) {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
-	ds.Logger.Traceln("TRACE getCollectionSize(): Start")
 	var index int
-
 	sqlStmt, _ := sqlGetCollectionSize()
-	//ds.Logger.Traceln("TRACE getCollectionSize(): SQL Statement", sqlStmt)
 
 	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
 	err := ds.DB.QueryRow(sqlStmt, collectionDatastoreID).Scan(&index)
@@ -116,7 +102,7 @@ func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
 		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
-	ds.Logger.Traceln("TRACE getCollectionSize(): Collection ID", collectionID, "has a size of", index)
+	ds.Logger.Debugln("DEBUG: Collection ID", collectionID, "has a size of", index)
 
 	return index, nil
 }
