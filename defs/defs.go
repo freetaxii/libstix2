@@ -13,8 +13,10 @@ const (
 	STIX_VERSION         = "2.1"
 	TAXII_MEDIA_TYPE     = "application/taxii+json"
 	TAXII_VERSION        = "2.1"
-	CONTENT_TYPE_STIX21  = STIX_MEDIA_TYPE + ";version=2.1"
-	CONTENT_TYPE_TAXII21 = TAXII_MEDIA_TYPE + ";version=2.1"
+	CONTENT_TYPE_STIX20  = "application/vnd.oasis.stix+json;version=2.0"
+	CONTENT_TYPE_TAXII20 = "application/vnd.oasis.taxii+json;version=2.0"
+	CONTENT_TYPE_STIX21  = "application/stix+json;version=2.1"
+	CONTENT_TYPE_TAXII21 = "application/taxii+json;version=2.1"
 	CONTENT_TYPE_JSON    = "application/json"
 	CONTENT_TYPE_HTML    = "text/html; charset=utf-8"
 
