@@ -6,6 +6,8 @@
 package objects
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -35,8 +37,16 @@ object.
 */
 type BundleType struct {
 	properties.CommonBundlePropertiesType
-	SpecVersion string        `json:"spec_version,omitempty"`
-	Objects     []interface{} `json:"objects,omitempty"`
+	Objects []interface{} `json:"objects,omitempty"`
+}
+
+type BundleDecodeType struct {
+	properties.CommonBundlePropertiesType
+	Objects []json.RawMessage `json:"objects,omitempty"`
+}
+
+type BundleObjectType struct {
+	properties.ObjectTypePropertyType
 }
 
 // ----------------------------------------------------------------------
@@ -54,7 +64,6 @@ func NewBundle() *BundleType {
 	var obj BundleType
 	obj.SetObjectType("bundle")
 	obj.SetNewID("bundle")
-	obj.SetSpecVersion20()
 	return &obj
 }
 
@@ -63,14 +72,6 @@ func NewBundle() *BundleType {
 // Public Methods - BundleType
 //
 // ----------------------------------------------------------------------
-
-/*
-SetSpecVersion20 - This method will set the specification version to 2.0.
-*/
-func (o *BundleType) SetSpecVersion20() error {
-	o.SpecVersion = "2.0"
-	return nil
-}
 
 /*
 AddObject - This method will take in an object as an interface and add it to

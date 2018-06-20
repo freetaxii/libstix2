@@ -13,11 +13,10 @@ package properties
 
 /*
 STIXVersionPropertyType - A property used by one or more STIX objects that
-captures the STIX specification version. This is not included in the JSON
-serialization, but is used for writing to the database.
+captures the STIX specification version.
 */
 type STIXVersionPropertyType struct {
-	SpecVersion string `json:"-"`
+	SpecVersion string `json:"spec_version,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -25,6 +24,22 @@ type STIXVersionPropertyType struct {
 // Public Methods - STIXVersionPropertyType
 //
 // ----------------------------------------------------------------------
+
+/*
+SetSpecVersion20 - This method will set the specification version to 2.0.
+*/
+func (p *STIXVersionPropertyType) SetSpecVersion20() error {
+	p.SpecVersion = "2.0"
+	return nil
+}
+
+/*
+SetSpecVersion20 - This method will set the specification version to 2.1.
+*/
+func (p *STIXVersionPropertyType) SetSpecVersion21() error {
+	p.SpecVersion = "2.1"
+	return nil
+}
 
 /*
 SetSpecVersion - This method takes in a string representing a STIX specification
