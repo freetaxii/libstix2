@@ -83,9 +83,9 @@ type Sighting struct {
 NewSighting - This function will create a new STIX Sighting object and return
 it as a pointer.
 */
-func NewSighting(ver string) *Sighting {
+func NewSighting() *Sighting {
 	var obj Sighting
-	obj.InitObjectProperties("sighting", ver)
+	obj.InitObject("sighting")
 	return &obj
 }
 

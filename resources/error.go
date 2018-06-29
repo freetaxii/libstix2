@@ -16,7 +16,7 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-ErrorType - This type implements the TAXII 2 Error Message and defines
+TAXIIError - This type implements the TAXII 2 Error Message and defines
 all of the properties and methods needed to create and work with the TAXII Error
 Message. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -43,9 +43,9 @@ about the error. All of the fields are application-specific and clients
 shouldn't assume consistent meaning across TAXII Servers even if the codes, IDs,
 or titles are the same.
 */
-type ErrorType struct {
-	properties.TitlePropertyType
-	properties.DescriptionPropertyType
+type TAXIIError struct {
+	properties.TitleProperty
+	properties.DescriptionProperty
 	ErrorID         string                 `json:"error_id,omitempty"`
 	ErrorCode       string                 `json:"error_code,omitempty"`
 	HTTPStatus      string                 `json:"http_status,omitempty"`
@@ -63,14 +63,14 @@ type ErrorType struct {
 NewError - This functions will create a new TAXII Error Message object and return
 it as a pointer.
 */
-func NewError() *ErrorType {
-	var obj ErrorType
+func NewError() *TAXIIError {
+	var obj TAXIIError
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ErrorType
+// Public Methods - TAXIIError
 //
 // ----------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ for this particular error instnace and updates the Error ID property. A TAXII
 Server might choose to assign each error occurrence it's own identifier in
 order to facilitate debugging.
 */
-func (r *ErrorType) SetErrorID(s string) error {
+func (r *TAXIIError) SetErrorID(s string) error {
 	r.ErrorID = s
 	return nil
 }
@@ -92,7 +92,7 @@ might choose to assign a common error code to all errors of the same type.
 Error codes are application-specific and not intended to be meaningful across
 different TAXII Servers.
 */
-func (r *ErrorType) SetErrorCode(s string) error {
+func (r *TAXIIError) SetErrorCode(s string) error {
 	r.ErrorCode = s
 	return nil
 }
@@ -101,7 +101,7 @@ func (r *ErrorType) SetErrorCode(s string) error {
 SetHTTPStatus - This method takes in a string value representing the HTTP
 status code applicable to this error and updates the HTTP Status property.
 */
-func (r *ErrorType) SetHTTPStatus(s string) error {
+func (r *TAXIIError) SetHTTPStatus(s string) error {
 	r.HTTPStatus = s
 	return nil
 }
@@ -113,7 +113,7 @@ For example, this could be a URL pointing to a knowledge base article
 describing the error code. Absence of this field indicates that there are no
 additional details.
 */
-func (r *ErrorType) SetExternalDetails(s string) error {
+func (r *TAXIIError) SetExternalDetails(s string) error {
 	r.ExternalDetails = s
 	return nil
 }

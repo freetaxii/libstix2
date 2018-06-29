@@ -40,9 +40,9 @@ type Infrastructure struct {
 NewInfrastructure - This function will create a new STIX Infrastructure object
 and return it as a pointer.
 */
-func NewInfrastructure(ver string) *Infrastructure {
+func NewInfrastructure() *Infrastructure {
 	var obj Infrastructure
-	obj.InitObjectProperties("infrastructure", ver)
+	obj.InitObject("infrastructure")
 	return &obj
 }
 

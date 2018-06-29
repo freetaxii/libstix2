@@ -6,7 +6,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -14,7 +13,7 @@ import (
 )
 
 func main() {
-	i := objects.NewIndicator("2.0")
+	i := objects.NewIndicator()
 
 	// The other option is to do
 	// var i objects.Indicator
@@ -30,7 +29,6 @@ func main() {
 	i.SetValidFrom(time.Now())
 	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
-	data, _ := json.MarshalIndent(i, "", "    ")
-
+	data, _ := i.Encode()
 	fmt.Println(string(data))
 }

@@ -16,7 +16,7 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-DiscoveryType - This type implements the TAXII 2 Discovery Resource and defines
+Discovery - This type implements the TAXII 2 Discovery Resource and defines
 all of the properties and methods needed to create and work with the TAXII Discovery
 Resource. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -39,9 +39,9 @@ API Roots that it is advertising. It also has an indication of which API Root it
 considers the default, or the one to use in the absence of other
 information/user choice.
 */
-type DiscoveryType struct {
-	properties.TitlePropertyType
-	properties.DescriptionPropertyType
+type Discovery struct {
+	properties.TitleProperty
+	properties.DescriptionProperty
 	Contact  string   `json:"contact,omitempty"`
 	Default  string   `json:"default,omitempty"`
 	APIRoots []string `json:"api_roots,omitempty"`
@@ -57,14 +57,14 @@ type DiscoveryType struct {
 NewDiscovery - This function will create a new TAXII Discovery object and return
 it as a pointer.
 */
-func NewDiscovery() *DiscoveryType {
-	var obj DiscoveryType
+func NewDiscovery() *Discovery {
+	var obj Discovery
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - DiscoveryType
+// Public Methods - Discovery
 //
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ func NewDiscovery() *DiscoveryType {
 SetContact - This methods takes in a string value representing contact
 information and updates the contact property.
 */
-func (r *DiscoveryType) SetContact(s string) error {
+func (r *Discovery) SetContact(s string) error {
 	r.Contact = s
 	return nil
 }
@@ -81,7 +81,7 @@ func (r *DiscoveryType) SetContact(s string) error {
 GetContact - This method returns the contact information from the contact
 property.
 */
-func (r *DiscoveryType) GetContact() string {
+func (r *Discovery) GetContact() string {
 	return r.Contact
 }
 
@@ -89,7 +89,7 @@ func (r *DiscoveryType) GetContact() string {
 SetDefault - This methods takes in a string value representing a default
 api-root and updates the default property.
 */
-func (r *DiscoveryType) SetDefault(s string) error {
+func (r *Discovery) SetDefault(s string) error {
 	r.Default = s
 	return nil
 }
@@ -97,7 +97,7 @@ func (r *DiscoveryType) SetDefault(s string) error {
 /*
 GetDefault - This methods returns the default api-root.
 */
-func (r *DiscoveryType) GetDefault() string {
+func (r *Discovery) GetDefault() string {
 	return r.Default
 }
 
@@ -105,7 +105,7 @@ func (r *DiscoveryType) GetDefault() string {
 AddAPIRoot - This method takes in a string value that represents an api-root
 and adds it to the list in the APIRoots property.
 */
-func (r *DiscoveryType) AddAPIRoot(s string) error {
+func (r *Discovery) AddAPIRoot(s string) error {
 	if r.APIRoots == nil {
 		a := make([]string, 0)
 		r.APIRoots = a

@@ -59,17 +59,17 @@ func DecodeObject(data []byte) (interface{}, string, error) {
 
 	switch stixtype {
 	case "campaign":
-		o, id, err := DecodeCampaign(data)
+		o, err := DecodeCampaign(data)
 		if err != nil {
 			return nil, "", err
 		}
-		return o, id, nil
+		return o, o.ID, nil
 	case "indicator":
-		o, id, err := DecodeIndicator(data)
+		o, err := DecodeIndicator(data)
 		if err != nil {
 			return nil, "", err
 		}
-		return o, id, nil
+		return o, o.ID, nil
 	case "infrastructure":
 		var o Infrastructure
 		err = json.Unmarshal(data, &o)

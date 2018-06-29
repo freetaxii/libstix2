@@ -5,6 +5,10 @@
 
 package properties
 
+import (
+	"github.com/freetaxii/libstix2/defs"
+)
+
 // ----------------------------------------------------------------------
 //
 // Common Property Types - Used to populate the common object properties
@@ -63,17 +67,15 @@ type CommonMarkingDefinitionProperties struct {
 //
 // ----------------------------------------------------------------------
 
-// InitObjectProperties is a helper function to initialize a new object with common
-// elements.
-//
-// params: objectType - a string value of the STIX object type
-// params: version - the STIX spec version of the object, ex. "2.0". This is
-// 		stored and used in TAXII.
-func (p *CommonObjectProperties) InitObjectProperties(objectType, version string) error {
-	// TODO make sure that the value coming in a a valid STIX object type
-	p.SetSpecVersion(version)
-	p.SetObjectType(objectType)
-	p.SetNewID(objectType)
+/*
+InitObject- This method will initialize the object by setting all of the basic
+properties.
+*/
+func (p *CommonObjectProperties) InitObject(stixType string) error {
+	// TODO make sure that the value coming in is a valid STIX object type
+	p.SetSpecVersion(defs.STIX_VERSION)
+	p.SetObjectType(stixType)
+	p.SetNewID(stixType)
 	p.SetCreatedToCurrentTime()
 	p.SetModifiedToCreated()
 	return nil

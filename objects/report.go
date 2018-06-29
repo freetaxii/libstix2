@@ -57,9 +57,9 @@ type Report struct {
 NewReport - This function will create a new STIX Report object and return it as
 a pointer.
 */
-func NewReport(ver string) *Report {
+func NewReport() *Report {
 	var obj Report
-	obj.InitObjectProperties("report", ver)
+	obj.InitObject("report")
 	return &obj
 }
 

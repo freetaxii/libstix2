@@ -15,12 +15,12 @@ import (
 func main() {
 	data := getdata()
 
-	b := objects.DecodeBundle(strings.NewReader(data))
+	b, _ := objects.DecodeBundle(strings.NewReader(data))
 
 	count := 0
 	for _, v := range b.Objects {
 
-		o, id, err := objects.DecodeBundleObject(v)
+		o, id, err := objects.DecodeObject(v)
 		if err != nil {
 			// Should probably log error here.
 			continue
@@ -28,9 +28,9 @@ func main() {
 		fmt.Println("ID", id)
 
 		switch o.(type) {
-		case objects.IndicatorType:
+		case objects.Indicator:
 			fmt.Println("Indicator")
-		case objects.RelationshipType:
+		case objects.Relationship:
 			fmt.Println("Relationship")
 		}
 

@@ -57,9 +57,9 @@ type AttackPattern struct {
 NewAttackPattern - This function will create a new STIX Attack Pattern object
 and return it as a pointer.
 */
-func NewAttackPattern(ver string) *AttackPattern {
+func NewAttackPattern() *AttackPattern {
 	var obj AttackPattern
-	obj.InitObjectProperties("attack-pattern", ver)
+	obj.InitObject("attack-pattern")
 	return &obj
 }
 

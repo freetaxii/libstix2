@@ -61,31 +61,32 @@ type Campaign struct {
 
 /*
 NewCampaign - This function will create a new STIX Campaign object and return
-it as a pointer.
+it as a pointer. It will also initialize the object by setting all of the basic
+properties.
 */
-func NewCampaign(ver string) *Campaign {
+func NewCampaign() *Campaign {
 	var obj Campaign
-	obj.InitObjectProperties("campaign", ver)
+	obj.InitObject("campaign")
 	return &obj
 }
 
 /*
 DecodeCampaign - This function will decode some JSON data encoded as a slice
-of bytes into an actual struct.
+of bytes into an actual struct. It will return the object as a pointer.
 */
-func DecodeCampaign(data []byte) (*Campaign, string, error) {
+func DecodeCampaign(data []byte) (*Campaign, error) {
 	var o Campaign
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
-	if valid := VerifyCommonProperties(o.CommonObjectProperties); valid != nil {
-		return nil, "", valid
+	if err := VerifyCommonProperties(o.CommonObjectProperties); err != nil {
+		return nil, err
 	}
 
 	o.SetRawData(data)
-	return &o, o.ID, nil
+	return &o, nil
 }
 
 // ----------------------------------------------------------------------

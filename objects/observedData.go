@@ -73,9 +73,9 @@ type ObservedData struct {
 NewObservedData - This function will create a new STIX Observed Data object
 and return it as a pointer.
 */
-func NewObservedData(ver string) *ObservedData {
+func NewObservedData() *ObservedData {
 	var obj ObservedData
-	obj.InitObjectProperties("observed-data", ver)
+	obj.InitObject("observed-data")
 	return &obj
 }
 

@@ -12,15 +12,15 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-TitlePropertyType - A property used by one or more TAXII resources.
+TitleProperty - A property used by one or more TAXII resources.
 */
-type TitlePropertyType struct {
+type TitleProperty struct {
 	Title string `json:"title"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - TitlePropertyType
+// Public Methods - TitleProperty
 //
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ type TitlePropertyType struct {
 SetTitle - This method takes in a string value representing a title or name
 and updates the title property.
 */
-func (p *TitlePropertyType) SetTitle(s string) error {
+func (p *TitleProperty) SetTitle(s string) error {
 	p.Title = s
 	return nil
 }
@@ -36,6 +36,6 @@ func (p *TitlePropertyType) SetTitle(s string) error {
 /*
 GetTitle - This method returns the title.
 */
-func (p *TitlePropertyType) GetTitle() string {
+func (p *TitleProperty) GetTitle() string {
 	return p.Title
 }

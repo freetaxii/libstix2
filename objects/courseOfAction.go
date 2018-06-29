@@ -52,9 +52,9 @@ type CourseOfAction struct {
 NewCourseOfAction - This function will create a new STIX Course of Action
 object and return it as a pointer.
 */
-func NewCourseOfAction(ver string) *CourseOfAction {
+func NewCourseOfAction() *CourseOfAction {
 	var obj CourseOfAction
-	obj.InitObjectProperties("course-of-action", ver)
+	obj.InitObject("course-of-action")
 	return &obj
 }
 

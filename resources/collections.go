@@ -17,7 +17,7 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-CollectionsType - This type implements the TAXII 2 Collections Resource and defines
+Collections - This type implements the TAXII 2 Collections Resource and defines
 all of the properties and methods needed to create and work with the TAXII Collections
 Resource. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -33,12 +33,12 @@ which is used to request objects or manifest entries from the Collection.
 The collections resource is a simple wrapper around a list of collection
 resources.
 */
-type CollectionsType struct {
-	Collections []CollectionType `json:"collections,omitempty"`
+type Collections struct {
+	Collections []Collection `json:"collections,omitempty"`
 }
 
 /*
-CollectionType - This type implements the TAXII 2 Collection Resource and defines
+Collection - This type implements the TAXII 2 Collection Resource and defines
 all of the properties and methods needed to create and work with the TAXII
 Collection Resource. All of the methods not defined local to this type are
 inherited from the individual properties.
@@ -68,15 +68,15 @@ media_types (representing the media type of objects can be requested from or
 added to it), and whether the TAXII Client, as authenticated, can get objects
 from the Collection and/or add objects to it.
 */
-type CollectionType struct {
+type Collection struct {
 	DatastoreID int    `json:"-"`
 	DateAdded   string `json:"-"`
 	Enabled     bool   `json:"-"`
 	Hidden      bool   `json:"-"`
 	Size        int    `json:"-"`
-	properties.IDPropertyType
-	properties.TitlePropertyType
-	properties.DescriptionPropertyType
+	properties.IDProperty
+	properties.TitleProperty
+	properties.DescriptionProperty
 	CanRead    bool     `json:"can_read"`
 	CanWrite   bool     `json:"can_write"`
 	MediaTypes []string `json:"media_types,omitempty"`
@@ -133,8 +133,8 @@ type CollectionQueryResultType struct {
 	Size           int
 	DateAddedFirst string
 	DateAddedLast  string
-	BundleData     objects.BundleType
-	ManifestData   ManifestType
+	BundleData     objects.Bundle
+	ManifestData   Manifest
 	// RangeBegin     int
 	// RangeEnd       int
 }
@@ -149,8 +149,8 @@ type CollectionQueryResultType struct {
 NewCollections - This function will create a new TAXII Collections object and return
 it as a pointer.
 */
-func NewCollections() *CollectionsType {
-	var obj CollectionsType
+func NewCollections() *Collections {
+	var obj Collections
 	return &obj
 }
 
@@ -158,8 +158,8 @@ func NewCollections() *CollectionsType {
 NewCollection - This function will create a new TAXII Collection object and return
 it as a pointer.
 */
-func NewCollection() *CollectionType {
-	var obj CollectionType
+func NewCollection() *Collection {
+	var obj Collection
 	return &obj
 }
 
@@ -188,7 +188,7 @@ func NewCollectionQuery(id string, limit int) *CollectionQueryType {
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - CollectionsType
+// Public Methods - Collections
 //
 // ----------------------------------------------------------------------
 
@@ -199,7 +199,7 @@ the location in the slice where the collection object was added. This method
 would be used if the collection was created separately and it just needs to be
 added in whole to the collections list.
 */
-func (r *CollectionsType) AddCollection(o *CollectionType) (int, error) {
+func (r *Collections) AddCollection(o *Collection) (int, error) {
 	//r.initCollectionsProperty()
 	positionThatAppendWillUse := len(r.Collections)
 	r.Collections = append(r.Collections, *o)
@@ -208,11 +208,11 @@ func (r *CollectionsType) AddCollection(o *CollectionType) (int, error) {
 
 /*
 NewCollection - This method is used to create a collection and automatically
-add it to the collections array. It returns a resources.CollectionType which
+add it to the collections array. It returns a resources.Collection which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (r *CollectionsType) NewCollection() (*CollectionType, error) {
+func (r *Collections) NewCollection() (*Collection, error) {
 	//r.initCollectionsProperty()
 	o := NewCollection()
 	positionThatAppendWillUse := len(r.Collections)
@@ -221,29 +221,29 @@ func (r *CollectionsType) NewCollection() (*CollectionType, error) {
 }
 
 // ----------------------------------------------------------------------
-// Private Methods - CollectionsType
+// Private Methods - Collections
 // ----------------------------------------------------------------------
 
 /*
 initCollectionsProperty - This method will initialize the Collections
 slice if it has not already been initialized.
 */
-// func (r *CollectionsType) initCollectionsProperty() error {
+// func (r *Collections) initCollectionsProperty() error {
 // 	if r.Collections == nil {
-// 		a := make([]CollectionType, 0)
+// 		a := make([]Collection, 0)
 // 		r.Collections = a
 // 	}
 // 	return nil
 // }
 
 // ----------------------------------------------------------------------
-// Public Methods - CollectionType
+// Public Methods - Collection
 // ----------------------------------------------------------------------
 
 /*
 SetEnabled - This method will set the collection to be enabled.
 */
-func (r *CollectionType) SetEnabled() error {
+func (r *Collection) SetEnabled() error {
 	r.Enabled = true
 	return nil
 }
@@ -251,7 +251,7 @@ func (r *CollectionType) SetEnabled() error {
 /*
 SetDisabled - This method will set the collection to be disabled.
 */
-func (r *CollectionType) SetDisabled() error {
+func (r *Collection) SetDisabled() error {
 	r.Enabled = false
 	return nil
 }
@@ -259,7 +259,7 @@ func (r *CollectionType) SetDisabled() error {
 /*
 SetHidden - This method will set the collection to be hidden.
 */
-func (r *CollectionType) SetHidden() error {
+func (r *Collection) SetHidden() error {
 	r.Hidden = true
 	return nil
 }
@@ -267,7 +267,7 @@ func (r *CollectionType) SetHidden() error {
 /*
 SetVisible - This method will set the collection to be visible.
 */
-func (r *CollectionType) SetVisible() error {
+func (r *Collection) SetVisible() error {
 	r.Hidden = false
 	return nil
 }
@@ -275,7 +275,7 @@ func (r *CollectionType) SetVisible() error {
 /*
 SetCanRead - This method will set the can_read boolean to true.
 */
-func (r *CollectionType) SetCanRead() error {
+func (r *Collection) SetCanRead() error {
 	r.CanRead = true
 	return nil
 }
@@ -283,14 +283,14 @@ func (r *CollectionType) SetCanRead() error {
 /*
 GetCanRead - This method will return the value of Can Read.
 */
-func (r *CollectionType) GetCanRead() bool {
+func (r *Collection) GetCanRead() bool {
 	return r.CanRead
 }
 
 /*
 SetCanWrite - This method will set the can_write boolean to true.
 */
-func (r *CollectionType) SetCanWrite() error {
+func (r *Collection) SetCanWrite() error {
 	r.CanWrite = true
 	return nil
 }
@@ -298,7 +298,7 @@ func (r *CollectionType) SetCanWrite() error {
 /*
 GetCanWrite - This method will return the value of Can Write.
 */
-func (r *CollectionType) GetCanWrite() bool {
+func (r *Collection) GetCanWrite() bool {
 	return r.CanWrite
 }
 
@@ -307,7 +307,7 @@ AddMediaType - This method takes in a string value that represents a version
 of the TAXII api that is supported and adds it to the list in media types
 property.
 */
-func (r *CollectionType) AddMediaType(s string) error {
+func (r *Collection) AddMediaType(s string) error {
 	if r.MediaTypes == nil {
 		a := make([]string, 0)
 		r.MediaTypes = a

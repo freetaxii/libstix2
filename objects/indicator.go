@@ -64,31 +64,32 @@ type Indicator struct {
 
 /*
 NewIndicator - This function will create a new STIX Indicator object and return
-it as a pointer.
+it as a pointer. It will also initialize the object by setting all of the basic
+properties.
 */
-func NewIndicator(ver string) *Indicator {
+func NewIndicator() *Indicator {
 	var obj Indicator
-	obj.InitObjectProperties("indicator", ver)
+	obj.InitObject("indicator")
 	return &obj
 }
 
 /*
 DecodeIndicator - This function will decode some JSON data encoded as a slice
-of bytes into an actual struct.
+of bytes into an actual struct. It will return the object as a pointer.
 */
-func DecodeIndicator(data []byte) (*Indicator, string, error) {
+func DecodeIndicator(data []byte) (*Indicator, error) {
 	var o Indicator
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
-	if valid := VerifyCommonProperties(o.CommonObjectProperties); valid != nil {
-		return nil, "", valid
+	if err := VerifyCommonProperties(o.CommonObjectProperties); err != nil {
+		return nil, err
 	}
 
 	o.SetRawData(data)
-	return &o, o.ID, nil
+	return &o, nil
 }
 
 // ----------------------------------------------------------------------
@@ -97,8 +98,22 @@ func DecodeIndicator(data []byte) (*Indicator, string, error) {
 //
 // ----------------------------------------------------------------------
 
+/*
+New - This method will initialize the object by setting all of the basic properties.
+*/
 func (o *Indicator) New() {
-	o.InitObjectProperties("indicator", "2.1")
+	o.InitObject("indicator")
+}
+
+/*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Indicator) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 /*

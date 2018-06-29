@@ -59,9 +59,9 @@ type ThreatActor struct {
 NewThreatActor - This function will create a new STIX Threat Actor object
 and return it as a pointer.
 */
-func NewThreatActor(ver string) *ThreatActor {
+func NewThreatActor() *ThreatActor {
 	var obj ThreatActor
-	obj.InitObjectProperties("threat-actor", ver)
+	obj.InitObject("threat-actor")
 	return &obj
 }
 

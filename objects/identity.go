@@ -51,9 +51,9 @@ type Identity struct {
 NewIdentity - This function will create a new STIX Identity object and return
 it as a pointer.
 */
-func NewIdentity(ver string) *Identity {
+func NewIdentity() *Identity {
 	var obj Identity
-	obj.InitObjectProperties("identity", ver)
+	obj.InitObject("identity")
 	return &obj
 }
 

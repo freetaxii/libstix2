@@ -16,14 +16,14 @@ KillChainPhasesProperty - A property used by one or more STIX objects
 that captures a list of kll chain phases as defined by STIX.
 */
 type KillChainPhasesProperty struct {
-	KillChainPhases []KillChainPhaseType `json:"kill_chain_phases,omitempty"`
+	KillChainPhases []KillChainPhase `json:"kill_chain_phases,omitempty"`
 }
 
 /*
-KillChainPhaseType - This type defines all of the properties associated with
+KillChainPhase - This type defines all of the properties associated with
 the STIX Kill Chain Phase type.
 */
-type KillChainPhaseType struct {
+type KillChainPhase struct {
 	KillChainName string `json:"kill_chain_name,omitempty"`
 	PhaseName     string `json:"phase_name,omitempty"`
 }
@@ -57,11 +57,11 @@ func (p *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error
 NewKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhaseType, error) {
-	var s KillChainPhaseType
+func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhase, error) {
+	var s KillChainPhase
 
 	// if p.KillChainPhases == nil {
-	// 	a := make([]KillChainPhaseType, 0)
+	// 	a := make([]KillChainPhase, 0)
 	// 	p.KillChainPhases = a
 	// }
 
@@ -71,14 +71,14 @@ func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhaseType, erro
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - KillChainPhaseType
+// Public Methods - KillChainPhase
 // ----------------------------------------------------------------------
 
 /*
 SetName - This method takes in a string value representing the name of a kill
 chain and updates the kill chain name property.
 */
-func (p *KillChainPhaseType) SetName(s string) error {
+func (p *KillChainPhase) SetName(s string) error {
 	p.KillChainName = s
 	return nil
 }
@@ -87,7 +87,7 @@ func (p *KillChainPhaseType) SetName(s string) error {
 SetPhase - This method takes in a string value representing the phase of a
 kill chain and updates the phase name property.
 */
-func (p *KillChainPhaseType) SetPhase(s string) error {
+func (p *KillChainPhase) SetPhase(s string) error {
 	p.PhaseName = s
 	return nil
 }
