@@ -12,17 +12,17 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-ObjectMarkingRefsPropertyType - A property used by one or more STIX objects
+ObjectMarkingRefsProperty - A property used by one or more STIX objects
 that captures a list of STIX identifier that represent marking definition
 objects.
 */
-type ObjectMarkingRefsPropertyType struct {
+type ObjectMarkingRefsProperty struct {
 	ObjectMarkingRefs []string `json:"object_marking_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ObjectMarkingRefsPropertyType
+// Public Methods - ObjectMarkingRefsProperty
 //
 // ----------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ AddObjectMarkingRef - This method takes in a string value that represents a
 STIX identifer for a marking definition object and adds it to the list of
 object marking refs.
 */
-func (p *ObjectMarkingRefsPropertyType) AddObjectMarkingRef(s string) error {
+func (p *ObjectMarkingRefsProperty) AddObjectMarkingRef(s string) error {
 	p.ObjectMarkingRefs = append(p.ObjectMarkingRefs, s)
 	return nil
 }

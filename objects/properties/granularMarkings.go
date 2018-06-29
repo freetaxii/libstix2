@@ -12,10 +12,10 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-GranularMarkingsPropertyType - A property used by one or more STIX objects
+GranularMarkingsProperty - A property used by one or more STIX objects
 that captures a list of granular markings as defined by STIX.
 */
-type GranularMarkingsPropertyType struct {
+type GranularMarkingsProperty struct {
 	GranularMarkings []GranularMarkingType `json:"granular_markings,omitempty"`
 }
 
@@ -25,14 +25,14 @@ the STIX Granular Marking type. All of the methods not defined local to this
 type are inherited from the individual properties.
 */
 type GranularMarkingType struct {
-	LangPropertyType
+	LangProperty
 	MarkingRef string   `json:"marking_ref,omitempty"`
 	Selectors  []string `json:"selectors,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - GranularMarkingType
+// Public Methods - GranularMarking
 //
 // ----------------------------------------------------------------------
 

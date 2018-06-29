@@ -12,10 +12,10 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-GoalsPropertyType - A property used by one or more STIX objects that captures a
+GoalsProperty - A property used by one or more STIX objects that captures a
 list of goals that are part of the STIX object.
 */
-type GoalsPropertyType struct {
+type GoalsProperty struct {
 	Goals []string `json:"goals,omitempty"`
 }
 
@@ -29,7 +29,7 @@ type GoalsPropertyType struct {
 AddGoal - This method takes in a string value that represents a goal and adds
 it to the list of goals in the goals property.
 */
-func (p *GoalsPropertyType) AddGoal(s string) error {
+func (p *GoalsProperty) AddGoal(s string) error {
 	// if this.Goals == nil {
 	// 	a := make([]string, 0)
 	// 	this.Goals = a

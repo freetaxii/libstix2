@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-CourseOfActionType - This type implements the STIX 2 Course of Action SDO and defines
+CourseOfAction - This type implements the STIX 2 Course of Action SDO and defines
 all of the properties methods needed to create and work with the STIX Course of Action
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -36,10 +36,10 @@ machine automatable courses of action. Relationships from the Course of Action
 can be used to link it to the Vulnerabilities or behaviors (Tool, Malware,
 Attack Pattern) that it mitigates.
 */
-type CourseOfActionType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
+type CourseOfAction struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
 }
 
 // ----------------------------------------------------------------------
@@ -52,14 +52,14 @@ type CourseOfActionType struct {
 NewCourseOfAction - This function will create a new STIX Course of Action
 object and return it as a pointer.
 */
-func NewCourseOfAction(ver string) *CourseOfActionType {
-	var obj CourseOfActionType
+func NewCourseOfAction(ver string) *CourseOfAction {
+	var obj CourseOfAction
 	obj.InitObjectProperties("course-of-action", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - CourseOfActionType
+// Public Methods - CourseOfAction
 //
 // ----------------------------------------------------------------------

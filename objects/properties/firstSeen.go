@@ -16,17 +16,17 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-FirstSeenPropertyType - A property used by one or more STIX objects that
+FirstSeenProperty - A property used by one or more STIX objects that
 captures the time that this object was first seen in STIX timestamp format,
 which is an RFC3339 format.
 */
-type FirstSeenPropertyType struct {
+type FirstSeenProperty struct {
 	FirstSeen string `json:"first_seen,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - FirstSeenPropertyType
+// Public Methods - FirstSeenProperty
 //
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ type FirstSeenPropertyType struct {
 SetFirstSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
-func (p *FirstSeenPropertyType) SetFirstSeenToCurrentTime() error {
+func (p *FirstSeenProperty) SetFirstSeenToCurrentTime() error {
 	p.FirstSeen = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -45,7 +45,7 @@ format and updates the first seen property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
-func (p *FirstSeenPropertyType) SetFirstSeen(t interface{}) error {
+func (p *FirstSeenProperty) SetFirstSeen(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	p.FirstSeen = ts
 	return nil

@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-SightingType - This type implements the STIX 2 Sighting SRO and defines
+Sighting - This type implements the STIX 2 Sighting SRO and defines
 all of the properties methods needed to create and work with the STIX Sighting
 SRO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -62,10 +62,10 @@ makes me think I saw this threat actor". Although confidence is currently
 reserved, notionally confidence would be added to Sighting (the intelligence
 relationship) but not to Observed Data (the raw information).
 */
-type SightingType struct {
-	properties.CommonObjectPropertiesType
-	properties.FirstSeenPropertyType
-	properties.LastSeenPropertyType
+type Sighting struct {
+	properties.CommonObjectProperties
+	properties.FirstSeenProperty
+	properties.LastSeenProperty
 	Count            int      `json:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`
 	ObservedDataRefs []string `json:"observed_data_refs,omitempty"`
@@ -83,15 +83,15 @@ type SightingType struct {
 NewSighting - This function will create a new STIX Sighting object and return
 it as a pointer.
 */
-func NewSighting(ver string) *SightingType {
-	var obj SightingType
+func NewSighting(ver string) *Sighting {
+	var obj Sighting
 	obj.InitObjectProperties("sighting", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - SightingType
+// Public Methods - Sighting
 //
 // ----------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ func NewSighting(ver string) *SightingType {
 SetCount - This method takes in an integer that represents the number of
 sightings and upates the count properties.
 */
-func (o *SightingType) SetCount(i int) error {
+func (o *Sighting) SetCount(i int) error {
 	o.Count = i
 	return nil
 }
@@ -109,7 +109,7 @@ SetSightingOfRef - This method takes in a string value that represents a STIX
 identifier of the object that was sighted and updates the sighting of ref
 property.
 */
-func (o *SightingType) SetSightingOfRef(s string) error {
+func (o *Sighting) SetSightingOfRef(s string) error {
 	o.SightingOfRef = s
 	return nil
 }
@@ -119,7 +119,7 @@ AddObservedDataRef - This method takes in a string value that represents a
 STIX identifier of the STIX Observed Data object that identifies what was
 sighted and adds it to the observed data refs property.
 */
-func (o *SightingType) AddObservedDataRef(s string) error {
+func (o *Sighting) AddObservedDataRef(s string) error {
 	o.ObservedDataRefs = append(o.ObservedDataRefs, s)
 	return nil
 }
@@ -129,7 +129,7 @@ AddWhereSightedRef - This method takes in a string value that represents a
 STIX identifier of the STIX Identity object that identifies where this was
 sighted (location, sector, etc) and adds it to the where sighted ref property.
 */
-func (o *SightingType) AddWhereSightedRef(s string) error {
+func (o *Sighting) AddWhereSightedRef(s string) error {
 	o.WhereSightedRefs = append(o.WhereSightedRefs, s)
 	return nil
 }
@@ -137,7 +137,7 @@ func (o *SightingType) AddWhereSightedRef(s string) error {
 /*
 SetSummary - This method set the boolean value of the summary to true.
 */
-func (o *SightingType) SetSummary() error {
+func (o *Sighting) SetSummary() error {
 	o.Summary = true
 	return nil
 }

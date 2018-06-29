@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-AttackPatternType - This type implements the STIX 2 Attack Pattern SDO and defines
+AttackPattern - This type implements the STIX 2 Attack Pattern SDO and defines
 all of the properties methods needed to create and work with the STIX Attack Pattern
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -40,11 +40,11 @@ Relationships from Attack Pattern can be used to relate it to what it targets
 (Vulnerabilities and Identities) and which tools and malware use it (Tool and
 Malware).
 */
-type AttackPatternType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.KillChainPhasesPropertyType
+type AttackPattern struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.KillChainPhasesProperty
 }
 
 // ----------------------------------------------------------------------
@@ -57,14 +57,14 @@ type AttackPatternType struct {
 NewAttackPattern - This function will create a new STIX Attack Pattern object
 and return it as a pointer.
 */
-func NewAttackPattern(ver string) *AttackPatternType {
-	var obj AttackPatternType
+func NewAttackPattern(ver string) *AttackPattern {
+	var obj AttackPattern
 	obj.InitObjectProperties("attack-pattern", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - AttackPatternType
+// Public Methods - AttackPattern
 //
 // ----------------------------------------------------------------------

@@ -6,6 +6,8 @@
 package properties
 
 import (
+	"errors"
+
 	"github.com/pborman/uuid"
 )
 
@@ -16,10 +18,10 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-IDPropertyType - A property used by one or more STIX objects that
+IDProperty - A property used by one or more STIX objects that
 captures the STIX identifier in string format.
 */
-type IDPropertyType struct {
+type IDProperty struct {
 	ID string `json:"id,omitempty"`
 }
 
@@ -29,11 +31,18 @@ type IDPropertyType struct {
 //
 // ----------------------------------------------------------------------
 
+func (p *IDProperty) Verify() error {
+	if p.ID == "" {
+		return errors.New("stix ID is missing")
+	}
+	return nil
+}
+
 /*
 CreateSTIXUUID - This method takes in a string value representing a STIX object
-type and create and return a new ID based on the approved STIX UUIDv4 format.
+type and creates and returns a new ID based on the approved STIX UUIDv4 format.
 */
-func (p *IDPropertyType) CreateSTIXUUID(s string) (string, error) {
+func (p *IDProperty) CreateSTIXUUID(s string) (string, error) {
 	// TODO add check to validate that s is a valid type
 	id := s + "--" + uuid.New()
 	return id, nil
@@ -44,7 +53,7 @@ SetNewID - This method takes in a string value representing a STIX object
 type and creates a new ID based on the approved STIX UUIDv4 format and update
 the id property for the object.
 */
-func (p *IDPropertyType) SetNewID(s string) error {
+func (p *IDProperty) SetNewID(s string) error {
 	// TODO Add check to validate input value
 	p.ID, _ = p.CreateSTIXUUID(s)
 	return nil
@@ -54,7 +63,7 @@ func (p *IDPropertyType) SetNewID(s string) error {
 SetID - This method takes in a string value representing an existing STIX id
 and updates the id property for the object.
 */
-func (p *IDPropertyType) SetID(s string) error {
+func (p *IDProperty) SetID(s string) error {
 	p.ID = s
 	return nil
 }
@@ -62,6 +71,6 @@ func (p *IDPropertyType) SetID(s string) error {
 /*
 GetID - This method will return the id for a given STIX object.
 */
-func (p *IDPropertyType) GetID() string {
+func (p *IDProperty) GetID() string {
 	return p.ID
 }

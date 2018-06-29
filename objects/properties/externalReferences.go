@@ -12,10 +12,10 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-ExternalReferencesPropertyType - A property used by one or more STIX objects
+ExternalReferencesProperty - A property used by one or more STIX objects
 that captures a list of external references as defined by STIX.
 */
-type ExternalReferencesPropertyType struct {
+type ExternalReferencesProperty struct {
 	ExternalReferences []ExternalReferenceType `json:"external_references,omitempty"`
 }
 
@@ -26,7 +26,7 @@ type are inherited from the individual properties.
 */
 type ExternalReferenceType struct {
 	SourceName string `json:"source_name,omitempty"`
-	DescriptionPropertyType
+	DescriptionProperty
 	URL        string            `json:"url,omitempty"`
 	Hashes     map[string]string `json:"hashes,omitempty"`
 	ExternalID string            `json:"external_id,omitempty"`
@@ -34,7 +34,7 @@ type ExternalReferenceType struct {
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ExternalReferencesPropertyType
+// Public Methods - ExternalReferencesProperty
 //
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ NewExternalReference - This method creates a new external reference and
 returns a reference to a slice location. This will enable the code to update an
 object located at that slice location.
 */
-func (p *ExternalReferencesPropertyType) NewExternalReference() (*ExternalReferenceType, error) {
+func (p *ExternalReferencesProperty) NewExternalReference() (*ExternalReferenceType, error) {
 	var s ExternalReferenceType
 
 	// if p.ExternalReferences == nil {

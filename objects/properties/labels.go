@@ -16,17 +16,17 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-LabelsPropertyType - A property used by one or more STIX objects that
+LabelsProperty - A property used by one or more STIX objects that
 captures a list of labels or tags for a STIX object. On some objects the
 labels property is defined as coming from an open-vocab.
 */
-type LabelsPropertyType struct {
+type LabelsProperty struct {
 	Labels []string `json:"labels,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - LabelsPropertyType
+// Public Methods - LabelsProperty
 //
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ AddLabel - This method takes in a string value that represents one or more
 labels separated by a command for a STIX object and adds it to the list of
 labels in the labels property.
 */
-func (p *LabelsPropertyType) AddLabel(s string) error {
+func (p *LabelsProperty) AddLabel(s string) error {
 
 	labels := strings.Split(s, ",")
 	for _, label := range labels {

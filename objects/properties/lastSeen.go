@@ -16,17 +16,17 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-LastSeenPropertyType - A property used by one or more STIX objects that
+LastSeenProperty - A property used by one or more STIX objects that
 captures the time that this object was last seen in STIX timestamp format,
 which is an RFC3339 format.
 */
-type LastSeenPropertyType struct {
+type LastSeenProperty struct {
 	LastSeen string `json:"last_seen,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - LastSeenPropertyType
+// Public Methods - LastSeenProperty
 //
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ type LastSeenPropertyType struct {
 SetLastSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
-func (p *LastSeenPropertyType) SetLastSeenToCurrentTime() error {
+func (p *LastSeenProperty) SetLastSeenToCurrentTime() error {
 	p.LastSeen = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -45,7 +45,7 @@ format and updates the last seen property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX time stamp format.
 */
-func (p *LastSeenPropertyType) SetLastSeen(t interface{}) error {
+func (p *LastSeenProperty) SetLastSeen(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	p.LastSeen = ts
 	return nil

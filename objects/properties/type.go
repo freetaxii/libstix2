@@ -5,6 +5,8 @@
 
 package properties
 
+import "errors"
+
 // ----------------------------------------------------------------------
 //
 // Types
@@ -12,24 +14,31 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-ObjectTypePropertyType - A property used by one or more STIX objects that
+TypeProperty - A property used by one or more STIX objects that
 captures the STIX object type in string format.
 */
-type ObjectTypePropertyType struct {
+type TypeProperty struct {
 	ObjectType string `json:"type,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ObjectTypePropertyType
+// Public Methods - TypeProperty
 //
 // ----------------------------------------------------------------------
+
+func (p *TypeProperty) Verify() error {
+	if p.ObjectType == "" {
+		return errors.New("object type is missing")
+	}
+	return nil
+}
 
 /*
 SetObjectType - This method takes in a string value representing a STIX object
 type and updates the type property.
 */
-func (p *ObjectTypePropertyType) SetObjectType(s string) error {
+func (p *TypeProperty) SetObjectType(s string) error {
 	p.ObjectType = s
 	return nil
 }
@@ -37,6 +46,6 @@ func (p *ObjectTypePropertyType) SetObjectType(s string) error {
 /*
 GetObjectType - This method returns the object type.
 */
-func (p *ObjectTypePropertyType) GetObjectType() string {
+func (p *TypeProperty) GetObjectType() string {
 	return p.ObjectType
 }

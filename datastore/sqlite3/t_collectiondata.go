@@ -152,6 +152,7 @@ not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
 func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
+	ds.Logger.Levelln("Function", "FUNC: START addObjectToCollection()")
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	// We are storing the Collection DatastoreID which is an integer instead
@@ -159,15 +160,25 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 	// the cache.
 	collectionDatastoreID := ds.Cache.Collections[obj.CollectionID].DatastoreID
 
+	// TODO before we add an object to the database, we need to make sure the
+	// object is not already in the table. Another option would be to add them
+	// to a secondary table and then have a second process go through and merge
+	// them.  This way the end client would not be held up by the transaction.
 	sqlStmt, _ := sqlAddObjectToCollection()
+	ds.Logger.Traceln("TRACE: SQL Add Object to Collection", sqlStmt)
+	ds.Logger.Debugln("DEBUG: Collection ID", collectionDatastoreID)
+	ds.Logger.Debugln("DEBUG: Object ID", obj.STIXID)
 	_, err := ds.DB.Exec(sqlStmt, dateAdded, collectionDatastoreID, obj.STIXID)
 
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: END addObjectToCollection() with error")
 		return fmt.Errorf("database execution error inserting collection data: ", err)
 	}
 
 	// If the operation was successful, lets increment the collection cache size
 	ds.Cache.Collections[obj.CollectionID].Size++
+	ds.Logger.Debugln("DEBUG: Collection ID", obj.CollectionID, "now has a size of", ds.Cache.Collections[obj.CollectionID].Size)
+	ds.Logger.Levelln("Function", "FUNC: END addObjectToCollection()")
 	return nil
 }
 

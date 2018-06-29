@@ -12,10 +12,10 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-KillChainPhasesPropertyType - A property used by one or more STIX objects
+KillChainPhasesProperty - A property used by one or more STIX objects
 that captures a list of kll chain phases as defined by STIX.
 */
-type KillChainPhasesPropertyType struct {
+type KillChainPhasesProperty struct {
 	KillChainPhases []KillChainPhaseType `json:"kill_chain_phases,omitempty"`
 }
 
@@ -30,7 +30,7 @@ type KillChainPhaseType struct {
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - KillChainPhasesPropertyType
+// Public Methods - KillChainPhasesProperty
 //
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ a new kill chain phase to the list. The first value is a string value
 representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
-func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {
+func (p *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error {
 	k, _ := p.NewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
@@ -49,7 +49,7 @@ func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) e
 
 // ----------------------------------------------------------------------
 //
-// Private Methods - KillChainPhasesPropertyType
+// Private Methods - KillChainPhasesProperty
 //
 // ----------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ func (p *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) e
 NewKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (p *KillChainPhasesPropertyType) NewKillChainPhase() (*KillChainPhaseType, error) {
+func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhaseType, error) {
 	var s KillChainPhaseType
 
 	// if p.KillChainPhases == nil {

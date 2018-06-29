@@ -12,12 +12,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-ReportType - This type implements the STIX 2 Report SDO and defines
+Report - This type implements the STIX 2 Report SDO and defines
 all of the properties methods needed to create and work with the STIX Report
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -39,10 +39,10 @@ contain the narrative of the report while the Campaign SDO and any related SDOs
 (e.g., Indicators for the Campaign, Malware it uses, and the associated
 Relationships) would be referenced in the report contents.
 */
-type ReportType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
+type Report struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
 	Published  string   `json:"published,omitempty"`
 	ObjectRefs []string `json:"object_refs,omitempty"`
 }
@@ -57,15 +57,15 @@ type ReportType struct {
 NewReport - This function will create a new STIX Report object and return it as
 a pointer.
 */
-func NewReport(ver string) *ReportType {
-	var obj ReportType
+func NewReport(ver string) *Report {
+	var obj Report
 	obj.InitObjectProperties("report", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ReportType
+// Public Methods - Report
 //
 // ----------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ func NewReport(ver string) *ReportType {
 SetPublished - This method takes in a timestamp in either time.Time or string
 format and updates the published timestamp property.
 */
-func (o *ReportType) SetPublished(t interface{}) error {
+func (o *Report) SetPublished(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	o.Published = ts
 	return nil
@@ -83,7 +83,7 @@ func (o *ReportType) SetPublished(t interface{}) error {
 AddObject - This methods takes in a string value that represents a STIX
 identifier and adds it to the objects ref property.
 */
-func (o *ReportType) AddObject(s string) error {
+func (o *Report) AddObject(s string) error {
 	o.ObjectRefs = append(o.ObjectRefs, s)
 	return nil
 }

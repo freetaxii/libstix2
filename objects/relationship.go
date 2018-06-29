@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-RelationshipType - This type implements the STIX 2 Relationship SRO and defines
+Relationship - This type implements the STIX 2 Relationship SRO and defines
 all of the properties methods needed to create and work with the STIX Relationship
 SRO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -51,10 +51,10 @@ analysis may not be known or sharable, while the high-level analysis is. For
 these reasons, relationships that might appear to be "shortcuts" are not
 excluded from STIX.
 */
-type RelationshipType struct {
-	properties.CommonObjectPropertiesType
+type Relationship struct {
+	properties.CommonObjectProperties
 	RelationshipType string `json:"relationship_type,omitempty"`
-	properties.DescriptionPropertyType
+	properties.DescriptionProperty
 	SourceRef string `json:"source_ref,omitempty"`
 	TargetRef string `json:"target_ref,omitempty"`
 }
@@ -69,23 +69,23 @@ type RelationshipType struct {
 NewRelationship - This function will create a new STIX Relationship object
 and return it as a pointer.
 */
-func NewRelationship(ver string) *RelationshipType {
-	var obj RelationshipType
+func NewRelationship(ver string) *Relationship {
+	var obj Relationship
 	obj.InitObjectProperties("relationship", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - RelationshipType
+// Public Methods - Relationship
 //
 // ----------------------------------------------------------------------
 
 /*
-SetRelationshipType - This method takes in a string value that represents the
+SetRelationship - This method takes in a string value that represents the
 type name of the releationship and updates the relationship type property.
 */
-func (o *RelationshipType) SetRelationshipType(s string) error {
+func (o *Relationship) SetRelationshipType(s string) error {
 	o.RelationshipType = s
 	return nil
 }
@@ -95,7 +95,7 @@ SetSourceRef - This method takes in a string value that represents a STIX
 identifier of the source STIX object in the relationship and updates the
 source ref property.
 */
-func (o *RelationshipType) SetSourceRef(s string) error {
+func (o *Relationship) SetSourceRef(s string) error {
 	o.SourceRef = s
 	return nil
 }
@@ -105,7 +105,7 @@ SetTargetRef - This method takes in a string value that represents a STIX
 identifier of the target STIX object in the relationship and updates the
 target ref property.
 */
-func (o *RelationshipType) SetTargetRef(s string) error {
+func (o *Relationship) SetTargetRef(s string) error {
 	o.TargetRef = s
 	return nil
 }
@@ -116,7 +116,7 @@ represent a STIX identifier. This is a convenience function for setting both
 ends of the relationship at the same time. The first identifier is for the
 source and the second is for the target.
 */
-func (o *RelationshipType) SetSourceTarget(s, t string) error {
+func (o *Relationship) SetSourceTarget(s, t string) error {
 	o.SourceRef = s
 	o.TargetRef = t
 	return nil

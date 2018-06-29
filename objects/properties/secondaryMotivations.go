@@ -12,10 +12,10 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-SecondaryMotivationsPropertyType - A property used by one or more STIX objects
+SecondaryMotivationsProperty - A property used by one or more STIX objects
 that captures a list of motivations.
 */
-type SecondaryMotivationsPropertyType struct {
+type SecondaryMotivationsProperty struct {
 	SecondaryMotivations []string `json:"secondary_motivations,omitempty"`
 }
 
@@ -30,7 +30,7 @@ AddSecondaryMotivation - This method takes in a string value that represents
 a motivation from the attack-motivation-ov vocab and adds it to the list of
 motivations in the secondary motivations property.
 */
-func (p *SecondaryMotivationsPropertyType) AddSecondaryMotivation(s string) error {
+func (p *SecondaryMotivationsProperty) AddSecondaryMotivation(s string) error {
 	p.SecondaryMotivations = append(p.SecondaryMotivations, s)
 	return nil
 }

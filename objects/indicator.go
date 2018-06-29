@@ -6,18 +6,20 @@
 package objects
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
 //
-// Define Indicator Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-IndicatorType - This type implements the STIX 2 Indicator SDO and defines
+Indicator - This type implements the STIX 2 Indicator SDO and defines
 all of the properties methods needed to create and work with the STIX Indicator
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -44,14 +46,14 @@ behavior that it directly detects (Malware, Tool, and Attack Pattern) as well
 as the Campaigns, Intrusion Sets, and Threat Actors that it might indicate the
 presence of.
 */
-type IndicatorType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
+type Indicator struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
 	Pattern    string `json:"pattern,omitempty"`
 	ValidFrom  string `json:"valid_from,omitempty"`
 	ValidUntil string `json:"valid_until,omitempty"`
-	properties.KillChainPhasesPropertyType
+	properties.KillChainPhasesProperty
 }
 
 // ----------------------------------------------------------------------
@@ -64,23 +66,46 @@ type IndicatorType struct {
 NewIndicator - This function will create a new STIX Indicator object and return
 it as a pointer.
 */
-func NewIndicator(ver string) *IndicatorType {
-	var obj IndicatorType
+func NewIndicator(ver string) *Indicator {
+	var obj Indicator
 	obj.InitObjectProperties("indicator", ver)
 	return &obj
 }
 
+/*
+DecodeIndicator - This function will decode some JSON data encoded as a slice
+of bytes into an actual struct.
+*/
+func DecodeIndicator(data []byte) (*Indicator, string, error) {
+	var o Indicator
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, "", err
+	}
+
+	if valid := VerifyCommonProperties(o.CommonObjectProperties); valid != nil {
+		return nil, "", valid
+	}
+
+	o.SetRawData(data)
+	return &o, o.ID, nil
+}
+
 // ----------------------------------------------------------------------
 //
-// Public Methods - IndicatorType
+// Public Methods - Indicator
 //
 // ----------------------------------------------------------------------
+
+func (o *Indicator) New() {
+	o.InitObjectProperties("indicator", "2.1")
+}
 
 /*
 SetPattern - This method will take in a string value representing a complete
 and valid STIX pattern and set the pattern property to that value.
 */
-func (o *IndicatorType) SetPattern(s string) error {
+func (o *Indicator) SetPattern(s string) error {
 	o.Pattern = s
 	return nil
 }
@@ -89,7 +114,7 @@ func (o *IndicatorType) SetPattern(s string) error {
 SetValidFromToCurrentTime - This methods sets the valid from time to the
 current time
 */
-func (o *IndicatorType) SetValidFromToCurrentTime() error {
+func (o *Indicator) SetValidFromToCurrentTime() error {
 	o.ValidFrom = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -98,7 +123,7 @@ func (o *IndicatorType) SetValidFromToCurrentTime() error {
 SetValidFrom - This method will take in a timestamp in either time.Time or
 string format and will set the valid from property to that value.
 */
-func (o *IndicatorType) SetValidFrom(t interface{}) error {
+func (o *Indicator) SetValidFrom(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	o.ValidFrom = ts
 	return nil
@@ -108,7 +133,7 @@ func (o *IndicatorType) SetValidFrom(t interface{}) error {
 SetValidUntilToCurrentTime - This methods sets the valid until time to the
 current time
 */
-func (o *IndicatorType) SetValidUntilToCurrentTime() error {
+func (o *Indicator) SetValidUntilToCurrentTime() error {
 	o.ValidUntil = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -117,7 +142,7 @@ func (o *IndicatorType) SetValidUntilToCurrentTime() error {
 SetValidUntil - This method will take in a timestamp in either time.Time or
 string format and will set the valid until property to that value.
 */
-func (o *IndicatorType) SetValidUntil(t interface{}) error {
+func (o *Indicator) SetValidUntil(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 
 	// TODO check to make sure this is later than the vaild_from

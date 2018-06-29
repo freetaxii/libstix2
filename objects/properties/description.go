@@ -12,16 +12,16 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-DescriptionPropertyType - A property used by one or more STIX objects that
+DescriptionProperty - A property used by one or more STIX objects that
 captures the description for the object as a string.
 */
-type DescriptionPropertyType struct {
+type DescriptionProperty struct {
 	Description string `json:"description,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - DescriptionPropertyType
+// Public Methods - DescriptionProperty
 //
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ type DescriptionPropertyType struct {
 SetDescription - This method takes in a string value representing a text
 description and updates the description property.
 */
-func (p *DescriptionPropertyType) SetDescription(s string) error {
+func (p *DescriptionProperty) SetDescription(s string) error {
 	p.Description = s
 	return nil
 }
@@ -37,6 +37,6 @@ func (p *DescriptionPropertyType) SetDescription(s string) error {
 /*
 GetDescription - This method returns the description for an object as a string.
 */
-func (p *DescriptionPropertyType) GetDescription() string {
+func (p *DescriptionProperty) GetDescription() string {
 	return p.Description
 }

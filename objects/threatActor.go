@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-ThreatActorType - This type implements the STIX 2 Threat Actor SDO and defines
+ThreatActor - This type implements the STIX 2 Threat Actor SDO and defines
 all of the properties methods needed to create and work with the STIX Threat Actor
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -35,17 +35,17 @@ Threat Actors can be characterized by their motives, capabilities, goals,
 sophistication level, past activities, resources they have access to, and their
 role in the organization.
 */
-type ThreatActorType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.AliasesPropertyType
+type ThreatActor struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.AliasesProperty
 	Roles []string `json:"roles,omitempty"`
-	properties.GoalsPropertyType
+	properties.GoalsProperty
 	Sophistication string `json:"sophistication,omitempty"`
-	properties.ResourceLevelPropertyType
-	properties.PrimaryMotivationPropertyType
-	properties.SecondaryMotivationsPropertyType
+	properties.ResourceLevelProperty
+	properties.PrimaryMotivationProperty
+	properties.SecondaryMotivationsProperty
 	PersonalMotivations []string `json:"personal_motivations,omitempty"`
 }
 
@@ -59,15 +59,15 @@ type ThreatActorType struct {
 NewThreatActor - This function will create a new STIX Threat Actor object
 and return it as a pointer.
 */
-func NewThreatActor(ver string) *ThreatActorType {
-	var obj ThreatActorType
+func NewThreatActor(ver string) *ThreatActor {
+	var obj ThreatActor
 	obj.InitObjectProperties("threat-actor", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ThreatActorType
+// Public Methods - ThreatActor
 //
 // ----------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ func NewThreatActor(ver string) *ThreatActorType {
 AddRole - This method takes in a string value representing a threat actor
 role from the threat-actor-role-ov and adds it to the role property.
 */
-func (o *ThreatActorType) AddRole(s string) error {
+func (o *ThreatActor) AddRole(s string) error {
 	o.Roles = append(o.Roles, s)
 	return nil
 }
@@ -85,7 +85,7 @@ SetSophistication - This method takes in a string value representing the
 sophistication level of a threat actor from the threat-actor-sophistication-ov
 and adds it to the sophistication property.
 */
-func (o *ThreatActorType) SetSophistication(s string) error {
+func (o *ThreatActor) SetSophistication(s string) error {
 	o.Sophistication = s
 	return nil
 }
@@ -95,7 +95,7 @@ AddPersonalMotivation - This method takes in a string value representing the
 motivation of a threat actor from the threat-actor-motivation-ov and adds it
 to the personal motivations property.
 */
-func (o *ThreatActorType) AddPersonalMotivation(s string) error {
+func (o *ThreatActor) AddPersonalMotivation(s string) error {
 	o.PersonalMotivations = append(o.PersonalMotivations, s)
 	return nil
 }

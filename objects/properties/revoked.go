@@ -12,24 +12,24 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-RevokedPropertyType - A property used by one or more STIX objects that
+RevokedProperty - A property used by one or more STIX objects that
 captures whether or not this STIX object has been revoked by the object
 // creator.
 */
-type RevokedPropertyType struct {
+type RevokedProperty struct {
 	Revoked bool `json:"revoked,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - RevokedPropertyType
+// Public Methods - RevokedProperty
 //
 // ----------------------------------------------------------------------
 
 /*
 SetRevoked - This method sets the revoked boolean to true
 */
-func (p *RevokedPropertyType) SetRevoked() error {
+func (p *RevokedProperty) SetRevoked() error {
 	p.Revoked = true
 	return nil
 }
@@ -37,6 +37,6 @@ func (p *RevokedPropertyType) SetRevoked() error {
 /*
 GetRevoked - This method returns the current value of the revoked property.
 */
-func (p *RevokedPropertyType) GetRevoked() bool {
+func (p *RevokedProperty) GetRevoked() bool {
 	return p.Revoked
 }

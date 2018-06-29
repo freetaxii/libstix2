@@ -10,6 +10,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 )
@@ -119,6 +120,8 @@ func (ds *DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 	if err != nil {
 		return err
 	}
+
+	ds.Logger.Debugln("DEBUG: Adding Indicator to datastore with object ID", objectID)
 
 	stmt, _ := sqlAddIndicator()
 	_, err1 := ds.DB.Exec(stmt,

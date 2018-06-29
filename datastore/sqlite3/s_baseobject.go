@@ -42,10 +42,10 @@ date_added = TAXII, the date the object was added to the TAXII server
 */
 func baseObjectProperties() string {
 	return baseProperties() + `
- 	"spec_version" TEXT NOT NULL,
  	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
  	"id" TEXT NOT NULL,
+ 	"spec_version" TEXT NOT NULL,
  	"created_by_ref" TEXT,
  	"created" TEXT NOT NULL,
  	"modified" TEXT NOT NULL,
@@ -151,10 +151,10 @@ func sqlAddBaseObject() (string, error) {
 		INSERT INTO
 			s_base_object (
 				"object_id",
-				"spec_version",
 				"date_added",
 				"type",
 				"id",
+				"spec_version",
 				"created_by_ref",
 				"created",
 				"modified",
@@ -170,10 +170,10 @@ func sqlAddBaseObject() (string, error) {
 	s.WriteString(tblBaseObj)
 	s.WriteString(" (")
 	s.WriteString("\"object_id\", ")
-	s.WriteString("\"spec_version\", ")
 	s.WriteString("\"date_added\", ")
 	s.WriteString("\"type\", ")
 	s.WriteString("\"id\", ")
+	s.WriteString("\"spec_version\", ")
 	s.WriteString("\"created_by_ref\", ")
 	s.WriteString("\"created\", ")
 	s.WriteString("\"modified\", ")
@@ -196,14 +196,16 @@ func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesTyp
 	objectID := ds.Cache.BaseObjectIDIndex
 	ds.Cache.BaseObjectIDIndex++
 
+	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", objectID, "and STIX ID", obj.ID)
+
 	stmt1, _ := sqlAddBaseObject()
 
 	_, err1 := ds.DB.Exec(stmt1,
 		objectID,
-		obj.SpecVersion,
 		dateAdded,
 		obj.ObjectType,
 		obj.ID,
+		obj.SpecVersion,
 		obj.CreatedByRef,
 		obj.Created,
 		obj.Modified,
@@ -273,10 +275,10 @@ func sqlGetBaseObject() (string, error) {
 	/*
 		SELECT
 			s_base_object.object_id,
-			s_base_object.spec_version,
 			s_base_object.date_added,
 			s_base_object.type,
 			s_base_object.id,
+			s_base_object.spec_version,
 			s_base_object.created_by_ref,
 			s_base_object.created,
 			s_base_object.modified,
@@ -299,13 +301,13 @@ func sqlGetBaseObject() (string, error) {
 	s.WriteString(tblBaseObj)
 	s.WriteString(".object_id, ")
 	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version, ")
-	s.WriteString(tblBaseObj)
 	s.WriteString(".date_added, ")
 	s.WriteString(tblBaseObj)
 	s.WriteString(".type, ")
 	s.WriteString(tblBaseObj)
 	s.WriteString(".id, ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".spec_version, ")
 	s.WriteString(tblBaseObj)
 	s.WriteString(".created_by_ref, ")
 	s.WriteString(tblBaseObj)
@@ -364,9 +366,9 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
 	baseObject.SetObjectID(objectID)
-	baseObject.SetSpecVersion(specVersion)
 	baseObject.SetObjectType(objectType)
 	baseObject.SetID(id)
+	baseObject.SetSpecVersion(specVersion)
 	baseObject.SetCreatedByRef(createdByRef)
 	baseObject.SetCreated(created)
 	baseObject.SetModified(modified)

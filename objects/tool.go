@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-ToolType - This type implements the STIX 2 Tool SDO and defines
+Tool - This type implements the STIX 2 Tool SDO and defines
 all of the properties methods needed to create and work with the STIX Tool
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -42,11 +42,11 @@ used to characterize tools used as part of a course of action in response to an
 attack. Tools used during response activities can be included directly as part
 of a Course of Action SDO.
 */
-type ToolType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.KillChainPhasesPropertyType
+type Tool struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.KillChainPhasesProperty
 	ToolVersion string `json:"tool_version,omitempty"`
 }
 
@@ -60,15 +60,15 @@ type ToolType struct {
 NewTool - This function will create a new STIX Tool object and return it as a
 pointer.
 */
-func NewTool(ver string) *ToolType {
-	var obj ToolType
+func NewTool(ver string) *Tool {
+	var obj Tool
 	obj.InitObjectProperties("tool", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ToolType
+// Public Methods - Tool
 //
 // ----------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ func NewTool(ver string) *ToolType {
 SetToolVersion - This method takes in a string value representing the version
 of the tool and updates the tool version property.
 */
-func (o *ToolType) SetToolVersion(s string) error {
+func (o *Tool) SetToolVersion(s string) error {
 	o.ToolVersion = s
 	return nil
 }

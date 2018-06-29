@@ -6,17 +6,19 @@
 package objects
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-CampaignType - This type implements the STIX 2 Campaign SDO and defines
+Campaign - This type implements the STIX 2 Campaign SDO and defines
 all of the properties methods needed to create and work with the STIX Campaign
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -41,13 +43,13 @@ using a specific variant of malware and new C2 servers against the executives
 of ACME Bank during the summer of 2016 in order to gain secret information
 about an upcoming merger with another bank.
 */
-type CampaignType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.AliasesPropertyType
-	properties.FirstSeenPropertyType
-	properties.LastSeenPropertyType
+type Campaign struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.AliasesProperty
+	properties.FirstSeenProperty
+	properties.LastSeenProperty
 	Objective string `json:"objective,omitempty"`
 }
 
@@ -61,15 +63,34 @@ type CampaignType struct {
 NewCampaign - This function will create a new STIX Campaign object and return
 it as a pointer.
 */
-func NewCampaign(ver string) *CampaignType {
-	var obj CampaignType
+func NewCampaign(ver string) *Campaign {
+	var obj Campaign
 	obj.InitObjectProperties("campaign", ver)
 	return &obj
 }
 
+/*
+DecodeCampaign - This function will decode some JSON data encoded as a slice
+of bytes into an actual struct.
+*/
+func DecodeCampaign(data []byte) (*Campaign, string, error) {
+	var o Campaign
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, "", err
+	}
+
+	if valid := VerifyCommonProperties(o.CommonObjectProperties); valid != nil {
+		return nil, "", valid
+	}
+
+	o.SetRawData(data)
+	return &o, o.ID, nil
+}
+
 // ----------------------------------------------------------------------
 //
-// Public Methods - CampaignType
+// Public Methods - Campaign
 //
 // ----------------------------------------------------------------------
 
@@ -77,7 +98,7 @@ func NewCampaign(ver string) *CampaignType {
 SetObjective - This method will take in a string representing an objective,
 goal, desired outcome, or intended effect and update the objective property.
 */
-func (o *CampaignType) SetObjective(s string) error {
+func (o *Campaign) SetObjective(s string) error {
 	o.Objective = s
 	return nil
 }

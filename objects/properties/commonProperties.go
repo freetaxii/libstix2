@@ -12,53 +12,54 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-CommonObjectPropertiesType - This type includes all of the common properties
+CommonBaseProperties - This type includes all of the common properties
+that are used by all STIX objects
+*/
+type CommonBaseProperties struct {
+	TypeProperty
+	IDProperty
+}
+
+/*
+CommonObjectProperties - This type includes all of the common properties
 that are used by all STIX SDOs and SROs
 */
-type CommonObjectPropertiesType struct {
-	ObjectIDPropertyType
-	STIXVersionPropertyType
-	ObjectTypePropertyType
-	IDPropertyType
-	CreatedByRefPropertyType
-	CreatedPropertyType
-	ModifiedPropertyType
-	RevokedPropertyType
-	LabelsPropertyType
-	ConfidencePropertyType
-	LangPropertyType
-	ExternalReferencesPropertyType
-	ObjectMarkingRefsPropertyType
-	GranularMarkingsPropertyType
+type CommonObjectProperties struct {
+	ObjectIDProperty
+	CommonBaseProperties
+	SpecVersionProperty
+	CreatedByRefProperty
+	CreatedProperty
+	ModifiedProperty
+	RevokedProperty
+	LabelsProperty
+	ConfidenceProperty
+	LangProperty
+	ExternalReferencesProperty
+	ObjectMarkingRefsProperty
+	GranularMarkingsProperty
+	RawDataProperty
 }
 
 /*
-CommonMarkingDefinitionPropertiesType - This type includes all of the common
+CommonMarkingDefinitionProperties - This type includes all of the common
 properties that are used by the STIX Marking Definition object
 */
-type CommonMarkingDefinitionPropertiesType struct {
-	STIXVersionPropertyType
-	ObjectTypePropertyType
-	IDPropertyType
-	CreatedByRefPropertyType
-	CreatedPropertyType
-	ExternalReferencesPropertyType
-	ObjectMarkingRefsPropertyType
-	GranularMarkingsPropertyType
-}
-
-/*
-CommonBundlePropertiesType - This type includes all of the common properties
-that are used by the STIX Bundle object
-*/
-type CommonBundlePropertiesType struct {
-	ObjectTypePropertyType
-	IDPropertyType
+type CommonMarkingDefinitionProperties struct {
+	ObjectIDProperty
+	CommonBaseProperties
+	SpecVersionProperty
+	CreatedByRefProperty
+	CreatedProperty
+	ExternalReferencesProperty
+	ObjectMarkingRefsProperty
+	GranularMarkingsProperty
+	RawDataProperty
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - CommonObjectPropertiesType
+// Public Methods - CommonObjectProperties
 //
 // ----------------------------------------------------------------------
 
@@ -68,7 +69,7 @@ type CommonBundlePropertiesType struct {
 // params: objectType - a string value of the STIX object type
 // params: version - the STIX spec version of the object, ex. "2.0". This is
 // 		stored and used in TAXII.
-func (p *CommonObjectPropertiesType) InitObjectProperties(objectType, version string) error {
+func (p *CommonObjectProperties) InitObjectProperties(objectType, version string) error {
 	// TODO make sure that the value coming in a a valid STIX object type
 	p.SetSpecVersion(version)
 	p.SetObjectType(objectType)
@@ -82,7 +83,7 @@ func (p *CommonObjectPropertiesType) InitObjectProperties(objectType, version st
 // created time. This has to be done at this level, since at the individual
 // properties type say "ModifiedPropertyType" this.Created does not exist.
 // But it will exist at this level of inheritance
-func (p *CommonObjectPropertiesType) SetModifiedToCreated() error {
+func (p *CommonObjectProperties) SetModifiedToCreated() error {
 	p.Modified = p.Created
 	return nil
 }

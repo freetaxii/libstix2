@@ -12,17 +12,17 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-ObjectIDPropertyType - A property used by one or more STIX objects that captures
+ObjectIDProperty - A property used by one or more STIX objects that captures
 the unique object ID. This is not included in the JSON serialization, but is
 used for writing to the database.
 */
-type ObjectIDPropertyType struct {
+type ObjectIDProperty struct {
 	ObjectID int `json:"-"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ObjectIDPropertyType
+// Public Methods - ObjectIDProperty
 //
 // ----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ type ObjectIDPropertyType struct {
 SetObjectID - This method takes in a int64 representing an object ID and
 updates the Version property.
 */
-func (p *ObjectIDPropertyType) SetObjectID(i int) error {
+func (p *ObjectIDProperty) SetObjectID(i int) error {
 	p.ObjectID = i
 	return nil
 }
@@ -38,6 +38,6 @@ func (p *ObjectIDPropertyType) SetObjectID(i int) error {
 /*
 GetObjectID - This method returns the object ID value as a int64.
 */
-func (p *ObjectIDPropertyType) GetObjectID() int {
+func (p *ObjectIDProperty) GetObjectID() int {
 	return p.ObjectID
 }

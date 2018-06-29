@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-IdentityType - This type implements the STIX 2 Identity SDO and defines
+Identity - This type implements the STIX 2 Identity SDO and defines
 all of the properties methods needed to create and work with the STIX Identity
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -32,10 +32,10 @@ and the sectors that the Identity belongs to. Identity is used in STIX to
 represent, among other things, targets of attacks, information sources, object
 creators, and threat actor identities.
 */
-type IdentityType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
+type Identity struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
 	IdentityClass      string   `json:"identity_class,omitempty"`
 	Sectors            []string `json:"sectors,omitempty"`
 	ContactInformation string   `json:"contact_information,omitempty"`
@@ -51,15 +51,15 @@ type IdentityType struct {
 NewIdentity - This function will create a new STIX Identity object and return
 it as a pointer.
 */
-func NewIdentity(ver string) *IdentityType {
-	var obj IdentityType
+func NewIdentity(ver string) *Identity {
+	var obj Identity
 	obj.InitObjectProperties("identity", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - IdentityType
+// Public Methods - Identity
 //
 // ----------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ SetIdentityClass - This method takes in a string value representing a STIX
 identity class from the vocab identity-class-ov and updates the identity class
 property.
 */
-func (o *IdentityType) SetIdentityClass(s string) error {
+func (o *Identity) SetIdentityClass(s string) error {
 	o.IdentityClass = s
 	return nil
 }
@@ -77,7 +77,7 @@ func (o *IdentityType) SetIdentityClass(s string) error {
 AddSector - This method takes in a string value that represents a STIX sector
 from the vocab industry-sector-ov and adds it to the identity object.
 */
-func (o *IdentityType) AddSector(s string) error {
+func (o *Identity) AddSector(s string) error {
 	o.Sectors = append(o.Sectors, s)
 	return nil
 }
@@ -87,7 +87,7 @@ SetContactInformation - This method takes in a string value representing
 contact information as a text string and updates the contact information
 property.
 */
-func (o *IdentityType) SetContactInformation(s string) error {
+func (o *Identity) SetContactInformation(s string) error {
 	o.ContactInformation = s
 	return nil
 }

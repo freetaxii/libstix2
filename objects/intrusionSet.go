@@ -11,12 +11,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-IntrusionSetType - This type implements the STIX 2 Intrusion Set SDO and defines
+IntrusionSet - This type implements the STIX 2 Intrusion Set SDO and defines
 all of the properties methods needed to create and work with the STIX Intrusion Set
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -43,17 +43,17 @@ varying level of fidelity on attributing an Intrusion Set back to Threat Actors
 and may be able to only attribute it back to a nation state or perhaps back to
 an organization within that nation state.
 */
-type IntrusionSetType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.AliasesPropertyType
-	properties.FirstSeenPropertyType
-	properties.LastSeenPropertyType
-	properties.GoalsPropertyType
-	properties.ResourceLevelPropertyType
-	properties.PrimaryMotivationPropertyType
-	properties.SecondaryMotivationsPropertyType
+type IntrusionSet struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.AliasesProperty
+	properties.FirstSeenProperty
+	properties.LastSeenProperty
+	properties.GoalsProperty
+	properties.ResourceLevelProperty
+	properties.PrimaryMotivationProperty
+	properties.SecondaryMotivationsProperty
 }
 
 // ----------------------------------------------------------------------
@@ -66,14 +66,14 @@ type IntrusionSetType struct {
 NewIntrusionSet - This function will create a new STIX Intrusion Set object
 and return it as a pointer.
 */
-func NewIntrusionSet(ver string) *IntrusionSetType {
-	var obj IntrusionSetType
+func NewIntrusionSet(ver string) *IntrusionSet {
+	var obj IntrusionSet
 	obj.InitObjectProperties("intrusion-set", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - IntrusionSetType
+// Public Methods - IntrusionSet
 //
 // ----------------------------------------------------------------------

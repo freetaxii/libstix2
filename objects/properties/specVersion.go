@@ -12,23 +12,23 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-STIXVersionPropertyType - A property used by one or more STIX objects that
+SpecVersionProperty - A property used by one or more STIX objects that
 captures the STIX specification version.
 */
-type STIXVersionPropertyType struct {
+type SpecVersionProperty struct {
 	SpecVersion string `json:"spec_version,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - STIXVersionPropertyType
+// Public Methods - SpecVersionProperty
 //
 // ----------------------------------------------------------------------
 
 /*
 SetSpecVersion20 - This method will set the specification version to 2.0.
 */
-func (p *STIXVersionPropertyType) SetSpecVersion20() error {
+func (p *SpecVersionProperty) SetSpecVersion20() error {
 	p.SpecVersion = "2.0"
 	return nil
 }
@@ -36,7 +36,7 @@ func (p *STIXVersionPropertyType) SetSpecVersion20() error {
 /*
 SetSpecVersion20 - This method will set the specification version to 2.1.
 */
-func (p *STIXVersionPropertyType) SetSpecVersion21() error {
+func (p *SpecVersionProperty) SetSpecVersion21() error {
 	p.SpecVersion = "2.1"
 	return nil
 }
@@ -45,7 +45,7 @@ func (p *STIXVersionPropertyType) SetSpecVersion21() error {
 SetSpecVersion - This method takes in a string representing a STIX specification
 version and updates the Version property.
 */
-func (p *STIXVersionPropertyType) SetSpecVersion(s string) error {
+func (p *SpecVersionProperty) SetSpecVersion(s string) error {
 	p.SpecVersion = s
 	return nil
 }
@@ -53,6 +53,6 @@ func (p *STIXVersionPropertyType) SetSpecVersion(s string) error {
 /*
 GetSpecVersion - This method returns the version value as a string.
 */
-func (p *STIXVersionPropertyType) GetSpecVersion() string {
+func (p *SpecVersionProperty) GetSpecVersion() string {
 	return p.SpecVersion
 }

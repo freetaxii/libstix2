@@ -11,23 +11,23 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-InfrastructureType - This type implements the STIX 2 Infrastructure SDO and defines
+Infrastructure - This type implements the STIX 2 Infrastructure SDO and defines
 all of the properties methods needed to create and work with the STIX Infrastructure
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
 
 The following information comes directly from the STIX 2 specification documents.
 */
-type InfrastructureType struct {
-	properties.CommonObjectPropertiesType
-	properties.NamePropertyType
-	properties.DescriptionPropertyType
-	properties.KillChainPhasesPropertyType
+type Infrastructure struct {
+	properties.CommonObjectProperties
+	properties.NameProperty
+	properties.DescriptionProperty
+	properties.KillChainPhasesProperty
 }
 
 // ----------------------------------------------------------------------
@@ -40,14 +40,14 @@ type InfrastructureType struct {
 NewInfrastructure - This function will create a new STIX Infrastructure object
 and return it as a pointer.
 */
-func NewInfrastructure(ver string) *InfrastructureType {
-	var obj InfrastructureType
+func NewInfrastructure(ver string) *Infrastructure {
+	var obj Infrastructure
 	obj.InitObjectProperties("infrastructure", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - InfrastructureType
+// Public Methods - Infrastructure
 //
 // ----------------------------------------------------------------------

@@ -16,6 +16,10 @@ import (
 func main() {
 	i := objects.NewIndicator("2.0")
 
+	// The other option is to do
+	// var i objects.Indicator
+	// i.New()
+
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
 
@@ -26,8 +30,7 @@ func main() {
 	i.SetValidFrom(time.Now())
 	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
-	var data []byte
-	data, _ = json.MarshalIndent(i, "", "    ")
+	data, _ := json.MarshalIndent(i, "", "    ")
 
 	fmt.Println(string(data))
 }

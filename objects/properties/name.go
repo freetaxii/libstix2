@@ -12,16 +12,16 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-NamePropertyType - A property used by one or more STIX objects that captures a
+NameProperty - A property used by one or more STIX objects that captures a
 vanity name for the STIX object in string format.
 */
-type NamePropertyType struct {
+type NameProperty struct {
 	Name string `json:"name,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - NamePropertyType
+// Public Methods - NameProperty
 //
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ type NamePropertyType struct {
 SetName - This method takes in a string value representing a name of the object
 and updates the name property.
 */
-func (p *NamePropertyType) SetName(s string) error {
+func (p *NameProperty) SetName(s string) error {
 	p.Name = s
 	return nil
 }
@@ -37,6 +37,6 @@ func (p *NamePropertyType) SetName(s string) error {
 /*
 GetName - This method returns the current name of the object.
 */
-func (p *NamePropertyType) GetName() string {
+func (p *NameProperty) GetName() string {
 	return p.Name
 }

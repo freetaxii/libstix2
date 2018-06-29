@@ -16,17 +16,17 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-ModifiedPropertyType - A property used by one or more STIX objects that
+ModifiedProperty - A property used by one or more STIX objects that
 captures the time that this object was modified in STIX timestamp format,
 which is an RFC3339 format.
 */
-type ModifiedPropertyType struct {
+type ModifiedProperty struct {
 	Modified string `json:"modified,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ModifiedPropertyType
+// Public Methods - ModifiedProperty
 //
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ type ModifiedPropertyType struct {
 SetModifiedToCurrentTime - This methods sets the object modified time to the
 current time
 */
-func (p *ModifiedPropertyType) SetModifiedToCurrentTime() error {
+func (p *ModifiedProperty) SetModifiedToCurrentTime() error {
 	p.Modified = timestamp.GetCurrentTime("milli")
 	return nil
 }
@@ -45,7 +45,7 @@ format and updates the modifed property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
-func (p *ModifiedPropertyType) SetModified(t interface{}) error {
+func (p *ModifiedProperty) SetModified(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
 	p.Modified = ts
 	return nil
@@ -56,6 +56,6 @@ GetModified - This method will return the modified timestamp as a string. If
 the value is the same as the created timestamp, then this object is the
 first version of the object.
 */
-func (p *ModifiedPropertyType) GetModified() string {
+func (p *ModifiedProperty) GetModified() string {
 	return p.Modified
 }

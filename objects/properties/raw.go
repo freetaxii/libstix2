@@ -12,23 +12,30 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-AliasesProperty - A property used by one or more STIX objects.
+RawDataProperty - A property used to store the raw bytes of the JSON object.
 */
-type AliasesProperty struct {
-	Aliases []string `json:"aliases,omitempty"`
+type RawDataProperty struct {
+	Raw []byte `json:"-"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - AliasesProperty
+// Public Methods - IdPropertyType
 //
 // ----------------------------------------------------------------------
 
 /*
-AddAlias - This method takes in a takes in a string value that represents an
-alias for something in STIX and adds it to the property.
+SetRaw - This method takes in a slice of bytes representing a full JSON object
+and updates the raw property for the object.
 */
-func (p *AliasesProperty) AddAlias(s string) error {
-	p.Aliases = append(p.Aliases, s)
+func (p *RawDataProperty) SetRawData(data []byte) error {
+	p.Raw = data
 	return nil
+}
+
+/*
+GetRaw - This method will return the raw bytes for a given STIX object.
+*/
+func (p *RawDataProperty) GetRawData() []byte {
+	return p.Raw
 }

@@ -12,12 +12,12 @@ import (
 
 // ----------------------------------------------------------------------
 //
-// Define Message Type
+// Define Object Type
 //
 // ----------------------------------------------------------------------
 
 /*
-ObservedDataType - This type implements the STIX 2 Observed Data SDO and defines
+ObservedData - This type implements the STIX 2 Observed Data SDO and defines
 all of the properties methods needed to create and work with the STIX Observed Data
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
@@ -55,8 +55,8 @@ an Indicator, Malware, or other SDO, uses Observed Data to represent the raw
 information that led to the creation of the Sighting (e.g., what was actually
 seen that suggested that a particular instance of malware was active).
 */
-type ObservedDataType struct {
-	properties.CommonObjectPropertiesType
+type ObservedData struct {
+	properties.CommonObjectProperties
 	FirstObserved  string `json:"first_observed,omitempty"`
 	LastObserved   string `json:"last_observed,omitempty"`
 	NumberObserved int    `json:"number_observed,omitempty"`
@@ -73,15 +73,15 @@ type ObservedDataType struct {
 NewObservedData - This function will create a new STIX Observed Data object
 and return it as a pointer.
 */
-func NewObservedData(ver string) *ObservedDataType {
-	var obj ObservedDataType
+func NewObservedData(ver string) *ObservedData {
+	var obj ObservedData
 	obj.InitObjectProperties("observed-data", ver)
 	return &obj
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - ObservedDataType
+// Public Methods - ObservedData
 //
 // ----------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ func NewObservedData(ver string) *ObservedDataType {
 SetFirstObservedToCurrentTime - This methods sets the first observed time to the
 current time
 */
-func (o *ObservedDataType) SetFirstObservedToCurrentTime() error {
+func (o *ObservedData) SetFirstObservedToCurrentTime() error {
 	o.FirstObserved = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -98,7 +98,7 @@ func (o *ObservedDataType) SetFirstObservedToCurrentTime() error {
 SetFirstObserved - This method takes in a timestamp in either time.Time or
 string format and updates the first observed property.
 */
-func (o *ObservedDataType) SetFirstObserved(t interface{}) error {
+func (o *ObservedData) SetFirstObserved(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	o.FirstObserved = ts
 	return nil
@@ -108,7 +108,7 @@ func (o *ObservedDataType) SetFirstObserved(t interface{}) error {
 SetLastObservedToCurrentTime - This methods sets the last observed time to the
 current time
 */
-func (o *ObservedDataType) SetLastObservedToCurrentTime() error {
+func (o *ObservedData) SetLastObservedToCurrentTime() error {
 	o.LastObserved = timestamp.GetCurrentTime("micro")
 	return nil
 }
@@ -117,7 +117,7 @@ func (o *ObservedDataType) SetLastObservedToCurrentTime() error {
 SetLastObserved - This method takes in a timestamp in either time.Time or
 string format and updates the last observed property.
 */
-func (o *ObservedDataType) SetLastObserved(t interface{}) error {
+func (o *ObservedData) SetLastObserved(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	o.LastObserved = ts
 	return nil
@@ -127,7 +127,7 @@ func (o *ObservedDataType) SetLastObserved(t interface{}) error {
 SetNumberObserved - This method takes in an integer that represents the
 number of objects that were observed and updates the number observed property.
 */
-func (o *ObservedDataType) SetNumberObserved(i int) error {
+func (o *ObservedData) SetNumberObserved(i int) error {
 	o.NumberObserved = i
 	return nil
 }
@@ -136,7 +136,7 @@ func (o *ObservedDataType) SetNumberObserved(i int) error {
 SetObjects - This takes in a string value that represents represents a cyber
 observable JSON object and updates the objects property.
 */
-func (o *ObservedDataType) SetObjects(s string) error {
+func (o *ObservedData) SetObjects(s string) error {
 	o.Objects = s
 	return nil
 }

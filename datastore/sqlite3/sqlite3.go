@@ -135,7 +135,11 @@ database.
 func (ds *DatastoreType) AddSTIXObject(obj interface{}) error {
 	switch o := obj.(type) {
 	case *objects.IndicatorType:
-		ds.addIndicator(o)
+		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
+		err := ds.addIndicator(o)
+		if err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("add object error, the following STIX type is not currently supported: ", o)
 	}
@@ -153,6 +157,7 @@ func (ds *DatastoreType) AddTAXIIObject(obj interface{}) error {
 	case *resources.CollectionType:
 		err = ds.addCollection(o)
 	case *resources.CollectionRecordType:
+		ds.Logger.Debugln("DEBUG: Found Collection Record to add to datastore")
 		err = ds.addObjectToCollection(o)
 	default:
 		err = fmt.Errorf("does not match any known types ", o)

@@ -12,16 +12,16 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-CreatedByRefPropertyType - A property used by one or more STIX objects that
+CreatedByRefProperty - A property used by one or more STIX objects that
 captures the STIX identifier of the identity that created this object.
 */
-type CreatedByRefPropertyType struct {
+type CreatedByRefProperty struct {
 	CreatedByRef string `json:"created_by_ref,omitempty"`
 }
 
 // ----------------------------------------------------------------------
 //
-// Public Methods - CreatedByRefPropertyType
+// Public Methods - CreatedByRefProperty
 //
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ type CreatedByRefPropertyType struct {
 SetCreatedByRef - This method takes in a string value representing a STIX
 identifier and updates the Created By Ref property.
 */
-func (p *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
+func (p *CreatedByRefProperty) SetCreatedByRef(s string) error {
 	p.CreatedByRef = s
 	return nil
 }
@@ -38,6 +38,6 @@ func (p *CreatedByRefPropertyType) SetCreatedByRef(s string) error {
 GetCreatedByRef - This method returns the STIX identifier for the identity
 that created this object.
 */
-func (p *CreatedByRefPropertyType) GetCreatedByRef() string {
+func (p *CreatedByRefProperty) GetCreatedByRef() string {
 	return p.CreatedByRef
 }
