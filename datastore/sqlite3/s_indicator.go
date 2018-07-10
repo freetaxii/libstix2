@@ -114,9 +114,9 @@ func sqlGetIndicator() (string, error) {
 /*
 addIndicator - This method will add an indicator to the database.
 */
-func (ds *DatastoreType) addIndicator(obj *objects.IndicatorType) error {
+func (ds *DatastoreType) addIndicator(obj *objects.Indicator) error {
 
-	objectID, err := ds.addBaseObject(&obj.CommonObjectPropertiesType)
+	objectID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
 		return err
 	}
@@ -138,7 +138,7 @@ func (ds *DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 	}
 
 	if obj.KillChainPhases != nil {
-		err2 := ds.addKillChainPhases(objectID, &obj.KillChainPhasesPropertyType)
+		err2 := ds.addKillChainPhases(objectID, &obj.KillChainPhasesProperty)
 
 		if err2 != nil {
 			return err2
@@ -150,8 +150,8 @@ func (ds *DatastoreType) addIndicator(obj *objects.IndicatorType) error {
 /*
 getIndicator - This method will get a specific indicator from the database.
 */
-func (ds *DatastoreType) getIndicator(stixid, version string) (*objects.IndicatorType, error) {
-	var i objects.IndicatorType
+func (ds *DatastoreType) getIndicator(stixid, version string) (*objects.Indicator, error) {
+	var i objects.Indicator
 	var description, pattern, validFrom, validUntil string
 
 	// Lets first get the base object so we know the objectID
@@ -161,7 +161,7 @@ func (ds *DatastoreType) getIndicator(stixid, version string) (*objects.Indicato
 	}
 
 	// Copy base object data in to the Indicator
-	i.CommonObjectPropertiesType = *baseObject
+	i.CommonObjectProperties = *baseObject
 
 	stmt, _ := sqlGetIndicator()
 	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&i.Name, &description, &pattern, &validFrom, &validUntil)

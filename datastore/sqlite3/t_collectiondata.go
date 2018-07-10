@@ -151,7 +151,7 @@ an entry in the taxii_collection_data table. In this table we use the STIX ID
 not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
-func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordType) error {
+func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecord) error {
 	ds.Logger.Levelln("Function", "FUNC: START addObjectToCollection()")
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
@@ -192,7 +192,7 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecordTy
 /*
 getBundle - This method will return a STIX bundle based on the query provided.
 */
-func (ds *DatastoreType) getBundle(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
+func (ds *DatastoreType) getBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	ds.Logger.Traceln("TRACE getBundle(): Start")
 
 	stixBundle := objects.NewBundle()
@@ -232,7 +232,7 @@ determine the requirements and parameters for the where clause of the SQL
 statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
-func sqlGetManifestData(query resources.CollectionQueryType) (string, error) {
+func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
 
@@ -305,10 +305,10 @@ func sqlGetManifestData(query resources.CollectionQueryType) (string, error) {
 /*
 getManifestData - This method will return manifest data based on the query provided.
 */
-func (ds *DatastoreType) getManifestData(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
+func (ds *DatastoreType) getManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	ds.Logger.Traceln("TRACE getManifestData(): Start")
 
-	var resultData resources.CollectionQueryResultType
+	var resultData resources.CollectionQueryResult
 	// var first, last int
 	// var errRange error
 
@@ -442,7 +442,7 @@ func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, in
 sqlCollectionDataQueryLimit - This function will take in a query struct and
 build an SQL LIMIT statement based on the values provided in query object.
 */
-func sqlCollectionDataQueryLimit(query resources.CollectionQueryType) (int, error) {
+func sqlCollectionDataQueryLimit(query resources.CollectionQuery) (int, error) {
 	srv := 0
 	client := 0
 	var err error
@@ -481,7 +481,7 @@ func sqlCollectionDataQueryLimit(query resources.CollectionQueryType) (int, erro
 sqlCollectionDataQueryOptions - This function will take in a query struct and
 build an SQL where statement based on all of the provided query parameters.
 */
-func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error) {
+func sqlCollectionDataQueryOptions(query resources.CollectionQuery) (string, error) {
 	var wherestmt bytes.Buffer
 	var err error
 

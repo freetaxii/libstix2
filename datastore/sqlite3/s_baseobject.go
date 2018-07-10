@@ -190,7 +190,7 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectPropertiesType) (int, error) {
+func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectProperties) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	objectID := ds.Cache.BaseObjectIDIndex
@@ -346,9 +346,9 @@ getbaseObject - This method will get a specific base object based on the STIX ID
 and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
-func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.CommonObjectPropertiesType, error) {
+func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
 
-	var baseObject properties.CommonObjectPropertiesType
+	var baseObject properties.CommonObjectProperties
 	var objectID int
 	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
 
@@ -385,7 +385,7 @@ func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.Comm
 	if err1 != nil {
 		return nil, err1
 	}
-	baseObject.ExternalReferencesPropertyType = *externalRefData
+	baseObject.ExternalReferencesProperty = *externalRefData
 
 	return &baseObject, nil
 }
@@ -478,7 +478,7 @@ func sqlAddExternalReference() (string, error) {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *DatastoreType) addExternalReference(objectID int, reference properties.ExternalReferenceType) error {
+func (ds *DatastoreType) addExternalReference(objectID int, reference properties.ExternalReference) error {
 	stmt, _ := sqlAddExternalReference()
 
 	_, err := ds.DB.Exec(stmt,
@@ -537,8 +537,8 @@ func sqlGetExternalReference() (string, error) {
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *DatastoreType) getExternalReferences(objectID int) (*properties.ExternalReferencesPropertyType, error) {
-	var extrefs properties.ExternalReferencesPropertyType
+func (ds *DatastoreType) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
+	var extrefs properties.ExternalReferencesProperty
 	stmt, _ := sqlGetExternalReference()
 
 	rows, err := ds.DB.Query(stmt, objectID)

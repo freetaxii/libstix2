@@ -37,12 +37,12 @@ should not assume that other implementations will treat it as a persistent
 object.
 */
 type Bundle struct {
-	properties.CommonBaseProperties
+	properties.CommonBundleProperties
 	Objects []interface{} `json:"objects,omitempty"`
 }
 
 type BundleDecode struct {
-	properties.CommonBaseProperties
+	properties.CommonBundleProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
@@ -77,7 +77,7 @@ func DecodeBundle(r io.Reader) (*BundleDecode, error) {
 	}
 
 	// Check to make sure the object type is valid.
-	if err := b.CommonBaseProperties.TypeProperty.Verify(); err != nil {
+	if err := b.CommonBundleProperties.TypeProperty.Verify(); err != nil {
 		return nil, err
 	}
 

@@ -18,6 +18,10 @@ func ValidSTIXID(id string) bool {
 	valid := false
 	idparts := strings.Split(id, "--")
 
+	if idparts != nil {
+		return false
+	}
+
 	valid = ValidSTIXObjectType(idparts[0])
 
 	// Short circuit if the STIX type part is wrong

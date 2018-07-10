@@ -37,7 +37,7 @@ type DatastoreType struct {
 	Filename string
 	DB       *sql.DB
 	Logger   *log.Logger
-	Cache    datastore.CacheType
+	Cache    datastore.MemCache
 	Strict   struct {
 		IDs   bool
 		Types bool
@@ -71,7 +71,7 @@ func New(logger *log.Logger, filename string) *DatastoreType {
 		log.Fatalln(err)
 	}
 
-	// Initialize the datastore cache which will have the current object ID
+	// Initialize the MemCache which will have the current object ID
 	// and the collections data.
 	err = ds.initCache()
 	if err != nil {
@@ -134,7 +134,7 @@ database.
 */
 func (ds *DatastoreType) AddSTIXObject(obj interface{}) error {
 	switch o := obj.(type) {
-	case *objects.IndicatorType:
+	case *objects.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
 		err := ds.addIndicator(o)
 		if err != nil {
@@ -154,10 +154,11 @@ func (ds *DatastoreType) AddTAXIIObject(obj interface{}) error {
 	var err error
 
 	switch o := obj.(type) {
-	case *resources.CollectionType:
+	case *resources.Collection:
+		ds.Logger.Debugln("DEBUG: Adding TAXII Collection to datastore")
 		err = ds.addCollection(o)
-	case *resources.CollectionRecordType:
-		ds.Logger.Debugln("DEBUG: Found Collection Record to add to datastore")
+	case *resources.CollectionRecord:
+		ds.Logger.Debugln("DEBUG: Adding TAXII Collection Record to datastore")
 		err = ds.addObjectToCollection(o)
 	default:
 		err = fmt.Errorf("does not match any known types ", o)
@@ -181,7 +182,7 @@ GetAllCollections - This method will return all collections, even those that
 are disabled and hidden. This is primarily used for administration tools that
 need to see all collections.
 */
-func (ds *DatastoreType) GetAllCollections() (*resources.CollectionsType, error) {
+func (ds *DatastoreType) GetAllCollections() (*resources.Collections, error) {
 	return ds.getCollections("all")
 }
 
@@ -189,16 +190,17 @@ func (ds *DatastoreType) GetAllCollections() (*resources.CollectionsType, error)
 GetAllEnabledCollections - This method will return only enabled collections,
 even those that are hidden. This is used for setup up the HTTP MUX routers.
 */
-func (ds *DatastoreType) GetAllEnabledCollections() (*resources.CollectionsType, error) {
+func (ds *DatastoreType) GetAllEnabledCollections() (*resources.Collections, error) {
 	return ds.getCollections("allEnabled")
 }
 
 /*
 GetCollections - This method will return just those collections that are both
-enabled and visible. This is primarily used for clients that pull a collections
-resource.
+enabled and visible. This is primarily used to populate the results for clients
+that pull a collections resource. Clients may be able to talk to a hidden
+collection, but they should not see it in the list.
 */
-func (ds *DatastoreType) GetCollections() (*resources.CollectionsType, error) {
+func (ds *DatastoreType) GetCollections() (*resources.Collections, error) {
 	return ds.getCollections("enabledVisible")
 }
 
@@ -214,7 +216,7 @@ parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *DatastoreType) GetBundle(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
+func (ds *DatastoreType) GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	return ds.getBundle(query)
 }
 
@@ -223,7 +225,7 @@ GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
-func (ds *DatastoreType) GetManifestData(query resources.CollectionQueryType) (*resources.CollectionQueryResultType, error) {
+func (ds *DatastoreType) GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	return ds.getManifestData(query)
 }
 
@@ -279,27 +281,26 @@ initCache - This method will populate the datastore cache.
 */
 func (ds *DatastoreType) initCache() error {
 	ds.Logger.Traceln("TRACE initCache(): Start ")
-	ds.Cache.Collections = make(map[string]*resources.CollectionType)
+	ds.Cache.Collections = make(map[string]*resources.Collection)
 
 	// Get current index value of the s_base_object table so new records being
 	// added can use it as their object_id. By using an integer here instead
 	// of the full STIX ID, we can save significant amounts of space.
 	// TODO - fix this once I setup my own error type
-	ds.Logger.Traceln("TRACE: Start getBaseObjectIndex()")
+	ds.Logger.Traceln("TRACE: Call getBaseObjectIndex()")
 	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
 
-	ds.Logger.Debugln("DEBUG initCache(): Base object index ID", ds.Cache.BaseObjectIDIndex)
+	ds.Logger.Debugln("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
 
 	// Populate the collections cache
-	ds.Cache.Collections = make(map[string]*resources.CollectionType)
+	ds.Cache.Collections = make(map[string]*resources.Collection)
 
 	// Lets initialize the collections cache from the datastore
 	allCollections, err := ds.GetAllCollections()
-
 	if err != nil {
 		return err
 	}
@@ -307,7 +308,7 @@ func (ds *DatastoreType) initCache() error {
 	for k, c := range allCollections.Collections {
 		ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
 		// get the size of the collection
-		ds.Logger.Traceln("TRACE: Start getCollectionSize() for collection", c.ID)
+		ds.Logger.Traceln("TRACE: Call getCollectionSize() for collection", c.ID)
 		size, err3 := ds.getCollectionSize(c.ID)
 		if err3 != nil {
 			return err3
@@ -317,7 +318,7 @@ func (ds *DatastoreType) initCache() error {
 	}
 
 	for k, v := range ds.Cache.Collections {
-		ds.Logger.Debugln("DEBUG initCache(): Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
+		ds.Logger.Debugln("DEBUG: Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
 	}
 
 	return nil

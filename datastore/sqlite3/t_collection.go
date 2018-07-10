@@ -138,7 +138,7 @@ func sqlAddCollectionMediaType() (string, error) {
 addCollection - This method will add a collection to the t_collections table in
 the database.
 */
-func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
+func (ds *DatastoreType) addCollection(obj *resources.Collection) error {
 	ds.Logger.Traceln("TRACE addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
@@ -175,13 +175,13 @@ func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
 			// TODO look up in cache
 			mediavalue := 0
 			switch media {
-			case "application/stix+json; version=2.0":
+			case "application/stix+json;version=2.0":
 				mediavalue = 1
-			case "application/stix+json; version=2.1":
+			case "application/stix+json;version=2.1":
 				mediavalue = 2
-			case "application/stix+json; version=2.2":
+			case "application/stix+json;version=2.2":
 				mediavalue = 3
-			case "application/stix+json; version=2.3":
+			case "application/stix+json;version=2.3":
 				mediavalue = 4
 			}
 
@@ -204,7 +204,7 @@ func (ds *DatastoreType) addCollection(obj *resources.CollectionType) error {
 
 /*
 sqlGetCollections - This function will return an SQL statement that will return a
-list of collections. A byte array is used instead of sting
+list of collections. A byte array is used instead of string
 concatenation as it is the most efficient way to do string concatenation in Go.
 */
 func sqlGetCollections(whichCollections string) (string, error) {
@@ -317,13 +317,15 @@ The HTTP Router MUX needs to know about all enabled collections, even those that
 are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
-func (ds *DatastoreType) getCollections(whichCollections string) (*resources.CollectionsType, error) {
+func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Collections, error) {
 	ds.Logger.Traceln("TRACE getCollections(): Start")
 	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
 
 	allCollections := resources.NewCollections()
 
 	stmt, _ := sqlGetCollections(whichCollections)
+
+	ds.Logger.Traceln("TRACE getCollections(): SQL Statement", stmt)
 
 	// Query database for all the collections
 	rows, err := ds.DB.Query(stmt)

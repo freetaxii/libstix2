@@ -16,12 +16,32 @@ import (
 // ----------------------------------------------------------------------
 
 /*
+CommonBundleProperties - This type includes all of the common properties
+that are used by all STIX objects
+*/
+type CommonBundleProperties struct {
+	TypeProperty
+	IDProperty
+}
+
+/*
 CommonBaseProperties - This type includes all of the common properties
 that are used by all STIX objects
 */
 type CommonBaseProperties struct {
+	ObjectIDProperty
 	TypeProperty
+	SpecVersionProperty
 	IDProperty
+	CreatedByRefProperty
+	CreatedProperty
+}
+
+type CommonAdditionalProperties struct {
+	ExternalReferencesProperty
+	ObjectMarkingRefsProperty
+	GranularMarkingsProperty
+	RawDataProperty
 }
 
 /*
@@ -29,20 +49,13 @@ CommonObjectProperties - This type includes all of the common properties
 that are used by all STIX SDOs and SROs
 */
 type CommonObjectProperties struct {
-	ObjectIDProperty
 	CommonBaseProperties
-	SpecVersionProperty
-	CreatedByRefProperty
-	CreatedProperty
 	ModifiedProperty
 	RevokedProperty
 	LabelsProperty
 	ConfidenceProperty
 	LangProperty
-	ExternalReferencesProperty
-	ObjectMarkingRefsProperty
-	GranularMarkingsProperty
-	RawDataProperty
+	CommonAdditionalProperties
 }
 
 /*
@@ -50,15 +63,8 @@ CommonMarkingDefinitionProperties - This type includes all of the common
 properties that are used by the STIX Marking Definition object
 */
 type CommonMarkingDefinitionProperties struct {
-	ObjectIDProperty
 	CommonBaseProperties
-	SpecVersionProperty
-	CreatedByRefProperty
-	CreatedProperty
-	ExternalReferencesProperty
-	ObjectMarkingRefsProperty
-	GranularMarkingsProperty
-	RawDataProperty
+	CommonAdditionalProperties
 }
 
 // ----------------------------------------------------------------------

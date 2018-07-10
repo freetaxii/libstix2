@@ -18,7 +18,8 @@ package sqlite3
 // ----------------------------------------------------------------------
 
 /*
-attackPatternProperties  - This method will return the properties for attack pattern SDOs
+attackPatternProperties  - This method will return the properties for the
+attack pattern SDO
 */
 func attackPatternProperties() string {
 	return baseProperties() + `

@@ -5,6 +5,5 @@
 
 /*
 Package datastore defines various datastores for use with STIX 2 and TAXII 2.
-
 */
 package datastore

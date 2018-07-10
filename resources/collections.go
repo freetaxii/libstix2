@@ -83,22 +83,22 @@ type Collection struct {
 }
 
 /*
-CollectionRecordType - This type will hold the data for adding an object to
+CollectionRecord - This type will hold the data for adding an object to
 a collection and is stored in the t_collection_data database table.
 
 CollectionID - The collection ID, a UUIDv4 value.  The database will store a DatastoreID integer.
 STIXID       - The STIX object ID. This is done so all versions of an object show up in the collection.
 */
-type CollectionRecordType struct {
+type CollectionRecord struct {
 	CollectionID string
 	STIXID       string
 }
 
 /*
-CollectionQueryType - This struct will hold all of the variables that a user can
+CollectionQuery - This struct will hold all of the variables that a user can
 use to query a collection.
 */
-type CollectionQueryType struct {
+type CollectionQuery struct {
 	CollectionID          string
 	CollectionDatastoreID int
 	STIXID                []string // Passed in from the URL
@@ -113,7 +113,7 @@ type CollectionQueryType struct {
 }
 
 /*
-CollectionQueryResultType - This struct contains the various bits of meta data
+CollectionQueryResult - This struct contains the various bits of meta data
 that are returned from a query against a collection on a TAXII server. This is
 done so that the method signatures do not need to change as time goes on and we
 add more meta data that needs to be returned. It is important to note that a
@@ -129,7 +129,7 @@ ManifestData   = The TAXII manifest resource that contains the requested data fr
 RangeBegin     = The range value of the first record being sent to the client.
 RangeEnd       = The range value of the last record being sent to the client.
 */
-type CollectionQueryResultType struct {
+type CollectionQueryResult struct {
 	Size           int
 	DateAddedFirst string
 	DateAddedLast  string
@@ -168,8 +168,8 @@ CreateCollectionRecord - This function will take in a collection ID and a STIX I
 and create a new TAXII Collection Record object and return it as a pointer. This
 is used for storying a record in the database in the t_collection_data table.
 */
-func CreateCollectionRecord(cid, sid string) *CollectionRecordType {
-	var obj CollectionRecordType
+func CreateCollectionRecord(cid, sid string) *CollectionRecord {
+	var obj CollectionRecord
 	obj.CollectionID = cid
 	obj.STIXID = sid
 	return &obj
@@ -179,8 +179,8 @@ func CreateCollectionRecord(cid, sid string) *CollectionRecordType {
 NewCollectionQuery - This function will take in a collection ID as a string
 and the Server Record Limit and return a CollectionQueryType object.
 */
-func NewCollectionQuery(id string, limit int) *CollectionQueryType {
-	var obj CollectionQueryType
+func NewCollectionQuery(id string, limit int) *CollectionQuery {
+	var obj CollectionQuery
 	obj.CollectionID = id
 	obj.ServerRecordLimit = limit
 	return &obj

@@ -29,7 +29,7 @@ type TypeProperty struct {
 
 func (p *TypeProperty) Verify() error {
 	if p.ObjectType == "" {
-		return errors.New("object type is missing")
+		return errors.New("STIX object type is missing")
 	}
 	return nil
 }
