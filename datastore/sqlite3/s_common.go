@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -121,7 +120,7 @@ sqlAddKillChainPhase - This function will return an SQL statement that will add 
 kill chain phase to the database for a given object.
 */
 func sqlAddKillChainPhase() (string, error) {
-	tblKillChain := datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES
+	tblKillChain := DB_TABLE_STIX_KILL_CHAIN_PHASES
 
 	/*
 		INSERT INTO
@@ -149,7 +148,7 @@ func sqlAddKillChainPhase() (string, error) {
 addKillChainPhases - This method will add a kill chain phase for a given object
 to the database.
 */
-func (ds *DatastoreType) addKillChainPhases(objectID int, obj *properties.KillChainPhasesProperty) error {
+func (ds *Datastore) addKillChainPhases(objectID int, obj *properties.KillChainPhasesProperty) error {
 	for _, v := range obj.KillChainPhases {
 		stmt, _ := sqlAddKillChainPhase()
 		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)

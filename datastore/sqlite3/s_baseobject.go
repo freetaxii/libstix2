@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
@@ -103,7 +102,17 @@ get the last object_id in the base objects table to be used as an index for
 new records.
 */
 func sqlGetBaseObjectIndex() (string, error) {
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+
+	/*
+		SELECT
+			object_id
+		FROM
+			t_base_object
+		ORDER BY
+			object_id DESC LIMIT 1
+	*/
+
 	var s bytes.Buffer
 	s.WriteString("SELECT ")
 	s.WriteString("object_id ")
@@ -115,9 +124,10 @@ func sqlGetBaseObjectIndex() (string, error) {
 }
 
 /*
-getBaseObjectIndex - This method will return the last object index value.
+getBaseObjectIndex - This method will return the last object index value from the
+database base object table.
 */
-func (ds *DatastoreType) getBaseObjectIndex() (int, error) {
+func (ds *Datastore) getBaseObjectIndex() (int, error) {
 	var index int
 	sqlStmt, _ := sqlGetBaseObjectIndex()
 
@@ -126,8 +136,7 @@ func (ds *DatastoreType) getBaseObjectIndex() (int, error) {
 		if err == sql.ErrNoRows {
 			return 0, errors.New("no base object record found")
 		}
-		ds.Cache.BaseObjectIDIndex = 1
-		return 0, fmt.Errorf("database execution error getting base object: ", err)
+		return 0, fmt.Errorf("database execution error getting base index: ", err)
 	}
 
 	return index, nil
@@ -145,7 +154,7 @@ sqlAddBaseObject - This function will return an SQL statement that will add the
 base object properties to the database.
 */
 func sqlAddBaseObject() (string, error) {
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
 
 	/*
 		INSERT INTO
@@ -190,7 +199,7 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *DatastoreType) addBaseObject(obj *properties.CommonObjectProperties) (int, error) {
+func (ds *Datastore) addBaseObject(obj *properties.CommonObjectProperties) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	objectID := ds.Cache.BaseObjectIDIndex
@@ -269,8 +278,8 @@ sqlGetbaseObject - This function will return an SQL statement that will get a
 specific base object from the database.
 */
 func sqlGetBaseObject() (string, error) {
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
-	tblLabels := datastore.DB_TABLE_STIX_LABELS
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+	tblLabels := DB_TABLE_STIX_LABELS
 
 	/*
 		SELECT
@@ -346,7 +355,7 @@ getbaseObject - This method will get a specific base object based on the STIX ID
 and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
-func (ds *DatastoreType) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
+func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
 
 	var baseObject properties.CommonObjectProperties
 	var objectID int
@@ -402,7 +411,7 @@ sqlAddLabel - This function will return an SQL statement that will add a
 label to the database for a given object.
 */
 func sqlAddLabel() (string, error) {
-	tblLabels := datastore.DB_TABLE_STIX_LABELS
+	tblLabels := DB_TABLE_STIX_LABELS
 
 	/*
 		INSERT INTO
@@ -424,7 +433,7 @@ func sqlAddLabel() (string, error) {
 /*
 addLabel - This method will add a label to the database for a specific object ID.
 */
-func (ds *DatastoreType) addLabel(objectID int, label string) error {
+func (ds *Datastore) addLabel(objectID int, label string) error {
 	stmt, _ := sqlAddLabel()
 	_, err := ds.DB.Exec(stmt, objectID, label)
 
@@ -446,7 +455,7 @@ sqlAddExternalReference - This function will return an SQL statement that will a
 an external reference to the database for a given object.
 */
 func sqlAddExternalReference() (string, error) {
-	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
+	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
 
 	/*
 		INSERT INTO
@@ -478,7 +487,7 @@ func sqlAddExternalReference() (string, error) {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *DatastoreType) addExternalReference(objectID int, reference properties.ExternalReference) error {
+func (ds *Datastore) addExternalReference(objectID int, reference properties.ExternalReference) error {
 	stmt, _ := sqlAddExternalReference()
 
 	_, err := ds.DB.Exec(stmt,
@@ -506,7 +515,7 @@ sqlGetExternalReference - This function will return an SQL statement that will
 get an external reference from the database for a specific object ID.
 */
 func sqlGetExternalReference() (string, error) {
-	tblExtRef := datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES
+	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
 
 	/*
 		SELECT
@@ -537,7 +546,7 @@ func sqlGetExternalReference() (string, error) {
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *DatastoreType) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
+func (ds *Datastore) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
 	var extrefs properties.ExternalReferencesProperty
 	stmt, _ := sqlGetExternalReference()
 
@@ -583,7 +592,7 @@ sqlAddObjectMarkingRef - This function will return an SQL statement that will ad
 an object marking ref to the database for a given object.
 */
 func sqlAddObjectMarkingRef() (string, error) {
-	tblObjMarking := datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS
+	tblObjMarking := DB_TABLE_STIX_OBJECT_MARKING_REFS
 
 	/*
 		INSERT INTO
@@ -606,7 +615,7 @@ func sqlAddObjectMarkingRef() (string, error) {
 addObjectMarkingRef - This method will add an object marking ref to the
 database for a specific object ID.
 */
-func (ds *DatastoreType) addObjectMarkingRef(objectID int, marking string) error {
+func (ds *Datastore) addObjectMarkingRef(objectID int, marking string) error {
 	stmt, _ := sqlAddObjectMarkingRef()
 	_, err := ds.DB.Exec(stmt, objectID, marking)
 

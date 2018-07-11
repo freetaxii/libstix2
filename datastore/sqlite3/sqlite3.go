@@ -13,11 +13,64 @@ import (
 	"strings"
 
 	"github.com/freetaxii/libstix2/common/stixid"
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
 	"github.com/gologme/log"
 	_ "github.com/mattn/go-sqlite3"
+)
+
+/*
+The following constants define database tables names for a relational database.
+All of the SQL statements and other code uses these constants, so it should be
+pretty safe, if needed, to change the actual table names without problems.
+*/
+const (
+	DB_TABLE_STIX_BASE_OBJECT           = "s_base_object"
+	DB_TABLE_STIX_ATTACK_PATTERN        = "s_attack_pattern"
+	DB_TABLE_STIX_CAMPAIGN              = "s_campaign"
+	DB_TABLE_STIX_COURSE_OF_ACTION      = "s_course_of_action"
+	DB_TABLE_STIX_IDENTITY              = "s_identity"
+	DB_TABLE_STIX_IDENTITY_SECTORS      = "s_identity_sectors"
+	DB_TABLE_STIX_INDICATOR             = "s_indicator"
+	DB_TABLE_STIX_INTRUSION_SET         = "s_intrusion_set"
+	DB_TABLE_STIX_LOCATION              = "s_location"
+	DB_TABLE_STIX_MALWARE               = "s_malware"
+	DB_TABLE_STIX_NOTE                  = "s_note"
+	DB_TABLE_STIX_OBSERVED_DATA         = "s_observed_data"
+	DB_TABLE_STIX_OPINION               = "s_opinion"
+	DB_TABLE_STIX_REPORT                = "s_report"
+	DB_TABLE_STIX_THREAT_ACTOR          = "s_threat_actor"
+	DB_TABLE_STIX_THREAT_ACTOR_ROLES    = "s_threat_actor_roles"
+	DB_TABLE_STIX_TOOL                  = "s_tool"
+	DB_TABLE_STIX_VULNERABILITY         = "s_vulnerability"
+	DB_TABLE_STIX_ALIASES               = "s_aliases"
+	DB_TABLE_STIX_AUTHORS               = "s_authors"
+	DB_TABLE_STIX_EXTERNAL_REFERENCES   = "s_external_references"
+	DB_TABLE_STIX_GOALS                 = "s_goals"
+	DB_TABLE_STIX_HASHES                = "s_hashes"
+	DB_TABLE_STIX_KILL_CHAIN_PHASES     = "s_kill_chain_phases"
+	DB_TABLE_STIX_LABELS                = "s_labels"
+	DB_TABLE_STIX_OBJECT_MARKING_REFS   = "s_object_marking_refs"
+	DB_TABLE_STIX_OBJECT_REFS           = "s_object_refs"
+	DB_TABLE_STIX_SECONDARY_MOTIVATIONS = "s_secondary_motivations"
+	DB_TABLE_STIX_PERSONAL_MOTIVATIONS  = "s_personal_motivations"
+
+	DB_TABLE_VOCAB_ATTACK_MOTIVATIONS          = "v_attack_motivation"
+	DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL       = "v_attack_resource_level"
+	DB_TABLE_VOCAB_IDENTITY_CLASS              = "v_identity_class"
+	DB_TABLE_VOCAB_INDICATOR_LABEL             = "v_indicator_label"
+	DB_TABLE_VOCAB_INDUSTRY_SECTOR             = "v_industry_sector"
+	DB_TABLE_VOCAB_MALWARE_LABEL               = "v_malware_label"
+	DB_TABLE_VOCAB_REPORT_LABEL                = "v_report_label"
+	DB_TABLE_VOCAB_THREAT_ACTOR_LABEL          = "v_threat_actor_label"
+	DB_TABLE_VOCAB_THREAT_ACTOR_ROLE           = "v_threat_actor_role"
+	DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION = "v_threat_actor_sophistication"
+	DB_TABLE_VOCAB_TOOL_LABEL                  = "v_tool_label"
+
+	DB_TABLE_TAXII_COLLECTIONS           = "t_collections"
+	DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE = "t_collection_media_type"
+	DB_TABLE_TAXII_COLLECTION_DATA       = "t_collection_data"
+	DB_TABLE_TAXII_MEDIA_TYPES           = "t_media_types"
 )
 
 // ----------------------------------------------------------------------
@@ -25,7 +78,7 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-DatastoreType defines all of the properties and information associated
+Datastore defines all of the properties and information associated
 with connecting and talking to the database.
 
 When Strict.IDs = false, then the system will allow vanity STIX IDs like:
@@ -33,12 +86,15 @@ indicator--1, indicator--2
 
 When Strict.Types = false, then the system will allow un-known STIX types
 */
-type DatastoreType struct {
+type Datastore struct {
 	Filename string
 	DB       *sql.DB
 	Logger   *log.Logger
-	Cache    datastore.MemCache
-	Strict   struct {
+	Cache    struct {
+		BaseObjectIDIndex int
+		Collections       map[string]*resources.Collection
+	}
+	Strict struct {
 		IDs   bool
 		Types bool
 	}
@@ -51,11 +107,11 @@ type DatastoreType struct {
 // ----------------------------------------------------------------------
 
 /*
-New - This function will return a DatastoreType.
+New - This function will return a Datastore.
 */
-func New(logger *log.Logger, filename string) *DatastoreType {
+func New(logger *log.Logger, filename string) *Datastore {
 	var err error
-	var ds DatastoreType
+	var ds Datastore
 	ds.Filename = filename
 	ds.Strict.IDs = false
 	ds.Strict.Types = true
@@ -84,7 +140,7 @@ func New(logger *log.Logger, filename string) *DatastoreType {
 /*
 Close - This method will close the database connection
 */
-func (ds *DatastoreType) Close() error {
+func (ds *Datastore) Close() error {
 	err := ds.DB.Close()
 	if err != nil {
 		return err
@@ -102,7 +158,7 @@ func (ds *DatastoreType) Close() error {
 GetSTIXObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the matching STIX object.
 */
-func (ds *DatastoreType) GetSTIXObject(id, version string) (interface{}, error) {
+func (ds *Datastore) GetSTIXObject(id, version string) (interface{}, error) {
 
 	idparts := strings.Split(id, "--")
 
@@ -132,7 +188,7 @@ func (ds *DatastoreType) GetSTIXObject(id, version string) (interface{}, error) 
 AddSTIXObject - This method will take in a STIX object and add it to the
 database.
 */
-func (ds *DatastoreType) AddSTIXObject(obj interface{}) error {
+func (ds *Datastore) AddSTIXObject(obj interface{}) error {
 	switch o := obj.(type) {
 	case *objects.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
@@ -150,7 +206,7 @@ func (ds *DatastoreType) AddSTIXObject(obj interface{}) error {
 AddTAXIIObject - This method will take in a TAXII object and add it to the
 database.
 */
-func (ds *DatastoreType) AddTAXIIObject(obj interface{}) error {
+func (ds *Datastore) AddTAXIIObject(obj interface{}) error {
 	var err error
 
 	switch o := obj.(type) {
@@ -182,7 +238,7 @@ GetAllCollections - This method will return all collections, even those that
 are disabled and hidden. This is primarily used for administration tools that
 need to see all collections.
 */
-func (ds *DatastoreType) GetAllCollections() (*resources.Collections, error) {
+func (ds *Datastore) GetAllCollections() (*resources.Collections, error) {
 	return ds.getCollections("all")
 }
 
@@ -190,7 +246,7 @@ func (ds *DatastoreType) GetAllCollections() (*resources.Collections, error) {
 GetAllEnabledCollections - This method will return only enabled collections,
 even those that are hidden. This is used for setup up the HTTP MUX routers.
 */
-func (ds *DatastoreType) GetAllEnabledCollections() (*resources.Collections, error) {
+func (ds *Datastore) GetAllEnabledCollections() (*resources.Collections, error) {
 	return ds.getCollections("allEnabled")
 }
 
@@ -200,7 +256,7 @@ enabled and visible. This is primarily used to populate the results for clients
 that pull a collections resource. Clients may be able to talk to a hidden
 collection, but they should not see it in the list.
 */
-func (ds *DatastoreType) GetCollections() (*resources.Collections, error) {
+func (ds *Datastore) GetCollections() (*resources.Collections, error) {
 	return ds.getCollections("enabledVisible")
 }
 
@@ -216,7 +272,7 @@ parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *DatastoreType) GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Datastore) GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	return ds.getBundle(query)
 }
 
@@ -225,7 +281,7 @@ GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
-func (ds *DatastoreType) GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Datastore) GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	return ds.getManifestData(query)
 }
 
@@ -238,7 +294,7 @@ func (ds *DatastoreType) GetManifestData(query resources.CollectionQuery) (*reso
 /*
 connect - This method is used to connect to an sqlite3 database
 */
-func (ds *DatastoreType) connect() error {
+func (ds *Datastore) connect() error {
 	var err error
 
 	if ds.Filename == "" {
@@ -265,7 +321,7 @@ func (ds *DatastoreType) connect() error {
 verifyFileExists - This method will check to make sure the sqlite3 database file
 is found on the file system
 */
-func (ds *DatastoreType) verifyFileExists() error {
+func (ds *Datastore) verifyFileExists() error {
 	if _, err := os.Stat(ds.Filename); os.IsNotExist(err) {
 		w, err2 := os.Create(ds.Filename)
 		w.Close()
@@ -279,7 +335,7 @@ func (ds *DatastoreType) verifyFileExists() error {
 /*
 initCache - This method will populate the datastore cache.
 */
-func (ds *DatastoreType) initCache() error {
+func (ds *Datastore) initCache() error {
 	ds.Logger.Traceln("TRACE initCache(): Start ")
 	ds.Cache.Collections = make(map[string]*resources.Collection)
 
@@ -287,7 +343,6 @@ func (ds *DatastoreType) initCache() error {
 	// added can use it as their object_id. By using an integer here instead
 	// of the full STIX ID, we can save significant amounts of space.
 	// TODO - fix this once I setup my own error type
-	ds.Logger.Traceln("TRACE: Call getBaseObjectIndex()")
 	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
 		return err

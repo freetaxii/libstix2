@@ -6,7 +6,6 @@
 package sqlite3
 
 import (
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/vocabs"
 )
 
@@ -20,85 +19,85 @@ import (
 CreateTAXIITables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateTAXIITables() {
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
-	ds.createTAXIITable(datastore.DB_TABLE_TAXII_MEDIA_TYPES, mediaTypeProperties())
-	ds.createTAXIIIndexes(datastore.DB_TABLE_TAXII_COLLECTION_DATA)
-	ds.insertMediaTypes(datastore.DB_TABLE_TAXII_MEDIA_TYPES)
+func (ds *Datastore) CreateTAXIITables() {
+	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
+	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
+	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
+	ds.createTAXIITable(DB_TABLE_TAXII_MEDIA_TYPES, mediaTypeProperties())
+	ds.createTAXIIIndexes(DB_TABLE_TAXII_COLLECTION_DATA)
+	ds.insertMediaTypes(DB_TABLE_TAXII_MEDIA_TYPES)
 }
 
 /*
 CreateSTIXTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateSTIXTables() {
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_CAMPAIGN, campaignProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_COURSE_OF_ACTION, courseOfActionProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY, identityProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_IDENTITY_SECTORS, identitySectorsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_INDICATOR, indicatorProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_INTRUSION_SET, intrusionSetProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_LOCATION, locationProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_MALWARE, malwareProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_NOTE, noteProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBSERVED_DATA, observedDataProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OPINION, opinionProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_REPORT, reportProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR, threatActorProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_THREAT_ACTOR_ROLES, threatActorRolesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_TOOL, toolProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_VULNERABILITY, vulnerabilityProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_ALIASES, commonAliasesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_AUTHORS, commonAuthorsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_EXTERNAL_REFERENCES, commonExternalReferencesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_GOALS, commonGoalsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_HASHES, commonHashesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_KILL_CHAIN_PHASES, commonKillChainPhasesProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_LABELS, commonLabelsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_MARKING_REFS, commonObjectMarkingRefsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_OBJECT_REFS, commonObjectRefsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_SECONDARY_MOTIVATIONS, commonSecondaryMotivationsProperties())
-	ds.createSTIXTable(datastore.DB_TABLE_STIX_PERSONAL_MOTIVATIONS, commonPersonalMotivationsProperties())
+func (ds *Datastore) CreateSTIXTables() {
+	ds.createSTIXTable(DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_CAMPAIGN, campaignProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_COURSE_OF_ACTION, courseOfActionProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_IDENTITY, identityProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_IDENTITY_SECTORS, identitySectorsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_INDICATOR, indicatorProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_INTRUSION_SET, intrusionSetProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_LOCATION, locationProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_MALWARE, malwareProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_NOTE, noteProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_OBSERVED_DATA, observedDataProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_OPINION, opinionProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_REPORT, reportProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_THREAT_ACTOR, threatActorProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_THREAT_ACTOR_ROLES, threatActorRolesProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_TOOL, toolProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_VULNERABILITY, vulnerabilityProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_ALIASES, commonAliasesProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_AUTHORS, commonAuthorsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_EXTERNAL_REFERENCES, commonExternalReferencesProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_GOALS, commonGoalsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_HASHES, commonHashesProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_KILL_CHAIN_PHASES, commonKillChainPhasesProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_LABELS, commonLabelsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_OBJECT_MARKING_REFS, commonObjectMarkingRefsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_OBJECT_REFS, commonObjectRefsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_SECONDARY_MOTIVATIONS, commonSecondaryMotivationsProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_PERSONAL_MOTIVATIONS, commonPersonalMotivationsProperties())
 }
 
 /*
 CreateVocabTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *DatastoreType) CreateVocabTables() {
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_INDICATOR_LABEL, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_MALWARE_LABEL, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_REPORT_LABEL, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabProperties())
-	ds.createVocabTable(datastore.DB_TABLE_VOCAB_TOOL_LABEL, vocabProperties())
+func (ds *Datastore) CreateVocabTables() {
+	ds.createVocabTable(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_MALWARE_LABEL, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_REPORT_LABEL, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabProperties())
+	ds.createVocabTable(DB_TABLE_VOCAB_TOOL_LABEL, vocabProperties())
 }
 
 /*
 PopulateVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
-func (ds *DatastoreType) PopulateVocabTables() {
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
-	ds.insertVocabData(datastore.DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
+func (ds *Datastore) PopulateVocabTables() {
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
+	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
+	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
+	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
+	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
 }
 
 // ----------------------------------------------------------------------
@@ -107,7 +106,7 @@ func (ds *DatastoreType) PopulateVocabTables() {
 //
 // ----------------------------------------------------------------------
 
-func (ds *DatastoreType) createTAXIITable(name, properties string) {
+func (ds *Datastore) createTAXIITable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -116,10 +115,10 @@ func (ds *DatastoreType) createTAXIITable(name, properties string) {
 	}
 }
 
-func (ds *DatastoreType) createTAXIIIndexes(name string) {
+func (ds *Datastore) createTAXIIIndexes(name string) {
 	var stmt string
 
-	if name == datastore.DB_TABLE_TAXII_COLLECTION_DATA {
+	if name == DB_TABLE_TAXII_COLLECTION_DATA {
 		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("collection_id" COLLATE BINARY ASC, "stix_id" COLLATE BINARY ASC)`
 	}
 
@@ -132,7 +131,7 @@ func (ds *DatastoreType) createTAXIIIndexes(name string) {
 	}
 }
 
-func (ds *DatastoreType) insertMediaTypes(name string) {
+func (ds *Datastore) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
 	var err error
@@ -146,7 +145,7 @@ func (ds *DatastoreType) insertMediaTypes(name string) {
 	}
 }
 
-func (ds *DatastoreType) createSTIXTable(name, properties string) {
+func (ds *Datastore) createSTIXTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -156,10 +155,10 @@ func (ds *DatastoreType) createSTIXTable(name, properties string) {
 	ds.createSTIXIndexes(name)
 }
 
-func (ds *DatastoreType) createSTIXIndexes(name string) {
+func (ds *Datastore) createSTIXIndexes(name string) {
 	var stmt string
 
-	if name == datastore.DB_TABLE_STIX_BASE_OBJECT {
+	if name == DB_TABLE_STIX_BASE_OBJECT {
 		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("object_id" COLLATE BINARY ASC, "id" COLLATE BINARY ASC)`
 	} else {
 		stmt = `CREATE INDEX "idx_` + name + `" ON ` + name + ` ("object_id" COLLATE BINARY ASC)`
@@ -172,7 +171,7 @@ func (ds *DatastoreType) createSTIXIndexes(name string) {
 	}
 }
 
-func (ds *DatastoreType) createVocabTable(name, properties string) {
+func (ds *Datastore) createVocabTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -182,7 +181,7 @@ func (ds *DatastoreType) createVocabTable(name, properties string) {
 }
 
 // InsertVocabData - This method will add a vocabulary item to its table
-func (ds *DatastoreType) insertVocabData(name string, data []string) {
+func (ds *Datastore) insertVocabData(name string, data []string) {
 	var stmt = `INSERT INTO "` + name + `" (value) values (?)`
 
 	var err error

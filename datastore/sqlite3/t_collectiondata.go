@@ -15,7 +15,6 @@ import (
 
 	"github.com/freetaxii/libstix2/common/stixid"
 	"github.com/freetaxii/libstix2/common/timestamp"
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
@@ -61,7 +60,7 @@ sqlGetCollectionSize - This function will return an SQL statement that will
 get the size of a collection from the t_collection_data table.
 */
 func sqlGetCollectionSize() (string, error) {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		SELECT
@@ -69,7 +68,7 @@ func sqlGetCollectionSize() (string, error) {
 		FROM
 			t_collection_data
 		WHERE
-			t_collection_data.collection_id = 3
+			t_collection_data.collection_id = ?
 	*/
 
 	var s bytes.Buffer
@@ -89,7 +88,8 @@ func sqlGetCollectionSize() (string, error) {
 /*
 getCollectionSize - This method will return the size of a given collection
 */
-func (ds *DatastoreType) getCollectionSize(collectionID string) (int, error) {
+func (ds *Datastore) getCollectionSize(collectionID string) (int, error) {
+	ds.Logger.Traceln("TRACE getCollectionSize(): Start")
 	var index int
 	sqlStmt, _ := sqlGetCollectionSize()
 
@@ -122,7 +122,7 @@ make sure we include all versions of an object. So we need to store just the
 STIX ID
 */
 func sqlAddObjectToCollection() (string, error) {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		INSERT INTO
@@ -151,8 +151,8 @@ an entry in the taxii_collection_data table. In this table we use the STIX ID
 not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
-func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecord) error {
-	ds.Logger.Levelln("Function", "FUNC: START addObjectToCollection()")
+func (ds *Datastore) addObjectToCollection(obj *resources.CollectionRecord) error {
+	ds.Logger.Traceln("TRACE addObjectToCollection(): Start")
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	// We are storing the Collection DatastoreID which is an integer instead
@@ -165,7 +165,6 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecord) 
 	// to a secondary table and then have a second process go through and merge
 	// them.  This way the end client would not be held up by the transaction.
 	sqlStmt, _ := sqlAddObjectToCollection()
-	ds.Logger.Traceln("TRACE: SQL Add Object to Collection", sqlStmt)
 	ds.Logger.Debugln("DEBUG: Collection ID", collectionDatastoreID)
 	ds.Logger.Debugln("DEBUG: Object ID", obj.STIXID)
 	_, err := ds.DB.Exec(sqlStmt, dateAdded, collectionDatastoreID, obj.STIXID)
@@ -192,8 +191,13 @@ func (ds *DatastoreType) addObjectToCollection(obj *resources.CollectionRecord) 
 /*
 getBundle - This method will return a STIX bundle based on the query provided.
 */
-func (ds *DatastoreType) getBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Datastore) getBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	ds.Logger.Traceln("TRACE getBundle(): Start")
+
+	// Lets first make sure the collection exists in the cache
+	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
+		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
+	}
 
 	stixBundle := objects.NewBundle()
 
@@ -233,25 +237,23 @@ statement. A byte array is used instead of sting concatenation as it is the most
 efficient way to do string concatenation in Go.
 */
 func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
 
-	whereQuery, err := sqlCollectionDataQueryOptions(query)
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
+	whereQuery, err := sqlCollectionDataQueryOptions(query)
 	if err != nil {
 		return "", err
 	}
 
-	limitQuery, _ := sqlCollectionDataQueryLimit(query)
-
-	// If an error is found, that means a query parameter was passed incorrectly
-	// and we should return an error versus just skipping the option. We probably
-	// do not need this error checking here, since we are doing it in the  function
-	// maybe we could log the message though since it might be useful for troubleshooting
-	// if err1 != nil {
-	// 	return "", err1
-	// }
+	// The only types of errors here are if the client value is invalid or is
+	// bigger than the server max value. Either way, we should just log. In both
+	// cases the server max value is returned.
+	limitQuery, err1 := sqlQueryLimit(query)
+	if err1 != nil {
+		//ds.Logger.Debugln("DEBUG: SQL limit error", err1)
+	}
 
 	/*
 		SELECT
@@ -305,27 +307,21 @@ func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 /*
 getManifestData - This method will return manifest data based on the query provided.
 */
-func (ds *DatastoreType) getManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Datastore) getManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
 	ds.Logger.Traceln("TRACE getManifestData(): Start")
 
-	var resultData resources.CollectionQueryResult
-	// var first, last int
-	// var errRange error
-
-	manifest := resources.NewManifest()
-
-	// Lets first make sure the collection does not already exist in the cache
+	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
 	}
-
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
 
-	sqlStmt, err := sqlGetManifestData(query)
-	//ds.Logger.Traceln("TRACE getManifestData(): SQL Statement", sqlStmt)
+	var resultData resources.CollectionQueryResult
+	manifest := resources.NewManifest()
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
+	sqlStmt, err := sqlGetManifestData(query)
 	if err != nil {
 		return nil, err
 	}
@@ -334,7 +330,7 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQuery) (*reso
 	rows, err := ds.DB.Query(sqlStmt)
 
 	if err != nil {
-		return nil, fmt.Errorf("database execution error getting manifest data: ", err)
+		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
 
@@ -342,9 +338,23 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQuery) (*reso
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
-			return nil, fmt.Errorf("database scan error getting manifest data: ", err)
+			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
-		specVersion = "application/stix+json; version=" + specVersion
+
+		switch specVersion {
+		case "2.0":
+			specVersion = defs.MEDIA_TYPE_STIX20
+		case "2.1":
+			specVersion = defs.MEDIA_TYPE_STIX21
+		case "2.2":
+			specVersion = defs.MEDIA_TYPE_STIX22
+		case "2.3":
+			specVersion = defs.MEDIA_TYPE_STIX23
+		case "2.4":
+			specVersion = defs.MEDIA_TYPE_STIX24
+		default:
+			specVersion = defs.MEDIA_TYPE_STIX
+		}
 		manifest.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
 	}
 
@@ -394,7 +404,8 @@ func (ds *DatastoreType) getManifestData(query resources.CollectionQuery) (*reso
 processRangeValues - This method will take in the various range parameters and size
 of the dataset and will return the correct first and last index values to be used.
 */
-func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, int, error) {
+func (ds *Datastore) processRangeValues(first, last, max, size int) (int, int, error) {
+	ds.Logger.Traceln("TRACE processRangeValues(): Start")
 
 	if first < 0 {
 		return 0, 0, errors.New("the starting value can not be negative")
@@ -439,10 +450,10 @@ func (ds *DatastoreType) processRangeValues(first, last, max, size int) (int, in
 // ----------------------------------------------------------------------
 
 /*
-sqlCollectionDataQueryLimit - This function will take in a query struct and
-build an SQL LIMIT statement based on the values provided in query object.
+sqlQueryLimit - This function will take in a query struct and
+build an SQL LIMIT statement based on the values provided in the query object.
 */
-func sqlCollectionDataQueryLimit(query resources.CollectionQuery) (int, error) {
+func sqlQueryLimit(query resources.CollectionQuery) (int, error) {
 	srv := 0
 	client := 0
 	var err error
@@ -536,7 +547,7 @@ statement for a provided collection ID value and is called from
 func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		This sql where statement should look like:
@@ -561,7 +572,7 @@ This method only supports a single added after value, since more than one does
 not make sense.
 */
 func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
 
 	/*
 		This sql where statement should look like:
@@ -590,7 +601,7 @@ statement when one or more STIX IDs is provided and is called from
 func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		This sql where statement should look like one of these two:
@@ -647,7 +658,7 @@ statement when one or more STIX types is provided and is called from
 func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string, error)
 */
 func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		This sql where statement should look like one of these two:
@@ -705,8 +716,8 @@ func sqlCollectionDataQueryOptions(query resources.CollectionQueryType) (string,
 It will return an error if multiple "all", "first", or "last" values is provided.
 */
 func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
-	tblColData := datastore.DB_TABLE_TAXII_COLLECTION_DATA
-	tblBaseObj := datastore.DB_TABLE_STIX_BASE_OBJECT
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
 
 	// If no version parameter was supplied, then set "last" as the default
 	if vers == nil {

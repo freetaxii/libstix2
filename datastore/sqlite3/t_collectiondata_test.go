@@ -7,17 +7,18 @@ package sqlite3
 
 import (
 	"bytes"
-	"github.com/freetaxii/libstix2/datastore"
 	"testing"
+
+	"github.com/freetaxii/libstix2/resources"
 )
 
 // ----------------------------------------------------------------------
 //
-// func (ds *Sqlite3DatastoreType) sqlGetObjectList(query datastore.QueryType) (string, error)
+// func (ds *Sqlite3DatastoreType) sqlGetObjectList(query resources.CollectionQuery) (string, error)
 //
 // ----------------------------------------------------------------------
 func Test_sqlGetObjectList(t *testing.T) {
-	var query datastore.QueryType
+	var query resources.CollectionQuery
 	var testdata string
 
 	t.Log("Test 1: get an error for no collection id")
@@ -35,11 +36,11 @@ func Test_sqlGetObjectList(t *testing.T) {
 
 // ----------------------------------------------------------------------
 //
-// func (ds *Sqlite3DatastoreType) sqlGetManifestData(query datastore.QueryType) (string, error)
+// func (ds *Sqlite3DatastoreType) sqlGetManifestData(query resources.CollectionQuery) (string, error)
 //
 // ----------------------------------------------------------------------
 func Test_sqlGetManifestData(t *testing.T) {
-	var query datastore.QueryType
+	var query resources.CollectionQuery
 	var testdata string
 
 	t.Log("Test 1: get an error for no collection id")
@@ -57,12 +58,12 @@ func Test_sqlGetManifestData(t *testing.T) {
 
 // ----------------------------------------------------------------------
 //
-// func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query datastore.QueryType) (string, error)
+// func (ds *Sqlite3DatastoreType) sqlCollectionDataQueryOptions(query resources.CollectionQuery) (string, error)
 //
 // ----------------------------------------------------------------------
 
 func Test_sqlCollectionDataQueryOptions(t *testing.T) {
-	var q datastore.QueryType
+	var q resources.CollectionQuery
 
 	t.Log("Test 1: get an error for no collection id")
 	if _, err := sqlCollectionDataQueryOptions(q); err == nil {

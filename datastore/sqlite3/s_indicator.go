@@ -11,7 +11,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/objects"
 )
 
@@ -41,7 +40,7 @@ sqlAddIndicator - This function will return an SQL statement that will add an
 indicator to the database.
 */
 func sqlAddIndicator() (string, error) {
-	tblInd := datastore.DB_TABLE_STIX_INDICATOR
+	tblInd := DB_TABLE_STIX_INDICATOR
 
 	/*
 		INSERT INTO
@@ -76,7 +75,7 @@ sqlGetIndicator - This function will return an SQL statement that will get an
 indicator from the database.
 */
 func sqlGetIndicator() (string, error) {
-	tblInd := datastore.DB_TABLE_STIX_INDICATOR
+	tblInd := DB_TABLE_STIX_INDICATOR
 
 	/*
 		SELECT
@@ -114,7 +113,7 @@ func sqlGetIndicator() (string, error) {
 /*
 addIndicator - This method will add an indicator to the database.
 */
-func (ds *DatastoreType) addIndicator(obj *objects.Indicator) error {
+func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 
 	objectID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
@@ -150,7 +149,7 @@ func (ds *DatastoreType) addIndicator(obj *objects.Indicator) error {
 /*
 getIndicator - This method will get a specific indicator from the database.
 */
-func (ds *DatastoreType) getIndicator(stixid, version string) (*objects.Indicator, error) {
+func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, error) {
 	var i objects.Indicator
 	var description, pattern, validFrom, validUntil string
 

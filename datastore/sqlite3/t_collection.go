@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources"
 )
@@ -77,7 +76,7 @@ sqlAddCollection - This function will return an SQL statement that will insert
 a new collection in to the t_collections table in the database.
 */
 func sqlAddCollection() (string, error) {
-	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
+	tblCol := DB_TABLE_TAXII_COLLECTIONS
 
 	/*
 		INSERT INTO
@@ -112,7 +111,7 @@ sqlAddCollectionMediaType - This function will return an SQL statement that will
 insert a media type for a given collection.
 */
 func sqlAddCollectionMediaType() (string, error) {
-	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+	tblColMedia := DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
 
 	/*
 		INSERT INTO
@@ -138,7 +137,7 @@ func sqlAddCollectionMediaType() (string, error) {
 addCollection - This method will add a collection to the t_collections table in
 the database.
 */
-func (ds *DatastoreType) addCollection(obj *resources.Collection) error {
+func (ds *Datastore) addCollection(obj *resources.Collection) error {
 	ds.Logger.Traceln("TRACE addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
@@ -208,9 +207,9 @@ list of collections. A byte array is used instead of string
 concatenation as it is the most efficient way to do string concatenation in Go.
 */
 func sqlGetCollections(whichCollections string) (string, error) {
-	tblCol := datastore.DB_TABLE_TAXII_COLLECTIONS
-	tblColMedia := datastore.DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
-	tblMediaTypes := datastore.DB_TABLE_TAXII_MEDIA_TYPES
+	tblCol := DB_TABLE_TAXII_COLLECTIONS
+	tblColMedia := DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+	tblMediaTypes := DB_TABLE_TAXII_MEDIA_TYPES
 
 	/*
 		SELECT
@@ -317,7 +316,7 @@ The HTTP Router MUX needs to know about all enabled collections, even those that
 are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
-func (ds *DatastoreType) getCollections(whichCollections string) (*resources.Collections, error) {
+func (ds *Datastore) getCollections(whichCollections string) (*resources.Collections, error) {
 	ds.Logger.Traceln("TRACE getCollections(): Start")
 	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
 
