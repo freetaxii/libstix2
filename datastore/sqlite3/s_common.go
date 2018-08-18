@@ -116,12 +116,12 @@ func commonKillChainPhasesProperties() string {
 }
 
 /*
-sqlAddKillChainPhase - This function will return an SQL statement that will add a
-kill chain phase to the database for a given object.
+addKillChainPhases - This method will add a kill chain phase for a given object
+to the database.
 */
-func sqlAddKillChainPhase() (string, error) {
-	tblKillChain := DB_TABLE_STIX_KILL_CHAIN_PHASES
+func (ds *Datastore) addKillChainPhases(objectID int, obj *properties.KillChainPhasesProperty) error {
 
+	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_kill_chain_phases (
@@ -131,28 +131,16 @@ func sqlAddKillChainPhase() (string, error) {
 			)
 			values (?, ?)
 	*/
+	tblKillChain := DB_TABLE_STIX_KILL_CHAIN_PHASES
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblKillChain)
+	sqlstmt.WriteString(" (object_id, kill_chain_name, phase_name) values (?, ?, ?)")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblKillChain)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", ")
-	s.WriteString("\"kill_chain_name\", ")
-	s.WriteString("\"phase_name\") ")
-	s.WriteString("values (?, ?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-addKillChainPhases - This method will add a kill chain phase for a given object
-to the database.
-*/
-func (ds *Datastore) addKillChainPhases(objectID int, obj *properties.KillChainPhasesProperty) error {
 	for _, v := range obj.KillChainPhases {
-		stmt, _ := sqlAddKillChainPhase()
+		// Make SQL Call
 		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
-
 		if err != nil {
 			return fmt.Errorf("database execution error inserting kill chain phase: ", err)
 		}

@@ -33,6 +33,7 @@ func indicatorProperties() string {
 	"valid_from" TEXT NOT NULL,
 	"valid_until" TEXT
 	`
+	// indicator_types
 	// kill_chain_phases
 }
 
@@ -46,44 +47,11 @@ func indicatorTypesProperties() string {
 	`
 }
 
-/*
-sqlAddIndicator - This function will return an SQL statement that will add an
-indicator to the database.
-*/
-func sqlAddIndicator() (string, error) {
-	tblInd := DB_TABLE_STIX_INDICATOR
-
-	/*
-		INSERT INTO
-			s_indicator (
-				"object_id",
-				"name",
-				"description",
-				"pattern",
-				"valid_from",
-				"valid_until"
-			)
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblInd)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", ")
-	s.WriteString("\"name\", ")
-	s.WriteString("\"description\", ")
-	s.WriteString("\"pattern\", ")
-	s.WriteString("\"valid_from\", ")
-	s.WriteString("\"valid_until\") ")
-	s.WriteString("values (?, ?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
-
 // ----------------------------------------------------------------------
 //
 // Private Methods - Indicator Table
+// addIndicator()
+// getIndicator()
 //
 // ----------------------------------------------------------------------
 
@@ -96,10 +64,30 @@ func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 	if err != nil {
 		return err
 	}
-
 	ds.Logger.Debugln("DEBUG: Adding Indicator to datastore with object ID", objectID)
 
-	stmt, _ := sqlAddIndicator()
+	// Create SQL Statement
+	/*
+		INSERT INTO
+			s_indicator (
+				"object_id",
+				"name",
+				"description",
+				"pattern",
+				"valid_from",
+				"valid_until"
+			)
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	*/
+	tblInd := DB_TABLE_STIX_INDICATOR
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(" (object_id, name, description, pattern, valid_from, valid_until) ")
+	sqlstmt.WriteString("values (?, ?, ?, ?, ?, ?)")
+	stmt := sqlstmt.String()
+
+	// Make SQL Call
 	_, err1 := ds.DB.Exec(stmt,
 		objectID,
 		obj.Name,
@@ -113,11 +101,25 @@ func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 		return fmt.Errorf("database execution error inserting indicator: ", err)
 	}
 
-	if obj.KillChainPhases != nil {
-		err2 := ds.addKillChainPhases(objectID, &obj.KillChainPhasesProperty)
+	// ----------------------------------------------------------------------
+	// Add Indicator Types
+	// ----------------------------------------------------------------------
+	if obj.IndicatorTypes != nil {
+		for _, itype := range obj.IndicatorTypes {
+			err := ds.addIndicatorType(objectID, itype)
+			if err != nil {
+				return err
+			}
+		}
+	}
 
-		if err2 != nil {
-			return err2
+	// ----------------------------------------------------------------------
+	// Add Kill Chains
+	// ----------------------------------------------------------------------
+	if obj.KillChainPhases != nil {
+		err := ds.addKillChainPhases(objectID, &obj.KillChainPhasesProperty)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
@@ -176,4 +178,35 @@ func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, e
 	i.SetValidUntil(validUntil)
 
 	return &i, nil
+}
+
+/*
+addIndicatorTypes - This method will add all of the indicator types to the
+database for a specific indicator based on its object ID.
+*/
+func (ds *Datastore) addIndicatorType(objectID int, itype string) error {
+
+	// Create SQL Statement
+	/*
+		INSERT INTO
+			s_indicator_types (
+				"object_id",
+				"indicator_type"
+			)
+			values (?, ?)
+	*/
+	tblIndTypes := DB_TABLE_STIX_INDICATOR_TYPES
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblIndTypes)
+	sqlstmt.WriteString(" (object_id, indicator_type) values (?, ?)")
+	stmt := sqlstmt.String()
+
+	// Make SQL Call
+	_, err := ds.DB.Exec(stmt, objectID, itype)
+	if err != nil {
+		return fmt.Errorf("database execution error inserting indicator type: ", err)
+	}
+
+	return nil
 }

@@ -129,6 +129,7 @@ func (ds *Datastore) getBaseObjectIndex() (int, error) {
 	sqlstmt.WriteString(" ORDER BY object_id DESC LIMIT 1")
 	stmt := sqlstmt.String()
 
+	// Make SQL Call
 	err := ds.DB.QueryRow(stmt).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
