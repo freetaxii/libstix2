@@ -12,19 +12,107 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
+BaseProperties - This type includes all of the common properties that are used
+by all STIX objects
+
+ObjectIDProperty - A property used by one or more STIX objects that captures
+the unique object ID. This is not included in the JSON serialization, but is
+used for writing to the database.
+
+SpecVersionProperty - A property used by one or more STIX objects that
+captures the STIX specification version.
+
+CreatedByRefProperty - A property used by one or more STIX objects that
+captures the STIX identifier of the identity that created this object.
+*/
+type BaseProperties struct {
+	ObjectID int `json:"-"`
+	TypeProperty
+	SpecVersion string `json:"spec_version,omitempty"`
+	IDProperty
+	CreatedByRef string `json:"created_by_ref,omitempty"`
+	BaseTimestampProperties
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - BaseProperties
+// ----------------------------------------------------------------------
+
+/*
+SetObjectID - This method takes in a int64 representing an object ID and
+updates the Version property.
+*/
+func (p *BaseProperties) SetObjectID(i int) error {
+	p.ObjectID = i
+	return nil
+}
+
+/*
+GetObjectID - This method returns the object ID value as a int64.
+*/
+func (p *BaseProperties) GetObjectID() int {
+	return p.ObjectID
+}
+
+/*
+SetSpecVersion20 - This method will set the specification version to 2.0.
+*/
+func (p *BaseProperties) SetSpecVersion20() error {
+	p.SpecVersion = "2.0"
+	return nil
+}
+
+/*
+SetSpecVersion20 - This method will set the specification version to 2.1.
+*/
+func (p *BaseProperties) SetSpecVersion21() error {
+	p.SpecVersion = "2.1"
+	return nil
+}
+
+/*
+SetSpecVersion - This method takes in a string representing a STIX specification
+version and updates the Version property.
+*/
+func (p *BaseProperties) SetSpecVersion(s string) error {
+	p.SpecVersion = s
+	return nil
+}
+
+/*
+GetSpecVersion - This method returns the version value as a string.
+*/
+func (p *BaseProperties) GetSpecVersion() string {
+	return p.SpecVersion
+}
+
+/*
+SetCreatedByRef - This method takes in a string value representing a STIX
+identifier and updates the Created By Ref property.
+*/
+func (p *BaseProperties) SetCreatedByRef(s string) error {
+	p.CreatedByRef = s
+	return nil
+}
+
+/*
+GetCreatedByRef - This method returns the STIX identifier for the identity
+that created this object.
+*/
+func (p *BaseProperties) GetCreatedByRef() string {
+	return p.CreatedByRef
+}
+
+// ----------------------------------------------------------------------
+// Other Types
+// ----------------------------------------------------------------------
+
+/*
 ConfidenceProperty - A property used by one or more STIX objects that
 captures the STIX confidence score, which is a value from 0-100.
 */
 type ConfidenceProperty struct {
 	Confidence int `json:"confidence,omitempty"`
-}
-
-/*
-CreatedByRefProperty - A property used by one or more STIX objects that
-captures the STIX identifier of the identity that created this object.
-*/
-type CreatedByRefProperty struct {
-	CreatedByRef string `json:"created_by_ref,omitempty"`
 }
 
 /*
@@ -61,14 +149,6 @@ type RevokedProperty struct {
 	Revoked bool `json:"revoked,omitempty"`
 }
 
-/*
-SpecVersionProperty - A property used by one or more STIX objects that
-captures the STIX specification version.
-*/
-type SpecVersionProperty struct {
-	SpecVersion string `json:"spec_version,omitempty"`
-}
-
 // ----------------------------------------------------------------------
 // Public Methods - ConfidenceProperty
 // ----------------------------------------------------------------------
@@ -87,27 +167,6 @@ GetConfidence - This method returns the confidence value as an integer.
 */
 func (p *ConfidenceProperty) GetConfidence() int {
 	return p.Confidence
-}
-
-// ----------------------------------------------------------------------
-// Public Methods - CreatedByRefProperty
-// ----------------------------------------------------------------------
-
-/*
-SetCreatedByRef - This method takes in a string value representing a STIX
-identifier and updates the Created By Ref property.
-*/
-func (p *CreatedByRefProperty) SetCreatedByRef(s string) error {
-	p.CreatedByRef = s
-	return nil
-}
-
-/*
-GetCreatedByRef - This method returns the STIX identifier for the identity
-that created this object.
-*/
-func (p *CreatedByRefProperty) GetCreatedByRef() string {
-	return p.CreatedByRef
 }
 
 // ----------------------------------------------------------------------
@@ -187,40 +246,4 @@ GetRevoked - This method returns the current value of the revoked property.
 */
 func (p *RevokedProperty) GetRevoked() bool {
 	return p.Revoked
-}
-
-// ----------------------------------------------------------------------
-// Public Methods - SpecVersionProperty
-// ----------------------------------------------------------------------
-
-/*
-SetSpecVersion20 - This method will set the specification version to 2.0.
-*/
-func (p *SpecVersionProperty) SetSpecVersion20() error {
-	p.SpecVersion = "2.0"
-	return nil
-}
-
-/*
-SetSpecVersion20 - This method will set the specification version to 2.1.
-*/
-func (p *SpecVersionProperty) SetSpecVersion21() error {
-	p.SpecVersion = "2.1"
-	return nil
-}
-
-/*
-SetSpecVersion - This method takes in a string representing a STIX specification
-version and updates the Version property.
-*/
-func (p *SpecVersionProperty) SetSpecVersion(s string) error {
-	p.SpecVersion = s
-	return nil
-}
-
-/*
-GetSpecVersion - This method returns the version value as a string.
-*/
-func (p *SpecVersionProperty) GetSpecVersion() string {
-	return p.SpecVersion
 }

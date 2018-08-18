@@ -13,11 +13,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/freetaxii/libstix2/common/stixid"
-	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/stixid"
+	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------

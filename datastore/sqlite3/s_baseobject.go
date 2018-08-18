@@ -38,8 +38,8 @@ func baseProperties() string {
 baseObjectProperties - This method will return the the common properties
 date_added = TAXII, the date the object was added to the TAXII server
 type = STIX Object Type
-id = STIX ID in type--uuidv4 format
 spec_version = STIX specification version
+id = STIX ID in type--uuidv4 format
 created_by_ref = A STIX ID that points to an Identity Object
 created = RFC 3339 timestamp with microsecond precision
 modified = RFC 3339 timestamp with microsecond precision
@@ -51,8 +51,8 @@ func baseObjectProperties() string {
 	return baseProperties() + `
  	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
- 	"id" TEXT NOT NULL,
  	"spec_version" TEXT NOT NULL,
+ 	"id" TEXT NOT NULL,
  	"created_by_ref" TEXT,
  	"created" TEXT NOT NULL,
  	"modified" TEXT NOT NULL,
@@ -105,13 +105,13 @@ func commonObjectMarkingRefsProperties() string {
 // ----------------------------------------------------------------------
 
 /*
-sqlGetBaseObjectIndex - This function will return an SQL statement that will
-get the last object_id in the base objects table to be used as an index for
-new records.
+getBaseObjectIndex - This method will return the last object index value from the
+database base object table.
 */
-func sqlGetBaseObjectIndex() (string, error) {
-	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+func (ds *Datastore) getBaseObjectIndex() (int, error) {
+	var index int
 
+	// Create SQL Statement
 	/*
 		SELECT
 			object_id
@@ -120,26 +120,16 @@ func sqlGetBaseObjectIndex() (string, error) {
 		ORDER BY
 			object_id DESC LIMIT 1
 	*/
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString("object_id ")
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(" ORDER BY object_id DESC LIMIT 1")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString("object_id ")
-	s.WriteString("FROM ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" ORDER BY object_id DESC LIMIT 1")
-
-	return s.String(), nil
-}
-
-/*
-getBaseObjectIndex - This method will return the last object index value from the
-database base object table.
-*/
-func (ds *Datastore) getBaseObjectIndex() (int, error) {
-	var index int
-	sqlStmt, _ := sqlGetBaseObjectIndex()
-
-	err := ds.DB.QueryRow(sqlStmt).Scan(&index)
+	err := ds.DB.QueryRow(stmt).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return 0, errors.New("no base object record found")
@@ -153,54 +143,10 @@ func (ds *Datastore) getBaseObjectIndex() (int, error) {
 // ----------------------------------------------------------------------
 //
 // Base Object Table Private Functions
-// addBaseObject
+// addBaseObject()
+// getBaseObject()
 //
 // ----------------------------------------------------------------------
-
-/*
-sqlAddBaseObject - This function will return an SQL statement that will add the
-base object properties to the database.
-*/
-func sqlAddBaseObject() (string, error) {
-	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
-
-	/*
-		INSERT INTO
-			s_base_object (
-				"object_id",
-				"date_added",
-				"type",
-				"id",
-				"spec_version",
-				"created_by_ref",
-				"created",
-				"modified",
-				"revoked",
-				"confidence",
-				"lang"
-			)
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", ")
-	s.WriteString("\"date_added\", ")
-	s.WriteString("\"type\", ")
-	s.WriteString("\"id\", ")
-	s.WriteString("\"spec_version\", ")
-	s.WriteString("\"created_by_ref\", ")
-	s.WriteString("\"created\", ")
-	s.WriteString("\"modified\", ")
-	s.WriteString("\"revoked\", ")
-	s.WriteString("\"confidence\", ")
-	s.WriteString("\"lang\") ")
-	s.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
 
 /*
 addBaseObject - This method will add the base properties of an object to the
@@ -215,14 +161,39 @@ func (ds *Datastore) addBaseObject(obj *properties.CommonObjectProperties) (int,
 
 	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", objectID, "and STIX ID", obj.ID)
 
-	stmt1, _ := sqlAddBaseObject()
+	// Create SQL Statement
+	/*
+		INSERT INTO
+			s_base_object (
+				"object_id",
+				"date_added",
+				"type",
+				"spec_version",
+				"id",
+				"created_by_ref",
+				"created",
+				"modified",
+				"revoked",
+				"confidence",
+				"lang"
+			)
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	*/
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(" (object_id, date_added, type, spec_version, id, created_by_ref, created, modified, revoked, confidence, lang) ")
+	sqlstmt.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt1 := sqlstmt.String()
 
+	// Make SQL Call
 	_, err1 := ds.DB.Exec(stmt1,
 		objectID,
 		dateAdded,
 		obj.ObjectType,
-		obj.ID,
 		obj.SpecVersion,
+		obj.ID,
 		obj.CreatedByRef,
 		obj.Created,
 		obj.Modified,
@@ -274,28 +245,30 @@ func (ds *Datastore) addBaseObject(obj *properties.CommonObjectProperties) (int,
 	return objectID, nil
 }
 
-// ----------------------------------------------------------------------
-//
-// Base Object Table Private Functions
-// getBaseObject
-//
-// ----------------------------------------------------------------------
-
 /*
-sqlGetbaseObject - This function will return an SQL statement that will get a
-specific base object from the database.
+getbaseObject - This method will get a specific base object based on the STIX ID
+and the version (modified timestamp).  This method is most often called from
+a get method on a STIX object (for example: getIndicator).
 */
-func sqlGetBaseObject() (string, error) {
-	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
-	tblLabels := DB_TABLE_STIX_LABELS
+func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
 
+	var baseObject properties.CommonObjectProperties
+	var objectID int
+	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
+
+	// Since not every object will have a label, and since we are using group_concat
+	// we need to define the label as a pointer so it can be a null value.
+	var label *string
+	var revoked, confidence int
+
+	// Create SQL Statement
 	/*
 		SELECT
 			s_base_object.object_id,
 			s_base_object.date_added,
 			s_base_object.type,
-			s_base_object.id,
 			s_base_object.spec_version,
+			s_base_object.id,
 			s_base_object.created_by_ref,
 			s_base_object.created,
 			s_base_object.modified,
@@ -312,70 +285,53 @@ func sqlGetBaseObject() (string, error) {
 			s_base_object.id = $1 AND
 			s_base_object.modified = $2
 	*/
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+	tblLabels := DB_TABLE_STIX_LABELS
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".object_id, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".date_added, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".type, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".spec_version, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".id, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".created_by_ref, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".created, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".modified, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".revoked, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".confidence, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".lang, ")
+	sqlstmt.WriteString("group_concat(")
+	sqlstmt.WriteString(tblLabels)
+	sqlstmt.WriteString(".label) ")
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(" LEFT JOIN ")
+	sqlstmt.WriteString(tblLabels)
+	sqlstmt.WriteString(" ON ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".object_id = ")
+	sqlstmt.WriteString(tblLabels)
+	sqlstmt.WriteString(".object_id ")
+	sqlstmt.WriteString("WHERE ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".id = $1 AND ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".modified = $2")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".object_id, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".date_added, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".type, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".id, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".created_by_ref, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".created, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".modified, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".revoked, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".confidence, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".lang, ")
-	s.WriteString("group_concat(")
-	s.WriteString(tblLabels)
-	s.WriteString(".label) ")
-	s.WriteString("FROM ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" LEFT JOIN ")
-	s.WriteString(tblLabels)
-	s.WriteString(" ON ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".object_id = ")
-	s.WriteString(tblLabels)
-	s.WriteString(".object_id ")
-	s.WriteString("WHERE ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".id = $1 AND ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".modified = $2")
-
-	return s.String(), nil
-}
-
-/*
-getbaseObject - This method will get a specific base object based on the STIX ID
-and the version (modified timestamp).  This method is most often called from
-a get method on a STIX object (for example: getIndicator).
-*/
-func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
-
-	var baseObject properties.CommonObjectProperties
-	var objectID int
-	var specVersion, dateAdded, objectType, id, createdByRef, created, modified, lang string
-
-	// Since not every object will have a label, and since we are using group_concat
-	// we need to define the label as a pointer so it can be a null value.
-	var label *string
-	var revoked, confidence int
-
-	stmt, _ := sqlGetBaseObject()
-	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&objectID, &specVersion, &dateAdded, &objectType, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
+	// Make SQL Call
+	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&objectID, &dateAdded, &objectType, &specVersion, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("no base object record found")
@@ -410,17 +366,16 @@ func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonOb
 // ----------------------------------------------------------------------
 //
 // Labels Table Private Functions
-// addLabel
+// addLabel()
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddLabel - This function will return an SQL statement that will add a
-label to the database for a given object.
+addLabel - This method will add a label to the database for a specific object ID.
 */
-func sqlAddLabel() (string, error) {
-	tblLabels := DB_TABLE_STIX_LABELS
+func (ds *Datastore) addLabel(objectID int, label string) error {
 
+	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_labels (
@@ -429,20 +384,14 @@ func sqlAddLabel() (string, error) {
 			)
 			values (?, ?)
 	*/
+	tblLabels := DB_TABLE_STIX_LABELS
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblLabels)
+	sqlstmt.WriteString(" (object_id, label) values (?, ?)")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblLabels)
-	s.WriteString(" (\"object_id\", \"label\") values (?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-addLabel - This method will add a label to the database for a specific object ID.
-*/
-func (ds *Datastore) addLabel(objectID int, label string) error {
-	stmt, _ := sqlAddLabel()
+	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, objectID, label)
 
 	if err != nil {
@@ -454,17 +403,18 @@ func (ds *Datastore) addLabel(objectID int, label string) error {
 // ----------------------------------------------------------------------
 //
 // External References Table Private Functions
-// addExternalReference
+// addExternalReference()
+// getExternalReference()
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddExternalReference - This function will return an SQL statement that will add
-an external reference to the database for a given object.
+addExternalReference - This method will add an external reference to the
+database for a specific object ID.
 */
-func sqlAddExternalReference() (string, error) {
-	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
+func (ds *Datastore) addExternalReference(objectID int, extref properties.ExternalReference) error {
 
+	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_external_references (
@@ -476,34 +426,21 @@ func sqlAddExternalReference() (string, error) {
 			)
 			values (?, ?, ?, ?, ?)
 	*/
+	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblExtRef)
+	sqlstmt.WriteString(" (object_id, source_name, description, url, external_id) ")
+	sqlstmt.WriteString("values (?, ?, ?, ?, ?)")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblExtRef)
-	s.WriteString(" (")
-	s.WriteString("\"object_id\", ")
-	s.WriteString("\"source_name\", ")
-	s.WriteString("\"description\", ")
-	s.WriteString("\"url\", ")
-	s.WriteString("\"external_id\") ")
-	s.WriteString("values (?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-addExternalReference - This method will add an external reference to the
-database for a specific object ID.
-*/
-func (ds *Datastore) addExternalReference(objectID int, reference properties.ExternalReference) error {
-	stmt, _ := sqlAddExternalReference()
-
+	// Make SQL Call
 	_, err := ds.DB.Exec(stmt,
 		objectID,
-		reference.SourceName,
-		reference.Description,
-		reference.URL,
-		reference.ExternalID)
+		extref.SourceName,
+		extref.Description,
+		extref.URL,
+		extref.ExternalID)
 
 	if err != nil {
 		return fmt.Errorf("database execution error inserting external reference: ", err)
@@ -511,20 +448,14 @@ func (ds *Datastore) addExternalReference(objectID int, reference properties.Ext
 	return nil
 }
 
-// ----------------------------------------------------------------------
-//
-// External References Table Private Functions
-// getExternalReference
-//
-// ----------------------------------------------------------------------
-
 /*
-sqlGetExternalReference - This function will return an SQL statement that will
-get an external reference from the database for a specific object ID.
+getExternalReferences - This method will return all external references that are
+part of a specific object ID.
 */
-func sqlGetExternalReference() (string, error) {
-	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
+func (ds *Datastore) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
+	var extrefs properties.ExternalReferencesProperty
 
+	// Create SQL Statement
 	/*
 		SELECT
 			source_name,
@@ -536,28 +467,16 @@ func sqlGetExternalReference() (string, error) {
 		WHERE
 			object_id = $1
 	*/
+	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString("source_name, description, url, external_id ")
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblExtRef)
+	sqlstmt.WriteString(" WHERE object_id = $1")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString("source_name, ")
-	s.WriteString("description, ")
-	s.WriteString("url, ")
-	s.WriteString("external_id ")
-	s.WriteString("FROM ")
-	s.WriteString(tblExtRef)
-	s.WriteString(" WHERE object_id = $1")
-
-	return s.String(), nil
-}
-
-/*
-getExternalReferences - This method will return all external references that are
-part of a specific object ID.
-*/
-func (ds *Datastore) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
-	var extrefs properties.ExternalReferencesProperty
-	stmt, _ := sqlGetExternalReference()
-
+	// Make SQL Call
 	rows, err := ds.DB.Query(stmt, objectID)
 	if err != nil {
 		return nil, fmt.Errorf("database execution error getting external reference: ", err)
@@ -591,17 +510,17 @@ func (ds *Datastore) getExternalReferences(objectID int) (*properties.ExternalRe
 // ----------------------------------------------------------------------
 //
 // Object Marking Refs Table Private Functions
-// addObjectMarkingRef
+// addObjectMarkingRef()
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddObjectMarkingRef - This function will return an SQL statement that will add
-an object marking ref to the database for a given object.
+addObjectMarkingRef - This method will add an object marking ref to the
+database for a specific object ID.
 */
-func sqlAddObjectMarkingRef() (string, error) {
-	tblObjMarking := DB_TABLE_STIX_OBJECT_MARKING_REFS
+func (ds *Datastore) addObjectMarkingRef(objectID int, marking string) error {
 
+	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_object_marking_refs (
@@ -610,21 +529,14 @@ func sqlAddObjectMarkingRef() (string, error) {
 			)
 			values (?, ?)
 	*/
+	tblObjMarking := DB_TABLE_STIX_OBJECT_MARKING_REFS
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblObjMarking)
+	sqlstmt.WriteString(" (object_id, object_marking_refs) values (?, ?)")
+	stmt := sqlstmt.String()
 
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblObjMarking)
-	s.WriteString(" (\"object_id\", \"object_marking_refs\") values (?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-addObjectMarkingRef - This method will add an object marking ref to the
-database for a specific object ID.
-*/
-func (ds *Datastore) addObjectMarkingRef(objectID int, marking string) error {
-	stmt, _ := sqlAddObjectMarkingRef()
+	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, objectID, marking)
 
 	if err != nil {

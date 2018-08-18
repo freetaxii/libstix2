@@ -48,7 +48,7 @@ type IntrusionSet struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.AliasesProperty
-	properties.SeenProperties
+	properties.SeenTimestampProperties
 	properties.GoalsProperty
 	properties.ResourceLevelProperty
 	properties.MotivationProperties

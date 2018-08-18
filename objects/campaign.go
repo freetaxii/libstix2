@@ -48,7 +48,7 @@ type Campaign struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.AliasesProperty
-	properties.SeenProperties
+	properties.SeenTimestampProperties
 	Objective string `json:"objective,omitempty"`
 }
 

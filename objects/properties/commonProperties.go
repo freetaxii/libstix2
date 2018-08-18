@@ -25,37 +25,16 @@ type CommonBundleProperties struct {
 }
 
 /*
-commonBaseProperties - This type includes all of the common properties
-that are used by all STIX objects
-*/
-type commonBaseProperties struct {
-	ObjectIDProperty
-	TypeProperty
-	SpecVersionProperty
-	IDProperty
-	CreatedByRefProperty
-	CreatedProperty
-}
-
-type commonAdditionalProperties struct {
-	ExternalReferencesProperty
-	ObjectMarkingRefsProperty
-	GranularMarkingsProperty
-	RawDataProperty
-}
-
-/*
 CommonObjectProperties - This type includes all of the common properties
 that are used by all STIX SDOs and SROs
 */
 type CommonObjectProperties struct {
-	commonBaseProperties
-	ModifiedProperty
+	BaseProperties
 	RevokedProperty
 	LabelsProperty
 	ConfidenceProperty
 	LangProperty
-	commonAdditionalProperties
+	BaseExtendedProperties
 }
 
 /*
@@ -63,8 +42,8 @@ CommonMarkingDefinitionProperties - This type includes all of the common
 properties that are used by the STIX Marking Definition object
 */
 type CommonMarkingDefinitionProperties struct {
-	commonBaseProperties
-	commonAdditionalProperties
+	BaseProperties
+	BaseExtendedProperties
 }
 
 // ----------------------------------------------------------------------

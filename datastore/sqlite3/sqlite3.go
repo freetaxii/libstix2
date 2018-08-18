@@ -12,9 +12,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/freetaxii/libstix2/common/stixid"
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/stixid"
 	"github.com/gologme/log"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -32,6 +32,7 @@ const (
 	DB_TABLE_STIX_IDENTITY              = "s_identity"
 	DB_TABLE_STIX_IDENTITY_SECTORS      = "s_identity_sectors"
 	DB_TABLE_STIX_INDICATOR             = "s_indicator"
+	DB_TABLE_STIX_INDICATOR_TYPES       = "s_indicator_types"
 	DB_TABLE_STIX_INTRUSION_SET         = "s_intrusion_set"
 	DB_TABLE_STIX_LOCATION              = "s_location"
 	DB_TABLE_STIX_MALWARE               = "s_malware"

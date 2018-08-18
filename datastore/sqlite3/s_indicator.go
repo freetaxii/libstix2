@@ -7,6 +7,7 @@ package sqlite3
 
 import (
 	"bytes"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -127,6 +128,7 @@ getIndicator - This method will get a specific indicator from the database based
 on the STIX ID and version.
 */
 func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, error) {
+	var i objects.Indicator
 
 	// Get Base Object - this will give us the objectID
 	// Then copy base object data in to Indicator object
@@ -150,16 +152,15 @@ func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, e
 			object_id = ?
 	*/
 	tblInd := DB_TABLE_STIX_INDICATOR
-	var sql bytes.Buffer
-	sql.WriteString("SELECT ")
-	sql.WriteString("name, description, pattern, valid_from, valid_until ")
-	sql.WriteString("FROM ")
-	sql.WriteString(tblInd)
-	sql.WriteString(" WHERE object_id = ?")
-	stmt, _ := sql.String()
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString("name, description, pattern, valid_from, valid_until ")
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(" WHERE object_id = ?")
+	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	var i objects.Indicator
 	var description, pattern, validFrom, validUntil string
 	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&i.Name, &description, &pattern, &validFrom, &validUntil)
 	if err != nil {
