@@ -6,8 +6,8 @@
 package objects
 
 import (
-	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -90,7 +90,7 @@ SetFirstObservedToCurrentTime - This methods sets the first observed time to the
 current time
 */
 func (o *ObservedData) SetFirstObservedToCurrentTime() error {
-	o.FirstObserved = timestamp.GetCurrentTime("micro")
+	o.FirstObserved = timestamp.CurrentTime("micro")
 	return nil
 }
 
@@ -109,7 +109,7 @@ SetLastObservedToCurrentTime - This methods sets the last observed time to the
 current time
 */
 func (o *ObservedData) SetLastObservedToCurrentTime() error {
-	o.LastObserved = timestamp.GetCurrentTime("micro")
+	o.LastObserved = timestamp.CurrentTime("micro")
 	return nil
 }
 

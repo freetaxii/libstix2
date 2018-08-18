@@ -20,10 +20,15 @@ type ObjectIDProperty struct {
 	ObjectID int `json:"-"`
 }
 
+/*
+RawDataProperty - A property used to store the raw bytes of the JSON object.
+*/
+type RawDataProperty struct {
+	Raw []byte `json:"-"`
+}
+
 // ----------------------------------------------------------------------
-//
 // Public Methods - ObjectIDProperty
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -40,4 +45,24 @@ GetObjectID - This method returns the object ID value as a int64.
 */
 func (p *ObjectIDProperty) GetObjectID() int {
 	return p.ObjectID
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - IdPropertyType
+// ----------------------------------------------------------------------
+
+/*
+SetRaw - This method takes in a slice of bytes representing a full JSON object
+and updates the raw property for the object.
+*/
+func (p *RawDataProperty) SetRawData(data []byte) error {
+	p.Raw = data
+	return nil
+}
+
+/*
+GetRaw - This method will return the raw bytes for a given STIX object.
+*/
+func (p *RawDataProperty) GetRawData() []byte {
+	return p.Raw
 }

@@ -39,13 +39,13 @@ type ThreatActor struct {
 	properties.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
+	ThreatActorType []string `json:"threat_actor_types,omitempty"`
 	properties.AliasesProperty
 	Roles []string `json:"roles,omitempty"`
 	properties.GoalsProperty
 	Sophistication string `json:"sophistication,omitempty"`
 	properties.ResourceLevelProperty
-	properties.PrimaryMotivationProperty
-	properties.SecondaryMotivationsProperty
+	properties.MotivationProperties
 	PersonalMotivations []string `json:"personal_motivations,omitempty"`
 }
 
@@ -70,6 +70,15 @@ func NewThreatActor() *ThreatActor {
 // Public Methods - ThreatActor
 //
 // ----------------------------------------------------------------------
+
+/*
+AddType - This method takes in a string value representing a threat actor
+type from the threat-actor-type-ov and adds it to the threat actor type property.
+*/
+func (o *ThreatActor) AddType(s string) error {
+	o.ThreatActorType = append(o.ThreatActorType, s)
+	return nil
+}
 
 /*
 AddRole - This method takes in a string value representing a threat actor

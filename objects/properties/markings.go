@@ -30,10 +30,17 @@ type GranularMarking struct {
 	Selectors  []string `json:"selectors,omitempty"`
 }
 
+/*
+ObjectMarkingRefsProperty - A property used by one or more STIX objects
+that captures a list of STIX identifier that represent marking definition
+objects.
+*/
+type ObjectMarkingRefsProperty struct {
+	ObjectMarkingRefs []string `json:"object_marking_refs,omitempty"`
+}
+
 // ----------------------------------------------------------------------
-//
 // Public Methods - GranularMarking
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -60,5 +67,19 @@ granular marking selector and adds it to the list of selectors.
 */
 func (p *GranularMarking) AddSelector(s string) error {
 	p.Selectors = append(p.Selectors, s)
+	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - ObjectMarkingRefsProperty
+// ----------------------------------------------------------------------
+
+/*
+AddObjectMarkingRef - This method takes in a string value that represents a
+STIX identifer for a marking definition object and adds it to the list of
+object marking refs.
+*/
+func (p *ObjectMarkingRefsProperty) AddObjectMarkingRef(s string) error {
+	p.ObjectMarkingRefs = append(p.ObjectMarkingRefs, s)
 	return nil
 }

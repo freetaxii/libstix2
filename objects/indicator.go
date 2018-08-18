@@ -8,8 +8,8 @@ package objects
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -50,9 +50,10 @@ type Indicator struct {
 	properties.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	Pattern    string `json:"pattern,omitempty"`
-	ValidFrom  string `json:"valid_from,omitempty"`
-	ValidUntil string `json:"valid_until,omitempty"`
+	IndicatorTypes []string `json:"indicator_types,omitempty"`
+	Pattern        string   `json:"pattern,omitempty"`
+	ValidFrom      string   `json:"valid_from,omitempty"`
+	ValidUntil     string   `json:"valid_until,omitempty"`
 	properties.KillChainPhasesProperty
 }
 
@@ -117,6 +118,15 @@ func (o *Indicator) Encode() ([]byte, error) {
 }
 
 /*
+AddType - This method takes in a string value representing an indicator
+type from the indicator-type-ov and adds it to the indicator type property.
+*/
+func (o *Indicator) AddType(s string) error {
+	o.IndicatorTypes = append(o.IndicatorTypes, s)
+	return nil
+}
+
+/*
 SetPattern - This method will take in a string value representing a complete
 and valid STIX pattern and set the pattern property to that value.
 */
@@ -130,7 +140,7 @@ SetValidFromToCurrentTime - This methods sets the valid from time to the
 current time
 */
 func (o *Indicator) SetValidFromToCurrentTime() error {
-	o.ValidFrom = timestamp.GetCurrentTime("micro")
+	o.ValidFrom = timestamp.CurrentTime("micro")
 	return nil
 }
 
@@ -149,7 +159,7 @@ SetValidUntilToCurrentTime - This methods sets the valid until time to the
 current time
 */
 func (o *Indicator) SetValidUntilToCurrentTime() error {
-	o.ValidUntil = timestamp.GetCurrentTime("micro")
+	o.ValidUntil = timestamp.CurrentTime("micro")
 	return nil
 }
 

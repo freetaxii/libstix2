@@ -26,7 +26,7 @@ import (
 /*
 baseProperties - This method will return the base properties for all objects
 row_id    = This is a database tracking number
-object_id = This is a unique identifier for the STIX object based on its ID + created and modified timestamps
+object_id = This is a unique integer for the STIX object
 */
 func baseProperties() string {
 	return `
@@ -36,8 +36,16 @@ func baseProperties() string {
 
 /*
 baseObjectProperties - This method will return the the common properties
-spec_version = STIX specification version
 date_added = TAXII, the date the object was added to the TAXII server
+type = STIX Object Type
+id = STIX ID in type--uuidv4 format
+spec_version = STIX specification version
+created_by_ref = A STIX ID that points to an Identity Object
+created = RFC 3339 timestamp with microsecond precision
+modified = RFC 3339 timestamp with microsecond precision
+revoked = a boolean of true / false
+confidence = an integer 0-100
+lang = An ISO language code
 */
 func baseObjectProperties() string {
 	return baseProperties() + `

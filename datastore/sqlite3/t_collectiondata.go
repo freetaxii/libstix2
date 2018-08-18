@@ -210,7 +210,7 @@ func (ds *Datastore) getBundle(query resources.CollectionQuery) (*resources.Coll
 
 	// Loop through all of the STIX IDs in the list and get the actual object
 	for _, v := range resultData.ManifestData.Objects {
-		obj, err := ds.GetSTIXObject(v.ID, v.Version)
+		obj, err := ds.GetObject(v.ID, v.Version)
 
 		if err != nil {
 			return nil, err

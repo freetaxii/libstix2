@@ -12,17 +12,16 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-PrimaryMotivationProperty - A property used by one or more STIX objects
-that captures the primary motivation.
+MotivationProperties - Properties used by one or more STIX objects that capture
+the primary and secondary motivations.
 */
-type PrimaryMotivationProperty struct {
-	PrimaryMotivation string `json:"primary_motivation,omitempty"`
+type MotivationProperties struct {
+	PrimaryMotivation    string   `json:"primary_motivation,omitempty"`
+	SecondaryMotivations []string `json:"secondary_motivations,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-//
-// Public Methods - PrimaryMotivationProperty
-//
+// Public Methods - MotivationProperties
 // ----------------------------------------------------------------------
 
 /*
@@ -30,7 +29,7 @@ SetPrimaryMotivation - This methods takes in a string value representing a
 motivation from the attack-motivation-ov vocab and updates the primary
 motivation property.
 */
-func (p *PrimaryMotivationProperty) SetPrimaryMotivation(s string) error {
+func (p *MotivationProperties) SetPrimaryMotivation(s string) error {
 	p.PrimaryMotivation = s
 	return nil
 }
@@ -38,6 +37,16 @@ func (p *PrimaryMotivationProperty) SetPrimaryMotivation(s string) error {
 /*
 GetPrimaryMotivation - This method returns the primary motivation.
 */
-func (p *PrimaryMotivationProperty) GetPrimaryMotivation() string {
+func (p *MotivationProperties) GetPrimaryMotivation() string {
 	return p.PrimaryMotivation
+}
+
+/*
+AddSecondaryMotivation - This method takes in a string value that represents
+a motivation from the attack-motivation-ov vocab and adds it to the list of
+motivations in the secondary motivations property.
+*/
+func (p *MotivationProperties) AddSecondaryMotivation(s string) error {
+	p.SecondaryMotivations = append(p.SecondaryMotivations, s)
+	return nil
 }

@@ -48,12 +48,10 @@ type IntrusionSet struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.AliasesProperty
-	properties.FirstSeenProperty
-	properties.LastSeenProperty
+	properties.SeenProperties
 	properties.GoalsProperty
 	properties.ResourceLevelProperty
-	properties.PrimaryMotivationProperty
-	properties.SecondaryMotivationsProperty
+	properties.MotivationProperties
 }
 
 // ----------------------------------------------------------------------

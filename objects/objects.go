@@ -29,7 +29,7 @@ DecodeObjectType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
 func DecodeObjectType(data []byte) (string, error) {
-	var o properties.CommonBaseProperties
+	var o properties.CommonObjectProperties
 	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return "", err

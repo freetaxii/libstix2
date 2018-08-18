@@ -7,7 +7,6 @@ package sqlite3
 
 import (
 	"bytes"
-	"database/sql"
 	"errors"
 	"fmt"
 
@@ -22,7 +21,8 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-indicatorProperties  - This method will return the properties for indicator SDOs
+indicatorProperties  - This function will return the properties for the
+indicator SDO table
 */
 func indicatorProperties() string {
 	return baseProperties() + `
@@ -33,6 +33,16 @@ func indicatorProperties() string {
 	"valid_until" TEXT
 	`
 	// kill_chain_phases
+}
+
+/*
+indicatorTypeProperties - This function will return the properties for the
+indicator types table
+*/
+func indicatorTypesProperties() string {
+	return baseProperties() + `
+	"indicator_type" TEXT NOT NULL
+	`
 }
 
 /*
@@ -66,40 +76,6 @@ func sqlAddIndicator() (string, error) {
 	s.WriteString("\"valid_from\", ")
 	s.WriteString("\"valid_until\") ")
 	s.WriteString("values (?, ?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
-
-/*
-sqlGetIndicator - This function will return an SQL statement that will get an
-indicator from the database.
-*/
-func sqlGetIndicator() (string, error) {
-	tblInd := DB_TABLE_STIX_INDICATOR
-
-	/*
-		SELECT
-			name,
-			description,
-			pattern,
-			valid_from,
-			valid_until
-		FROM
-			s_indicator
-		WHERE
-			object_id =
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString("name, ")
-	s.WriteString("description, ")
-	s.WriteString("pattern, ")
-	s.WriteString("valid_from, ")
-	s.WriteString("valid_until ")
-	s.WriteString("FROM ")
-	s.WriteString(tblInd)
-	s.WriteString(" WHERE object_id = ?")
 
 	return s.String(), nil
 }
@@ -147,22 +123,44 @@ func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 }
 
 /*
-getIndicator - This method will get a specific indicator from the database.
+getIndicator - This method will get a specific indicator from the database based
+on the STIX ID and version.
 */
 func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, error) {
-	var i objects.Indicator
-	var description, pattern, validFrom, validUntil string
 
-	// Lets first get the base object so we know the objectID
+	// Get Base Object - this will give us the objectID
+	// Then copy base object data in to Indicator object
 	baseObject, errBase := ds.getBaseObject(stixid, version)
 	if errBase != nil {
 		return nil, errBase
 	}
-
-	// Copy base object data in to the Indicator
 	i.CommonObjectProperties = *baseObject
 
-	stmt, _ := sqlGetIndicator()
+	// Create SQL Statement
+	/*
+		SELECT
+			name,
+			description,
+			pattern,
+			valid_from,
+			valid_until
+		FROM
+			s_indicator
+		WHERE
+			object_id = ?
+	*/
+	tblInd := DB_TABLE_STIX_INDICATOR
+	var sql bytes.Buffer
+	sql.WriteString("SELECT ")
+	sql.WriteString("name, description, pattern, valid_from, valid_until ")
+	sql.WriteString("FROM ")
+	sql.WriteString(tblInd)
+	sql.WriteString(" WHERE object_id = ?")
+	stmt, _ := sql.String()
+
+	// Make SQL Call
+	var i objects.Indicator
+	var description, pattern, validFrom, validUntil string
 	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&i.Name, &description, &pattern, &validFrom, &validUntil)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -175,5 +173,6 @@ func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, e
 	i.SetPattern(pattern)
 	i.SetValidFrom(validFrom)
 	i.SetValidUntil(validUntil)
+
 	return &i, nil
 }

@@ -40,6 +40,7 @@ func (ds *Datastore) CreateSTIXTables() {
 	ds.createSTIXTable(DB_TABLE_STIX_IDENTITY, identityProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_IDENTITY_SECTORS, identitySectorsProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_INDICATOR, indicatorProperties())
+	ds.createSTIXTable(DB_TABLE_STIX_INDICATOR_TYPES, indicatorTypesProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_INTRUSION_SET, intrusionSetProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_LOCATION, locationProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_MALWARE, malwareProperties())
@@ -135,10 +136,10 @@ func (ds *Datastore) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
 	var err error
-	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.0")
-	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.1")
-	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.2")
-	_, err = ds.DB.Exec(stmt, "application/stix+json; version=2.3")
+	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.0")
+	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.1")
+	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.2")
+	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.3")
 
 	if err != nil {
 		ds.Logger.Println("ERROR: The media type item could not be inserted in to the", name, "table")

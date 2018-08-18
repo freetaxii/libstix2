@@ -6,8 +6,8 @@
 package objects
 
 import (
-	"github.com/freetaxii/libstix2/common/timestamp"
 	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------

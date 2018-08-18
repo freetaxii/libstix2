@@ -7,23 +7,18 @@ package timestamp
 
 import (
 	"fmt"
-	"github.com/freetaxii/libstix2/defs"
 	"regexp"
 	"time"
+
+	"github.com/freetaxii/libstix2/defs"
 )
 
-// These functions are used by the follow properties and objects:
-// created, modified, firstSeen, lastSeen,
-// indicator, observedData, report
-
-// ----------------------------------------------------------------------
-// Public Functions
-// ----------------------------------------------------------------------
-
-// GetCurrentTime - This function will return the current time in the STIX
-// time stamp format, which is in RFC 3339 format. The options are "milli",
-// "micro", or "" which will give you to the second.
-func GetCurrentTime(precision string) string {
+/*
+CurrentTime - This function will return the current time in the STIX
+time stamp format, which is in RFC 3339 format. The options are "milli",
+"micro", or "" which will give you to the second.
+*/
+func CurrentTime(precision string) string {
 	if precision == "milli" {
 		return time.Now().UTC().Format(defs.TIME_RFC_3339_MILLI)
 	} else if precision == "micro" {
@@ -32,9 +27,11 @@ func GetCurrentTime(precision string) string {
 	return time.Now().UTC().Format(defs.TIME_RFC_3339)
 }
 
-// Valid - This function will return true if the time stamp is a valid STIX
-// time stamp, just the date in proper RFC3339 format, or just the year. If it
-// is anything else it will return false.
+/*
+Valid - This function will return true if the time stamp is a valid STIX
+time stamp, just the date in proper RFC3339 format, or just the year. If it
+is anything else it will return false.
+*/
 func Valid(t string) bool {
 	re1 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}T[0-2]\d{1}:[0-5]\d{1}:[0-5]\d{1}(\.\d{0,6})?Z$`)
 	re2 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}$`)
@@ -49,8 +46,10 @@ func Valid(t string) bool {
 	return false
 }
 
-// ToString - This function takes in a timestamp in either time.Time or string
-// format and returns a string version of the timestamp.
+/*
+ToString - This function takes in a timestamp in either time.Time or string
+format and returns a string version of the timestamp.
+*/
 func ToString(t interface{}, p string) (string, error) {
 	// TODO: One potential problem is if the time is created with the time package
 	// at a precision less than micro and we set it to micro in things like

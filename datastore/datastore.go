@@ -21,8 +21,8 @@ GetManifestData - This will return a TAXII Manifest resource based on the query 
 */
 type Datastorer interface {
 	Close() error
-	GetSTIXObject(stixid, version string) (interface{}, error)
-	AddSTIXObject(obj interface{}) error
+	GetObject(id, version string) (interface{}, error)
+	AddObject(obj interface{}) error
 	AddTAXIIObject(obj interface{}) error
 	GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error)
 	GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error)

@@ -155,10 +155,10 @@ func (ds *Datastore) Close() error {
 // ----------------------------------------------------------------------
 
 /*
-GetSTIXObject - This method will take in a STIX ID and version timestamp (the
+GetObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the matching STIX object.
 */
-func (ds *Datastore) GetSTIXObject(id, version string) (interface{}, error) {
+func (ds *Datastore) GetObject(id, version string) (interface{}, error) {
 
 	idparts := strings.Split(id, "--")
 
@@ -185,10 +185,10 @@ func (ds *Datastore) GetSTIXObject(id, version string) (interface{}, error) {
 }
 
 /*
-AddSTIXObject - This method will take in a STIX object and add it to the
+AddObject - This method will take in a STIX object and add it to the
 database.
 */
-func (ds *Datastore) AddSTIXObject(obj interface{}) error {
+func (ds *Datastore) AddObject(obj interface{}) error {
 	switch o := obj.(type) {
 	case *objects.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")

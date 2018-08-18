@@ -64,8 +64,7 @@ relationship) but not to Observed Data (the raw information).
 */
 type Sighting struct {
 	properties.CommonObjectProperties
-	properties.FirstSeenProperty
-	properties.LastSeenProperty
+	properties.SeenProperties
 	Count            int      `json:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`
 	ObservedDataRefs []string `json:"observed_data_refs,omitempty"`

@@ -25,10 +25,10 @@ type CommonBundleProperties struct {
 }
 
 /*
-CommonBaseProperties - This type includes all of the common properties
+commonBaseProperties - This type includes all of the common properties
 that are used by all STIX objects
 */
-type CommonBaseProperties struct {
+type commonBaseProperties struct {
 	ObjectIDProperty
 	TypeProperty
 	SpecVersionProperty
@@ -37,7 +37,7 @@ type CommonBaseProperties struct {
 	CreatedProperty
 }
 
-type CommonAdditionalProperties struct {
+type commonAdditionalProperties struct {
 	ExternalReferencesProperty
 	ObjectMarkingRefsProperty
 	GranularMarkingsProperty
@@ -49,13 +49,13 @@ CommonObjectProperties - This type includes all of the common properties
 that are used by all STIX SDOs and SROs
 */
 type CommonObjectProperties struct {
-	CommonBaseProperties
+	commonBaseProperties
 	ModifiedProperty
 	RevokedProperty
 	LabelsProperty
 	ConfidenceProperty
 	LangProperty
-	CommonAdditionalProperties
+	commonAdditionalProperties
 }
 
 /*
@@ -63,8 +63,8 @@ CommonMarkingDefinitionProperties - This type includes all of the common
 properties that are used by the STIX Marking Definition object
 */
 type CommonMarkingDefinitionProperties struct {
-	CommonBaseProperties
-	CommonAdditionalProperties
+	commonBaseProperties
+	commonAdditionalProperties
 }
 
 // ----------------------------------------------------------------------
@@ -84,14 +84,5 @@ func (p *CommonObjectProperties) InitObject(stixType string) error {
 	p.SetNewID(stixType)
 	p.SetCreatedToCurrentTime()
 	p.SetModifiedToCreated()
-	return nil
-}
-
-// SetModifiedToCreated sets the object modified time to be the same as the
-// created time. This has to be done at this level, since at the individual
-// properties type say "ModifiedPropertyType" this.Created does not exist.
-// But it will exist at this level of inheritance
-func (p *CommonObjectProperties) SetModifiedToCreated() error {
-	p.Modified = p.Created
 	return nil
 }
