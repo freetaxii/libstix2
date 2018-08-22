@@ -89,7 +89,7 @@ func sqlGetCollectionSize() (string, error) {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *Datastore) getCollectionSize(collectionID string) (int, error) {
-	ds.Logger.Traceln("TRACE getCollectionSize(): Start")
+	ds.Logger.Traceln("TRACE: getCollectionSize() Start")
 	var index int
 	sqlStmt, _ := sqlGetCollectionSize()
 
@@ -152,7 +152,7 @@ not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
 func (ds *Datastore) addObjectToCollection(obj *resources.CollectionRecord) error {
-	ds.Logger.Traceln("TRACE addObjectToCollection(): Start")
+	ds.Logger.Traceln("TRACE: addObjectToCollection() Start")
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	// We are storing the Collection DatastoreID which is an integer instead
@@ -192,7 +192,7 @@ func (ds *Datastore) addObjectToCollection(obj *resources.CollectionRecord) erro
 getBundle - This method will return a STIX bundle based on the query provided.
 */
 func (ds *Datastore) getBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
-	ds.Logger.Traceln("TRACE getBundle(): Start")
+	ds.Logger.Traceln("TRACE: getBundle() Start")
 
 	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
@@ -258,7 +258,7 @@ func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 	/*
 		SELECT
 			t_collection_data.stix_id,
-			s.base_object.date_added,
+			s_base_object.date_added,
 			s_base_object.modified,
 			s_base_object.spec_version
 		FROM
@@ -268,6 +268,8 @@ func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 			t_collection_data.stix_id = s_base_object.id
 		WHERE
 			t_collection_data.collection_id = ?
+		ORDER BY
+			s_base_object.date_added
 		LIMIT 5
 	*/
 	var s bytes.Buffer
@@ -295,6 +297,10 @@ func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 	s.WriteString("WHERE ")
 	s.WriteString(whereQuery)
 
+	s.WriteString(" ORDER BY ")
+	s.WriteString(tblBaseObj)
+	s.WriteString(".date_added ASC ")
+
 	if limitQuery != 0 {
 		s.WriteString(" LIMIT ")
 		i := strconv.Itoa(limitQuery)
@@ -308,7 +314,7 @@ func sqlGetManifestData(query resources.CollectionQuery) (string, error) {
 getManifestData - This method will return manifest data based on the query provided.
 */
 func (ds *Datastore) getManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
-	ds.Logger.Traceln("TRACE getManifestData(): Start")
+	ds.Logger.Traceln("TRACE: getManifestData() Start")
 
 	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
@@ -371,8 +377,8 @@ func (ds *Datastore) getManifestData(query resources.CollectionQuery) (*resource
 
 	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
 
-	ds.Logger.Traceln("TRACE getManifestData(): Query Collection ID", query.CollectionID)
-	ds.Logger.Traceln("TRACE getManifestData(): Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
+	ds.Logger.Traceln("TRACE: getManifestData() Query Collection ID", query.CollectionID)
+	ds.Logger.Traceln("TRACE: getManifestData() Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
 
 	resultData.ManifestData.Objects = manifest.Objects
 
@@ -390,7 +396,6 @@ func (ds *Datastore) getManifestData(query resources.CollectionQuery) (*resource
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-
 	return &resultData, nil
 }
 
@@ -405,7 +410,7 @@ processRangeValues - This method will take in the various range parameters and s
 of the dataset and will return the correct first and last index values to be used.
 */
 func (ds *Datastore) processRangeValues(first, last, max, size int) (int, int, error) {
-	ds.Logger.Traceln("TRACE processRangeValues(): Start")
+	ds.Logger.Traceln("TRACE: processRangeValues() Start")
 
 	if first < 0 {
 		return 0, 0, errors.New("the starting value can not be negative")

@@ -117,9 +117,11 @@ func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 	// Add Kill Chains
 	// ----------------------------------------------------------------------
 	if obj.KillChainPhases != nil {
-		err := ds.addKillChainPhases(objectID, &obj.KillChainPhasesProperty)
-		if err != nil {
-			return err
+		for _, v := range obj.KillChainPhases {
+			err := ds.addKillChainPhase(objectID, &v)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -143,39 +145,72 @@ func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, e
 	// Create SQL Statement
 	/*
 		SELECT
-			name,
-			description,
-			pattern,
-			valid_from,
-			valid_until
+			s_indicator.name,
+			s_indicator.description,
+			s_indicator.pattern,
+			s_indicator.valid_from,
+			s_indicator.valid_until,
+			group_concat(s_indicator_types.indicator_type)
 		FROM
 			s_indicator
+		JOIN
+			s_indicator_types ON
+			s_indicator.object_id = s_indicator_types.object_id
 		WHERE
-			object_id = ?
+			s_indicator.object_id = ?
 	*/
 	tblInd := DB_TABLE_STIX_INDICATOR
+	tblIndType := DB_TABLE_STIX_INDICATOR_TYPES
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("SELECT ")
-	sqlstmt.WriteString("name, description, pattern, valid_from, valid_until ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".name, ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".description, ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".pattern, ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".valid_from, ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".valid_until, ")
+	sqlstmt.WriteString("group_concat(")
+	sqlstmt.WriteString(tblIndType)
+	sqlstmt.WriteString(".indicator_type) ")
 	sqlstmt.WriteString("FROM ")
 	sqlstmt.WriteString(tblInd)
-	sqlstmt.WriteString(" WHERE object_id = ?")
+	sqlstmt.WriteString(" JOIN ")
+	sqlstmt.WriteString(tblIndType)
+	sqlstmt.WriteString(" ON ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".object_id = ")
+	sqlstmt.WriteString(tblIndType)
+	sqlstmt.WriteString(".object_id ")
+	sqlstmt.WriteString("WHERE ")
+	sqlstmt.WriteString(tblInd)
+	sqlstmt.WriteString(".object_id = ?")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	var description, pattern, validFrom, validUntil string
-	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&i.Name, &description, &pattern, &validFrom, &validUntil)
+	var name, description, pattern, validFrom, validUntil, indTypes string
+	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&name, &description, &pattern, &validFrom, &validUntil, &indTypes)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("no indicator record found")
 		}
 		return nil, fmt.Errorf("database execution error getting indicator: ", err)
 	}
-	//i.SetName(name)
+	i.SetName(name)
 	i.SetDescription(description)
+	i.AddType(indTypes)
 	i.SetPattern(pattern)
 	i.SetValidFrom(validFrom)
 	i.SetValidUntil(validUntil)
+
+	killChainPhases, errkc := ds.getKillChainPhases(i.ObjectID)
+	if errkc != nil {
+		return nil, errkc
+	}
+	i.KillChainPhasesProperty = *killChainPhases
 
 	return &i, nil
 }

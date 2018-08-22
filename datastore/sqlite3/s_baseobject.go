@@ -341,8 +341,8 @@ func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonOb
 	}
 	baseObject.SetObjectID(objectID)
 	baseObject.SetObjectType(objectType)
-	baseObject.SetID(id)
 	baseObject.SetSpecVersion(specVersion)
+	baseObject.SetID(id)
 	baseObject.SetCreatedByRef(createdByRef)
 	baseObject.SetCreated(created)
 	baseObject.SetModified(modified)

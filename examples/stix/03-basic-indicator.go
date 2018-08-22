@@ -21,6 +21,7 @@ func main() {
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
+	i.AddType("compromised")
 
 	// Set modified time to be one hour from now
 	//modifiedTime := time.Now().Add(time.Hour)

@@ -86,7 +86,7 @@ func (p *ExternalReferencesProperty) NewExternalReference() (*ExternalReference,
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ExternalReferencesProperty
+// Public Methods - BaseExtendedProperties
 // ----------------------------------------------------------------------
 
 /*

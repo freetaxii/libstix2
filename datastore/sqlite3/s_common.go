@@ -116,10 +116,10 @@ func commonKillChainPhasesProperties() string {
 }
 
 /*
-addKillChainPhases - This method will add a kill chain phase for a given object
+addKillChainPhase - This method will add a kill chain phase for a given object
 to the database.
 */
-func (ds *Datastore) addKillChainPhases(objectID int, obj *properties.KillChainPhasesProperty) error {
+func (ds *Datastore) addKillChainPhase(objectID int, obj *properties.KillChainPhase) error {
 
 	// Create SQL Statement
 	/*
@@ -138,14 +138,68 @@ func (ds *Datastore) addKillChainPhases(objectID int, obj *properties.KillChainP
 	sqlstmt.WriteString(" (object_id, kill_chain_name, phase_name) values (?, ?, ?)")
 	stmt := sqlstmt.String()
 
-	for _, v := range obj.KillChainPhases {
-		// Make SQL Call
-		_, err := ds.DB.Exec(stmt, objectID, v.KillChainName, v.PhaseName)
-		if err != nil {
-			return fmt.Errorf("database execution error inserting kill chain phase: ", err)
-		}
+	// Make SQL Call
+	_, err := ds.DB.Exec(stmt, objectID, obj.KillChainName, obj.PhaseName)
+	if err != nil {
+		return fmt.Errorf("database execution error inserting kill chain phase: ", err)
 	}
+
 	return nil
+}
+
+/*
+getKillChainPhases - This method will get the kill chain phases for a given
+object ID.
+*/
+func (ds *Datastore) getKillChainPhases(objectID int) (*properties.KillChainPhasesProperty, error) {
+	var kcPhases properties.KillChainPhasesProperty
+
+	// Create SQL Statement
+	/*
+		SELECT
+			kill_chain_name,
+			phase_name
+		FROM
+			s_kill_chain_phases
+		WHERE
+			object_id = ?
+	*/
+	tblKCP := DB_TABLE_STIX_KILL_CHAIN_PHASES
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString("kill_chain_name, phase_name ")
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblKCP)
+	sqlstmt.WriteString(" WHERE object_id = ?")
+	stmt := sqlstmt.String()
+
+	// Make SQL Call
+	rows, err := ds.DB.Query(stmt, objectID)
+	if err != nil {
+		return nil, fmt.Errorf("database execution error getting kill chain phases: ", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var name, phase string
+		p, _ := kcPhases.NewKillChainPhase()
+
+		if err := rows.Scan(&name, &phase); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("database scan error getting kill chain phases: ", err)
+		}
+		p.SetName(name)
+		p.SetPhase(phase)
+	}
+
+	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
+	// check for the error and handle it.
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("database rows error getting kill chain phases: ", err)
+	}
+
+	return &kcPhases, nil
 }
 
 // ----------------------------------------------------------------------

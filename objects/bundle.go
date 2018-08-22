@@ -91,6 +91,28 @@ func DecodeBundle(r io.Reader) (*BundleDecode, error) {
 // ----------------------------------------------------------------------
 
 /*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *BundleDecode) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *BundleDecode) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+/*
 AddObject - This method will take in an object as an interface and add it to
 the list of objects in the bundle.
 */
