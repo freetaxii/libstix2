@@ -81,7 +81,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Type Value
 	if b.ObjectType != p.ObjectType {
 		problemsFound++
-		str := fmt.Sprintf("++ Types Do Not Match: %s | %s", p.ObjectType, b.ObjectType)
+		str := fmt.Sprintf("-- Types Do Not Match: %s | %s", p.ObjectType, b.ObjectType)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Types Match: %s | %s", p.ObjectType, b.ObjectType)
@@ -91,7 +91,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Spec Version Value
 	if b.SpecVersion != p.SpecVersion {
 		problemsFound++
-		str := fmt.Sprintf("++ Spec Versions Do Not Match: %s | %s", p.SpecVersion, b.SpecVersion)
+		str := fmt.Sprintf("-- Spec Versions Do Not Match: %s | %s", p.SpecVersion, b.SpecVersion)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Spec Versions Match: %s | %s", p.SpecVersion, b.SpecVersion)
@@ -101,7 +101,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check ID Value
 	if b.ID != p.ID {
 		problemsFound++
-		str := fmt.Sprintf("++ IDs Do Not Match: %s | %s", p.ID, b.ID)
+		str := fmt.Sprintf("-- IDs Do Not Match: %s | %s", p.ID, b.ID)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ IDs Match: %s | %s", p.ID, b.ID)
@@ -111,7 +111,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Created By Ref Value
 	if b.CreatedByRef != p.CreatedByRef {
 		problemsFound++
-		str := fmt.Sprintf("++ Created By Refs Do Not Match: %s | %s", p.CreatedByRef, b.CreatedByRef)
+		str := fmt.Sprintf("-- Created By Refs Do Not Match: %s | %s", p.CreatedByRef, b.CreatedByRef)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Created By Refs Match: %s | %s", p.CreatedByRef, b.CreatedByRef)
@@ -121,7 +121,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Created Value
 	if b.Created != p.Created {
 		problemsFound++
-		str := fmt.Sprintf("++ Created Dates Do Not Match: %s | %s", p.Created, b.Created)
+		str := fmt.Sprintf("-- Created Dates Do Not Match: %s | %s", p.Created, b.Created)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Created Dates Match: %s | %s", p.Created, b.Created)
@@ -131,7 +131,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Modified Value
 	if b.Modified != p.Modified {
 		problemsFound++
-		str := fmt.Sprintf("++ Modified Dates Do Not Match: %s | %s", p.Modified, b.Modified)
+		str := fmt.Sprintf("-- Modified Dates Do Not Match: %s | %s", p.Modified, b.Modified)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Modified Dates Match: %s | %s", p.Modified, b.Modified)
@@ -141,7 +141,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Revoked Value
 	if b.Revoked != p.Revoked {
 		problemsFound++
-		str := fmt.Sprintf("++ Revoked Values Do Not Match: %t | %t", p.Revoked, b.Revoked)
+		str := fmt.Sprintf("-- Revoked Values Do Not Match: %t | %t", p.Revoked, b.Revoked)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Revoked Values Match: %t | %t", p.Revoked, b.Revoked)
@@ -151,7 +151,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Labels Values
 	if len(b.Labels) != len(p.Labels) {
 		problemsFound++
-		str := fmt.Sprintf("++ Labels Length Do Not Match: %d | %d", len(p.Labels), len(b.Labels))
+		str := fmt.Sprintf("-- Labels Length Do Not Match: %d | %d", len(p.Labels), len(b.Labels))
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Labels Length Match: %d | %d", len(p.Labels), len(b.Labels))
@@ -161,7 +161,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 		for index, _ := range p.Labels {
 			if b.Labels[index] != p.Labels[index] {
 				problemsFound++
-				str := fmt.Sprintf("++ Labels Do Not Match: %s | %s", p.Labels[index], b.Labels[index])
+				str := fmt.Sprintf("-- Labels Do Not Match: %s | %s", p.Labels[index], b.Labels[index])
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Labels Match: %s | %s", p.Labels[index], b.Labels[index])
@@ -173,17 +173,17 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Confidence Value
 	if b.Confidence != p.Confidence {
 		problemsFound++
-		str := fmt.Sprintf("++ Confidence Values Do Not Match: %s | %s", p.Confidence, b.Confidence)
+		str := fmt.Sprintf("-- Confidence Values Do Not Match: %d | %d", p.Confidence, b.Confidence)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Confidence Values Match: %s | %s", p.Confidence, b.Confidence)
+		str := fmt.Sprintf("++ Confidence Values Match: %d | %d", p.Confidence, b.Confidence)
 		details = append(details, str)
 	}
 
 	// Check Lang Value
 	if b.Lang != p.Lang {
 		problemsFound++
-		str := fmt.Sprintf("++ Lang Values Do Not Match: %s | %s", p.Lang, b.Lang)
+		str := fmt.Sprintf("-- Lang Values Do Not Match: %s | %s", p.Lang, b.Lang)
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Lang Values Match: %s | %s", p.Lang, b.Lang)
@@ -193,7 +193,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check External References
 	if len(b.ExternalReferences) != len(p.ExternalReferences) {
 		problemsFound++
-		str := fmt.Sprintf("++ External References Length Do Not Match: %d | %d", len(p.ExternalReferences), len(b.ExternalReferences))
+		str := fmt.Sprintf("-- External References Length Do Not Match: %d | %d", len(p.ExternalReferences), len(b.ExternalReferences))
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ External References Length Match: %d | %d", len(p.ExternalReferences), len(b.ExternalReferences))
@@ -203,7 +203,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check External Reference Source Name
 			if b.ExternalReferences[index].SourceName != p.ExternalReferences[index].SourceName {
 				problemsFound++
-				str := fmt.Sprintf("++ Source Name Do Not Match: %s | %s", p.ExternalReferences[index].SourceName, b.ExternalReferences[index].SourceName)
+				str := fmt.Sprintf("-- Source Name Do Not Match: %s | %s", p.ExternalReferences[index].SourceName, b.ExternalReferences[index].SourceName)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Source Name Match: %s | %s", p.ExternalReferences[index].SourceName, b.ExternalReferences[index].SourceName)
@@ -213,7 +213,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check External Reference Descriptions
 			if b.ExternalReferences[index].Description != p.ExternalReferences[index].Description {
 				problemsFound++
-				str := fmt.Sprintf("++ Descriptions Do Not Match: %s | %s", p.ExternalReferences[index].Description, b.ExternalReferences[index].Description)
+				str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", p.ExternalReferences[index].Description, b.ExternalReferences[index].Description)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Descriptions Match: %s | %s", p.ExternalReferences[index].Description, b.ExternalReferences[index].Description)
@@ -223,7 +223,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check External Reference URLs
 			if b.ExternalReferences[index].URL != p.ExternalReferences[index].URL {
 				problemsFound++
-				str := fmt.Sprintf("++ URLs Do Not Match: %s | %s", p.ExternalReferences[index].URL, b.ExternalReferences[index].URL)
+				str := fmt.Sprintf("-- URLs Do Not Match: %s | %s", p.ExternalReferences[index].URL, b.ExternalReferences[index].URL)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ URLs Match: %s | %s", p.ExternalReferences[index].URL, b.ExternalReferences[index].URL)
@@ -233,7 +233,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check External Reference Hashes
 			if len(b.ExternalReferences[index].Hashes) != len(p.ExternalReferences[index].Hashes) {
 				problemsFound++
-				str := fmt.Sprintf("++ Hashes Length Do Not Match: %d | %d", len(p.ExternalReferences[index].Hashes), len(b.ExternalReferences[index].Hashes))
+				str := fmt.Sprintf("-- Hashes Length Do Not Match: %d | %d", len(p.ExternalReferences[index].Hashes), len(b.ExternalReferences[index].Hashes))
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Hashes Length Match: %d | %d", len(p.ExternalReferences[index].Hashes), len(b.ExternalReferences[index].Hashes))
@@ -243,7 +243,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 				for key, _ := range p.ExternalReferences[index].Hashes {
 					if b.ExternalReferences[index].Hashes[key] != p.ExternalReferences[index].Hashes[key] {
 						problemsFound++
-						str := fmt.Sprintf("++ Hashes Do Not Match: %s | %s", p.ExternalReferences[index].Hashes[key], b.ExternalReferences[index].Hashes[key])
+						str := fmt.Sprintf("-- Hashes Do Not Match: %s | %s", p.ExternalReferences[index].Hashes[key], b.ExternalReferences[index].Hashes[key])
 						details = append(details, str)
 					} else {
 						str := fmt.Sprintf("++ Hashes Match: %s | %s", p.ExternalReferences[index].Hashes[key], b.ExternalReferences[index].Hashes[key])
@@ -255,7 +255,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check External Reference External IDs
 			if b.ExternalReferences[index].ExternalID != p.ExternalReferences[index].ExternalID {
 				problemsFound++
-				str := fmt.Sprintf("++ External IDs Do Not Match: %s | %s", p.ExternalReferences[index].ExternalID, b.ExternalReferences[index].ExternalID)
+				str := fmt.Sprintf("-- External IDs Do Not Match: %s | %s", p.ExternalReferences[index].ExternalID, b.ExternalReferences[index].ExternalID)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ External IDs Match: %s | %s", p.ExternalReferences[index].ExternalID, b.ExternalReferences[index].ExternalID)
@@ -267,7 +267,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Object Marking Refs
 	if len(b.ObjectMarkingRefs) != len(p.ObjectMarkingRefs) {
 		problemsFound++
-		str := fmt.Sprintf("++ Object Marking Refs Length Do Not Match: %d | %d", len(p.ObjectMarkingRefs), len(b.ObjectMarkingRefs))
+		str := fmt.Sprintf("-- Object Marking Refs Length Do Not Match: %d | %d", len(p.ObjectMarkingRefs), len(b.ObjectMarkingRefs))
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Object Marking Refs Length Match: %d | %d", len(p.ObjectMarkingRefs), len(b.ObjectMarkingRefs))
@@ -277,7 +277,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 		for index, _ := range p.ObjectMarkingRefs {
 			if b.ObjectMarkingRefs[index] != p.ObjectMarkingRefs[index] {
 				problemsFound++
-				str := fmt.Sprintf("++ Object Marking Refs Do Not Match: %s | %s", p.ObjectMarkingRefs[index], b.ObjectMarkingRefs[index])
+				str := fmt.Sprintf("-- Object Marking Refs Do Not Match: %s | %s", p.ObjectMarkingRefs[index], b.ObjectMarkingRefs[index])
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Object Marking Refs Match: %s | %s", p.ObjectMarkingRefs[index], b.ObjectMarkingRefs[index])
@@ -289,7 +289,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 	// Check Granular Markings
 	if len(b.GranularMarkings) != len(p.GranularMarkings) {
 		problemsFound++
-		str := fmt.Sprintf("++ Granular Markings Length Do Not Match: %d | %d", len(p.GranularMarkings), len(b.GranularMarkings))
+		str := fmt.Sprintf("-- Granular Markings Length Do Not Match: %d | %d", len(p.GranularMarkings), len(b.GranularMarkings))
 		details = append(details, str)
 	} else {
 		str := fmt.Sprintf("++ Granular Markings Length Match: %d | %d", len(p.GranularMarkings), len(b.GranularMarkings))
@@ -299,7 +299,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check Granular Marking Languages
 			if b.GranularMarkings[index].Lang != p.GranularMarkings[index].Lang {
 				problemsFound++
-				str := fmt.Sprintf("++ Languages Do Not Match: %s | %s", p.GranularMarkings[index].Lang, b.GranularMarkings[index].Lang)
+				str := fmt.Sprintf("-- Languages Do Not Match: %s | %s", p.GranularMarkings[index].Lang, b.GranularMarkings[index].Lang)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Languages Match: %s | %s", p.GranularMarkings[index].Lang, b.GranularMarkings[index].Lang)
@@ -309,7 +309,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check Granular Marking Refs
 			if b.GranularMarkings[index].MarkingRef != p.GranularMarkings[index].MarkingRef {
 				problemsFound++
-				str := fmt.Sprintf("++ Refs Do Not Match: %s | %s", p.GranularMarkings[index].MarkingRef, b.GranularMarkings[index].MarkingRef)
+				str := fmt.Sprintf("-- Refs Do Not Match: %s | %s", p.GranularMarkings[index].MarkingRef, b.GranularMarkings[index].MarkingRef)
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Refs Match: %s | %s", p.GranularMarkings[index].MarkingRef, b.GranularMarkings[index].MarkingRef)
@@ -319,7 +319,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 			// Check Granular Marking Selectors
 			if len(b.GranularMarkings[index].Selectors) != len(p.GranularMarkings[index].Selectors) {
 				problemsFound++
-				str := fmt.Sprintf("++ Selectors Length Do Not Match: %d | %d", len(p.GranularMarkings[index].Selectors), len(b.GranularMarkings[index].Selectors))
+				str := fmt.Sprintf("-- Selectors Length Do Not Match: %d | %d", len(p.GranularMarkings[index].Selectors), len(b.GranularMarkings[index].Selectors))
 				details = append(details, str)
 			} else {
 				str := fmt.Sprintf("++ Selectors Length Match: %d | %d", len(p.GranularMarkings[index].Selectors), len(b.GranularMarkings[index].Selectors))
@@ -329,7 +329,7 @@ func (p *CommonObjectProperties) Compare(b *CommonObjectProperties) (bool, int, 
 				for j, _ := range p.GranularMarkings[index].Selectors {
 					if b.GranularMarkings[index].Selectors[j] != p.GranularMarkings[index].Selectors[j] {
 						problemsFound++
-						str := fmt.Sprintf("++ Selectors Do Not Match: %s | %s", p.GranularMarkings[index].Selectors[j], b.GranularMarkings[index].Selectors[j])
+						str := fmt.Sprintf("-- Selectors Do Not Match: %s | %s", p.GranularMarkings[index].Selectors[j], b.GranularMarkings[index].Selectors[j])
 						details = append(details, str)
 					} else {
 						str := fmt.Sprintf("++ Selectors Match: %s | %s", p.GranularMarkings[index].Selectors[j], b.GranularMarkings[index].Selectors[j])

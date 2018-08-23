@@ -18,7 +18,7 @@ func ValidSTIXID(id string) bool {
 	valid := false
 	idparts := strings.Split(id, "--")
 
-	if idparts != nil {
+	if idparts == nil {
 		return false
 	}
 
