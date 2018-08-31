@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/indicator"
 )
 
 func main() {
-	i := objects.NewIndicator()
+	i := indicator.New()
 
 	// The other option is to do
 	// var i objects.Indicator

@@ -1,4 +1,4 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -29,11 +29,11 @@ type GoalsProperty struct {
 AddGoal - This method takes in a string value that represents a goal and adds
 it to the list of goals in the goals property.
 */
-func (p *GoalsProperty) AddGoal(s string) error {
+func (o *GoalsProperty) AddGoal(s string) error {
 	// if this.Goals == nil {
 	// 	a := make([]string, 0)
 	// 	this.Goals = a
 	// }
-	p.Goals = append(p.Goals, s)
+	o.Goals = append(o.Goals, s)
 	return nil
 }

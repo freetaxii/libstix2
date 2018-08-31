@@ -8,7 +8,7 @@ package resources
 import (
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/resources/properties"
 )
 
@@ -135,7 +135,7 @@ type CollectionQueryResult struct {
 	Size           int
 	DateAddedFirst string
 	DateAddedLast  string
-	BundleData     objects.Bundle
+	BundleData     bundle.Bundle
 	ManifestData   Manifest
 	// RangeBegin     int
 	// RangeEnd       int

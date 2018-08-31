@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/report"
 )
 
 func main() {
-	r := objects.NewReport()
+	r := report.New()
 
 	r.SetName("Malware Foo Report 2016")
 	r.SetDescription("This report gives us details about Malware Foo1")

@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/resources"
 	"github.com/freetaxii/libstix2/stixid"
 	"github.com/freetaxii/libstix2/timestamp"
@@ -199,7 +199,7 @@ func (ds *Datastore) getBundle(query resources.CollectionQuery) (*resources.Coll
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
 	}
 
-	stixBundle := objects.NewBundle()
+	stixBundle := bundle.New()
 
 	// First get a list of all of the objects that are in the collection that
 	// meet the query requirements. This is done with the manifest records.

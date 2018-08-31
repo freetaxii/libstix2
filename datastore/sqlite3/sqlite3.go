@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/resources"
 	"github.com/freetaxii/libstix2/stixid"
 	"github.com/gologme/log"
@@ -191,7 +191,7 @@ database.
 */
 func (ds *Datastore) AddObject(obj interface{}) error {
 	switch o := obj.(type) {
-	case *objects.Indicator:
+	case *indicator.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
 		err := ds.addIndicator(o)
 		if err != nil {

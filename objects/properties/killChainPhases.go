@@ -1,4 +1,4 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,9 +6,7 @@
 package properties
 
 // ----------------------------------------------------------------------
-//
 // Types
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -29,9 +27,7 @@ type KillChainPhase struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - KillChainPhasesProperty
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -40,34 +36,32 @@ a new kill chain phase to the list. The first value is a string value
 representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
-func (p *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error {
-	k, _ := p.NewKillChainPhase()
+func (o *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error {
+	k, _ := o.NewKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 	return nil
 }
 
 // ----------------------------------------------------------------------
-//
 // Private Methods - KillChainPhasesProperty
-//
 // ----------------------------------------------------------------------
 
 /*
 NewKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhase, error) {
+func (o *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhase, error) {
 	var s KillChainPhase
 
-	// if p.KillChainPhases == nil {
+	// if o.KillChainPhases == nil {
 	// 	a := make([]KillChainPhase, 0)
-	// 	p.KillChainPhases = a
+	// 	o.KillChainPhases = a
 	// }
 
-	positionThatAppendWillUse := len(p.KillChainPhases)
-	p.KillChainPhases = append(p.KillChainPhases, s)
-	return &p.KillChainPhases[positionThatAppendWillUse], nil
+	positionThatAppendWillUse := len(o.KillChainPhases)
+	o.KillChainPhases = append(o.KillChainPhases, s)
+	return &o.KillChainPhases[positionThatAppendWillUse], nil
 }
 
 // ----------------------------------------------------------------------
@@ -78,8 +72,8 @@ func (p *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhase, error) {
 SetName - This method takes in a string value representing the name of a kill
 chain and updates the kill chain name property.
 */
-func (p *KillChainPhase) SetName(s string) error {
-	p.KillChainName = s
+func (o *KillChainPhase) SetName(s string) error {
+	o.KillChainName = s
 	return nil
 }
 
@@ -87,7 +81,7 @@ func (p *KillChainPhase) SetName(s string) error {
 SetPhase - This method takes in a string value representing the phase of a
 kill chain and updates the phase name property.
 */
-func (p *KillChainPhase) SetPhase(s string) error {
-	p.PhaseName = s
+func (o *KillChainPhase) SetPhase(s string) error {
+	o.PhaseName = s
 	return nil
 }

@@ -10,21 +10,29 @@ package properties
 // ----------------------------------------------------------------------
 
 /*
-AliasesProperty - A property used by one or more STIX objects.
+NameProperty - A property used by one or more STIX objects that captures a
+vanity name for the STIX object in string format.
 */
-type AliasesProperty struct {
-	Aliases []string `json:"aliases,omitempty"`
+type NameProperty struct {
+	Name string `json:"name,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - AliasesProperty
+// Public Methods - NameProperty
 // ----------------------------------------------------------------------
 
 /*
-AddAlias - This method takes in a takes in a string value that represents an
-alias for something in STIX and adds it to the property.
+SetName - This method takes in a string value representing a name of the object
+and updates the name property.
 */
-func (o *AliasesProperty) AddAlias(s string) error {
-	o.Aliases = append(o.Aliases, s)
+func (o *NameProperty) SetName(s string) error {
+	o.Name = s
 	return nil
+}
+
+/*
+GetName - This method returns the current name of the object.
+*/
+func (o *NameProperty) GetName() string {
+	return o.Name
 }

@@ -9,18 +9,20 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/bundle"
+	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects/relationship"
 )
 
 func main() {
 	data := getdata()
 
-	b, _ := objects.DecodeBundle(strings.NewReader(data))
+	b, _ := bundle.Decode(strings.NewReader(data))
 
 	count := 0
 	for _, v := range b.Objects {
 
-		o, id, err := objects.DecodeObject(v)
+		o, id, err := bundle.DecodeObject(v)
 		if err != nil {
 			// Should probably log error here.
 			continue
@@ -28,9 +30,9 @@ func main() {
 		fmt.Println("ID", id)
 
 		switch o.(type) {
-		case objects.Indicator:
+		case indicator.Indicator:
 			fmt.Println("Indicator")
-		case objects.Relationship:
+		case relationship.Relationship:
 			fmt.Println("Relationship")
 		}
 

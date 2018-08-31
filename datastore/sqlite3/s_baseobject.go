@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects/baseobject"
 )
 
 // ----------------------------------------------------------------------
@@ -154,7 +154,7 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *Datastore) addBaseObject(obj *properties.CommonObjectProperties) (int, error) {
+func (ds *Datastore) addBaseObject(obj *baseobject.CommonObjectProperties) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	objectID := ds.Cache.BaseObjectIDIndex
@@ -251,9 +251,9 @@ getbaseObject - This method will get a specific base object based on the STIX ID
 and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
-func (ds *Datastore) getBaseObject(stixid, version string) (*properties.CommonObjectProperties, error) {
+func (ds *Datastore) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
 
-	var baseObject properties.CommonObjectProperties
+	var baseObject baseobject.CommonObjectProperties
 	var objectID int
 	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
 
@@ -413,7 +413,7 @@ func (ds *Datastore) addLabel(objectID int, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *Datastore) addExternalReference(objectID int, extref properties.ExternalReference) error {
+func (ds *Datastore) addExternalReference(objectID int, extref baseobject.ExternalReference) error {
 
 	// Create SQL Statement
 	/*
@@ -453,8 +453,8 @@ func (ds *Datastore) addExternalReference(objectID int, extref properties.Extern
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *Datastore) getExternalReferences(objectID int) (*properties.ExternalReferencesProperty, error) {
-	var extrefs properties.ExternalReferencesProperty
+func (ds *Datastore) getExternalReferences(objectID int) (*baseobject.ExternalReferencesProperty, error) {
+	var extrefs baseobject.ExternalReferencesProperty
 
 	// Create SQL Statement
 	/*

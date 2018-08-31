@@ -9,27 +9,34 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/bundle"
+	"github.com/freetaxii/libstix2/objects/campaign"
+	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects/infrastructure"
+	"github.com/freetaxii/libstix2/objects/malware"
+	"github.com/freetaxii/libstix2/objects/observeddata"
+	"github.com/freetaxii/libstix2/objects/relationship"
+	"github.com/freetaxii/libstix2/objects/sighting"
 )
 
 func main() {
-	sm := objects.NewBundle()
+	sm := bundle.New()
 
 	// Create a campaign
-	c := objects.NewCampaign()
+	c := campaign.New()
 	c.SetName("Bank Attack 2016")
 	c.SetObjective("Compromise SWIFT system and steal money")
 	sm.AddObject(c)
 
 	// Create an indicator
-	i := objects.NewIndicator()
+	i := indicator.New()
 	i.SetName("Malware C2 Indicator 2016")
 	i.SetDescription("This indicator should detect the SpyEye malware by looking for this MD5 hash")
 	i.SetPattern("file-object:hashes.md5 = 84714c100d2dfc88629531f6456b8276")
 	sm.AddObject(i)
 
 	// Define some infrastructure as used by this campaign and malware.
-	infra := objects.NewInfrastructure()
+	infra := infrastructure.New()
 	infra.SetName("SpyEye Command and Control Servers")
 	infra.SetDescription("These servers are located in a datacenter in the Netherlands and the IPs change on a weekly basis")
 	// infra.AddKillChainPhase("lockheed-martin-cyber-kill-chain", "command-and-control")
@@ -39,14 +46,14 @@ func main() {
 	sm.AddObject(infra)
 
 	// Define some Observed Data for the Infrastructure
-	od1 := objects.NewObservedData()
+	od1 := observeddata.New()
 	od1.SetFirstObserved("2016-09-01T00:00:01Z")
 	od1.SetLastObserved("2016-09-07T00:00:01Z")
 	od1.SetNumberObserved(3)
 	//od1.SetCybox("This will be a CybOX container object using the ipv4-addr object pointing to 5.79.68.0/24")
 	sm.AddObject(od1)
 
-	od2 := objects.NewObservedData()
+	od2 := observeddata.New()
 	od2.SetFirstObserved("2016-09-07T00:00:01Z")
 	od2.SetLastObserved("2016-09-14T00:00:01Z")
 	od2.SetNumberObserved(3)
@@ -54,7 +61,7 @@ func main() {
 	sm.AddObject(od2)
 
 	// Define some Observed Data for the sighting of the Infrastructure
-	od3 := objects.NewObservedData()
+	od3 := observeddata.New()
 	od3.SetFirstObserved("2016-09-07T00:00:01Z")
 	od3.SetLastObserved("2016-09-14T00:00:01Z")
 	od3.SetNumberObserved(1)
@@ -62,14 +69,14 @@ func main() {
 	sm.AddObject(od3)
 
 	// Define a family of malware
-	m1 := objects.NewMalware()
+	m1 := malware.New()
 	m1.SetName("Zeus")
 	m1.AddLabel("trojan")
 	m1.AddLabel("malware-family")
 	sm.AddObject(m1)
 
 	// Define a piece of malware
-	m2 := objects.NewMalware()
+	m2 := malware.New()
 	m2.SetName("SpyEye")
 	m2.AddLabel("trojan")
 	// m2.AddFilename("cleansweep.exe")
@@ -92,49 +99,49 @@ func main() {
 	// m2s2.SetClassification("Win32:Downloader-NTU [PUP]")
 
 	// Connect the malware sample to a malware family
-	r1 := objects.NewRelationship()
+	r1 := relationship.New()
 	r1.SetRelationshipType("member-of")
 	r1.SetSourceTarget(m1.GetID(), m2.GetID())
 	sm.AddObject(r1)
 
 	// Identify that this campaign uses this piece of malware
-	r2 := objects.NewRelationship()
+	r2 := relationship.New()
 	r2.SetRelationshipType("uses")
 	r2.SetSourceTarget(c.GetID(), m2.GetID())
 	sm.AddObject(r2)
 
 	// Identify that this campaign uses this infrastructure
-	r3 := objects.NewRelationship()
+	r3 := relationship.New()
 	r3.SetRelationshipType("uses")
 	r3.SetSourceTarget(c.GetID(), infra.GetID())
 	sm.AddObject(r3)
 
 	// Identify that this malware uses this infrastructure
-	r4 := objects.NewRelationship()
+	r4 := relationship.New()
 	r4.SetRelationshipType("uses")
 	r4.SetSourceTarget(m2.GetID(), infra.GetID())
 	sm.AddObject(r4)
 
 	// Identify that this indicator can indicate the presence of this malware
-	r5 := objects.NewRelationship()
+	r5 := relationship.New()
 	r5.SetRelationshipType("indicates")
 	r5.SetSourceTarget(i.GetID(), m2.GetID())
 	sm.AddObject(r5)
 
 	// Attach some Observed Data to an Infrastructure Object
-	r6 := objects.NewRelationship()
+	r6 := relationship.New()
 	r6.SetRelationshipType("part-of")
 	r6.SetSourceTarget(od1.GetID(), infra.GetID())
 	sm.AddObject(r6)
 
 	// Attach some Observed Data to an Infrastructure Object
-	r7 := objects.NewRelationship()
+	r7 := relationship.New()
 	r7.SetRelationshipType("part-of")
 	r7.SetSourceTarget(od2.GetID(), infra.GetID())
 	sm.AddObject(r7)
 
 	// Add a sighting for the malware
-	s1 := objects.NewSighting()
+	s1 := sighting.New()
 	s1.SetFirstSeen("2016-09-01T00:00:01Z")
 	s1.SetLastSeen("2016-09-01T10:30:00Z")
 	s1.SetCount(3)
@@ -142,7 +149,7 @@ func main() {
 	sm.AddObject(s1)
 
 	// Add a sighting for the infrastructure
-	s2 := objects.NewSighting()
+	s2 := sighting.New()
 	s2.SetFirstSeen("2016-09-01T00:00:01Z")
 	s2.SetLastSeen("2016-09-01T10:30:00Z")
 	s2.SetCount(10)

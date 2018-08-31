@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/indicator"
 )
 
 // ----------------------------------------------------------------------
@@ -58,7 +58,7 @@ func indicatorTypesProperties() string {
 /*
 addIndicator - This method will add an indicator to the database.
 */
-func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
+func (ds *Datastore) addIndicator(obj *indicator.Indicator) error {
 
 	objectID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
@@ -131,8 +131,8 @@ func (ds *Datastore) addIndicator(obj *objects.Indicator) error {
 getIndicator - This method will get a specific indicator from the database based
 on the STIX ID and version.
 */
-func (ds *Datastore) getIndicator(stixid, version string) (*objects.Indicator, error) {
-	var i objects.Indicator
+func (ds *Datastore) getIndicator(stixid, version string) (*indicator.Indicator, error) {
+	var i indicator.Indicator
 
 	// Get Base Object - this will give us the objectID
 	// Then copy base object data in to Indicator object
