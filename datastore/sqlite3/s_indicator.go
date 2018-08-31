@@ -21,32 +21,6 @@ import (
 //
 // ----------------------------------------------------------------------
 
-/*
-indicatorProperties  - This function will return the properties for the
-indicator SDO table
-*/
-func indicatorProperties() string {
-	return baseProperties() + `
-	"name" TEXT,
-	"description" TEXT,
-	"pattern" TEXT NOT NULL,
-	"valid_from" TEXT NOT NULL,
-	"valid_until" TEXT
-	`
-	// indicator_types
-	// kill_chain_phases
-}
-
-/*
-indicatorTypeProperties - This function will return the properties for the
-indicator types table
-*/
-func indicatorTypesProperties() string {
-	return baseProperties() + `
-	"indicator_type" TEXT NOT NULL
-	`
-}
-
 // ----------------------------------------------------------------------
 //
 // Private Methods - Indicator Table
