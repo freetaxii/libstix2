@@ -32,7 +32,7 @@ Used by:
   threat actor
 */
 func commonAliasesProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"aliases" TEXT NOT NULL
 	`
 }
@@ -50,7 +50,7 @@ Used by:
   opinion
 */
 func commonAuthorsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"authors" TEXT NOT NULL
 	`
 }
@@ -68,7 +68,7 @@ Used by:
   threat actor
 */
 func commonGoalsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"goals" TEXT NOT NULL
 	`
 }
@@ -88,7 +88,7 @@ maybe this should be called external references hashes.  Otherwise  how will you
 know which object in the database it is tied to.
 */
 func commonHashesProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"hash" TEXT NOT NULL,
 	"value" TEXT NOT NULL
 	`
@@ -109,7 +109,7 @@ Used by:
   tool
 */
 func commonKillChainPhasesProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"kill_chain_name" TEXT NOT NULL,
 	"phase_name" TEXT NOT NULL
 	`
@@ -216,7 +216,7 @@ Used by:
   report
 */
 func commonObjectRefsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"object_refs" TEXT NOT NULL
 	`
 }
@@ -233,7 +233,7 @@ Used by:
   threat actor
 */
 func commonPersonalMotivationsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"personal_motivations" TEXT NOT NULL
 	`
 }
@@ -251,7 +251,7 @@ Used by:
   threat actor
 */
 func commonSecondaryMotivationsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"secondary_motivations" TEXT NOT NULL
 	`
 }

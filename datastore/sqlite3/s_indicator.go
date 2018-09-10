@@ -21,6 +21,32 @@ import (
 //
 // ----------------------------------------------------------------------
 
+/*
+indicatorProperties  - This function will return the properties for the
+indicator SDO table
+*/
+func indicatorProperties() string {
+	return baseDBProperties() + `
+	"name" TEXT,
+	"description" TEXT,
+	"pattern" TEXT NOT NULL,
+	"valid_from" TEXT NOT NULL,
+	"valid_until" TEXT
+	`
+	// indicator_types
+	// kill_chain_phases
+}
+
+/*
+indicatorTypeProperties - This function will return the properties for the
+indicator types table
+*/
+func indicatorTypesProperties() string {
+	return baseDBProperties() + `
+	"indicator_type" TEXT NOT NULL
+	`
+}
+
 // ----------------------------------------------------------------------
 //
 // Private Methods - Indicator Table
@@ -32,7 +58,7 @@ import (
 /*
 addIndicator - This method will add an indicator to the database.
 */
-func (ds *Datastore) addIndicator(obj *indicator.Indicator) error {
+func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 
 	objectID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
@@ -105,7 +131,7 @@ func (ds *Datastore) addIndicator(obj *indicator.Indicator) error {
 getIndicator - This method will get a specific indicator from the database based
 on the STIX ID and version.
 */
-func (ds *Datastore) getIndicator(stixid, version string) (*indicator.Indicator, error) {
+func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, error) {
 	var i indicator.Indicator
 
 	// Get Base Object - this will give us the objectID
@@ -193,7 +219,7 @@ func (ds *Datastore) getIndicator(stixid, version string) (*indicator.Indicator,
 addIndicatorTypes - This method will add all of the indicator types to the
 database for a specific indicator based on its object ID.
 */
-func (ds *Datastore) addIndicatorType(objectID int, itype string) error {
+func (ds *Store) addIndicatorType(objectID int, itype string) error {
 
 	// Create SQL Statement
 	/*

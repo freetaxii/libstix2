@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	baseobject "github.com/freetaxii/libstix2/objects/baseObject"
 )
 
 // ----------------------------------------------------------------------
@@ -24,11 +24,11 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-baseProperties - This method will return the base properties for all objects
+baseDBProperties - This method will return the base properties for all objects
 row_id    = This is a database tracking number
 object_id = This is a unique integer for the STIX object
 */
-func baseProperties() string {
+func baseDBProperties() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
  	"object_id" INTEGER NOT NULL,`
@@ -48,7 +48,7 @@ confidence = an integer 0-100
 lang = An ISO language code
 */
 func baseObjectProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
  	"date_added" TEXT NOT NULL,
  	"type" TEXT NOT NULL,
  	"spec_version" TEXT NOT NULL,
@@ -69,7 +69,7 @@ commonLabelsProperties - This method will return the properties for labels
 Used by: All SDOs and SROs
 */
 func commonLabelsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"label" TEXT NOT NULL
 	`
 }
@@ -79,7 +79,7 @@ commonExternalReferencesProperties - This method will return the properties for 
 Used by: All SDOs and SROs
 */
 func commonExternalReferencesProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"source_name" TEXT NOT NULL,
 	"description" TEXT,
 	"url" TEXT,
@@ -92,7 +92,7 @@ commonObjectMarkingRefsProperties - This method will return the properties for o
 Used by: All SDOs and SROs
 */
 func commonObjectMarkingRefsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"object_marking_refs" TEXT NOT NULL
 	`
 }
@@ -108,7 +108,7 @@ func commonObjectMarkingRefsProperties() string {
 getBaseObjectIndex - This method will return the last object index value from the
 database base object table.
 */
-func (ds *Datastore) getBaseObjectIndex() (int, error) {
+func (ds *Store) getBaseObjectIndex() (int, error) {
 	var index int
 
 	// Create SQL Statement
@@ -154,7 +154,7 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *Datastore) addBaseObject(obj *baseobject.CommonObjectProperties) (int, error) {
+func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	objectID := ds.Cache.BaseObjectIDIndex
@@ -251,9 +251,9 @@ getbaseObject - This method will get a specific base object based on the STIX ID
 and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
-func (ds *Datastore) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
+func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
 
-	var baseObject baseobject.CommonObjectProperties
+	var baseObject baseObject.CommonObjectProperties
 	var objectID int
 	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
 
@@ -374,7 +374,7 @@ func (ds *Datastore) getBaseObject(stixid, version string) (*baseobject.CommonOb
 /*
 addLabel - This method will add a label to the database for a specific object ID.
 */
-func (ds *Datastore) addLabel(objectID int, label string) error {
+func (ds *Store) addLabel(objectID int, label string) error {
 
 	// Create SQL Statement
 	/*
@@ -413,7 +413,7 @@ func (ds *Datastore) addLabel(objectID int, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *Datastore) addExternalReference(objectID int, extref baseobject.ExternalReference) error {
+func (ds *Store) addExternalReference(objectID int, extref baseObject.ExternalReference) error {
 
 	// Create SQL Statement
 	/*
@@ -453,8 +453,8 @@ func (ds *Datastore) addExternalReference(objectID int, extref baseobject.Extern
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *Datastore) getExternalReferences(objectID int) (*baseobject.ExternalReferencesProperty, error) {
-	var extrefs baseobject.ExternalReferencesProperty
+func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalReferencesProperty, error) {
+	var extrefs baseObject.ExternalReferencesProperty
 
 	// Create SQL Statement
 	/*
@@ -519,7 +519,7 @@ func (ds *Datastore) getExternalReferences(objectID int) (*baseobject.ExternalRe
 addObjectMarkingRef - This method will add an object marking ref to the
 database for a specific object ID.
 */
-func (ds *Datastore) addObjectMarkingRef(objectID int, marking string) error {
+func (ds *Store) addObjectMarkingRef(objectID int, marking string) error {
 
 	// Create SQL Statement
 	/*

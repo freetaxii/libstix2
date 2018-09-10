@@ -10,7 +10,7 @@ attackPatternProperties  - This method will return the properties for the
 attack pattern SDO
 */
 func attackPatternProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
@@ -21,7 +21,7 @@ func attackPatternProperties() string {
 campaignProperties  - This method will return the properties for campaign SDOs
 */
 func campaignProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"first_seen" TEXT,
@@ -35,7 +35,7 @@ func campaignProperties() string {
 courseOfActionProperties  - This method will return the properties for course of action SDOs
 */
 func courseOfActionProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
@@ -45,7 +45,7 @@ func courseOfActionProperties() string {
 identityProperties  - This method will return the properties for identity SDOs
 */
 func identityProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"identity_class" TEXT NOT NULL,
@@ -59,34 +59,8 @@ identitySectorsProperties  - This method will return the properties for identity
 Used by: identity
 */
 func identitySectorsProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"sectors" TEXT NOT NULL
-	`
-}
-
-/*
-indicatorProperties  - This function will return the properties for the
-indicator SDO table
-*/
-func indicatorProperties() string {
-	return baseProperties() + `
-	"name" TEXT,
-	"description" TEXT,
-	"pattern" TEXT NOT NULL,
-	"valid_from" TEXT NOT NULL,
-	"valid_until" TEXT
-	`
-	// indicator_types
-	// kill_chain_phases
-}
-
-/*
-indicatorTypeProperties - This function will return the properties for the
-indicator types table
-*/
-func indicatorTypesProperties() string {
-	return baseProperties() + `
-	"indicator_type" TEXT NOT NULL
 	`
 }
 
@@ -94,7 +68,7 @@ func indicatorTypesProperties() string {
 intrusionSetProperties  - This method will return the properties for intrusion set SDOs
 */
 func intrusionSetProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"first_seen" TEXT,
@@ -111,7 +85,7 @@ func intrusionSetProperties() string {
 locationProperties - This method will return the properties for location SDOs
 */
 func locationProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"description" TEXT,
 	"latitude" TEXT,
 	"longitude" TEXT,
@@ -129,7 +103,7 @@ func locationProperties() string {
 malwareProperties  - This method will return the properties for malware SDOs
 */
 func malwareProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`
@@ -140,7 +114,7 @@ func malwareProperties() string {
 noteProperties  - This method will return the properties for note SDOs
 */
 func noteProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"summary" TEXT,
 	"description" TEXT NOT NULL
 	`
@@ -152,7 +126,7 @@ func noteProperties() string {
 observedDataProperties  - This method will return the properties for observed data SDOs
 */
 func observedDataProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"first_observed" TEXT NOT NULL,
 	"last_observed" TEXT NOT NULL,
 	"number_observed" INTEGER NOT NULL,
@@ -164,7 +138,7 @@ func observedDataProperties() string {
 opinionProperties - This method will return the properties for opinion SDOs
 */
 func opinionProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"description" TEXT,
 	"opinion" TEXT
 	`
@@ -176,7 +150,7 @@ func opinionProperties() string {
 reportProperties  - This method will return the properties for report SDOs
 */
 func reportProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"published" TEXT NOT NULL
@@ -188,7 +162,7 @@ func reportProperties() string {
 threatActorProperties  - This method will return the properties for threat actor SDOs
 */
 func threatActorProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"sophistication" TEXT,
@@ -207,7 +181,7 @@ threatActorRolesProperties  - This method will return the properties for threat 
 Used by: threat actor
 */
 func threatActorRolesProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"roles" TEXT NOT NULL
 	`
 }
@@ -216,7 +190,7 @@ func threatActorRolesProperties() string {
 toolProperties  - This method will return the properties for tool SDOs
 */
 func toolProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT,
 	"tool_version" TEXT
@@ -238,7 +212,7 @@ func vocabProperties() string {
 vulnerabilityProperties  - This method will return the properties for vulnerability SDOs
 */
 func vulnerabilityProperties() string {
-	return baseProperties() + `
+	return baseDBProperties() + `
 	"name" TEXT NOT NULL,
 	"description" TEXT
 	`

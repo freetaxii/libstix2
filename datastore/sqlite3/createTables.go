@@ -19,7 +19,7 @@ import (
 CreateTAXIITables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Datastore) CreateTAXIITables() {
+func (ds *Store) CreateTAXIITables() {
 	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTION_DATA, collectionDataProperties())
 	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTIONS, collectionProperties())
 	ds.createTAXIITable(DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE, collectionMediaTypeProperties())
@@ -32,7 +32,7 @@ func (ds *Datastore) CreateTAXIITables() {
 CreateSTIXTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Datastore) CreateSTIXTables() {
+func (ds *Store) CreateSTIXTables() {
 	ds.createSTIXTable(DB_TABLE_STIX_BASE_OBJECT, baseObjectProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_ATTACK_PATTERN, attackPatternProperties())
 	ds.createSTIXTable(DB_TABLE_STIX_CAMPAIGN, campaignProperties())
@@ -69,7 +69,7 @@ func (ds *Datastore) CreateSTIXTables() {
 CreateVocabTables - This method will create all of the tables needed to store
 STIX content in the database.
 */
-func (ds *Datastore) CreateVocabTables() {
+func (ds *Store) CreateVocabTables() {
 	ds.createVocabTable(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabProperties())
 	ds.createVocabTable(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabProperties())
 	ds.createVocabTable(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabProperties())
@@ -87,7 +87,7 @@ func (ds *Datastore) CreateVocabTables() {
 PopulateVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
-func (ds *Datastore) PopulateVocabTables() {
+func (ds *Store) PopulateVocabTables() {
 	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
 	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
 	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
@@ -107,7 +107,7 @@ func (ds *Datastore) PopulateVocabTables() {
 //
 // ----------------------------------------------------------------------
 
-func (ds *Datastore) createTAXIITable(name, properties string) {
+func (ds *Store) createTAXIITable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -116,7 +116,7 @@ func (ds *Datastore) createTAXIITable(name, properties string) {
 	}
 }
 
-func (ds *Datastore) createTAXIIIndexes(name string) {
+func (ds *Store) createTAXIIIndexes(name string) {
 	var stmt string
 
 	if name == DB_TABLE_TAXII_COLLECTION_DATA {
@@ -132,7 +132,7 @@ func (ds *Datastore) createTAXIIIndexes(name string) {
 	}
 }
 
-func (ds *Datastore) insertMediaTypes(name string) {
+func (ds *Store) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
 	var err error
@@ -146,7 +146,7 @@ func (ds *Datastore) insertMediaTypes(name string) {
 	}
 }
 
-func (ds *Datastore) createSTIXTable(name, properties string) {
+func (ds *Store) createSTIXTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -156,7 +156,7 @@ func (ds *Datastore) createSTIXTable(name, properties string) {
 	ds.createSTIXIndexes(name)
 }
 
-func (ds *Datastore) createSTIXIndexes(name string) {
+func (ds *Store) createSTIXIndexes(name string) {
 	var stmt string
 
 	if name == DB_TABLE_STIX_BASE_OBJECT {
@@ -172,7 +172,7 @@ func (ds *Datastore) createSTIXIndexes(name string) {
 	}
 }
 
-func (ds *Datastore) createVocabTable(name, properties string) {
+func (ds *Store) createVocabTable(name, properties string) {
 	var stmt = `CREATE TABLE IF NOT EXISTS "` + name + `" (` + properties + `)`
 	_, err := ds.DB.Exec(stmt)
 
@@ -182,7 +182,7 @@ func (ds *Datastore) createVocabTable(name, properties string) {
 }
 
 // InsertVocabData - This method will add a vocabulary item to its table
-func (ds *Datastore) insertVocabData(name string, data []string) {
+func (ds *Store) insertVocabData(name string, data []string) {
 	var stmt = `INSERT INTO "` + name + `" (value) values (?)`
 
 	var err error

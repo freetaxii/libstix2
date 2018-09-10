@@ -124,7 +124,7 @@ Verify - This method will verify all of the properties on the object.
 func (o *Indicator) Verify() error {
 
 	// Check common base properties first
-	if err := baseobject.VerifyCommonProperties(o.CommonObjectProperties); err != nil {
+	if err := o.CommonObjectProperties.Verify(); err != nil {
 		return err
 	}
 

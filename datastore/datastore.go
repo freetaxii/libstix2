@@ -5,9 +5,7 @@
 
 package datastore
 
-import (
-	"github.com/freetaxii/libstix2/resources"
-)
+import "github.com/freetaxii/libstix2/resources"
 
 /*
 Datastorer - This interface enables access to the STIX/TAXII datastore.
