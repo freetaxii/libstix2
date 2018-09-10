@@ -15,10 +15,6 @@ import (
 func main() {
 	i := indicator.New()
 
-	// The other option is to do
-	// var i objects.Indicator
-	// i.New()
-
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
 	i.AddType("compromised")
@@ -30,6 +26,6 @@ func main() {
 	i.SetValidFrom(time.Now())
 	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 
-	data, _ := i.Encode()
-	fmt.Println(string(data))
+	data, _ := i.EncodeToString()
+	fmt.Println(data)
 }

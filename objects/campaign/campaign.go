@@ -80,7 +80,7 @@ func Decode(data []byte) (*Campaign, error) {
 		return nil, err
 	}
 
-	if err := baseobject.VerifyCommonProperties(o.CommonObjectProperties); err != nil {
+	if err := o.CommonObjectProperties.Verify(); err != nil {
 		return nil, err
 	}
 
