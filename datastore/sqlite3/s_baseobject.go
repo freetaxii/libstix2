@@ -339,7 +339,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 		}
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
-	baseObj.SetObjectID(objectID)
+	baseObj.SetDatabaseID(objectID)
 	baseObj.SetObjectType(objectType)
 	baseObj.SetSpecVersion(specVersion)
 	baseObj.SetID(id)

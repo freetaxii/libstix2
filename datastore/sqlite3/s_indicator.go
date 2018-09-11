@@ -60,11 +60,11 @@ addIndicator - This method will add an indicator to the database.
 */
 func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 
-	objectID, err := ds.addBaseObject(&obj.CommonObjectProperties)
+	databaseID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
 		return err
 	}
-	ds.Logger.Debugln("DEBUG: Adding Indicator to datastore with object ID", objectID)
+	ds.Logger.Debugln("DEBUG: Adding Indicator to datastore with database ID", databaseID)
 
 	// Create SQL Statement
 	/*
@@ -89,7 +89,7 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 
 	// Make SQL Call
 	_, err1 := ds.DB.Exec(stmt,
-		objectID,
+		databaseID,
 		obj.Name,
 		obj.Description,
 		obj.Pattern,
@@ -106,7 +106,7 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 	// ----------------------------------------------------------------------
 	if obj.IndicatorTypes != nil {
 		for _, itype := range obj.IndicatorTypes {
-			err := ds.addIndicatorType(objectID, itype)
+			err := ds.addIndicatorType(databaseID, itype)
 			if err != nil {
 				return err
 			}
@@ -118,7 +118,7 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 	// ----------------------------------------------------------------------
 	if obj.KillChainPhases != nil {
 		for _, v := range obj.KillChainPhases {
-			err := ds.addKillChainPhase(objectID, &v)
+			err := ds.addKillChainPhase(databaseID, &v)
 			if err != nil {
 				return err
 			}
@@ -134,7 +134,7 @@ on the STIX ID and version.
 func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, error) {
 	var i indicator.Indicator
 
-	// Get Base Object - this will give us the objectID
+	// Get Base Object - this will give us the databaseID
 	// Then copy base object data in to Indicator object
 	baseObject, errBase := ds.getBaseObject(stixid, version)
 	if errBase != nil {
@@ -192,7 +192,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 
 	// Make SQL Call
 	var name, description, pattern, validFrom, validUntil, indTypes string
-	err := ds.DB.QueryRow(stmt, i.ObjectID).Scan(&name, &description, &pattern, &validFrom, &validUntil, &indTypes)
+	err := ds.DB.QueryRow(stmt, i.DatabaseID).Scan(&name, &description, &pattern, &validFrom, &validUntil, &indTypes)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("no indicator record found")
@@ -206,7 +206,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	i.SetValidFrom(validFrom)
 	i.SetValidUntil(validUntil)
 
-	killChainPhases, errkc := ds.getKillChainPhases(i.ObjectID)
+	killChainPhases, errkc := ds.getKillChainPhases(i.DatabaseID)
 	if errkc != nil {
 		return nil, errkc
 	}
@@ -217,9 +217,9 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 
 /*
 addIndicatorTypes - This method will add all of the indicator types to the
-database for a specific indicator based on its object ID.
+database for a specific indicator based on its database ID.
 */
-func (ds *Store) addIndicatorType(objectID int, itype string) error {
+func (ds *Store) addIndicatorType(databaseID int, itype string) error {
 
 	// Create SQL Statement
 	/*
@@ -238,7 +238,7 @@ func (ds *Store) addIndicatorType(objectID int, itype string) error {
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	_, err := ds.DB.Exec(stmt, objectID, itype)
+	_, err := ds.DB.Exec(stmt, databaseID, itype)
 	if err != nil {
 		return fmt.Errorf("database execution error inserting indicator type: ", err)
 	}

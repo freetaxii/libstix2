@@ -45,7 +45,7 @@ CommonObjectProperties - This type includes all of the common properties
 that are used by all STIX SDOs and SROs
 */
 type CommonObjectProperties struct {
-	ObjectIDProperty
+	DatabaseIDProperty
 	CommonBaseProperties
 	LabelsProperty
 	ConfidenceProperty
@@ -56,7 +56,7 @@ type CommonObjectProperties struct {
 }
 
 type CommonLanguageContentProperties struct {
-	ObjectIDProperty
+	DatabaseIDProperty
 	CommonBaseProperties
 	LabelsProperty
 	ConfidenceProperty
@@ -72,7 +72,7 @@ the CommonBaseProperties even though the Modified and Revoked properties are
 not technically valid for this object.
 */
 type CommonMarkingDefinitionProperties struct {
-	ObjectIDProperty
+	DatabaseIDProperty
 	CommonBaseProperties
 	ExternalReferencesProperty
 	MarkingProperties
