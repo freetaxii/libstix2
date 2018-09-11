@@ -34,7 +34,7 @@ the collection content table
 date_added    = The date that this object was added to the collection
 collection_id = The collection ID that this object is tied to
 stix_id       = The STIX ID for the object that is being mapped to a collection.
-  We do not use the object_id here or the row_id as that would point to a
+  We do not use the datastore_id here or the row_id as that would point to a
   specific version and we need to be able to find all versions of an object.
   and if we used row_id for example, it would require two queries, the first
   to get the SITX ID and then the second to get all objects with that STIX ID.

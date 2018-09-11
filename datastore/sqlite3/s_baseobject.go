@@ -26,12 +26,12 @@ import (
 /*
 baseDBProperties - This method will return the base properties for all objects
 row_id    = This is a database tracking number
-object_id = This is a unique integer for the STIX object
+datastore_id = This is a unique integer for the STIX object
 */
 func baseDBProperties() string {
 	return `
 	"row_id" INTEGER PRIMARY KEY,
- 	"object_id" INTEGER NOT NULL,`
+ 	"datastore_id" INTEGER NOT NULL,`
 }
 
 /*
@@ -114,19 +114,19 @@ func (ds *Store) getBaseObjectIndex() (int, error) {
 	// Create SQL Statement
 	/*
 		SELECT
-			object_id
+			datastore_id
 		FROM
 			t_base_object
 		ORDER BY
-			object_id DESC LIMIT 1
+			datastore_id DESC LIMIT 1
 	*/
 	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("SELECT ")
-	sqlstmt.WriteString("object_id ")
+	sqlstmt.WriteString("datastore_id ")
 	sqlstmt.WriteString("FROM ")
 	sqlstmt.WriteString(tblBaseObj)
-	sqlstmt.WriteString(" ORDER BY object_id DESC LIMIT 1")
+	sqlstmt.WriteString(" ORDER BY datastore_id DESC LIMIT 1")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
@@ -157,16 +157,16 @@ relationships.
 func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, error) {
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
-	objectID := ds.Cache.BaseObjectIDIndex
+	datastoreID := ds.Cache.BaseObjectIDIndex
 	ds.Cache.BaseObjectIDIndex++
 
-	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", objectID, "and STIX ID", obj.ID)
+	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", datastoreID, "and STIX ID", obj.ID)
 
 	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_base_object (
-				"object_id",
+				"datastore_id",
 				"date_added",
 				"type",
 				"spec_version",
@@ -184,13 +184,13 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("INSERT INTO ")
 	sqlstmt.WriteString(tblBaseObj)
-	sqlstmt.WriteString(" (object_id, date_added, type, spec_version, id, created_by_ref, created, modified, revoked, confidence, lang) ")
+	sqlstmt.WriteString(" (datastore_id, date_added, type, spec_version, id, created_by_ref, created, modified, revoked, confidence, lang) ")
 	sqlstmt.WriteString("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	stmt1 := sqlstmt.String()
 
 	// Make SQL Call
 	_, err1 := ds.DB.Exec(stmt1,
-		objectID,
+		datastoreID,
 		dateAdded,
 		obj.ObjectType,
 		obj.SpecVersion,
@@ -211,7 +211,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 	// ----------------------------------------------------------------------
 	if obj.Labels != nil {
 		for _, label := range obj.Labels {
-			err2 := ds.addLabel(objectID, label)
+			err2 := ds.addLabel(datastoreID, label)
 			if err2 != nil {
 				return 0, err2
 			}
@@ -223,7 +223,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 	// ----------------------------------------------------------------------
 	if obj.ExternalReferences != nil {
 		for _, reference := range obj.ExternalReferences {
-			err3 := ds.addExternalReference(objectID, reference)
+			err3 := ds.addExternalReference(datastoreID, reference)
 			if err3 != nil {
 				return 0, err3
 			}
@@ -235,7 +235,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 	// ----------------------------------------------------------------------
 	if obj.ObjectMarkingRefs != nil {
 		for _, marking := range obj.ObjectMarkingRefs {
-			err4 := ds.addObjectMarkingRef(objectID, marking)
+			err4 := ds.addObjectMarkingRef(datastoreID, marking)
 
 			if err4 != nil {
 				return 0, err4
@@ -243,7 +243,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 		}
 	}
 
-	return objectID, nil
+	return datastoreID, nil
 }
 
 /*
@@ -254,7 +254,7 @@ a get method on a STIX object (for example: getIndicator).
 func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
 
 	var baseObj baseobject.CommonObjectProperties
-	var objectID int
+	var datastoreID int
 	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
 
 	// Since not every object will have a label, and since we are using group_concat
@@ -265,7 +265,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	// Create SQL Statement
 	/*
 		SELECT
-			s_base_object.object_id,
+			s_base_object.datastore_id,
 			s_base_object.date_added,
 			s_base_object.type,
 			s_base_object.spec_version,
@@ -281,7 +281,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 			s_base_object
 		JOIN
 			s_labels ON
-			s_base_object.object_id = s_labels.object_id
+			s_base_object.datastore_id = s_labels.datastore_id
 		WHERE
 			s_base_object.id = $1 AND
 			s_base_object.modified = $2
@@ -291,7 +291,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("SELECT ")
 	sqlstmt.WriteString(tblBaseObj)
-	sqlstmt.WriteString(".object_id, ")
+	sqlstmt.WriteString(".datastore_id, ")
 	sqlstmt.WriteString(tblBaseObj)
 	sqlstmt.WriteString(".date_added, ")
 	sqlstmt.WriteString(tblBaseObj)
@@ -321,9 +321,9 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	sqlstmt.WriteString(tblLabels)
 	sqlstmt.WriteString(" ON ")
 	sqlstmt.WriteString(tblBaseObj)
-	sqlstmt.WriteString(".object_id = ")
+	sqlstmt.WriteString(".datastore_id = ")
 	sqlstmt.WriteString(tblLabels)
-	sqlstmt.WriteString(".object_id ")
+	sqlstmt.WriteString(".datastore_id ")
 	sqlstmt.WriteString("WHERE ")
 	sqlstmt.WriteString(tblBaseObj)
 	sqlstmt.WriteString(".id = $1 AND ")
@@ -332,14 +332,14 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&objectID, &dateAdded, &objectType, &specVersion, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
+	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&datastoreID, &dateAdded, &objectType, &specVersion, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("no base object record found")
 		}
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
-	baseObj.SetDatabaseID(objectID)
+	baseObj.SetDatastoreID(datastoreID)
 	baseObj.SetObjectType(objectType)
 	baseObj.SetSpecVersion(specVersion)
 	baseObj.SetID(id)
@@ -355,7 +355,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 		baseObj.AddLabel(*label)
 	}
 
-	externalRefData, err1 := ds.getExternalReferences(objectID)
+	externalRefData, err1 := ds.getExternalReferences(datastoreID)
 	if err1 != nil {
 		return nil, err1
 	}
@@ -374,13 +374,13 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 /*
 addLabel - This method will add a label to the database for a specific object ID.
 */
-func (ds *Store) addLabel(objectID int, label string) error {
+func (ds *Store) addLabel(datastoreID int, label string) error {
 
 	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_labels (
-				"object_id",
+				"datastore_id",
 				"label"
 			)
 			values (?, ?)
@@ -389,11 +389,11 @@ func (ds *Store) addLabel(objectID int, label string) error {
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("INSERT INTO ")
 	sqlstmt.WriteString(tblLabels)
-	sqlstmt.WriteString(" (object_id, label) values (?, ?)")
+	sqlstmt.WriteString(" (datastore_id, label) values (?, ?)")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	_, err := ds.DB.Exec(stmt, objectID, label)
+	_, err := ds.DB.Exec(stmt, datastoreID, label)
 
 	if err != nil {
 		return fmt.Errorf("database execution error inserting object label: ", err)
@@ -413,13 +413,13 @@ func (ds *Store) addLabel(objectID int, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *Store) addExternalReference(objectID int, extref baseobject.ExternalReference) error {
+func (ds *Store) addExternalReference(datastoreID int, extref baseobject.ExternalReference) error {
 
 	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_external_references (
-				"object_id",
+				"datastore_id",
 				"source_name",
 				"description",
 				"url",
@@ -431,13 +431,13 @@ func (ds *Store) addExternalReference(objectID int, extref baseobject.ExternalRe
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("INSERT INTO ")
 	sqlstmt.WriteString(tblExtRef)
-	sqlstmt.WriteString(" (object_id, source_name, description, url, external_id) ")
+	sqlstmt.WriteString(" (datastore_id, source_name, description, url, external_id) ")
 	sqlstmt.WriteString("values (?, ?, ?, ?, ?)")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt,
-		objectID,
+		datastoreID,
 		extref.SourceName,
 		extref.Description,
 		extref.URL,
@@ -453,7 +453,7 @@ func (ds *Store) addExternalReference(objectID int, extref baseobject.ExternalRe
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalReferencesProperty, error) {
+func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalReferencesProperty, error) {
 	var extrefs baseobject.ExternalReferencesProperty
 
 	// Create SQL Statement
@@ -466,7 +466,7 @@ func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalRefere
 		FROM
 			s_external_references
 		WHERE
-			object_id = $1
+			datastore_id = $1
 	*/
 	tblExtRef := DB_TABLE_STIX_EXTERNAL_REFERENCES
 	var sqlstmt bytes.Buffer
@@ -474,11 +474,11 @@ func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalRefere
 	sqlstmt.WriteString("source_name, description, url, external_id ")
 	sqlstmt.WriteString("FROM ")
 	sqlstmt.WriteString(tblExtRef)
-	sqlstmt.WriteString(" WHERE object_id = $1")
+	sqlstmt.WriteString(" WHERE datastore_id = $1")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	rows, err := ds.DB.Query(stmt, objectID)
+	rows, err := ds.DB.Query(stmt, datastoreID)
 	if err != nil {
 		return nil, fmt.Errorf("database execution error getting external reference: ", err)
 	}
@@ -519,13 +519,13 @@ func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalRefere
 addObjectMarkingRef - This method will add an object marking ref to the
 database for a specific object ID.
 */
-func (ds *Store) addObjectMarkingRef(objectID int, marking string) error {
+func (ds *Store) addObjectMarkingRef(datastoreID int, marking string) error {
 
 	// Create SQL Statement
 	/*
 		INSERT INTO
 			s_object_marking_refs (
-				"object_id",
+				"datastore_id",
 				"object_marking_refs"
 			)
 			values (?, ?)
@@ -534,11 +534,11 @@ func (ds *Store) addObjectMarkingRef(objectID int, marking string) error {
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("INSERT INTO ")
 	sqlstmt.WriteString(tblObjMarking)
-	sqlstmt.WriteString(" (object_id, object_marking_refs) values (?, ?)")
+	sqlstmt.WriteString(" (datastore_id, object_marking_refs) values (?, ?)")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	_, err := ds.DB.Exec(stmt, objectID, marking)
+	_, err := ds.DB.Exec(stmt, datastoreID, marking)
 
 	if err != nil {
 		return fmt.Errorf("database execution error inserting object marking ref: ", err)

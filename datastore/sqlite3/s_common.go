@@ -125,7 +125,7 @@ func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase)
 	/*
 		INSERT INTO
 			s_kill_chain_phases (
-				"object_id",
+				"datastore_id",
 				"kill_chain_name",
 				"phase_name"
 			)
@@ -135,7 +135,7 @@ func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase)
 	var sqlstmt bytes.Buffer
 	sqlstmt.WriteString("INSERT INTO ")
 	sqlstmt.WriteString(tblKillChain)
-	sqlstmt.WriteString(" (object_id, kill_chain_name, phase_name) values (?, ?, ?)")
+	sqlstmt.WriteString(" (datastore_id, kill_chain_name, phase_name) values (?, ?, ?)")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
@@ -162,7 +162,7 @@ func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesPr
 		FROM
 			s_kill_chain_phases
 		WHERE
-			object_id = ?
+			datastore_id = ?
 	*/
 	tblKCP := DB_TABLE_STIX_KILL_CHAIN_PHASES
 	var sqlstmt bytes.Buffer
@@ -170,7 +170,7 @@ func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesPr
 	sqlstmt.WriteString("kill_chain_name, phase_name ")
 	sqlstmt.WriteString("FROM ")
 	sqlstmt.WriteString(tblKCP)
-	sqlstmt.WriteString(" WHERE object_id = ?")
+	sqlstmt.WriteString(" WHERE datastore_id = ?")
 	stmt := sqlstmt.String()
 
 	// Make SQL Call

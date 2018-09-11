@@ -10,30 +10,30 @@ package baseobject
 // ----------------------------------------------------------------------
 
 /*
-DatabaseIDProperty - A property used by all STIX objects that captures the
+DatastoreIDProperty - A property used by all STIX objects that captures the
 unique database ID for this object. This is not included in the JSON
 serialization, but is used with some datastores.
 */
-type DatabaseIDProperty struct {
-	DatabaseID int `json:"-"`
+type DatastoreIDProperty struct {
+	DatastoreID int `json:"-"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - DatabaseIDProperty
+// Public Methods - DatastoreIDProperty
 // ----------------------------------------------------------------------
 
 /*
-SetDatabaseID - This method takes in a int representing the database ID and
-updates the DatabaseID property.
+SetDatastoreID - This method takes in a int representing the database ID and
+updates the DatastoreID property.
 */
-func (o *DatabaseIDProperty) SetDatabaseID(i int) error {
-	o.DatabaseID = i
+func (o *DatastoreIDProperty) SetDatastoreID(i int) error {
+	o.DatastoreID = i
 	return nil
 }
 
 /*
-GetDatabaseID - This method returns the database ID value.
+GetDatastoreID - This method returns the database ID value.
 */
-func (o *DatabaseIDProperty) GetDatabaseID() int {
-	return o.DatabaseID
+func (o *DatastoreIDProperty) GetDatastoreID() int {
+	return o.DatastoreID
 }

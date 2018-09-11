@@ -288,7 +288,7 @@ func (ds *Store) initCache() error {
 	ds.Cache.Collections = make(map[string]*resources.Collection)
 
 	// Get current index value of the s_base_object table so new records being
-	// added can use it as their object_id. By using an integer here instead
+	// added can use it as their datastore_id. By using an integer here instead
 	// of the full STIX ID, we can save significant amounts of space.
 	// TODO - fix this once I setup my own error type
 	baseObjectIndex, err := ds.getBaseObjectIndex()
