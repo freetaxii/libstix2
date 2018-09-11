@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	baseobject "github.com/freetaxii/libstix2/objects/baseObject"
+	"github.com/freetaxii/libstix2/objects/baseobject"
 )
 
 // ----------------------------------------------------------------------
@@ -253,7 +253,7 @@ a get method on a STIX object (for example: getIndicator).
 */
 func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
 
-	var baseObject baseObject.CommonObjectProperties
+	var baseObj baseobject.CommonObjectProperties
 	var objectID int
 	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
 
@@ -339,29 +339,29 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 		}
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
-	baseObject.SetObjectID(objectID)
-	baseObject.SetObjectType(objectType)
-	baseObject.SetSpecVersion(specVersion)
-	baseObject.SetID(id)
-	baseObject.SetCreatedByRef(createdByRef)
-	baseObject.SetCreated(created)
-	baseObject.SetModified(modified)
+	baseObj.SetObjectID(objectID)
+	baseObj.SetObjectType(objectType)
+	baseObj.SetSpecVersion(specVersion)
+	baseObj.SetID(id)
+	baseObj.SetCreatedByRef(createdByRef)
+	baseObj.SetCreated(created)
+	baseObj.SetModified(modified)
 	if revoked == 1 {
-		baseObject.SetRevoked()
+		baseObj.SetRevoked()
 	}
-	baseObject.SetConfidence(confidence)
-	baseObject.SetLang(lang)
+	baseObj.SetConfidence(confidence)
+	baseObj.SetLang(lang)
 	if label != nil {
-		baseObject.AddLabel(*label)
+		baseObj.AddLabel(*label)
 	}
 
 	externalRefData, err1 := ds.getExternalReferences(objectID)
 	if err1 != nil {
 		return nil, err1
 	}
-	baseObject.ExternalReferencesProperty = *externalRefData
+	baseObj.ExternalReferencesProperty = *externalRefData
 
-	return &baseObject, nil
+	return &baseObj, nil
 }
 
 // ----------------------------------------------------------------------
@@ -413,7 +413,7 @@ func (ds *Store) addLabel(objectID int, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *Store) addExternalReference(objectID int, extref baseObject.ExternalReference) error {
+func (ds *Store) addExternalReference(objectID int, extref baseobject.ExternalReference) error {
 
 	// Create SQL Statement
 	/*
@@ -454,7 +454,7 @@ getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
 func (ds *Store) getExternalReferences(objectID int) (*baseobject.ExternalReferencesProperty, error) {
-	var extrefs baseObject.ExternalReferencesProperty
+	var extrefs baseobject.ExternalReferencesProperty
 
 	// Create SQL Statement
 	/*

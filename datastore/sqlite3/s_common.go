@@ -119,7 +119,7 @@ func commonKillChainPhasesProperties() string {
 addKillChainPhase - This method will add a kill chain phase for a given object
 to the database.
 */
-func (ds *Datastore) addKillChainPhase(objectID int, obj *properties.KillChainPhase) error {
+func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase) error {
 
 	// Create SQL Statement
 	/*
@@ -151,7 +151,7 @@ func (ds *Datastore) addKillChainPhase(objectID int, obj *properties.KillChainPh
 getKillChainPhases - This method will get the kill chain phases for a given
 object ID.
 */
-func (ds *Datastore) getKillChainPhases(objectID int) (*properties.KillChainPhasesProperty, error) {
+func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesProperty, error) {
 	var kcPhases properties.KillChainPhasesProperty
 
 	// Create SQL Statement

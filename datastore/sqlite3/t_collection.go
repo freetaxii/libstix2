@@ -137,7 +137,7 @@ func sqlAddCollectionMediaType() (string, error) {
 addCollection - This method will add a collection to the t_collections table in
 the database.
 */
-func (ds *Datastore) addCollection(obj *resources.Collection) error {
+func (ds *Store) addCollection(obj *resources.Collection) error {
 	ds.Logger.Traceln("TRACE addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
@@ -316,7 +316,7 @@ The HTTP Router MUX needs to know about all enabled collections, even those that
 are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
-func (ds *Datastore) getCollections(whichCollections string) (*resources.Collections, error) {
+func (ds *Store) getCollections(whichCollections string) (*resources.Collections, error) {
 	ds.Logger.Traceln("TRACE getCollections(): Start")
 	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
 

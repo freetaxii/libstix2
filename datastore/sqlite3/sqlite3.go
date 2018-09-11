@@ -38,7 +38,7 @@ type Store struct {
 	Logger   *log.Logger
 	Cache    struct {
 		BaseObjectIDIndex int
-		//Collections       map[string]*resources.Collection
+		Collections       map[string]*resources.Collection
 	}
 	Strict struct {
 		IDs   bool
@@ -285,7 +285,7 @@ initCache - This method will populate the datastore cache.
 */
 func (ds *Store) initCache() error {
 	ds.Logger.Traceln("TRACE initCache(): Start ")
-	//ds.Cache.Collections = make(map[string]*resources.Collection)
+	ds.Cache.Collections = make(map[string]*resources.Collection)
 
 	// Get current index value of the s_base_object table so new records being
 	// added can use it as their object_id. By using an integer here instead
@@ -300,7 +300,7 @@ func (ds *Store) initCache() error {
 	ds.Logger.Debugln("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
 
 	// Populate the collections cache
-	//ds.Cache.Collections = make(map[string]*resources.Collection)
+	ds.Cache.Collections = make(map[string]*resources.Collection)
 
 	// Lets initialize the collections cache from the datastore
 	allCollections, err := ds.GetAllCollections()
