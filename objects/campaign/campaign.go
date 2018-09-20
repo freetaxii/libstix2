@@ -7,6 +7,7 @@ package campaign
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/freetaxii/libstix2/objects/baseobject"
 	"github.com/freetaxii/libstix2/objects/properties"
@@ -69,29 +70,72 @@ func New() *Campaign {
 	return &obj
 }
 
+// ----------------------------------------------------------------------
+// Public Methods - Campaign - Core Functionality
+// ----------------------------------------------------------------------
+
 /*
 Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer.
+into an actual struct. It will return the object as a pointer, the STIX ID, and
+any errors.
 */
-func Decode(data []byte) (*Campaign, error) {
+func Decode(data []byte) (*Campaign, string, error) {
 	var o Campaign
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	if err := o.CommonObjectProperties.Verify(); err != nil {
-		return nil, err
+	if err := o.Verify(); err != nil {
+		return nil, "", err
 	}
 
 	o.SetRawData(data)
-	return &o, nil
+	return &o, o.ID, nil
+
+}
+
+/*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Campaign) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Campaign) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+/*
+Verify - This method will verify all of the properties on the object.
+*/
+func (o *Campaign) Verify() error {
+
+	// Check common base properties first
+	if err := o.CommonObjectProperties.Verify(); err != nil {
+		return err
+	}
+
+	if o.Name == "" {
+		return errors.New("the name property is required, but missing")
+	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - Campaign
-//
 // ----------------------------------------------------------------------
 
 /*

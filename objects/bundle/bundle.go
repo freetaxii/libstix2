@@ -7,7 +7,6 @@ package bundle
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 
@@ -46,19 +45,17 @@ should not assume that other implementations will treat it as a persistent
 object.
 */
 type Bundle struct {
-	baseobject.CommonBundleProperties
+	baseobject.CommonBaseProperties
 	Objects []interface{} `json:"objects,omitempty"`
 }
 
-type BundleDecode struct {
-	baseobject.CommonBundleProperties
+type BundleRawDecode struct {
+	baseobject.CommonBaseProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -73,23 +70,21 @@ func New() *Bundle {
 	return &obj
 }
 
+// ----------------------------------------------------------------------
+// Public Methods - Bundle - Core Functionality
+// ----------------------------------------------------------------------
+
 /*
-Decode - This function will decode the outer later of a bundle and stop
+DecodeRaw - This function will decode the outer later of a bundle and stop
 processing when it gets to the objects. It will leave the objects as a slice of
 json.RawMessage objects. This way, later on, we can decode each one individually
 */
-func Decode(r io.Reader) (*BundleDecode, error) {
-	var b BundleDecode
+func DecodeRaw(r io.Reader) (*BundleRawDecode, error) {
+	var b BundleRawDecode
 	err := json.NewDecoder(r).Decode(&b)
 	if err != nil {
 		return nil, err
 	}
-
-	// // Check to make sure the object type is valid.
-	// if err := b.CommonBundleProperties.TypeProperty.Verify(); err != nil {
-	// 	return nil, err
-	// }
-
 	return &b, nil
 }
 
@@ -98,14 +93,15 @@ DecodeObjectType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
 func DecodeObjectType(data []byte) (string, error) {
-	var o baseobject.CommonObjectProperties
+	var o baseobject.CommonBaseProperties
 	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return "", err
 	}
 
-	if o.ObjectType == "" {
-		return "", errors.New("Invalid STIX object: object type is missing")
+	err1 := o.Verify()
+	if err1 != nil {
+		return "", fmt.Errorf("invalid STIX object: %s", err1)
 	}
 
 	return o.ObjectType, nil
@@ -128,57 +124,38 @@ func DecodeObject(data []byte) (interface{}, string, error) {
 
 	switch stixtype {
 	case "campaign":
-		o, err := campaign.Decode(data)
-		if err != nil {
-			return nil, "", err
-		}
-		return o, o.ID, nil
+		return campaign.Decode(data)
 	case "indicator":
-		o, err := indicator.Decode(data)
-		if err != nil {
-			return nil, "", err
-		}
-		return o, o.ID, nil
+		return indicator.Decode(data)
 	case "infrastructure":
 		var o infrastructure.Infrastructure
 		err = json.Unmarshal(data, &o)
-		fmt.Println(o.ID)
-		return o, "", nil
+		return o, o.ID, nil
 	case "malware":
 		var o malware.Malware
 		err = json.Unmarshal(data, &o)
-		fmt.Println(o.ID)
-		return o, "", nil
+		return o, o.ID, nil
 	case "observed-data":
 		var o observeddata.ObservedData
 		err = json.Unmarshal(data, &o)
-		fmt.Println(o.ID)
-		return o, "", nil
+		return o, o.ID, nil
 	case "relationship":
 		var o relationship.Relationship
 		err = json.Unmarshal(data, &o)
-		fmt.Println(o.ID)
-		return o, "", nil
+		return o, o.ID, nil
 	case "sighting":
 		var o sighting.Sighting
 		err = json.Unmarshal(data, &o)
-		fmt.Println(o.ID)
-		return o, "", nil
+		return o, o.ID, nil
 	}
 	//TODO add a default that just stores the custom object
 	return nil, "", nil
 }
 
-// ----------------------------------------------------------------------
-//
-// Public Methods - Bundle
-//
-// ----------------------------------------------------------------------
-
 /*
 Encode - This method is a simple wrapper for encoding an object in to JSON
 */
-func (o *BundleDecode) Encode() ([]byte, error) {
+func (o *Bundle) Encode() ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
@@ -189,13 +166,19 @@ func (o *BundleDecode) Encode() ([]byte, error) {
 /*
 EncodeToString - This method is a simple wrapper for encoding an object in to JSON
 */
-func (o *BundleDecode) EncodeToString() (string, error) {
+func (o *Bundle) EncodeToString() (string, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return "", err
 	}
 	return string(data), nil
 }
+
+// ----------------------------------------------------------------------
+//
+// Public Methods - Bundle
+//
+// ----------------------------------------------------------------------
 
 /*
 AddObject - This method will take in an object as an interface and add it to

@@ -79,21 +79,22 @@ func New() *Indicator {
 
 /*
 Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer.
+into an actual struct. It will return the object as a pointer, the STIX ID, and
+any errors.
 */
-func Decode(data []byte) (*Indicator, error) {
+func Decode(data []byte) (*Indicator, string, error) {
 	var o Indicator
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	if err := o.Verify(); err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	o.SetRawData(data)
-	return &o, nil
+	return &o, o.ID, nil
 }
 
 /*
@@ -129,17 +130,17 @@ func (o *Indicator) Verify() error {
 	}
 
 	if len(o.IndicatorTypes) == 0 {
-		return errors.New("The indicator type property is required, but missing")
+		return errors.New("the indicator types property is required, but missing")
 	}
 
 	if o.Pattern == "" {
-		return errors.New("The pattern property is required, but missing")
+		return errors.New("the pattern property is required, but missing")
 	} else {
 		// TODO verify the pattern is correct
 	}
 
 	if o.ValidFrom == "" {
-		return errors.New("The valid from property is required, but missing")
+		return errors.New("the valid from property is required, but missing")
 	} else {
 		// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
 	}
