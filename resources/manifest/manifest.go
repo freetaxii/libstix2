@@ -1,18 +1,16 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package resources
+package manifest
 
 import (
 	"github.com/freetaxii/libstix2/resources/properties"
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Message Type
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -61,23 +59,21 @@ type ManifestEntry struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
 /*
-NewManifest - This function will create a new TAXII Manifest object and return
-it as a pointer.
+New - This function will create a new TAXII Manifest object and return it as a
+pointer.
 */
-func NewManifest() *Manifest {
+func New() *Manifest {
 	var obj Manifest
 	return &obj
 }
 
 /*
-NewManifestEntry - This function will create a new TAXII Manifest Entry object
-and return it as a pointer.
+NewManifestEntry - This function will create a new TAXII Manifest Entry object and
+return it as a pointer.
 */
 func NewManifestEntry() *ManifestEntry {
 	var obj ManifestEntry
@@ -85,9 +81,7 @@ func NewManifestEntry() *ManifestEntry {
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - Manifest
-//
 // ----------------------------------------------------------------------
 
 /*

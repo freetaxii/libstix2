@@ -1,18 +1,16 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package resources
+package discovery
 
 import (
 	"github.com/freetaxii/libstix2/resources/properties"
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Message Type
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -48,24 +46,20 @@ type Discovery struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
 /*
-NewDiscovery - This function will create a new TAXII Discovery object and return
-it as a pointer.
+New - This function will create a new TAXII Discovery object and return it as a
+pointer.
 */
-func NewDiscovery() *Discovery {
+func New() *Discovery {
 	var obj Discovery
 	return &obj
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - Discovery
-//
 // ----------------------------------------------------------------------
 
 /*

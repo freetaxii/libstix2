@@ -1,4 +1,4 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -9,13 +9,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/resources/discovery"
 )
 
 func main() {
-	//d := resources.InitDiscovery()
 
-	var d resources.DiscoveryType
+	var d discovery.Discovery
 
 	d.SetTitle("FreeTAXII Discovery Service")
 	d.SetDescription("This service will display API roots that this TAXII knows about.")

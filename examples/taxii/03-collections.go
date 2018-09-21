@@ -1,4 +1,4 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -9,11 +9,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/resources/collections"
 )
 
 func main() {
-	o := resources.NewCollections()
+	o := collections.New()
 
 	c, _ := o.NewCollection()
 	c.SetNewID()

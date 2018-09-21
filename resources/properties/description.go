@@ -1,4 +1,4 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,9 +6,7 @@
 package properties
 
 // ----------------------------------------------------------------------
-//
 // Types
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -19,14 +17,12 @@ type DescriptionProperty struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - DescriptionProperty
-//
 // ----------------------------------------------------------------------
 
 /*
 SetDescription - This method takes in a string value representing a text
-description and udpates the description property.
+description and updates the description property.
 */
 func (p *DescriptionProperty) SetDescription(s string) error {
 	p.Description = s

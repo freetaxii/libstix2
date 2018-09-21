@@ -1,18 +1,16 @@
-// Copyright 2017 Bret Jordan, All rights reserved.
+// Copyright 2018 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package resources
+package apiroot
 
 import (
 	"github.com/freetaxii/libstix2/resources/properties"
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Message Type
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -41,24 +39,20 @@ type APIRoot struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
 /*
-NewAPIRoot - This function will create a new TAXII API Root object and return
-it as a pointer.
+New - This function will create a new TAXII API Root object and return it as a
+pointer.
 */
-func NewAPIRoot() *APIRoot {
+func New() *APIRoot {
 	var obj APIRoot
 	return &obj
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - APIRoot
-//
 // ----------------------------------------------------------------------
 
 /*
