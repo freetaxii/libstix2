@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/resources/collections"
 	"github.com/freetaxii/libstix2/stixid"
 	"github.com/gologme/log"
 	_ "github.com/mattn/go-sqlite3"
@@ -38,7 +38,7 @@ type Store struct {
 	Logger   *log.Logger
 	Cache    struct {
 		BaseObjectIDIndex int
-		Collections       map[string]*resources.Collection
+		Collections       map[string]*collections.Collection
 	}
 	Strict struct {
 		IDs   bool
@@ -158,12 +158,9 @@ func (ds *Store) AddTAXIIObject(obj interface{}) error {
 	var err error
 
 	switch o := obj.(type) {
-	case *resources.Collection:
+	case *collections.Collection:
 		ds.Logger.Debugln("DEBUG: Adding TAXII Collection to datastore")
 		err = ds.addCollection(o)
-	case *resources.CollectionRecord:
-		ds.Logger.Debugln("DEBUG: Adding TAXII Collection Record to datastore")
-		err = ds.addObjectToCollection(o)
 	default:
 		err = fmt.Errorf("does not match any known types ", o)
 	}
@@ -186,7 +183,7 @@ GetAllCollections - This method will return all collections, even those that
 are disabled and hidden. This is primarily used for administration tools that
 need to see all collections.
 */
-func (ds *Store) GetAllCollections() (*resources.Collections, error) {
+func (ds *Store) GetAllCollections() (*collections.Collections, error) {
 	return ds.getCollections("all")
 }
 
@@ -194,7 +191,7 @@ func (ds *Store) GetAllCollections() (*resources.Collections, error) {
 GetAllEnabledCollections - This method will return only enabled collections,
 even those that are hidden. This is used for setup up the HTTP MUX routers.
 */
-func (ds *Store) GetAllEnabledCollections() (*resources.Collections, error) {
+func (ds *Store) GetAllEnabledCollections() (*collections.Collections, error) {
 	return ds.getCollections("allEnabled")
 }
 
@@ -204,7 +201,7 @@ enabled and visible. This is primarily used to populate the results for clients
 that pull a collections resource. Clients may be able to talk to a hidden
 collection, but they should not see it in the list.
 */
-func (ds *Store) GetCollections() (*resources.Collections, error) {
+func (ds *Store) GetCollections() (*collections.Collections, error) {
 	return ds.getCollections("enabledVisible")
 }
 
@@ -215,12 +212,20 @@ func (ds *Store) GetCollections() (*resources.Collections, error) {
 // ----------------------------------------------------------------------
 
 /*
+AddToCollection - This method will add an entry to a collection as defined in
+addToCollection() in t_collectiondata.go
+*/
+func (ds *Store) AddToCollection(collectionid, stixid string) error {
+	return ds.addToCollection(collectionid, stixid)
+}
+
+/*
 GetBundle - This method will take in a query struct with range
 parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *Store) GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Store) GetBundle(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getBundle(query)
 }
 
@@ -229,7 +234,7 @@ GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
 of the records that match the query and range parameters.
 */
-func (ds *Store) GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error) {
+func (ds *Store) GetManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getManifestData(query)
 }
 
@@ -285,7 +290,7 @@ initCache - This method will populate the datastore cache.
 */
 func (ds *Store) initCache() error {
 	ds.Logger.Traceln("TRACE initCache(): Start ")
-	ds.Cache.Collections = make(map[string]*resources.Collection)
+	ds.Cache.Collections = make(map[string]*collections.Collection)
 
 	// Get current index value of the s_base_object table so new records being
 	// added can use it as their datastore_id. By using an integer here instead
@@ -296,11 +301,10 @@ func (ds *Store) initCache() error {
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
-
 	ds.Logger.Debugln("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
 
 	// Populate the collections cache
-	ds.Cache.Collections = make(map[string]*resources.Collection)
+	ds.Cache.Collections = make(map[string]*collections.Collection)
 
 	// Lets initialize the collections cache from the datastore
 	allCollections, err := ds.GetAllCollections()

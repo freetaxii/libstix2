@@ -174,6 +174,17 @@ func (o *Bundle) EncodeToString() (string, error) {
 	return string(data), nil
 }
 
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *BundleRawDecode) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // ----------------------------------------------------------------------
 //
 // Public Methods - Bundle

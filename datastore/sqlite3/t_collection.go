@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/resources/collections"
 )
 
 // ----------------------------------------------------------------------
@@ -137,7 +137,7 @@ func sqlAddCollectionMediaType() (string, error) {
 addCollection - This method will add a collection to the t_collections table in
 the database.
 */
-func (ds *Store) addCollection(obj *resources.Collection) error {
+func (ds *Store) addCollection(obj *collections.Collection) error {
 	ds.Logger.Traceln("TRACE addCollection(): Start")
 
 	// Lets first make sure the collection does not already exist in the cache
@@ -147,7 +147,7 @@ func (ds *Store) addCollection(obj *resources.Collection) error {
 	// If the object ID is not found in the cache, then lets initialize it with
 	// a TAXII collection object. This NewColleciton() function will return a
 	// pointer, which is what we need here.
-	ds.Cache.Collections[obj.ID] = resources.NewCollection()
+	ds.Cache.Collections[obj.ID] = collections.NewCollection()
 
 	stmt1, _ := sqlAddCollection()
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
@@ -316,11 +316,11 @@ The HTTP Router MUX needs to know about all enabled collections, even those that
 are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
-func (ds *Store) getCollections(whichCollections string) (*resources.Collections, error) {
+func (ds *Store) getCollections(whichCollections string) (*collections.Collections, error) {
 	ds.Logger.Traceln("TRACE getCollections(): Start")
 	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
 
-	allCollections := resources.NewCollections()
+	allCollections := collections.New()
 
 	stmt, _ := sqlGetCollections(whichCollections)
 

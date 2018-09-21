@@ -82,18 +82,6 @@ type Collection struct {
 }
 
 /*
-CollectionRecord - This type will hold the data for adding an object to
-a collection and is stored in the t_collection_data database table.
-
-CollectionID - The collection ID, a UUIDv4 value.  The database will store a DatastoreID integer.
-STIXID       - The STIX object ID. This is done so all versions of an object show up in the collection.
-*/
-type CollectionRecord struct {
-	CollectionID string
-	STIXID       string
-}
-
-/*
 CollectionQuery - This struct will hold all of the variables that a user can
 use to query a collection.
 */
@@ -157,18 +145,6 @@ it as a pointer.
 */
 func NewCollection() *Collection {
 	var obj Collection
-	return &obj
-}
-
-/*
-CreateCollectionRecord - This function will take in a collection ID and a STIX ID
-and create a new TAXII Collection Record object and return it as a pointer. This
-is used for storying a record in the database in the t_collection_data table.
-*/
-func CreateCollectionRecord(cid, sid string) *CollectionRecord {
-	var obj CollectionRecord
-	obj.CollectionID = cid
-	obj.STIXID = sid
 	return &obj
 }
 

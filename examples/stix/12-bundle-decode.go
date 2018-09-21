@@ -12,12 +12,16 @@ import (
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/objects/relationship"
+	"github.com/gologme/log"
 )
 
 func main() {
 	data := getdata()
 
-	b, _ := bundle.DecodeRaw(strings.NewReader(data))
+	b, err := bundle.DecodeRaw(strings.NewReader(data))
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	count := 0
 	for _, v := range b.Objects {

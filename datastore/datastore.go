@@ -5,7 +5,7 @@
 
 package datastore
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/resources/collections"
 
 /*
 Datastorer - This interface enables access to the STIX/TAXII datastore.
@@ -22,6 +22,7 @@ type Datastorer interface {
 	GetObject(id, version string) (interface{}, error)
 	AddObject(obj interface{}) error
 	AddTAXIIObject(obj interface{}) error
-	GetBundle(query resources.CollectionQuery) (*resources.CollectionQueryResult, error)
-	GetManifestData(query resources.CollectionQuery) (*resources.CollectionQueryResult, error)
+	AddToCollection(collectionid, stixid string) error
+	GetBundle(query collections.CollectionQuery) (*collections.CollectionQueryResult, error)
+	GetManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error)
 }
