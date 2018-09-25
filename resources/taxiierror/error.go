@@ -70,7 +70,7 @@ func New() *TAXIIError {
 
 /*
 SetErrorID - This methods takes in a string value representing an identifier
-for this particular error instnace and updates the Error ID property. A TAXII
+for this particular error instance and updates the Error ID property. A TAXII
 Server might choose to assign each error occurrence it's own identifier in
 order to facilitate debugging.
 */
