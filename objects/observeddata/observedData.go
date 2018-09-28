@@ -6,6 +6,8 @@
 package observeddata
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects/baseobject"
 	"github.com/freetaxii/libstix2/timestamp"
 )
@@ -57,10 +59,10 @@ seen that suggested that a particular instance of malware was active).
 */
 type ObservedData struct {
 	baseobject.CommonObjectProperties
-	FirstObserved  string `json:"first_observed,omitempty"`
-	LastObserved   string `json:"last_observed,omitempty"`
-	NumberObserved int    `json:"number_observed,omitempty"`
-	Objects        string `json:"objects,omitempty"`
+	FirstObserved  string           `json:"first_observed,omitempty"`
+	LastObserved   string           `json:"last_observed,omitempty"`
+	NumberObserved int              `json:"number_observed,omitempty"`
+	Objects        *json.RawMessage `json:"objects,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -137,6 +139,7 @@ SetObjects - This takes in a string value that represents represents a cyber
 observable JSON object and updates the objects property.
 */
 func (o *ObservedData) SetObjects(s string) error {
-	o.Objects = s
+	raw := json.RawMessage(s)
+	o.Objects = &raw
 	return nil
 }
