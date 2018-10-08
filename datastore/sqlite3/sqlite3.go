@@ -105,6 +105,7 @@ GetObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the matching STIX object.
 */
 func (ds *Store) GetObject(id, version string) (interface{}, error) {
+	ds.Logger.Levelln("Function", "FUNC: GetObject Start")
 
 	idparts := strings.Split(id, "--")
 
@@ -112,21 +113,25 @@ func (ds *Store) GetObject(id, version string) (interface{}, error) {
 	// UUIDv4, then lets test that.
 	if ds.Strict.IDs == true {
 		if !stixid.ValidUUID(idparts[1]) {
+			ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
 			return nil, errors.New("get STIX object error, invalid STIX ID")
 		}
 	}
 
 	if ds.Strict.Types == true {
 		if !stixid.ValidSTIXObjectType(idparts[0]) {
+			ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
 			return nil, errors.New("get STIX object error, invalid STIX type")
 		}
 	}
 
 	switch idparts[0] {
 	case "indicator":
+		ds.Logger.Levelln("Function", "FUNC: GetObject End")
 		return ds.getIndicator(id, version)
 	}
 
+	ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
 	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
 }
 
@@ -135,18 +140,22 @@ AddObject - This method will take in a STIX object and add it to the
 database.
 */
 func (ds *Store) AddObject(obj interface{}) error {
+	ds.Logger.Levelln("Function", "FUNC: AddObject Start")
 
 	switch o := obj.(type) {
 	case *indicator.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
 		err := ds.addIndicator(o)
 		if err != nil {
+			ds.Logger.Levelln("Function", "FUNC: AddObject End with error")
 			return err
 		}
 	default:
+		ds.Logger.Levelln("Function", "FUNC: AddObject End with error")
 		return fmt.Errorf("add object error, the following STIX type is not currently supported: ", o)
 	}
 
+	ds.Logger.Levelln("Function", "FUNC: AddObject End")
 	return nil
 }
 
@@ -155,6 +164,7 @@ AddTAXIIObject - This method will take in a TAXII object and add it to the
 database.
 */
 func (ds *Store) AddTAXIIObject(obj interface{}) error {
+	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject Start")
 	var err error
 
 	switch o := obj.(type) {
@@ -165,8 +175,11 @@ func (ds *Store) AddTAXIIObject(obj interface{}) error {
 		err = fmt.Errorf("does not match any known types ", o)
 	}
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject End with error")
 		return err
 	}
+
+	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject End")
 	return nil
 }
 
@@ -289,7 +302,7 @@ func (ds *Store) verifyFileExists() error {
 initCache - This method will populate the datastore cache.
 */
 func (ds *Store) initCache() error {
-	ds.Logger.Traceln("TRACE initCache(): Start ")
+	ds.Logger.Levelln("Function", "FUNC: initCache Start")
 	ds.Cache.Collections = make(map[string]*collections.Collection)
 
 	// Get current index value of the s_base_object table so new records being
@@ -298,6 +311,7 @@ func (ds *Store) initCache() error {
 	// TODO - fix this once I setup my own error type
 	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
+		ds.Logger.Levelln("Function", "FUNC: initCache End with error")
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
@@ -309,6 +323,7 @@ func (ds *Store) initCache() error {
 	// Lets initialize the collections cache from the datastore
 	allCollections, err := ds.GetAllCollections()
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: initCache End with error")
 		return err
 	}
 
@@ -318,6 +333,7 @@ func (ds *Store) initCache() error {
 		ds.Logger.Traceln("TRACE: Call getCollectionSize() for collection", c.ID)
 		size, err3 := ds.getCollectionSize(c.ID)
 		if err3 != nil {
+			ds.Logger.Levelln("Function", "FUNC: initCache End with error")
 			return err3
 		}
 		// If there was no error, set the size of the collection in the cache
@@ -328,5 +344,6 @@ func (ds *Store) initCache() error {
 		ds.Logger.Debugln("DEBUG: Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
 	}
 
+	ds.Logger.Levelln("Function", "FUNC: initCache End")
 	return nil
 }
