@@ -60,7 +60,7 @@ func collectionDataProperties() string {
 getCollectionSize - This method will return the size of a given collection
 */
 func (ds *Store) getCollectionSize(collectionID string) (int, error) {
-	ds.Logger.Traceln("TRACE: getCollectionSize() Start")
+	ds.Logger.Levelln("Function", "FUNC: getCollectionSize Start")
 	var index int
 	collectionDatastoreID := ds.Cache.Collections[collectionID].DatastoreID
 
@@ -84,13 +84,16 @@ func (ds *Store) getCollectionSize(collectionID string) (int, error) {
 	err := ds.DB.QueryRow(stmt, collectionDatastoreID).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			ds.Logger.Levelln("Function", "FUNC: getCollectionSize End with error")
 			return 0, errors.New("no collection data found")
 		}
+		ds.Logger.Levelln("Function", "FUNC: getCollectionSize End with error")
 		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
 	ds.Logger.Debugln("DEBUG: Collection ID", collectionID, "has a size of", index)
 
+	ds.Logger.Levelln("Function", "FUNC: getCollectionSize End")
 	return index, nil
 }
 
@@ -108,7 +111,7 @@ not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
 func (ds *Store) addToCollection(collectionid, stixid string) error {
-	ds.Logger.Levelln("Function", "FUNC: addToCollection() Start")
+	ds.Logger.Levelln("Function", "FUNC: addToCollection Start")
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	// We are storing the Collection DatastoreID which is an integer instead
@@ -143,14 +146,14 @@ func (ds *Store) addToCollection(collectionid, stixid string) error {
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, dateAdded, collectionDatastoreID, stixid)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addToCollection() End with error")
+		ds.Logger.Levelln("Function", "FUNC: addToCollection End with error")
 		return fmt.Errorf("database execution error inserting collection data: ", err)
 	}
 
 	// If the operation was successful, lets increment the collection cache size
 	ds.Cache.Collections[collectionid].Size++
 	ds.Logger.Debugln("DEBUG: Collection ID", collectionid, "now has a size of", ds.Cache.Collections[collectionid].Size)
-	ds.Logger.Levelln("Function", "FUNC: addToCollection() End")
+	ds.Logger.Levelln("Function", "FUNC: addToCollection End")
 	return nil
 }
 
@@ -165,10 +168,11 @@ func (ds *Store) addToCollection(collectionid, stixid string) error {
 getBundle - This method will return a STIX bundle based on the query provided.
 */
 func (ds *Store) getBundle(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getBundle() Start")
+	ds.Logger.Levelln("Function", "FUNC: getBundle Start")
 
 	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
+		ds.Logger.Levelln("Function", "FUNC: getBundle End with error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
 	}
 
@@ -178,7 +182,7 @@ func (ds *Store) getBundle(query collections.CollectionQuery) (*collections.Coll
 	// meet the query requirements. This is done with the manifest records.
 	resultData, err := ds.getManifestData(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getBundle() End with error")
+		ds.Logger.Levelln("Function", "FUNC: getBundle End with error")
 		return nil, err
 	}
 
@@ -187,13 +191,13 @@ func (ds *Store) getBundle(query collections.CollectionQuery) (*collections.Coll
 		obj, err := ds.GetObject(v.ID, v.Version)
 
 		if err != nil {
-			ds.Logger.Levelln("Function", "FUNC: getBundle() End with error")
+			ds.Logger.Levelln("Function", "FUNC: getBundle End with error")
 			return nil, err
 		}
 		stixBundle.AddObject(obj)
 	}
 	resultData.BundleData = *stixBundle
-	ds.Logger.Levelln("Function", "FUNC: getBundle() End")
+	ds.Logger.Levelln("Function", "FUNC: getBundle End")
 	return resultData, nil
 }
 
@@ -290,10 +294,11 @@ func sqlGetManifestData(query collections.CollectionQuery) (string, error) {
 getManifestData - This method will return manifest data based on the query provided.
 */
 func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Traceln("TRACE: getManifestData() Start")
+	ds.Logger.Levelln("Function", "FUNC: getManifestData Start")
 
 	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionID]; !found {
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionID)
 	}
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionID].DatastoreID
@@ -305,6 +310,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// and we should return an error versus just skipping the option.
 	sqlStmt, err := sqlGetManifestData(query)
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, err
 	}
 
@@ -312,6 +318,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	rows, err := ds.DB.Query(sqlStmt)
 
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
@@ -320,6 +327,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
+			ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
 
@@ -344,17 +352,19 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
 	if len(manifest.Objects) == 0 {
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
 
 	resultData.Size = ds.Cache.Collections[query.CollectionID].Size
 
-	ds.Logger.Traceln("TRACE: getManifestData() Query Collection ID", query.CollectionID)
-	ds.Logger.Traceln("TRACE: getManifestData() Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
+	ds.Logger.Debugln("DEBUG: Query Collection ID", query.CollectionID)
+	ds.Logger.Debugln("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionID].Size)
 
 	resultData.ManifestData.Objects = manifest.Objects
 
@@ -372,6 +382,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
+	ds.Logger.Levelln("Function", "FUNC: getManifestData End")
 	return &resultData, nil
 }
 
@@ -386,17 +397,20 @@ processRangeValues - This method will take in the various range parameters and s
 of the dataset and will return the correct first and last index values to be used.
 */
 func (ds *Store) processRangeValues(first, last, max, size int) (int, int, error) {
-	ds.Logger.Traceln("TRACE: processRangeValues() Start")
+	ds.Logger.Levelln("Function", "FUNC: processRangeValues Start")
 
 	if first < 0 {
+		ds.Logger.Levelln("Function", "FUNC: processRangeValues End with error")
 		return 0, 0, errors.New("the starting value can not be negative")
 	}
 
 	if first > last {
+		ds.Logger.Levelln("Function", "FUNC: processRangeValues End with error")
 		return 0, 0, errors.New("the starting range value is larger than the ending range value")
 	}
 
 	if first >= size {
+		ds.Logger.Levelln("Function", "FUNC: processRangeValues End with error")
 		return 0, 0, errors.New("the starting range value is out of scope")
 	}
 
@@ -421,6 +435,7 @@ func (ds *Store) processRangeValues(first, last, max, size int) (int, int, error
 		last = first + max
 	}
 
+	ds.Logger.Levelln("Function", "FUNC: processRangeValues End")
 	return first, last, nil
 }
 

@@ -138,10 +138,11 @@ addCollection - This method will add a collection to the t_collections table in
 the database.
 */
 func (ds *Store) addCollection(obj *collections.Collection) error {
-	ds.Logger.Traceln("TRACE addCollection(): Start")
+	ds.Logger.Levelln("Function", "FUNC: addCollection Start")
 
 	// Lets first make sure the collection does not already exist in the cache
 	if _, found := ds.Cache.Collections[obj.ID]; found {
+		ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
 		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
 	}
 	// If the object ID is not found in the cache, then lets initialize it with
@@ -161,6 +162,7 @@ func (ds *Store) addCollection(obj *collections.Collection) error {
 		obj.CanWrite)
 
 	if err1 != nil {
+		ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
 		return fmt.Errorf("database execution error inserting collection", err1)
 	}
 
@@ -187,10 +189,12 @@ func (ds *Store) addCollection(obj *collections.Collection) error {
 			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
+				ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
 				return fmt.Errorf("database execution error inserting collection media type", err2)
 			}
 		}
 	}
+	ds.Logger.Levelln("Function", "FUNC: addCollection End")
 	return nil
 }
 
@@ -317,8 +321,8 @@ are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
 func (ds *Store) getCollections(whichCollections string) (*collections.Collections, error) {
-	ds.Logger.Traceln("TRACE getCollections(): Start")
-	ds.Logger.Traceln("TRACE getCollections(): Which Collections", whichCollections)
+	ds.Logger.Levelln("Function", "FUNC: getCollections Start")
+	ds.Logger.Debugln("DEBUG: Which Collections", whichCollections)
 
 	allCollections := collections.New()
 
@@ -329,6 +333,7 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 	// Query database for all the collections
 	rows, err := ds.DB.Query(stmt)
 	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
 		return nil, fmt.Errorf("database execution error getting collection: ", err)
 	}
 	defer rows.Close()
@@ -338,6 +343,7 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 		var dateAdded, id, title, description, mediaType string
 		if err := rows.Scan(&datastoreID, &dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
 			rows.Close()
+			ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
 			return nil, fmt.Errorf("database scan error getting collection: ", err)
 		}
 
@@ -381,8 +387,10 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 
 	if err := rows.Err(); err != nil {
 		rows.Close()
+		ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
 		return nil, fmt.Errorf("database row error getting collection: ", err)
 	}
 
+	ds.Logger.Levelln("Function", "FUNC: getCollections End")
 	return allCollections, nil
 }
