@@ -25,27 +25,29 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-sqlGetManifestData - This function will return an SQL statement that will
-return a list of objects from a given collection and all of the information
-needed to create the manifest resource. It will use the query struct to
-determine the requirements and parameters for the where clause of the SQL
-statement. A byte array is used instead of sting concatenation as it is the most
-efficient way to do string concatenation in Go.
+getManifestData - This method will return manifest data based on the query provided.
+
+The SQL statement that is built in this method will return a list of objects
+from a given collection and all of the information needed to create the manifest
+resource. It will use the query struct to determine the requirements and
+parameters for the where clause of the SQL statement. A byte array is used
+instead of sting concatenation as it is the most efficient way to do string
+concatenation in Go.
 */
-func (ds *Store) sqlGetManifestData(query collections.CollectionQuery) (string, error) {
-	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
-	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
+	ds.Logger.Levelln("Function", "FUNC: getManifestData Start")
 
-	// If an error is found, that means a query parameter was passed incorrectly
-	// and we should return an error versus just skipping the option.
-	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
-	if err != nil {
-		return "", err
+	// Lets first make sure the collection exists in the cache
+	if _, found := ds.Cache.Collections[query.CollectionUUID]; !found {
+		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
+	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
 
-	// If the client passes in an invalid value, then the server limit is used
-	limitQuery := ds.sqlQueryLimit(query)
+	var resultData collections.CollectionQueryResult
+	manifestData := manifest.New()
 
+	// Create SQL Statement
 	/*
 		SELECT
 			t_collection_data.stix_id,
@@ -63,70 +65,59 @@ func (ds *Store) sqlGetManifestData(query collections.CollectionQuery) (string, 
 			s_base_object.date_added
 		LIMIT 5
 	*/
-	var s bytes.Buffer
-	s.WriteString("SELECT ")
-	s.WriteString(tblColData)
-	s.WriteString(".stix_id, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".date_added, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".modified, ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".spec_version ")
-
-	s.WriteString("FROM ")
-	s.WriteString(tblColData)
-
-	s.WriteString(" JOIN ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(" ON ")
-	s.WriteString(tblColData)
-	s.WriteString(".stix_id = ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".id ")
-
-	s.WriteString("WHERE ")
-	s.WriteString(whereQuery)
-
-	s.WriteString(" ORDER BY ")
-	s.WriteString(tblBaseObj)
-	s.WriteString(".date_added ASC ")
-
-	if limitQuery != 0 {
-		s.WriteString(" LIMIT ")
-		i := strconv.Itoa(limitQuery)
-		s.WriteString(i)
-	}
-
-	return s.String(), nil
-}
-
-/*
-getManifestData - This method will return manifest data based on the query provided.
-*/
-func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getManifestData Start")
-
-	// Lets first make sure the collection exists in the cache
-	if _, found := ds.Cache.Collections[query.CollectionUUID]; !found {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
-		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
-	}
-	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
-
-	var resultData collections.CollectionQueryResult
-	manifestData := manifest.New()
 
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
-	sqlStmt, err := sqlGetManifestData(query)
+	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
 	if err != nil {
 		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, err
 	}
 
+	// If the client passes in an invalid value, then the server limit is used
+	limitQuery := ds.sqlQueryLimit(query)
+
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT ")
+	sqlstmt.WriteString(tblColData)
+	sqlstmt.WriteString(".stix_id, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".date_added, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".modified, ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".spec_version ")
+
+	sqlstmt.WriteString("FROM ")
+	sqlstmt.WriteString(tblColData)
+
+	sqlstmt.WriteString(" JOIN ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(" ON ")
+	sqlstmt.WriteString(tblColData)
+	sqlstmt.WriteString(".stix_id = ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".id ")
+
+	sqlstmt.WriteString("WHERE ")
+	sqlstmt.WriteString(whereQuery)
+
+	sqlstmt.WriteString(" ORDER BY ")
+	sqlstmt.WriteString(tblBaseObj)
+	sqlstmt.WriteString(".date_added ASC ")
+
+	if limitQuery != 0 {
+		sqlstmt.WriteString(" LIMIT ")
+		i := strconv.Itoa(limitQuery)
+		sqlstmt.WriteString(i)
+	}
+	stmt := sqlstmt.String()
+
+	// Make SQL Call
 	// Query database for all the collection entries
-	rows, err := ds.DB.Query(sqlStmt)
+	rows, err := ds.DB.Query(stmt)
 
 	if err != nil {
 		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
@@ -134,6 +125,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	}
 	defer rows.Close()
 
+	// Loop through all records returned and build a manifest resource
 	for rows.Next() {
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
@@ -156,7 +148,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		default:
 			specVersion = defs.MEDIA_TYPE_STIX
 		}
-		manifestData.CreateManifestEntry(stixid, dateAdded, modified, specVersion)
+		manifestData.CreateRecord(stixid, dateAdded, modified, specVersion)
 	}
 
 	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
