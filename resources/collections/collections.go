@@ -86,7 +86,7 @@ CollectionQuery - This struct will hold all of the variables that a user can
 use to query a collection.
 */
 type CollectionQuery struct {
-	CollectionID          string
+	CollectionUUID        string
 	CollectionDatastoreID int
 	STIXID                []string // Passed in from the URL
 	STIXType              []string // Passed in from the URL
@@ -154,7 +154,7 @@ and the Server Record Limit and return a CollectionQueryType object.
 */
 func NewCollectionQuery(id string, limit int) *CollectionQuery {
 	var obj CollectionQuery
-	obj.CollectionID = id
+	obj.CollectionUUID = id
 	obj.ServerRecordLimit = limit
 	return &obj
 }
