@@ -35,23 +35,23 @@ type of indicator will return the manifest entries for objects with a type of
 indicator, even though the manifest doesn't have a type field.
 */
 type Manifest struct {
-	Objects []ManifestEntry `json:"objects,omitempty"`
+	Objects []ManifestRecord `json:"objects,omitempty"`
 }
 
 /*
-ManifestEntry - This type implements the TAXII 2 Manifest Entry Type and
+ManifestRecord - This type implements the TAXII 2 Manifest Record Type and
 defines all of the properties and methods needed to create and work with the TAXII
-Manifest Entry.
+Manifest Record.
 
 The following information comes directly from the TAXII 2 specification documents.
 
-The manifest-entry type captures metadata about a single versions of an object,
+The manifest-record type captures metadata about a single versions of an object,
 indicated by the id property. The metadata includes information such as when that
 versions of the object was added to the Collection, the version of the object
 itself, and the media type that this specific version of the object is available
 in.
 */
-type ManifestEntry struct {
+type ManifestRecord struct {
 	properties.IDProperty
 	DateAdded string `json:"date_added,omitempty"`
 	Version   string `json:"version,omitempty"`
@@ -72,11 +72,11 @@ func New() *Manifest {
 }
 
 /*
-NewManifestEntry - This function will create a new TAXII Manifest Entry object and
+NewRecord - This function will create a new TAXII Manifest Record object and
 return it as a pointer.
 */
-func NewManifestEntry() *ManifestEntry {
-	var obj ManifestEntry
+func NewRecord() *ManifestRecord {
+	var obj ManifestRecord
 	return &obj
 }
 
@@ -85,36 +85,36 @@ func NewManifestEntry() *ManifestEntry {
 // ----------------------------------------------------------------------
 
 /*
-AddManifestEntry - This method takes in an object that represents a manifest
-entry and adds it to the list in the objects property and returns an integer of
+AddRecord - This method takes in an object that represents a manifest
+record and adds it to the list in the objects property and returns an integer of
 the location in the slice where the manifest entry object was added. This method
 would be used if the manifest entry was created separately and it just needs to
 be added in whole to the manifest list.
 */
-func (r *Manifest) AddManifestEntry(o *ManifestEntry) (int, error) {
+func (r *Manifest) AddRecord(o *ManifestRecord) (int, error) {
 	positionThatAppendWillUse := len(r.Objects)
 	r.Objects = append(r.Objects, *o)
 	return positionThatAppendWillUse, nil
 }
 
 /*
-NewManifestEntry - This method is used to create a manifest entry and automatically
-add it to the objects array. It returns a resources.ManifestEntry which is a
+NewRecord - This method is used to create a manifest entry and automatically
+add it to the objects array. It returns a resources.ManifestRecord which is a
 pointer to the actual manifest entry that was created in the manifest slice.
 */
-func (r *Manifest) NewManifestEntry() (*ManifestEntry, error) {
-	o := NewManifestEntry()
+func (r *Manifest) NewRecord() (*ManifestRecord, error) {
+	o := NewRecord()
 	positionThatAppendWillUse := len(r.Objects)
 	r.Objects = append(r.Objects, *o)
 	return &r.Objects[positionThatAppendWillUse], nil
 }
 
 /*
-CreateManifestEntry - This method is used to create and add a manifest entry in
+CreateRecord - This method is used to create and add a manifest entry in
 a single step, by taking in all of the values as parameters.
 */
-func (r *Manifest) CreateManifestEntry(id, date, ver, media string) error {
-	m, _ := r.NewManifestEntry()
+func (r *Manifest) CreateRecord(id, date, ver, media string) error {
+	m, _ := r.NewRecord()
 	m.SetID(id)
 	m.SetDateAdded(date)
 	m.SetVersion(ver)
@@ -123,13 +123,13 @@ func (r *Manifest) CreateManifestEntry(id, date, ver, media string) error {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ManifestEntry
+// Public Methods - ManifestRecord
 // ----------------------------------------------------------------------
 
 /*
 SetDateAdded - This method will add the date added to the manifest entry
 */
-func (r *ManifestEntry) SetDateAdded(s string) error {
+func (r *ManifestRecord) SetDateAdded(s string) error {
 	r.DateAdded = s
 	return nil
 }
@@ -137,7 +137,7 @@ func (r *ManifestEntry) SetDateAdded(s string) error {
 /*
 SetVersion - This method will add the version to the manifest entry
 */
-func (r *ManifestEntry) SetVersion(s string) error {
+func (r *ManifestRecord) SetVersion(s string) error {
 	r.Version = s
 	return nil
 }
@@ -145,7 +145,7 @@ func (r *ManifestEntry) SetVersion(s string) error {
 /*
 SetMediaType - This method will add the media type to the manifest entry
 */
-func (r *ManifestEntry) SetMediaType(s string) error {
+func (r *ManifestRecord) SetMediaType(s string) error {
 	r.MediaType = s
 	return nil
 }
