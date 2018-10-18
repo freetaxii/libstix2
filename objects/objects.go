@@ -4,7 +4,9 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package sqlite3 implements the SQLite 3 datastore for TAXII 2.
-
+Package objects implements the STIX 2 object model.
 */
-package sqlite3
+package objects
+
+type STIXObject interface {
+}
