@@ -14,7 +14,24 @@ import (
 // ----------------------------------------------------------------------
 
 /*
- */
+Envelope - This type implements the TAXII 2 Envelope Resource and defines
+all of the properties and methods needed to create and work with the TAXII
+Envelope Resource.
+
+The following information comes directly from the TAXII 2 specification documents.
+
+The envelope is a simple wrapper for STIX 2 content. When returning STIX 2
+content in a TAXII response the HTTP root object payload MUST be an envelope.
+This specification does not define any other form of content wrapper for objects
+outside of STIX content.
+
+For example:
+* A single indicator in response to a request for an indicator by ID is enclosed
+in a bundle inside of an envelope.
+* A list of campaigns returned from a Collection is enclosed in a bundle inside of
+an envelope.
+* An empty response with no STIX objects results in an empty envelope.
+*/
 type Envelope struct {
 	More bool           `json:"more,omitempty"`
 	Data *bundle.Bundle `json:"data,omitempty"`

@@ -10,79 +10,88 @@ import "fmt"
 /*
 Compare - This method will compare two collections to make sure they
 are the same. The collection receiver is the master and represent the correct
-data, the indicator passed in as i represents the one we need to test.
+data, the collection passed in as toTest represents the one we need to test.
 */
-func (r *Collection) Compare(c *Collection) (bool, int, []string) {
+func (r *Collection) Compare(toTest *Collection) (bool, int, []string) {
+	return Compare(r, toTest)
+}
+
+/*
+Compare - This function will compare two collections to make sure they
+are the same. Collection correct is the master and represent the correct
+data, collection toTest represents the one we need to test.
+*/
+func Compare(correct, toTest *Collection) (bool, int, []string) {
 	problemsFound := 0
 	details := make([]string, 0)
 
 	// Check ID Value
-	if c.ID != r.ID {
+	if toTest.ID != correct.ID {
 		problemsFound++
-		str := fmt.Sprintf("-- IDs Do Not Match: %s | %s", r.ID, c.ID)
+		str := fmt.Sprintf("-- IDs Do Not Match: %s | %s", correct.ID, toTest.ID)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ IDs Match: %s | %s", r.ID, c.ID)
+		str := fmt.Sprintf("++ IDs Match: %s | %s", correct.ID, toTest.ID)
 		details = append(details, str)
 	}
 
 	// Check Title Value
-	if c.Title != r.Title {
+	if toTest.Title != correct.Title {
 		problemsFound++
-		str := fmt.Sprintf("-- Titles Do Not Match: %s | %s", r.Title, c.Title)
+		str := fmt.Sprintf("-- Titles Do Not Match: %s | %s", correct.Title, toTest.Title)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Titles Match: %s | %s", r.Title, c.Title)
+		str := fmt.Sprintf("++ Titles Match: %s | %s", correct.Title, toTest.Title)
 		details = append(details, str)
 	}
 
 	// Check Description Value
-	if c.Description != r.Description {
+	if toTest.Description != correct.Description {
 		problemsFound++
-		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", r.Description, c.Description)
+		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", correct.Description, toTest.Description)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Descriptions Match: %s | %s", r.Description, c.Description)
+		str := fmt.Sprintf("++ Descriptions Match: %s | %s", correct.Description, toTest.Description)
 		details = append(details, str)
 	}
 
 	// Check Can Read Value
-	if c.CanRead != r.CanRead {
+	if toTest.CanRead != correct.CanRead {
 		problemsFound++
-		str := fmt.Sprintf("-- Can Read Values Do Not Match: %t | %t", r.CanRead, c.CanRead)
+		str := fmt.Sprintf("-- Can Read Values Do Not Match: %t | %t", correct.CanRead, toTest.CanRead)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Can Read Values Match: %t | %t", r.CanRead, c.CanRead)
+		str := fmt.Sprintf("++ Can Read Values Match: %t | %t", correct.CanRead, toTest.CanRead)
 		details = append(details, str)
 	}
 
 	// Check Can Write Value
-	if c.CanWrite != r.CanWrite {
+	if toTest.CanWrite != correct.CanWrite {
 		problemsFound++
-		str := fmt.Sprintf("-- Can Write Values Do Not Match: %t | %t", r.CanWrite, c.CanWrite)
+		str := fmt.Sprintf("-- Can Write Values Do Not Match: %t | %t", correct.CanWrite, toTest.CanWrite)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Can Write Values Match: %t | %t", r.CanWrite, c.CanWrite)
+		str := fmt.Sprintf("++ Can Write Values Match: %t | %t", correct.CanWrite, toTest.CanWrite)
 		details = append(details, str)
 	}
 
 	// Check Media Type Property Length
-	if len(c.MediaTypes) != len(r.MediaTypes) {
+	if len(toTest.MediaTypes) != len(correct.MediaTypes) {
 		problemsFound++
-		str := fmt.Sprintf("-- Media Type Lengths Do Not Match: %d | %d", r.MediaTypes, c.MediaTypes)
+		str := fmt.Sprintf("-- Media Type Lengths Do Not Match: %d | %d", correct.MediaTypes, toTest.MediaTypes)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Media Type Lengths Match: %d | %d", r.MediaTypes, c.MediaTypes)
+		str := fmt.Sprintf("++ Media Type Lengths Match: %d | %d", correct.MediaTypes, toTest.MediaTypes)
 		details = append(details, str)
 
 		// If lengths are the same, then check each value
-		for index, _ := range r.MediaTypes {
-			if c.MediaTypes[index] != r.MediaTypes[index] {
+		for index, _ := range correct.MediaTypes {
+			if toTest.MediaTypes[index] != correct.MediaTypes[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- Media Types Do Not Match: %s | %s", r.MediaTypes[index], c.MediaTypes[index])
+				str := fmt.Sprintf("-- Media Types Do Not Match: %s | %s", correct.MediaTypes[index], toTest.MediaTypes[index])
 				details = append(details, str)
 			} else {
-				str := fmt.Sprintf("++ Media Types Match: %s | %s", r.MediaTypes[index], c.MediaTypes[index])
+				str := fmt.Sprintf("++ Media Types Match: %s | %s", correct.MediaTypes[index], toTest.MediaTypes[index])
 				details = append(details, str)
 			}
 		}

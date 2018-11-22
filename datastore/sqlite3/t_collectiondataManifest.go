@@ -13,6 +13,7 @@ import (
 
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/freetaxii/libstix2/resources/manifest"
 	"github.com/freetaxii/libstix2/stixid"
 	"github.com/freetaxii/libstix2/timestamp"
 )
@@ -159,7 +160,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
-	if len(manifest.Objects) == 0 {
+	if len(manifestData.Objects) == 0 {
 		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
@@ -202,6 +203,7 @@ statement based on the values provided in the query object.
 func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 	srv := 0
 	client := 0
+	var err error
 
 	// In the configuration, if the server record limit is 0 or a negative number
 	// than the value is zero and thus no limit will be applied.

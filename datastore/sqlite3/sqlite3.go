@@ -30,7 +30,7 @@ with connecting and talking to the database.
 When Strict.IDs = false, then the system will allow vanity STIX IDs like:
 indicator--1, indicator--2
 
-When Strict.Types = false, then the system will allow un-known STIX types
+When Strict.Types = false, then the system will allow unknown STIX types
 */
 type Store struct {
 	Filename string
@@ -233,12 +233,12 @@ func (ds *Store) AddToCollection(collectionid, stixid string) error {
 }
 
 /*
-GetBundle - This method will take in a query struct with range
+GetObjects - This method will take in a query struct with range
 parameters for a collection and will return a STIX Bundle that contains all
 of the STIX objects that are in that collection that meet those query or range
 parameters.
 */
-func (ds *Store) GetBundle(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
+func (ds *Store) GetObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getBundle(query)
 }
 
