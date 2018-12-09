@@ -55,7 +55,7 @@ type Store struct {
 /*
 New - This function will return a Store.
 */
-func New(logger *log.Logger, filename string) *Store {
+func New(logger *log.Logger, filename string, collections map[string]collections.Collection) *Store {
 	var err error
 	var ds Store
 	ds.Filename = filename
@@ -75,7 +75,7 @@ func New(logger *log.Logger, filename string) *Store {
 
 	// Initialize the MemCache which will have the current object ID
 	// and the collections data.
-	err = ds.initCache()
+	err = ds.initCache(collections)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -105,7 +105,7 @@ GetObject - This method will take in a STIX ID and version timestamp (the
 modified timestamp from a STIX object) and return the matching STIX object.
 */
 func (ds *Store) GetObject(id, version string) (interface{}, error) {
-	ds.Logger.Levelln("Function", "FUNC: GetObject Start")
+	ds.Logger.Levelln("Function", "FUNC: GetObject start")
 
 	idparts := strings.Split(id, "--")
 
@@ -113,25 +113,25 @@ func (ds *Store) GetObject(id, version string) (interface{}, error) {
 	// UUIDv4, then lets test that.
 	if ds.Strict.IDs == true {
 		if !stixid.ValidUUID(idparts[1]) {
-			ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
+			ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
 			return nil, errors.New("get STIX object error, invalid STIX ID")
 		}
 	}
 
 	if ds.Strict.Types == true {
 		if !stixid.ValidSTIXObjectType(idparts[0]) {
-			ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
+			ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
 			return nil, errors.New("get STIX object error, invalid STIX type")
 		}
 	}
 
 	switch idparts[0] {
 	case "indicator":
-		ds.Logger.Levelln("Function", "FUNC: GetObject End")
+		ds.Logger.Levelln("Function", "FUNC: GetObject end")
 		return ds.getIndicator(id, version)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: GetObject End with error")
+	ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
 	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
 }
 
@@ -140,22 +140,22 @@ AddObject - This method will take in a STIX object and add it to the
 database.
 */
 func (ds *Store) AddObject(obj interface{}) error {
-	ds.Logger.Levelln("Function", "FUNC: AddObject Start")
+	ds.Logger.Levelln("Function", "FUNC: AddObject start")
 
 	switch o := obj.(type) {
 	case *indicator.Indicator:
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
 		err := ds.addIndicator(o)
 		if err != nil {
-			ds.Logger.Levelln("Function", "FUNC: AddObject End with error")
+			ds.Logger.Levelln("Function", "FUNC: AddObject exited with an error")
 			return err
 		}
 	default:
-		ds.Logger.Levelln("Function", "FUNC: AddObject End with error")
+		ds.Logger.Levelln("Function", "FUNC: AddObject exited with an error")
 		return fmt.Errorf("add object error, the following STIX type is not currently supported: ", o)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: AddObject End")
+	ds.Logger.Levelln("Function", "FUNC: AddObject end")
 	return nil
 }
 
@@ -164,22 +164,23 @@ AddTAXIIObject - This method will take in a TAXII object and add it to the
 database.
 */
 func (ds *Store) AddTAXIIObject(obj interface{}) error {
-	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject Start")
+	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject start")
 	var err error
 
 	switch o := obj.(type) {
 	case *collections.Collection:
 		ds.Logger.Debugln("DEBUG: Adding TAXII Collection to datastore")
-		err = ds.addCollection(o)
+		// TODO if you add a collection this way, it will not be in the cache, so I need to fix that
+		_, err = ds.addCollection(o)
 	default:
 		err = fmt.Errorf("does not match any known types ", o)
 	}
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject End with error")
+		ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject exited with an error")
 		return err
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject End")
+	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject end")
 	return nil
 }
 
@@ -301,9 +302,8 @@ func (ds *Store) verifyFileExists() error {
 /*
 initCache - This method will populate the datastore cache.
 */
-func (ds *Store) initCache() error {
-	ds.Logger.Levelln("Function", "FUNC: initCache Start")
-	ds.Cache.Collections = make(map[string]*collections.Collection)
+func (ds *Store) initCache(cols map[string]collections.Collection) error {
+	ds.Logger.Levelln("Function", "FUNC: initCache start")
 
 	// Get current index value of the s_base_object table so new records being
 	// added can use it as their datastore_id. By using an integer here instead
@@ -311,39 +311,93 @@ func (ds *Store) initCache() error {
 	// TODO - fix this once I setup my own error type
 	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
-		ds.Logger.Levelln("Function", "FUNC: initCache End with error")
+		ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
-	ds.Logger.Debugln("DEBUG: Base object index ID", ds.Cache.BaseObjectIDIndex)
+	ds.Logger.Debugln("DEBUG: The next base object index ID id", ds.Cache.BaseObjectIDIndex)
 
-	// Populate the collections cache
+	// Initialize the collections cache in the datastore
 	ds.Cache.Collections = make(map[string]*collections.Collection)
 
-	// Lets initialize the collections cache from the datastore
-	allCollections, err := ds.GetAllCollections()
-	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: initCache End with error")
-		return err
-	}
+	// ------------------------------------------------------------
+	// Populate the cache with all of the collections
+	// ------------------------------------------------------------
+	// Check to see if each collection ID from the passed in list is already in
+	// the datastore.
+	// 	- If it is, grab the datastore ID and stick in the cache
+	// 	- If it is not, then add it to the database, and get the datastore ID
+	//    after it was added
 
-	for k, c := range allCollections.Collections {
-		ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
-		// get the size of the collection
-		ds.Logger.Traceln("TRACE: Call getCollectionSize() for collection", c.ID)
-		size, err3 := ds.getCollectionSize(c.ID)
+	// Loop through all of the collections that were in the configuration file
+	for _, c := range cols {
+		var datastoreID int
+		var err, err2 error
+
+		// Check to see if the collection is already in the database
+		datastoreID, err = ds.getCollectionDatastoreID(c.ID)
+		if err != nil {
+			// The collection was not found or there was an error talking to the database
+			if err.Error() != "collection not found" {
+				return err
+			}
+
+			// The collection was not found in the database, so we need to add it
+			datastoreID, err2 = ds.addCollection(&c)
+			if err2 != nil {
+				ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+				return err2
+			}
+		}
+
+		// Get the size of the collection
+		size, err3 := ds.getCollectionSize(datastoreID)
 		if err3 != nil {
-			ds.Logger.Levelln("Function", "FUNC: initCache End with error")
+			ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
 			return err3
 		}
-		// If there was no error, set the size of the collection in the cache
-		ds.Cache.Collections[c.ID].Size = size
-	}
+
+		// If there was no error, set the datastore ID and size of the collection
+		c.DatastoreID = datastoreID
+		c.Size = size
+
+		// Add collection to cache and force a copy so we do not get into problems
+		// later where the reference is the same for every entry.
+		localCollection := c
+		ds.Cache.Collections[c.ID] = &localCollection
+
+	} // End loop through collections from configuration file
+
+	// // Get a list of all of the collections in the datastore, however, this
+	// // needs to change, we need to only trust the collections in the configuration
+	// // file, since other collections in the database will not be assigned to an
+	// // API root.
+	// allCollections, err := ds.GetAllCollections()
+	// if err != nil {
+	// 	ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+	// 	return err
+	// }
+
+	// // Populate the cache with the collections from the datastore
+	// for k, c := range allCollections.Collections {
+	// 	ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
+
+	// 	// Get the size of the collection
+	// 	ds.Logger.Debugln("DEBUG: Getting collection size for collection", c.ID)
+	// 	size, err3 := ds.getCollectionSize(c.ID)
+	// 	if err3 != nil {
+	// 		ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+	// 		return err3
+	// 	}
+	// 	// If there was no error, set the size of the collection in the cache
+	// 	ds.Cache.Collections[c.ID].Size = size
+	// }
 
 	for k, v := range ds.Cache.Collections {
-		ds.Logger.Debugln("DEBUG: Collection Cache Key", k, "Collection ID", v.ID, "Size", v.Size)
+		ds.Logger.Debugln("DEBUG: Current collection cache: index key", k, "datastore ID", v.DatastoreID, "size", v.Size)
 	}
+	// ------------------------------------------------------------
 
-	ds.Logger.Levelln("Function", "FUNC: initCache End")
+	ds.Logger.Levelln("Function", "FUNC: initCache end")
 	return nil
 }

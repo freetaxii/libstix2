@@ -7,6 +7,8 @@ package sqlite3
 
 import (
 	"bytes"
+	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -26,6 +28,7 @@ import (
 collectionProperties - This function will return the properties that make up the
 collection table.
 
+row_id      = This is the datastore ID used to reference this collection
 date_added  = The date that this collection was added to the system
 enabled     = Is this collection currently enabled
 hidden      = Is this collection currently hidden for this directory listing
@@ -72,41 +75,6 @@ func collectionMediaTypeProperties() string {
 // ----------------------------------------------------------------------
 
 /*
-sqlAddCollection - This function will return an SQL statement that will insert
-a new collection in to the t_collections table in the database.
-*/
-func sqlAddCollection() (string, error) {
-	tblCol := DB_TABLE_TAXII_COLLECTIONS
-
-	/*
-		INSERT INTO
-			t_collections (
-				"date_added",
-				"id",
-				"title",
-				"description",
-				"can_read",
-				"can_write"
-			)
-			values (?, ?, ?, ?, ?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblCol)
-	s.WriteString(" (")
-	s.WriteString("date_added, ")
-	s.WriteString("id, ")
-	s.WriteString("title, ")
-	s.WriteString("description, ")
-	s.WriteString("can_read, ")
-	s.WriteString("can_write) ")
-	s.WriteString("values (?, ?, ?, ?, ?, ?)")
-
-	return s.String(), nil
-}
-
-/*
 sqlAddCollectionMediaType - This function will return an SQL statement that will
 insert a media type for a given collection.
 */
@@ -135,24 +103,46 @@ func sqlAddCollectionMediaType() (string, error) {
 
 /*
 addCollection - This method will add a collection to the t_collections table in
-the database.
+the database and return the row_id (datastore ID) for the collection and an
+error if there is one.
 */
-func (ds *Store) addCollection(obj *collections.Collection) error {
-	ds.Logger.Levelln("Function", "FUNC: addCollection Start")
+func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
+	ds.Logger.Levelln("Function", "FUNC: addCollection start")
 
 	// Lets first make sure the collection does not already exist in the cache
 	if _, found := ds.Cache.Collections[obj.ID]; found {
-		ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
-		return fmt.Errorf("the following collection id was already found in the cache", obj.ID)
+		ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
+		return 0, fmt.Errorf("the following collection id was already found in the cache", obj.ID)
 	}
 	// If the object ID is not found in the cache, then lets initialize it with
 	// a TAXII collection object. This NewColleciton() function will return a
 	// pointer, which is what we need here.
 	ds.Cache.Collections[obj.ID] = collections.NewCollection()
 
-	stmt1, _ := sqlAddCollection()
+	// Create SQL Statement
+	/*
+		INSERT INTO
+			t_collections (
+				"date_added",
+				"id",
+				"title",
+				"description",
+				"can_read",
+				"can_write"
+			)
+			values (?, ?, ?, ?, ?, ?)
+	*/
+	tblCol := DB_TABLE_TAXII_COLLECTIONS
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("INSERT INTO ")
+	sqlstmt.WriteString(tblCol)
+	sqlstmt.WriteString(" (date_added, id, title, description, can_read, can_write) ")
+	sqlstmt.WriteString("values (?, ?, ?, ?, ?, ?)")
+	stmt1 := sqlstmt.String()
+
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
+	// Make SQL Call
 	val, err1 := ds.DB.Exec(stmt1,
 		dateAdded,
 		obj.ID,
@@ -162,12 +152,15 @@ func (ds *Store) addCollection(obj *collections.Collection) error {
 		obj.CanWrite)
 
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
-		return fmt.Errorf("database execution error inserting collection", err1)
+		ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
+		return 0, fmt.Errorf("database execution error inserting collection", err1)
 	}
 
-	indexID, _ := val.LastInsertId()
-	ds.Cache.Collections[obj.ID].DatastoreID = int(indexID)
+	// Get the row_id from the last insert and store in the cache. This comes
+	// back from the database as an int64 so we need to convert back to an int.
+	rowID, _ := val.LastInsertId()
+	datastoreID := int(rowID)
+	ds.Cache.Collections[obj.ID].DatastoreID = datastoreID
 
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
@@ -189,13 +182,13 @@ func (ds *Store) addCollection(obj *collections.Collection) error {
 			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addCollection End with error")
-				return fmt.Errorf("database execution error inserting collection media type", err2)
+				ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
+				return 0, fmt.Errorf("database execution error inserting collection media type", err2)
 			}
 		}
 	}
-	ds.Logger.Levelln("Function", "FUNC: addCollection End")
-	return nil
+	ds.Logger.Levelln("Function", "FUNC: addCollection end")
+	return datastoreID, nil
 }
 
 // ----------------------------------------------------------------------
@@ -302,6 +295,47 @@ func sqlGetCollections(whichCollections string) (string, error) {
 }
 
 /*
+getCollectionDatastoreID - This method takes in a collection UUID and returns
+the collection datastore ID from the database if it is found. If it is not
+found it will return an error.
+*/
+func (ds *Store) getCollectionDatastoreID(uuid string) (int, error) {
+	ds.Logger.Levelln("Function", "FUNC: getCollectionDatastoreID start")
+	ds.Logger.Debugln("DEBUG: Getting the datastore ID for collection", uuid)
+	var datastoreID int
+
+	// Create SQL Statement
+	/*
+		SELECT
+			row_id
+		FROM
+			t_collections
+		WHERE
+			id = ?
+	*/
+	tblCol := DB_TABLE_TAXII_COLLECTIONS
+	var sqlstmt bytes.Buffer
+	sqlstmt.WriteString("SELECT row_id FROM ")
+	sqlstmt.WriteString(tblCol)
+	sqlstmt.WriteString(" WHERE id = ?")
+	stmt := sqlstmt.String()
+
+	// Make SQL Call
+	err := ds.DB.QueryRow(stmt, uuid).Scan(&datastoreID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+			return 0, errors.New("collection not found")
+		}
+		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+		return 0, fmt.Errorf("database execution error getting collection: ", err)
+	}
+	ds.Logger.Debugln("DEBUG: Datastore ID for collection", uuid, "is", datastoreID)
+	ds.Logger.Levelln("Function", "FUNC: getCollectionDatastoreID end")
+	return datastoreID, nil
+}
+
+/*
 getCollections - This method is called from either GetAllCollections(),
 GetAllEnabledCollections(), or GetCollections() and will return all of the
 collections that are asked for based on the method that called it.  The options
@@ -321,7 +355,7 @@ are hidden, so that it can start an HTTP router for it. The enabled and visible
 list is what would be displayed to a client that is pulling a collections resource.
 */
 func (ds *Store) getCollections(whichCollections string) (*collections.Collections, error) {
-	ds.Logger.Levelln("Function", "FUNC: getCollections Start")
+	ds.Logger.Levelln("Function", "FUNC: getCollections start")
 	ds.Logger.Debugln("DEBUG: Which Collections", whichCollections)
 
 	allCollections := collections.New()
@@ -333,17 +367,18 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 	// Query database for all the collections
 	rows, err := ds.DB.Query(stmt)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
+		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
 		return nil, fmt.Errorf("database execution error getting collection: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var datastoreID, enabled, hidden, iCanRead, iCanWrite int
+		var datastoreID int
+		var enabled, hidden, iCanRead, iCanWrite int
 		var dateAdded, id, title, description, mediaType string
 		if err := rows.Scan(&datastoreID, &dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
+			ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
 			return nil, fmt.Errorf("database scan error getting collection: ", err)
 		}
 
@@ -387,10 +422,10 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getCollections End with error")
+		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
 		return nil, fmt.Errorf("database row error getting collection: ", err)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: getCollections End")
+	ds.Logger.Levelln("Function", "FUNC: getCollections end")
 	return allCollections, nil
 }

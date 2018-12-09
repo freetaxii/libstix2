@@ -36,11 +36,11 @@ instead of sting concatenation as it is the most efficient way to do string
 concatenation in Go.
 */
 func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getManifestData Start")
+	ds.Logger.Levelln("Function", "FUNC: getManifestData start")
 
 	// Lets first make sure the collection exists in the cache
 	if _, found := ds.Cache.Collections[query.CollectionUUID]; !found {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
@@ -71,7 +71,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// and we should return an error versus just skipping the option.
 	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, err
 	}
 
@@ -121,7 +121,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	rows, err := ds.DB.Query(stmt)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
@@ -131,7 +131,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
 
@@ -156,12 +156,12 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
 	if len(manifestData.Objects) == 0 {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData End with error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
 
@@ -186,7 +186,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-	ds.Logger.Levelln("Function", "FUNC: getManifestData End")
+	ds.Logger.Levelln("Function", "FUNC: getManifestData end")
 	return &resultData, nil
 }
 
@@ -301,20 +301,22 @@ func (ds *Store) sqlCollectionDataQueryOptions(query collections.CollectionQuery
 
 /*
 sqlCollectionDataWhereCollectionID - This function will build the correct WHERE
-statement for a provided collection ID value and is called from
+statement for a provided collection ID (datastore id) value and is called from
 func sqlCollectionDataQueryOptions(query collections.CollectionQueryType) (string, error)
 */
-func sqlCollectionDataWhereCollectionID(id int, b *bytes.Buffer) error {
+func sqlCollectionDataWhereCollectionID(datastoreID int, b *bytes.Buffer) error {
 	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 
 	/*
 		This sql where statement should look like:
 		t_collection_data.collection_id = "some collection id"
 	*/
-	if id != 0 {
+	if datastoreID != 0 {
 		b.WriteString(tblColData)
 		b.WriteString(`.collection_id = `)
-		b.WriteString(strconv.Itoa(id))
+		// Even though we are matching an integer in the database we need to
+		// write a string out since the sql statement itself is a string.
+		b.WriteString(strconv.Itoa(datastoreID))
 	} else {
 		return errors.New("no collection ID was provided")
 	}
