@@ -7,14 +7,11 @@ package sqlite3
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/resources/collections"
-	"github.com/freetaxii/libstix2/stixid"
 	"github.com/gologme/log"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -99,41 +96,6 @@ func (ds *Store) Close() error {
 // Public Methods
 //
 // ----------------------------------------------------------------------
-
-/*
-GetObject - This method will take in a STIX ID and version timestamp (the
-modified timestamp from a STIX object) and return the matching STIX object.
-*/
-func (ds *Store) GetObject(id, version string) (interface{}, error) {
-	ds.Logger.Levelln("Function", "FUNC: GetObject start")
-
-	idparts := strings.Split(id, "--")
-
-	// If the datastore requires the id portion of the STIX id to be a valid
-	// UUIDv4, then lets test that.
-	if ds.Strict.IDs == true {
-		if !stixid.ValidUUID(idparts[1]) {
-			ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
-			return nil, errors.New("get STIX object error, invalid STIX ID")
-		}
-	}
-
-	if ds.Strict.Types == true {
-		if !stixid.ValidSTIXObjectType(idparts[0]) {
-			ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
-			return nil, errors.New("get STIX object error, invalid STIX type")
-		}
-	}
-
-	switch idparts[0] {
-	case "indicator":
-		ds.Logger.Levelln("Function", "FUNC: GetObject end")
-		return ds.getIndicator(id, version)
-	}
-
-	ds.Logger.Levelln("Function", "FUNC: GetObject exited with an error")
-	return nil, fmt.Errorf("get object error, the following STIX type is not currently supported: ", idparts[0])
-}
 
 /*
 AddObject - This method will take in a STIX object and add it to the
@@ -236,17 +198,16 @@ func (ds *Store) AddToCollection(collectionid, stixid string) error {
 /*
 GetObjects - This method will take in a query struct with range
 parameters for a collection and will return a STIX Bundle that contains all
-of the STIX objects that are in that collection that meet those query or range
-parameters.
+of the STIX objects that are in that collection that meet those query parameters.
 */
 func (ds *Store) GetObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	return ds.getBundle(query)
+	return ds.getObjects(query)
 }
 
 /*
 GetManifestData - This method will take in query struct with range
 parameters for a collection and will return a TAXII manifest that contains all
-of the records that match the query and range parameters.
+of the records that match the query parameters.
 */
 func (ds *Store) GetManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getManifestData(query)

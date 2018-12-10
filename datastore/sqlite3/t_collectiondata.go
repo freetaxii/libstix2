@@ -10,11 +10,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/freetaxii/libstix2/resources/envelope"
+	"github.com/freetaxii/libstix2/stixid"
 )
 
 // ----------------------------------------------------------------------
@@ -164,44 +166,84 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 // ----------------------------------------------------------------------
 //
 // Collection Data Table Private Functions and Methods
-// getBundle
+// getObjects
 //
 // ----------------------------------------------------------------------
 
 /*
-getBundle - This method will return a STIX bundle based on the query provided.
+getObjects - This method will return a STIX bundle based on the query provided.
 */
-func (ds *Store) getBundle(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getBundle start")
+func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
+	ds.Logger.Levelln("Function", "FUNC: getObjects start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: getBundle exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 
-	stixBundle := bundle.New()
+	taxiiEnvelope := envelope.New()
+	stixBundle, _ := taxiiEnvelope.NewBundle()
 
 	// First get a list of all of the objects that are in the collection that
 	// meet the query requirements. This is done with the manifest records.
 	resultData, err := ds.getManifestData(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getBundle exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error")
 		return nil, err
+	}
+
+	if resultData.ManifestData.More == true {
+		taxiiEnvelope.SetMore()
 	}
 
 	// Loop through all of the STIX IDs in the list and get the actual object
 	for _, v := range resultData.ManifestData.Objects {
-		obj, err := ds.GetObject(v.ID, v.Version)
+		var obj interface{}
+		var err error
 
-		if err != nil {
-			ds.Logger.Levelln("Function", "FUNC: getBundle exited with an error")
-			return nil, err
+		// ------------------------------------------------------------
+		// Test STIX ID to see if it is valid
+		// ------------------------------------------------------------
+		idparts := strings.Split(v.ID, "--")
+
+		// Is the UUIDv4 portion of the ID valid?
+		if ds.Strict.IDs == true {
+			if !stixid.ValidUUID(idparts[1]) {
+				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX UUID", idparts[1])
+				continue
+			}
 		}
+
+		// Is the STIX type part of the ID valid?
+		if ds.Strict.Types == true {
+			if !stixid.ValidSTIXObjectType(idparts[0]) {
+				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX type", idparts[0])
+				continue
+			}
+		}
+
+		// ------------------------------------------------------------
+		// Get object by type
+		// ------------------------------------------------------------
+
+		switch idparts[0] {
+		case "indicator":
+			obj, err = ds.getIndicator(v.ID, v.Version)
+			if err != nil {
+				ds.Logger.Debugln("DEBUG: Get object error,", err)
+				continue
+			}
+		default:
+			ds.Logger.Debugln("DEBUG: Get object error, the following STIX type is not currently supported: ", idparts[0])
+			continue
+		}
+
 		stixBundle.AddObject(obj)
 	}
-	resultData.BundleData = *stixBundle
-	ds.Logger.Levelln("Function", "FUNC: getBundle end")
+
+	resultData.ObjectData = *taxiiEnvelope
+	ds.Logger.Levelln("Function", "FUNC: getObjects end")
 	return resultData, nil
 }
 

@@ -111,7 +111,11 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	if limitQuery != 0 {
 		sqlstmt.WriteString(" LIMIT ")
-		i := strconv.Itoa(limitQuery)
+		// We need to ask for limit + 1 to see if there are more records available
+		// but only if a limit is being enforced. Later on we will check the number
+		// of records that comes back to see if we got limit or limit+1
+		limitQueryPagination := limitQuery + 1
+		i := strconv.Itoa(limitQueryPagination)
 		sqlstmt.WriteString(i)
 	}
 	stmt := sqlstmt.String()
@@ -127,12 +131,21 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	defer rows.Close()
 
 	// Loop through all records returned and build a manifest resource
+	counter := 0
 	for rows.Next() {
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
 			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
+		}
+
+		if counter == limitQuery {
+			// If we have added the number of records that the limit query is
+			// set to, then lets not add the last record, but rather set the
+			// pagination value of more to true and eject from the for loop
+			manifestData.SetMore()
+			continue
 		}
 
 		switch specVersion {
@@ -150,6 +163,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 			specVersion = defs.MEDIA_TYPE_STIX
 		}
 		manifestData.CreateRecord(stixid, dateAdded, modified, specVersion)
+		counter++
 	}
 
 	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
@@ -170,6 +184,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	ds.Logger.Debugln("DEBUG: Query Collection ID", query.CollectionUUID)
 	ds.Logger.Debugln("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
 
+	resultData.ManifestData.More = manifestData.More
 	resultData.ManifestData.Objects = manifestData.Objects
 
 	// ----------------------------------------------------------------------

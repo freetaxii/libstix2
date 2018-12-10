@@ -76,6 +76,13 @@ func (r *Envelope) NewBundle() (*bundle.Bundle, error) {
 }
 
 /*
+GetMore - This method will return the more property
+*/
+func (r *Envelope) GetMore() bool {
+	return r.More
+}
+
+/*
 SetMore - This method will set the more property to true
 */
 func (r *Envelope) SetMore() error {

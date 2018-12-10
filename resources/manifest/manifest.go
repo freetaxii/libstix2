@@ -35,6 +35,7 @@ type of indicator will return the manifest entries for objects with a type of
 indicator, even though the manifest doesn't have a type field.
 */
 type Manifest struct {
+	More    bool             `json:"more,omitempty"`
 	Objects []ManifestRecord `json:"objects,omitempty"`
 }
 
@@ -119,6 +120,21 @@ func (r *Manifest) CreateRecord(id, date, ver, media string) error {
 	m.SetDateAdded(date)
 	m.SetVersion(ver)
 	m.SetMediaType(media)
+	return nil
+}
+
+/*
+GetMore - This method will return the more property
+*/
+func (r *Manifest) GetMore() bool {
+	return r.More
+}
+
+/*
+SetMore - This method will set the more property to true
+*/
+func (r *Manifest) SetMore() error {
+	r.More = true
 	return nil
 }
 

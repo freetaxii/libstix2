@@ -6,7 +6,7 @@
 package collections
 
 import (
-	"github.com/freetaxii/libstix2/objects/bundle"
+	"github.com/freetaxii/libstix2/resources/envelope"
 	"github.com/freetaxii/libstix2/resources/manifest"
 	"github.com/freetaxii/libstix2/resources/properties"
 )
@@ -120,7 +120,7 @@ type CollectionQueryResult struct {
 	Size           int
 	DateAddedFirst string
 	DateAddedLast  string
-	BundleData     bundle.Bundle
+	ObjectData     envelope.Envelope
 	ManifestData   manifest.Manifest
 	// RangeBegin     int
 	// RangeEnd       int
