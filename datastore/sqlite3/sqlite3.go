@@ -323,7 +323,7 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 	// ------------------------------------------------------------
 	// Populate the cache with all of the collections
 	// ------------------------------------------------------------
-	// Check to see if each collection ID from the passed in list is already in
+	// Check to see if each collection UUID from the passed in list is already in
 	// the datastore.
 	// 	- If it is, grab the datastore ID and stick in the cache
 	// 	- If it is not, then add it to the database, and get the datastore ID
@@ -367,31 +367,6 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 		ds.Cache.Collections[c.ID] = &localCollection
 
 	} // End loop through collections from configuration file
-
-	// // Get a list of all of the collections in the datastore, however, this
-	// // needs to change, we need to only trust the collections in the configuration
-	// // file, since other collections in the database will not be assigned to an
-	// // API root.
-	// allCollections, err := ds.GetAllCollections()
-	// if err != nil {
-	// 	ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
-	// 	return err
-	// }
-
-	// // Populate the cache with the collections from the datastore
-	// for k, c := range allCollections.Collections {
-	// 	ds.Cache.Collections[c.ID] = &allCollections.Collections[k]
-
-	// 	// Get the size of the collection
-	// 	ds.Logger.Debugln("DEBUG: Getting collection size for collection", c.ID)
-	// 	size, err3 := ds.getCollectionSize(c.ID)
-	// 	if err3 != nil {
-	// 		ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
-	// 		return err3
-	// 	}
-	// 	// If there was no error, set the size of the collection in the cache
-	// 	ds.Cache.Collections[c.ID].Size = size
-	// }
 
 	for k, v := range ds.Cache.Collections {
 		ds.Logger.Debugln("DEBUG: Current collection cache: index key", k, "datastore ID", v.DatastoreID, "size", v.Size)

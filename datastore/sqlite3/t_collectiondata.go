@@ -107,14 +107,19 @@ an entry in the taxii_collection_data table. In this table we use the STIX ID
 not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
-func (ds *Store) addToCollection(collectionid, stixid string) error {
+func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 	ds.Logger.Levelln("Function", "FUNC: addToCollection start")
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
+	// Lets first make sure the collection exists in the cache
+	if found := ds.doesCollectionExistInTheCache(collectionUUID); !found {
+		ds.Logger.Levelln("Function", "FUNC: addToCollection exited with an error")
+		return fmt.Errorf("the following collection id was not found in the cache", collectionUUID)
+	}
 
 	// We are storing the Collection DatastoreID which is an integer instead
 	// of the long collection ID string (UUID). So lets get the DatastoreID from
 	// the cache.
-	collectionDatastoreID := ds.Cache.Collections[collectionid].DatastoreID
+	collectionDatastoreID := ds.Cache.Collections[collectionUUID].DatastoreID
 	ds.Logger.Debugln("DEBUG: Collection Datastore ID", collectionDatastoreID)
 	ds.Logger.Debugln("DEBUG: Object ID", stixid)
 
@@ -140,6 +145,8 @@ func (ds *Store) addToCollection(collectionid, stixid string) error {
 	// to a secondary table and then have a second process go through and merge
 	// them. This way the end client would not be held up by the transaction.
 
+	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, dateAdded, collectionDatastoreID, stixid)
 	if err != nil {
@@ -148,8 +155,8 @@ func (ds *Store) addToCollection(collectionid, stixid string) error {
 	}
 
 	// If the operation was successful, lets increment the collection cache size
-	ds.Cache.Collections[collectionid].Size++
-	ds.Logger.Debugln("DEBUG: Collection ID", collectionid, "now has a size of", ds.Cache.Collections[collectionid].Size)
+	ds.Cache.Collections[collectionUUID].Size++
+	ds.Logger.Debugln("DEBUG: Collection ID", collectionUUID, "now has a size of", ds.Cache.Collections[collectionUUID].Size)
 	ds.Logger.Levelln("Function", "FUNC: addToCollection end")
 	return nil
 }
@@ -168,7 +175,7 @@ func (ds *Store) getBundle(query collections.CollectionQuery) (*collections.Coll
 	ds.Logger.Levelln("Function", "FUNC: getBundle start")
 
 	// Lets first make sure the collection exists in the cache
-	if _, found := ds.Cache.Collections[query.CollectionUUID]; !found {
+	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
 		ds.Logger.Levelln("Function", "FUNC: getBundle exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}

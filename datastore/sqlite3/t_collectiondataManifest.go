@@ -39,7 +39,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	ds.Logger.Levelln("Function", "FUNC: getManifestData start")
 
 	// Lets first make sure the collection exists in the cache
-	if _, found := ds.Cache.Collections[query.CollectionUUID]; !found {
+	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
 		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}

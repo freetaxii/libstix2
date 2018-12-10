@@ -70,35 +70,24 @@ func collectionMediaTypeProperties() string {
 // ----------------------------------------------------------------------
 //
 // Collection Table Private Functions and Methods
+// doesCollectionExistInTheCache
 // addCollection
+// getCollectionDatastoreID
+// getCollections
 //
 // ----------------------------------------------------------------------
 
 /*
-sqlAddCollectionMediaType - This function will return an SQL statement that will
-insert a media type for a given collection.
+doesCollectionExistInTheCache - This method will check to see if the collection
+already exists in the cache. This is used by several methods that get data from
+the datastore, to make sure the collection is a valid collection.
+Called from: addToCollection(), getBundle(), getManifestData(),
 */
-func sqlAddCollectionMediaType() (string, error) {
-	tblColMedia := DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
-
-	/*
-		INSERT INTO
-			t_collection_media_type (
-				"collection_id",
-				"media_type_id"
-			)
-			values (?, ?)
-	*/
-
-	var s bytes.Buffer
-	s.WriteString("INSERT INTO ")
-	s.WriteString(tblColMedia)
-	s.WriteString(" (")
-	s.WriteString("\"collection_id\", ")
-	s.WriteString("\"media_type_id\") ")
-	s.WriteString("values (?, ?)")
-
-	return s.String(), nil
+func (ds *Store) doesCollectionExistInTheCache(collectionUUID string) bool {
+	if _, found := ds.Cache.Collections[collectionUUID]; found {
+		return true
+	}
+	return false
 }
 
 /*
@@ -108,16 +97,6 @@ error if there is one.
 */
 func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 	ds.Logger.Levelln("Function", "FUNC: addCollection start")
-
-	// Lets first make sure the collection does not already exist in the cache
-	if _, found := ds.Cache.Collections[obj.ID]; found {
-		ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
-		return 0, fmt.Errorf("the following collection id was already found in the cache", obj.ID)
-	}
-	// If the object ID is not found in the cache, then lets initialize it with
-	// a TAXII collection object. This NewColleciton() function will return a
-	// pointer, which is what we need here.
-	ds.Cache.Collections[obj.ID] = collections.NewCollection()
 
 	// Create SQL Statement
 	/*
@@ -160,13 +139,12 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 	// back from the database as an int64 so we need to convert back to an int.
 	rowID, _ := val.LastInsertId()
 	datastoreID := int(rowID)
-	ds.Cache.Collections[obj.ID].DatastoreID = datastoreID
 
+	// Add the media types to the collection
 	if obj.MediaTypes != nil {
 		for _, media := range obj.MediaTypes {
-			stmt2, _ := sqlAddCollectionMediaType()
 
-			// TODO look up in cache
+			// TODO These should really be in the cache where we can look them up
 			mediavalue := 0
 			switch media {
 			case "application/stix+json;version=2.0":
@@ -179,6 +157,23 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 				mediavalue = 4
 			}
 
+			// Create SQL Statement
+			/*
+				INSERT INTO
+					t_collection_media_type (
+						collection_id,
+						media_type_id
+					)
+					values (?, ?)
+			*/
+			tblColMedia := DB_TABLE_TAXII_COLLECTION_MEDIA_TYPE
+			var sqlstmt bytes.Buffer
+			sqlstmt.WriteString("INSERT INTO ")
+			sqlstmt.WriteString(tblColMedia)
+			sqlstmt.WriteString(" (collection_id, media_type_id) values (?, ?)")
+			stmt2 := sqlstmt.String()
+
+			// Make SQL Call
 			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
@@ -190,13 +185,6 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 	ds.Logger.Levelln("Function", "FUNC: addCollection end")
 	return datastoreID, nil
 }
-
-// ----------------------------------------------------------------------
-//
-// Collection Table Private Functions and Methods
-// getCollection
-//
-// ----------------------------------------------------------------------
 
 /*
 sqlGetCollections - This function will return an SQL statement that will return a
