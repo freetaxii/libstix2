@@ -83,10 +83,10 @@ func (ds *Store) getCollectionSize(collectionDatastoreID int) (int, error) {
 	err := ds.DB.QueryRow(stmt, collectionDatastoreID).Scan(&size)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error,", err)
 			return 0, errors.New("no collection data found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error,", err)
 		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
@@ -152,7 +152,7 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, dateAdded, collectionDatastoreID, stixid)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addToCollection exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addToCollection exited with an error,", err)
 		return fmt.Errorf("database execution error inserting collection data: ", err)
 	}
 
@@ -189,7 +189,7 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 	// meet the query requirements. This is done with the manifest records.
 	resultData, err := ds.getManifestData(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error,", err)
 		return nil, err
 	}
 

@@ -71,7 +71,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// and we should return an error versus just skipping the option.
 	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, err
 	}
 
@@ -125,7 +125,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	rows, err := ds.DB.Query(stmt)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
@@ -136,7 +136,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
 
@@ -170,7 +170,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 

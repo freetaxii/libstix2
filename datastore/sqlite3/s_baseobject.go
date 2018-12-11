@@ -132,10 +132,10 @@ func (ds *Store) getBaseObjectIndex() (int, error) {
 	err := ds.DB.QueryRow(stmt).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
 			return 0, errors.New("no base object record found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
 		return 0, fmt.Errorf("database execution error getting base index: ", err)
 	}
 
@@ -162,7 +162,6 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
 
 	datastoreID := ds.Cache.BaseObjectIDIndex
-	ds.Cache.BaseObjectIDIndex++
 
 	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", datastoreID, "and STIX ID", obj.ID)
 
@@ -207,9 +206,13 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 		obj.Lang)
 
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err1)
 		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
 	}
+
+	// Update the cache index so it is ready for the next insert, but only
+	// if the previous insert was successful
+	ds.Cache.BaseObjectIDIndex++
 
 	// ----------------------------------------------------------------------
 	// Add Labels
@@ -218,7 +221,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 		for _, label := range obj.Labels {
 			err2 := ds.addLabel(datastoreID, label)
 			if err2 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error")
+				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err2)
 				return 0, err2
 			}
 		}
@@ -231,7 +234,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 		for _, reference := range obj.ExternalReferences {
 			err3 := ds.addExternalReference(datastoreID, reference)
 			if err3 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error")
+				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err3)
 				return 0, err3
 			}
 		}
@@ -245,7 +248,7 @@ func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, err
 			err4 := ds.addObjectMarkingRef(datastoreID, marking)
 
 			if err4 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error")
+				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err4)
 				return 0, err4
 			}
 		}
@@ -345,10 +348,10 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&datastoreID, &dateAdded, &objectType, &specVersion, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
 			return nil, errors.New("no base object record found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
 	baseObj.SetDatastoreID(datastoreID)
@@ -369,7 +372,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 
 	externalRefData, err1 := ds.getExternalReferences(datastoreID)
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err1)
 		return nil, err1
 	}
 	baseObj.ExternalReferencesProperty = *externalRefData
@@ -411,7 +414,7 @@ func (ds *Store) addLabel(datastoreID int, label string) error {
 	_, err := ds.DB.Exec(stmt, datastoreID, label)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addLabel exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addLabel exited with an error,", err)
 		return fmt.Errorf("database execution error inserting object label: ", err)
 	}
 	ds.Logger.Levelln("Function", "FUNC: addLabel end")
@@ -461,7 +464,7 @@ func (ds *Store) addExternalReference(datastoreID int, extref baseobject.Externa
 		extref.ExternalID)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addExternalReference exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addExternalReference exited with an error,", err)
 		return fmt.Errorf("database execution error inserting external reference: ", err)
 	}
 	ds.Logger.Levelln("Function", "FUNC: addExternalReference end")
@@ -508,7 +511,7 @@ func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalRef
 
 		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting external references: ", err)
 		}
 		e.SetSourceName(sourceName)
@@ -521,7 +524,7 @@ func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalRef
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error,", err)
 		return nil, fmt.Errorf("database rows error getting external references: ", err)
 	}
 	ds.Logger.Levelln("Function", "FUNC: getExternalReferences end")
@@ -562,7 +565,7 @@ func (ds *Store) addObjectMarkingRef(datastoreID int, marking string) error {
 	_, err := ds.DB.Exec(stmt, datastoreID, marking)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef exited with an error,", err)
 		return fmt.Errorf("database execution error inserting object marking ref: ", err)
 	}
 	ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef end")

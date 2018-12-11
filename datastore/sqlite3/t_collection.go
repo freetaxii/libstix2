@@ -131,7 +131,7 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 		obj.CanWrite)
 
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error,", err1)
 		return 0, fmt.Errorf("database execution error inserting collection", err1)
 	}
 
@@ -177,7 +177,7 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 			_, err2 := ds.DB.Exec(stmt2, obj.ID, mediavalue)
 
 			if err2 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error")
+				ds.Logger.Levelln("Function", "FUNC: addCollection exited with an error,", err2)
 				return 0, fmt.Errorf("database execution error inserting collection media type", err2)
 			}
 		}
@@ -312,10 +312,10 @@ func (ds *Store) getCollectionDatastoreID(uuid string) (int, error) {
 	err := ds.DB.QueryRow(stmt, uuid).Scan(&datastoreID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
 			return 0, errors.New("collection not found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
 		return 0, fmt.Errorf("database execution error getting collection: ", err)
 	}
 	ds.Logger.Debugln("DEBUG: Datastore ID for collection", uuid, "is", datastoreID)
@@ -355,7 +355,7 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 	// Query database for all the collections
 	rows, err := ds.DB.Query(stmt)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting collection: ", err)
 	}
 	defer rows.Close()
@@ -366,7 +366,7 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 		var dateAdded, id, title, description, mediaType string
 		if err := rows.Scan(&datastoreID, &dateAdded, &enabled, &hidden, &id, &title, &description, &iCanRead, &iCanWrite, &mediaType); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting collection: ", err)
 		}
 
@@ -410,7 +410,7 @@ func (ds *Store) getCollections(whichCollections string) (*collections.Collectio
 
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: getCollections exited with an error,", err)
 		return nil, fmt.Errorf("database row error getting collection: ", err)
 	}
 

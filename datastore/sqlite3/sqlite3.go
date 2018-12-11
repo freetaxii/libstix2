@@ -109,7 +109,7 @@ func (ds *Store) AddObject(obj interface{}) error {
 		ds.Logger.Debugln("DEBUG: Found Indicator to add to datastore")
 		err := ds.addIndicator(o)
 		if err != nil {
-			ds.Logger.Levelln("Function", "FUNC: AddObject exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: AddObject exited with an error,", err)
 			return err
 		}
 	default:
@@ -128,17 +128,26 @@ database.
 func (ds *Store) AddTAXIIObject(obj interface{}) error {
 	ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject start")
 	var err error
+	var datastoreID int
 
 	switch o := obj.(type) {
 	case *collections.Collection:
 		ds.Logger.Debugln("DEBUG: Adding TAXII Collection to datastore")
 		// TODO if you add a collection this way, it will not be in the cache, so I need to fix that
-		_, err = ds.addCollection(o)
+		// it will also not be saved to the configuration file so it will not be there next time
+		// This needs to be fixed and cleaned up, it is hack for now.
+		datastoreID, err = ds.addCollection(o)
+		if err == nil {
+			o.DatastoreID = datastoreID
+			if _, found := ds.Cache.Collections[o.ID]; !found {
+				ds.Cache.Collections[o.ID] = o
+			}
+		}
 	default:
 		err = fmt.Errorf("does not match any known types ", o)
 	}
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: AddTAXIIObject exited with an error,", err)
 		return err
 	}
 
@@ -272,11 +281,11 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 	// TODO - fix this once I setup my own error type
 	baseObjectIndex, err := ds.getBaseObjectIndex()
 	if err != nil && err.Error() != "no base object record found" {
-		ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+		ds.Logger.Levelln("Function", "FUNC: initCache exited with an error,", err)
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
-	ds.Logger.Debugln("DEBUG: The next base object index ID id", ds.Cache.BaseObjectIDIndex)
+	ds.Logger.Debugln("DEBUG: The next base object index ID is", ds.Cache.BaseObjectIDIndex)
 
 	// Initialize the collections cache in the datastore
 	ds.Cache.Collections = make(map[string]*collections.Collection)
@@ -306,7 +315,7 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 			// The collection was not found in the database, so we need to add it
 			datastoreID, err2 = ds.addCollection(&c)
 			if err2 != nil {
-				ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+				ds.Logger.Levelln("Function", "FUNC: initCache exited with an error,", err2)
 				return err2
 			}
 		}
@@ -314,7 +323,7 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 		// Get the size of the collection
 		size, err3 := ds.getCollectionSize(datastoreID)
 		if err3 != nil {
-			ds.Logger.Levelln("Function", "FUNC: initCache exited with an error")
+			ds.Logger.Levelln("Function", "FUNC: initCache exited with an error,", err3)
 			return err3
 		}
 
