@@ -268,11 +268,13 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 
 	var baseObj baseobject.CommonObjectProperties
 	var datastoreID int
-	var dateAdded, objectType, specVersion, id, createdByRef, created, modified, lang string
+	var dateAdded, objectType, specVersion, id, created, modified string
+	var createdByRef, lang sql.NullString
 
 	// Since not every object will have a label, and since we are using group_concat
-	// we need to define the label as a pointer so it can be a null value.
-	var label *string
+	// we need to define the label as a pointer so it can be a null value. Made it
+	// a NullString so that it would be consistent.
+	var label sql.NullString
 	var revoked, confidence int
 
 	// Create SQL Statement
@@ -292,7 +294,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 			group_concat(s_labels.label)
 		FROM
 			s_base_object
-		JOIN
+		LEFT JOIN
 			s_labels ON
 			s_base_object.datastore_id = s_labels.datastore_id
 		WHERE
@@ -358,16 +360,24 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	baseObj.SetObjectType(objectType)
 	baseObj.SetSpecVersion(specVersion)
 	baseObj.SetID(id)
-	baseObj.SetCreatedByRef(createdByRef)
+	if createdByRef.Valid {
+		baseObj.SetCreatedByRef(createdByRef.String)
+	}
+
 	baseObj.SetCreated(created)
 	baseObj.SetModified(modified)
 	if revoked == 1 {
 		baseObj.SetRevoked()
 	}
+
 	baseObj.SetConfidence(confidence)
-	baseObj.SetLang(lang)
-	if label != nil {
-		baseObj.AddLabel(*label)
+
+	if lang.Valid {
+		baseObj.SetLang(lang.String)
+	}
+
+	if label.Valid {
+		baseObj.AddLabel(label.String)
 	}
 
 	externalRefData, err1 := ds.getExternalReferences(datastoreID)
@@ -506,7 +516,8 @@ func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalRef
 	defer rows.Close()
 
 	for rows.Next() {
-		var sourceName, description, url, externalID string
+		var sourceName string
+		var description, url, externalID sql.NullString
 		e, _ := extrefs.NewExternalReference()
 
 		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
@@ -515,9 +526,18 @@ func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalRef
 			return nil, fmt.Errorf("database scan error getting external references: ", err)
 		}
 		e.SetSourceName(sourceName)
-		e.SetDescription(description)
-		e.SetURL(url)
-		e.SetExternalID(externalID)
+		if description.Valid {
+			e.SetDescription(description.String)
+		}
+
+		if url.Valid {
+			e.SetURL(url.String)
+		}
+
+		if externalID.Valid {
+			e.SetExternalID(externalID.String)
+		}
+
 	}
 
 	// Errors can cause the rows.Next() to exit prematurely, if this happens lets

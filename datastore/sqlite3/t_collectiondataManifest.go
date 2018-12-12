@@ -236,19 +236,19 @@ func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 	}
 
 	if client > srv {
-		ds.Logger.Debugln("DEBUG: client limit value is greater than the server limit, using server limit")
+		ds.Logger.Debugln("DEBUG: client limit value is greater than the server limit, using server limit of", srv)
 		return srv
 	} else if client < 0 {
-		ds.Logger.Debugln("DEBUG: client limit value is less than zero, using server limit")
+		ds.Logger.Debugln("DEBUG: client limit value is less than zero, using server limit of", srv)
 		return srv
 	} else if client == 0 {
-		ds.Logger.Debugln("DEBUG: client limit value is equal to zero, using server limit")
+		ds.Logger.Debugln("DEBUG: client limit value is equal to zero, using server limit of", srv)
 		return srv
 	} else if client == srv {
-		ds.Logger.Debugln("DEBUG: client limit value is equal to server limit, using server limit")
+		ds.Logger.Debugln("DEBUG: client limit value is equal to server limit, using server limit of", srv)
 		return srv
 	} else if client < srv {
-		ds.Logger.Debugln("DEBUG: client limit value is less than server limit, using client limit")
+		ds.Logger.Debugln("DEBUG: client limit value is less than server limit, using client limit of", client)
 		return client
 	}
 

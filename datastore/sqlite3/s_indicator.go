@@ -161,7 +161,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 			group_concat(s_indicator_types.indicator_type)
 		FROM
 			s_indicator
-		JOIN
+		LEFT JOIN
 			s_indicator_types ON
 			s_indicator.datastore_id = s_indicator_types.datastore_id
 		WHERE
@@ -186,7 +186,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	sqlstmt.WriteString(".indicator_type) ")
 	sqlstmt.WriteString("FROM ")
 	sqlstmt.WriteString(tblInd)
-	sqlstmt.WriteString(" JOIN ")
+	sqlstmt.WriteString(" LEFT JOIN ")
 	sqlstmt.WriteString(tblIndType)
 	sqlstmt.WriteString(" ON ")
 	sqlstmt.WriteString(tblInd)
@@ -199,7 +199,8 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	stmt := sqlstmt.String()
 
 	// Make SQL Call
-	var name, description, pattern, validFrom, validUntil, indTypes string
+	var name, description, pattern, validFrom, validUntil, indTypes sql.NullString
+
 	err := ds.DB.QueryRow(stmt, i.DatastoreID).Scan(&name, &description, &pattern, &validFrom, &validUntil, &indTypes)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -209,12 +210,30 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 		ds.Logger.Levelln("Function", "FUNC: getIndicator exited with an error")
 		return nil, fmt.Errorf("database execution error getting indicator: ", err)
 	}
-	i.SetName(name)
-	i.SetDescription(description)
-	i.AddType(indTypes)
-	i.SetPattern(pattern)
-	i.SetValidFrom(validFrom)
-	i.SetValidUntil(validUntil)
+
+	if name.Valid {
+		i.SetName(name.String)
+	}
+
+	if description.Valid {
+		i.SetDescription(description.String)
+	}
+
+	if indTypes.Valid {
+		i.AddType(indTypes.String)
+	}
+
+	if pattern.Valid {
+		i.SetPattern(pattern.String)
+	}
+
+	if validFrom.Valid {
+		i.SetValidFrom(validFrom.String)
+	}
+
+	if validUntil.Valid {
+		i.SetValidUntil(validUntil.String)
+	}
 
 	killChainPhases, errkc := ds.getKillChainPhases(i.DatastoreID)
 	if errkc != nil {
