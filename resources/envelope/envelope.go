@@ -6,7 +6,7 @@
 package envelope
 
 import (
-	"github.com/freetaxii/libstix2/objects/bundle"
+	"encoding/json"
 )
 
 // ----------------------------------------------------------------------
@@ -26,15 +26,15 @@ This specification does not define any other form of content wrapper for objects
 outside of STIX content.
 
 For example:
-* A single indicator in response to a request for an indicator by ID is enclosed
-in a bundle inside of an envelope.
-* A list of campaigns returned from a Collection is enclosed in a bundle inside of
-an envelope.
-* An empty response with no STIX objects results in an empty envelope.
 */
 type Envelope struct {
-	More bool           `json:"more,omitempty"`
-	Data *bundle.Bundle `json:"data,omitempty"`
+	More    bool          `json:"more,omitempty"`
+	Objects []interface{} `json:"objects,omitempty"`
+}
+
+type EnvelopeRawDecode struct {
+	More    bool              `json:"more,omitempty"`
+	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -55,24 +55,12 @@ func New() *Envelope {
 // ----------------------------------------------------------------------
 
 /*
-AddBundle - This method takes in an object that represents a STIX Bundle and
-adds it to the envelope. This method would be used if the Bundle was created
-separately and it just needs to be added in whole to the envelope.
+AddObject - This method will take in an object as an interface and add it to
+the list of objects in the envelope
 */
-func (r *Envelope) AddBundle(o *bundle.Bundle) error {
-	r.Data = o
+func (r *Envelope) AddObject(o interface{}) error {
+	r.Objects = append(r.Objects, o)
 	return nil
-}
-
-/*
-NewBundle - This method is used to create a STIX Bundle and automatically
-add it to the envelope. It returns a bundle.Bundle which is a pointer to the
-actual STIX Bundle that was created in the envelope.
-*/
-func (r *Envelope) NewBundle() (*bundle.Bundle, error) {
-	o := bundle.New()
-	r.Data = o
-	return r.Data, nil
 }
 
 /*

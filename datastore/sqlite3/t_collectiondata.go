@@ -183,7 +183,6 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 	}
 
 	taxiiEnvelope := envelope.New()
-	stixBundle, _ := taxiiEnvelope.NewBundle()
 
 	// First get a list of all of the objects that are in the collection that
 	// meet the query requirements. This is done with the manifest records.
@@ -239,7 +238,7 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 			continue
 		}
 
-		stixBundle.AddObject(obj)
+		taxiiEnvelope.AddObject(obj)
 	}
 
 	resultData.ObjectData = *taxiiEnvelope
