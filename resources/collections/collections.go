@@ -95,6 +95,7 @@ type CollectionQuery struct {
 	AddedAfter            []string // Passed in from the URL
 	AddedBefore           []string // Passed in from the URL
 	Limit                 []string // Passed in from the URL
+	SpecVersion           []string // Passed in from the URL
 	ServerRecordLimit     int      // Server defined value in the configuration file
 }
 

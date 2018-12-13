@@ -70,6 +70,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// If an error is found, that means a query parameter was passed incorrectly
 	// and we should return an error versus just skipping the option.
 	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
+
 	if err != nil {
 		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, err
@@ -231,24 +232,24 @@ func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 		client, err = strconv.Atoi(query.Limit[0])
 	}
 	if err != nil {
-		ds.Logger.Debugln("DEBUG: client limit value is not valid: ", err)
+		ds.Logger.Debugln("DEBUG: Client limit value is not valid: ", err)
 		return srv
 	}
 
 	if client > srv {
-		ds.Logger.Debugln("DEBUG: client limit value is greater than the server limit, using server limit of", srv)
+		ds.Logger.Debugln("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
 		return srv
 	} else if client < 0 {
-		ds.Logger.Debugln("DEBUG: client limit value is less than zero, using server limit of", srv)
+		ds.Logger.Debugln("DEBUG: Client limit value is less than zero, using server limit of", srv)
 		return srv
 	} else if client == 0 {
-		ds.Logger.Debugln("DEBUG: client limit value is equal to zero, using server limit of", srv)
+		ds.Logger.Debugln("DEBUG: Client limit value is equal to zero, using server limit of", srv)
 		return srv
 	} else if client == srv {
-		ds.Logger.Debugln("DEBUG: client limit value is equal to server limit, using server limit of", srv)
+		ds.Logger.Debugln("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
 		return srv
 	} else if client < srv {
-		ds.Logger.Debugln("DEBUG: client limit value is less than server limit, using client limit of", client)
+		ds.Logger.Debugln("DEBUG: Client limit value is less than server limit, using client limit of", client)
 		return client
 	}
 
@@ -308,6 +309,15 @@ func (ds *Store) sqlCollectionDataQueryOptions(query collections.CollectionQuery
 	// parentheses as the comma represents an OR operator.
 	// ----------------------------------------------------------------------
 	if err = sqlCollectionDataWhereSTIXVersion(query.STIXVersion, &wherestmt); err != nil {
+		return "", err
+	}
+
+	// ----------------------------------------------------------------------
+	// Check to see if one or more sepc versions to query on was supplied.
+	// If there is more than one option given, we need to enclose the options in
+	// parentheses as the comma represents an OR operator.
+	// ----------------------------------------------------------------------
+	if err = sqlCollectionDataWhereSpecVersion(query.SpecVersion, &wherestmt); err != nil {
 		return "", err
 	}
 
@@ -627,6 +637,62 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 					return errors.New("the provided timestamp for the version is invalid")
 				}
 			}
+		}
+		b.WriteString(`)`)
+	}
+
+	return nil
+}
+
+/*
+sqlCollectionDataWhereSpecVersion - This function will build the correct WHERE
+statement when one or more STIX versions is provided and is called from
+func sqlCollectionDataQueryOptions(query collections.CollectionQueryType) (string, error).
+*/
+func sqlCollectionDataWhereSpecVersion(vers []string, b *bytes.Buffer) error {
+	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+
+	/*
+		This sql where statement should look like one of the following:
+		t_collection_data.collection_id = "aa" AND
+		s_base_object.spec_version = "2.0"
+
+		t_collection_data.collection_id = "aa" AND
+		(s_base_object.spec_version = "2.0" OR
+		s_base_object.spec_version = "2.1")
+	*/
+
+	if len(vers) == 1 {
+
+		if vers[0] == "2.0" {
+			b.WriteString(" AND ")
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.spec_version = "2.0" `)
+		} else {
+			b.WriteString(" AND ")
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.spec_version = "2.1" `)
+		}
+
+	} else if len(vers) > 1 {
+		b.WriteString(" AND (")
+		for i, v := range vers {
+			// Lets only add he OR after the first object and not after the
+			// last object. Since skipOr starts as true, this takes care of
+			// the first run case where i == 0
+
+			if i > 0 {
+				b.WriteString(" OR ")
+			}
+
+			if v == "2.0" {
+				b.WriteString(tblBaseObj)
+				b.WriteString(`.spec_version = "2.0"`)
+			} else {
+				b.WriteString(tblBaseObj)
+				b.WriteString(`.spec_version = "2.1"`)
+			}
+
 		}
 		b.WriteString(`)`)
 	}
