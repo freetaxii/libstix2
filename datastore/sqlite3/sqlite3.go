@@ -205,18 +205,27 @@ func (ds *Store) AddToCollection(collectionid, stixid string) error {
 }
 
 /*
-GetObjects - This method will take in a query struct with range
-parameters for a collection and will return a STIX Bundle that contains all
-of the STIX objects that are in that collection that meet those query parameters.
+GetObjects - This method will take in a query struct for a collection and will
+return a TAXII Enveloper resource that contains all of the STIX objects that are
+in that collection that meet those query parameters.
 */
 func (ds *Store) GetObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getObjects(query)
 }
 
 /*
-GetManifestData - This method will take in query struct with range
-parameters for a collection and will return a TAXII manifest that contains all
-of the records that match the query parameters.
+GetVersions - This method will take in a query struct for a collection and will
+return a TAXII versions resource that contains all of the versions of the STIX
+objects that are in that collection that meet those query parameters.
+*/
+func (ds *Store) GetVersions(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
+	return ds.getVersions(query)
+}
+
+/*
+GetManifestData - This method will take in query struct for a collection and
+will return a TAXII manifest resource that contains all of the records that
+match the query parameters.
 */
 func (ds *Store) GetManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	return ds.getManifestData(query)

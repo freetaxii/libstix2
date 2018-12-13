@@ -23,5 +23,6 @@ type Datastorer interface {
 	AddTAXIIObject(obj interface{}) error
 	AddToCollection(collectionid, stixid string) error
 	GetObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error)
+	GetVersions(query collections.CollectionQuery) (*collections.CollectionQueryResult, error)
 	GetManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error)
 }

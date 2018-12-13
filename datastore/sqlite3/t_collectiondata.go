@@ -16,6 +16,7 @@ import (
 	"github.com/freetaxii/libstix2/defs"
 	"github.com/freetaxii/libstix2/resources/collections"
 	"github.com/freetaxii/libstix2/resources/envelope"
+	"github.com/freetaxii/libstix2/resources/versions"
 	"github.com/freetaxii/libstix2/stixid"
 )
 
@@ -167,11 +168,12 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 //
 // Collection Data Table Private Functions and Methods
 // getObjects
+// getVersions
 //
 // ----------------------------------------------------------------------
 
 /*
-getObjects - This method will return a STIX bundle based on the query provided.
+getObjects - This method will return a TAXII Envelope resource based on the query provided.
 */
 func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
 	ds.Logger.Levelln("Function", "FUNC: getObjects start")
@@ -243,6 +245,42 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 
 	resultData.ObjectData = *taxiiEnvelope
 	ds.Logger.Levelln("Function", "FUNC: getObjects end")
+	return resultData, nil
+}
+
+/*
+getVersions - This method will return a TAXII Versions resource based on the query provided.
+*/
+func (ds *Store) getVersions(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
+	ds.Logger.Levelln("Function", "FUNC: getVersions start")
+
+	// Lets first make sure the collection exists in the cache
+	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
+		ds.Logger.Levelln("Function", "FUNC: getVersions exited with an error")
+		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
+	}
+
+	taxiiVersions := versions.New()
+
+	// First get a list of all of the objects that are in the collection that
+	// meet the query requirements. This is done with the manifest records.
+	resultData, err := ds.getManifestData(query)
+	if err != nil {
+		ds.Logger.Levelln("Function", "FUNC: getVersions exited with an error,", err)
+		return nil, err
+	}
+
+	if resultData.ManifestData.More == true {
+		taxiiVersions.SetMore()
+	}
+
+	// Loop through all of the STIX IDs in the list and get the actual object
+	for _, v := range resultData.ManifestData.Objects {
+		taxiiVersions.AddVersion(v.Version)
+	}
+
+	resultData.VersionsData = *taxiiVersions
+	ds.Logger.Levelln("Function", "FUNC: getVersions end")
 	return resultData, nil
 }
 

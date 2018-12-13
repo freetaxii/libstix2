@@ -9,6 +9,7 @@ import (
 	"github.com/freetaxii/libstix2/resources/envelope"
 	"github.com/freetaxii/libstix2/resources/manifest"
 	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/resources/versions"
 )
 
 // ----------------------------------------------------------------------
@@ -121,6 +122,7 @@ type CollectionQueryResult struct {
 	DateAddedFirst string
 	DateAddedLast  string
 	ObjectData     envelope.Envelope
+	VersionsData   versions.Versions
 	ManifestData   manifest.Manifest
 	// RangeBegin     int
 	// RangeEnd       int
