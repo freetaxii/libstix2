@@ -96,8 +96,6 @@ type CollectionQuery struct {
 	AddedBefore           []string // Passed in from the URL
 	Limit                 []string // Passed in from the URL
 	ServerRecordLimit     int      // Server defined value in the configuration file
-	// RangeBegin            int      // Passed in from Range Headers
-	// RangeEnd              int      // Passed in from Range Headers
 }
 
 /*
