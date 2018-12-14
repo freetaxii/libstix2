@@ -511,27 +511,17 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 
 	// Lets check the multiple version use case and see if the options are valid
 	if len(vers) > 1 {
-		first := 0
-		last := 0
-		all := 0
+		counter := make(map[string]int)
 
 		for _, v := range vers {
-			if v == "last" {
-				last++
-			} else if v == "first" {
-				first++
-			} else if v == "all" {
-				all++
+			counter[v]++
+			if counter[v] > 1 {
+				return errors.New("can not use the same URL parameter more than once in the version selector")
 			}
 		}
 
-		if last > 1 {
-			return errors.New("can not use the 'last' key word multiple time in the version selector")
-		}
-		if first > 1 {
-			return errors.New("can not use the 'first' key word multiple time in the version selector")
-		}
-		if all > 0 {
+		// This check ensures that it is only used in a single URL parameter use case.
+		if counter["all"] > 0 {
 			return errors.New("can not use the 'all' key word with a multiple version selector")
 		}
 	}
@@ -650,7 +640,11 @@ statement when one or more STIX versions is provided and is called from
 func sqlCollectionDataQueryOptions(query collections.CollectionQueryType) (string, error).
 */
 func sqlCollectionDataWhereSpecVersion(vers []string, b *bytes.Buffer) error {
+	tblColData := DB_TABLE_TAXII_COLLECTION_DATA
 	tblBaseObj := DB_TABLE_STIX_BASE_OBJECT
+
+	// If we add another version here, we need to also add it in the FreeTAXII
+	// Server code in server.go processURLParameters()
 
 	/*
 		This sql where statement should look like one of the following:
@@ -663,20 +657,40 @@ func sqlCollectionDataWhereSpecVersion(vers []string, b *bytes.Buffer) error {
 	*/
 
 	if len(vers) == 1 {
-
 		if vers[0] == "2.0" {
 			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.spec_version = "2.0" `)
-		} else {
+		} else if vers[0] == "2.1" {
 			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.spec_version = "2.1" `)
+		} else {
+			// s_base_object.modified = (select max(modified) from s_base_object where t_collection_data.stix_id = s_base_object.id)
+			b.WriteString(" AND ")
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.spec_version = (select max(modified) from `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(` where `)
+			b.WriteString(tblColData)
+			b.WriteString(`.stix_id = `)
+			b.WriteString(tblBaseObj)
+			b.WriteString(`.id)`)
+
 		}
 
 	} else if len(vers) > 1 {
 		b.WriteString(" AND (")
+
+		counter := make(map[string]int)
 		for i, v := range vers {
+			// First lets keep track of each element to make sure that the same
+			// element is not being used more than once.
+			counter[v]++
+			if counter[v] > 1 {
+				return errors.New("can not use the same URL parameter more than once")
+			}
+
 			// Lets only add he OR after the first object and not after the
 			// last object. Since skipOr starts as true, this takes care of
 			// the first run case where i == 0
@@ -688,7 +702,7 @@ func sqlCollectionDataWhereSpecVersion(vers []string, b *bytes.Buffer) error {
 			if v == "2.0" {
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.spec_version = "2.0"`)
-			} else {
+			} else if v == "2.1" {
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.spec_version = "2.1"`)
 			}

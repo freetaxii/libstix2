@@ -5,6 +5,10 @@
 
 package defs
 
+// To support additional specification versions, I need to update the following code
+// libstix2/t_collectiondataManifest.go sqlCollectionDataWhereSpecVersion()
+// server/server.go processURLParameters()
+
 // These are the STIX timestamp formats.
 // TIME_RFC_3339 is the general purpose timestamp.
 // TIME_RFC_3339_MICRO is the timestamp for the created and modified properties.
