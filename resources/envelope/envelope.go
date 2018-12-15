@@ -7,6 +7,7 @@ package envelope
 
 import (
 	"encoding/json"
+	"io"
 )
 
 // ----------------------------------------------------------------------
@@ -48,6 +49,57 @@ pointer.
 func New() *Envelope {
 	var obj Envelope
 	return &obj
+}
+
+// ----------------------------------------------------------------------
+// Public Methods - Envelope - Core Functionality
+// ----------------------------------------------------------------------
+
+/*
+DecodeRaw - This function will decode the outer layer of an envelope and stop
+processing when it gets to the objects. It will leave the objects as a slice of
+json.RawMessage objects. This way, later on, we can decode each one individually
+*/
+func DecodeRaw(r io.Reader) (*EnvelopeRawDecode, error) {
+	var b EnvelopeRawDecode
+	err := json.NewDecoder(r).Decode(&b)
+	if err != nil {
+		return nil, err
+	}
+	return &b, nil
+}
+
+/*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Envelope) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Envelope) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *EnvelopeRawDecode) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
 
 // ----------------------------------------------------------------------

@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/objects/relationship"
@@ -26,7 +27,7 @@ func main() {
 	count := 0
 	for _, v := range b.Objects {
 
-		o, id, err := bundle.DecodeObject(v)
+		o, id, err := objects.Decode(v)
 		if err != nil {
 			fmt.Println("ERROR:", err)
 			continue
@@ -41,43 +42,6 @@ func main() {
 		}
 
 		count++
-		// var o objects.BundleObjectType
-		// err := json.Unmarshal(v, &o)
-		// if err != nil {
-		// 	continue
-		// }
-		// count++
-
-		// switch o.ObjectType {
-		// case "campaign":
-		// 	var o objects.CampaignType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "indicator":
-		// 	var o objects.IndicatorType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "infrastructure":
-		// 	var o objects.InfrastructureType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "malware":
-		// 	var o objects.MalwareType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "observed-data":
-		// 	var o objects.ObservedDataType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "relationship":
-		// 	var o objects.RelationshipType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// case "sighting":
-		// 	var o objects.SightingType
-		// 	err = json.Unmarshal(v, &o)
-		// 	fmt.Println(o.ID)
-		// }
 	}
 	fmt.Println("Total number of objects", count)
 
