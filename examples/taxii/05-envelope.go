@@ -8,23 +8,27 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
-	"github.com/freetaxii/libstix2/objects/campaign"
+	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/resources/envelope"
 )
 
 func main() {
 
-	var e envelope.Envelope
+	e := envelope.New()
 
-	e.SetMore()
-	b, _ := e.NewBundle()
+	// Create an indicator
+	i := indicator.New()
 
-	// Create a campaign
-	c := campaign.New()
-	c.SetName("Bank Attack 2016")
-	c.SetObjective("Compromise SWIFT system and steal money")
-	b.AddObject(c)
+	i.SetName("Malware C2 Indicator 2016")
+	i.AddLabel("BadStuff")
+	i.AddType("compromised")
+	i.SetPattern("[ ipv4-addr:value = '192.168.100.100' ]")
+	i.SetValidFrom(time.Now())
+	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
+
+	e.AddObject(i)
 
 	var data []byte
 	data, _ = json.MarshalIndent(e, "", "    ")
