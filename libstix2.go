@@ -11,4 +11,4 @@ built to support STIX 2.x.
 */
 package libstix2
 
-// Version = "0.5"
+// Version = "0.3.1"

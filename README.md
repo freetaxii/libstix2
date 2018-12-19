@@ -7,6 +7,9 @@ the Go (Golang) programming language. Please see the examples directory and the
 README files in each of the sub packages for more information. This API is built 
 to support STIX 2.x and TAXII 2.x.
 
+## Version ##
+0.3.1
+
 ## Installation ##
 
 This package can be installed with the go get command:
@@ -66,14 +69,6 @@ Other STIX Objects
 - [ ] Language Content
 - [ ] Marking Definition
 
-TAXII Features
-- [x] Multiple Discovery Services
-- [ ] Authentication
-- [ ] Persistent storage
-- [ ] Version checking
-- [x] URL parameters
-- [x] Object by ID
-
 TAXII Resources
 - [x] Discovery
 - [x] API Root
@@ -81,8 +76,12 @@ TAXII Resources
 - [x] Collection
 - [x] Objects
 - [x] Manifest
-- [ ] Status
+- [x] Envelope
+- [x] Status
 - [x] Error
+
+Datastore
+- [ ] SQLite 3
 
 
 ## Naming Conventions ##
@@ -91,7 +90,7 @@ While Go does not require getters and setters, setters are used in libstix2 to e
 
 Libstix2 uses the following naming conventions for methods on objects and resources.
 
-* Methods that setup / create a new object have a name of "New" + object type. These constructors return a pointer to the object. 
+* Methods that setup / create a new object have a name of "New" or "New"+ object type. These constructors return a pointer to the object. 
 
 * Methods that are setting a value have a name of “Set” + the property name. Example: “SetConfidence” is used for setting a value on the Confidence property.
 
