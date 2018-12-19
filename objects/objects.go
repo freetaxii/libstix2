@@ -13,13 +13,7 @@ import (
 	"fmt"
 
 	"github.com/freetaxii/libstix2/objects/baseobject"
-	"github.com/freetaxii/libstix2/objects/campaign"
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/objects/infrastructure"
-	"github.com/freetaxii/libstix2/objects/malware"
-	"github.com/freetaxii/libstix2/objects/observeddata"
-	"github.com/freetaxii/libstix2/objects/relationship"
-	"github.com/freetaxii/libstix2/objects/sighting"
 )
 
 type STIXObject interface {
@@ -60,30 +54,30 @@ func Decode(data []byte) (interface{}, string, error) {
 	}
 
 	switch stixtype {
-	case "campaign":
-		return campaign.Decode(data)
+	// case "campaign":
+	// 	return campaign.Decode(data)
 	case "indicator":
 		return indicator.Decode(data)
-	case "infrastructure":
-		var o infrastructure.Infrastructure
-		err = json.Unmarshal(data, &o)
-		return o, o.ID, nil
-	case "malware":
-		var o malware.Malware
-		err = json.Unmarshal(data, &o)
-		return o, o.ID, nil
-	case "observed-data":
-		var o observeddata.ObservedData
-		err = json.Unmarshal(data, &o)
-		return o, o.ID, nil
-	case "relationship":
-		var o relationship.Relationship
-		err = json.Unmarshal(data, &o)
-		return o, o.ID, nil
-	case "sighting":
-		var o sighting.Sighting
-		err = json.Unmarshal(data, &o)
-		return o, o.ID, nil
+		// case "infrastructure":
+		// 	var o infrastructure.Infrastructure
+		// 	err = json.Unmarshal(data, &o)
+		// 	return o, o.ID, nil
+		// case "malware":
+		// 	var o malware.Malware
+		// 	err = json.Unmarshal(data, &o)
+		// 	return o, o.ID, nil
+		// case "observed-data":
+		// 	var o observeddata.ObservedData
+		// 	err = json.Unmarshal(data, &o)
+		// 	return o, o.ID, nil
+		// case "relationship":
+		// 	var o relationship.Relationship
+		// 	err = json.Unmarshal(data, &o)
+		// 	return o, o.ID, nil
+		// case "sighting":
+		// 	var o sighting.Sighting
+		// 	err = json.Unmarshal(data, &o)
+		// 	return o, o.ID, nil
 	}
 	//TODO add a default that just stores the custom object
 	return nil, "", nil

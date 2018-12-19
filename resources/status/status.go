@@ -6,6 +6,7 @@
 package status
 
 import (
+	"github.com/freetaxii/libstix2/resources/properties"
 	"github.com/freetaxii/libstix2/timestamp"
 )
 
@@ -14,7 +15,7 @@ import (
 // ----------------------------------------------------------------------
 
 type Status struct {
-	ID               string          `json:"id,omitempty"`
+	properties.IDProperty
 	Status           string          `json:"status,omitempty"`
 	RequestTimestamp string          `json:"request_timestamp,omitempty"`
 	TotalCount       int             `json:"total_count,omitempty"`
@@ -46,10 +47,10 @@ func New() *Status {
 }
 
 /*
-NewStatusDetail - This function will create a new TAXII Status Detail object and
+NewStatusDetails - This function will create a new TAXII Status Detail object and
 return it as a pointer.
 */
-func NewStatusDetail() *StatusDetails {
+func NewStatusDetails() *StatusDetails {
 	var obj StatusDetails
 	return &obj
 }
@@ -58,13 +59,13 @@ func NewStatusDetail() *StatusDetails {
 // Public Methods - Status
 // ----------------------------------------------------------------------
 
-func (r *Status) SetID(id string) error {
-	r.ID = id
+func (r *Status) SetStatusCompleted() error {
+	r.Status = "Completed"
 	return nil
 }
 
-func (r *Status) SetStatus(s string) error {
-	r.Status = s
+func (r *Status) SetStatusPending() error {
+	r.Status = "Pending"
 	return nil
 }
 
@@ -75,6 +76,7 @@ func (r *Status) SetRequestTimestamp(s string) error {
 
 func (r *Status) SetRequestTimestampToCurrentTime() error {
 	r.RequestTimestamp = timestamp.CurrentTime("micro")
+	return nil
 }
 
 func (r *Status) SetTotalCount(i int) error {
@@ -84,6 +86,7 @@ func (r *Status) SetTotalCount(i int) error {
 
 func (r *Status) IncreaseTotalCount() error {
 	r.TotalCount++
+	return nil
 }
 
 func (r *Status) SetSuccessCount(i int) error {
@@ -93,6 +96,7 @@ func (r *Status) SetSuccessCount(i int) error {
 
 func (r *Status) IncreaseSuccessCount() error {
 	r.SuccessCount++
+	return nil
 }
 
 func (r *Status) SetFailureCount(i int) error {
@@ -102,6 +106,7 @@ func (r *Status) SetFailureCount(i int) error {
 
 func (r *Status) IncreaseFailureCount() error {
 	r.FailureCount++
+	return nil
 }
 
 func (r *Status) SetPendingCount(i int) error {
@@ -111,6 +116,7 @@ func (r *Status) SetPendingCount(i int) error {
 
 func (r *Status) IncreasePendingCount() error {
 	r.PendingCount++
+	return nil
 }
 
 func (r *Status) NewSuccessDetails() (*StatusDetails, error) {
@@ -127,10 +133,10 @@ func (r *Status) AddSuccessDetails(o *StatusDetails) (int, error) {
 }
 
 func (r *Status) CreateSuccessDetails(id, ver, mesg string) error {
-	s, _ := r.NewSuccess()
-	r.SetID(id)
-	r.SetVersion(ver)
-	r.SetMessage(mesg)
+	s, _ := r.NewSuccessDetails()
+	s.SetID(id)
+	s.SetVersion(ver)
+	s.SetMessage(mesg)
 	return nil
 }
 
@@ -148,10 +154,10 @@ func (r *Status) AddFailureDetails(o *StatusDetails) (int, error) {
 }
 
 func (r *Status) CreateFailureDetails(id, ver, mesg string) error {
-	s, _ := r.NewFailure()
-	r.SetID(id)
-	r.SetVersion(ver)
-	r.SetMessage(mesg)
+	s, _ := r.NewFailureDetails()
+	s.SetID(id)
+	s.SetVersion(ver)
+	s.SetMessage(mesg)
 	return nil
 }
 
@@ -169,10 +175,10 @@ func (r *Status) AddPendingDetails(o *StatusDetails) (int, error) {
 }
 
 func (r *Status) CreatePendingDetails(id, ver, mesg string) error {
-	s, _ := r.NewPending()
-	r.SetID(id)
-	r.SetVersion(ver)
-	r.SetMessage(mesg)
+	s, _ := r.NewPendingDetails()
+	s.SetID(id)
+	s.SetVersion(ver)
+	s.SetMessage(mesg)
 	return nil
 }
 
