@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -24,15 +24,14 @@ DecodeType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
 func DecodeType(data []byte) (string, error) {
-	var o baseobject.CommonBaseProperties
+	var o baseobject.TypeProperty
 	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return "", err
 	}
 
-	err1 := o.Verify()
-	if err1 != nil {
-		return "", fmt.Errorf("invalid STIX object: %s", err1)
+	if valid, err := o.Valid(); valid != true {
+		return "", fmt.Errorf("invalid STIX object: %s", err)
 	}
 
 	return o.ObjectType, nil
@@ -41,16 +40,20 @@ func DecodeType(data []byte) (string, error) {
 /*
 Decode - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON, decode it to the appropriate STIX object
-struct, and return object itself, its STIX ID, and any possible errors.
+struct, and return
+ - object itself as an interface
+ - its STIX ID
+ - its Modified time stamp
+ - and any possible errors
 */
-func Decode(data []byte) (interface{}, string, error) {
+func Decode(data []byte) (interface{}, string, string, error) {
 	var err error
 
 	// Make a first pass to decode just the object type value. Once we have this
 	// value we can easily make a second pass and decode the rest of the object.
 	stixtype, err := DecodeType(data)
 	if err != nil {
-		return nil, "", err
+		return nil, "", "", err
 	}
 
 	switch stixtype {
@@ -80,5 +83,5 @@ func Decode(data []byte) (interface{}, string, error) {
 		// 	return o, o.ID, nil
 	}
 	//TODO add a default that just stores the custom object
-	return nil, "", nil
+	return nil, "", "", nil
 }

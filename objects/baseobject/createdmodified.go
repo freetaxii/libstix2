@@ -1,11 +1,15 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
 package baseobject
 
-import "github.com/freetaxii/libstix2/timestamp"
+import (
+	"errors"
+
+	"github.com/freetaxii/libstix2/timestamp"
+)
 
 // ----------------------------------------------------------------------
 // Types
@@ -29,6 +33,24 @@ type CreatedModifiedProperty struct {
 // ----------------------------------------------------------------------
 // Public Methods - CreatedModifiedProperty
 // ----------------------------------------------------------------------
+
+/*
+Valid - This method will ensure that the created and modified properties are populated and valid.
+It will return a true / false and any error information.
+*/
+func (o *CreatedModifiedProperty) Valid() (bool, error) {
+
+	if o.Created == "" {
+		return false, errors.New("the created property is required, but missing")
+	}
+
+	if o.Modified == "" {
+		return false, errors.New("the created property is required, but missing")
+	}
+
+	// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
+	return true, nil
+}
 
 /*
 SetCreatedToCurrentTime - This methods sets the object created time to the

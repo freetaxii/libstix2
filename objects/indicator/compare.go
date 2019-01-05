@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -34,6 +34,8 @@ func Compare(correct, toTest *Indicator) (bool, int, []string) {
 			errorDetails = append(errorDetails, v)
 		}
 	} else {
+		// The Common Properties were good, so lets just capture any details
+		// that were returned.
 		for _, v := range d {
 			errorDetails = append(errorDetails, v)
 		}

@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,8 +6,6 @@
 package baseobject
 
 import (
-	"errors"
-
 	"github.com/freetaxii/libstix2/defs"
 )
 
@@ -95,60 +93,49 @@ func (o *CommonObjectProperties) InitObject(stixType string) error {
 }
 
 /*
-Verify - This method will ensure that all of the required properties are
+Valid - This method will ensure that all of the required properties are
 populated and try to ensure all of values are valid. The difference between this
 method and the one for Common Object Properties is this one is missing the check
 for the modified property.
 */
-func (o *CommonBaseProperties) Verify() error {
+func (o *CommonBaseProperties) Valid() (bool, error) {
 
-	if o.ObjectType == "" {
-		return errors.New("the type property is required, but missing")
+	if valid, err := o.TypeProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.SpecVersion == "" {
-		return errors.New("the spec version property is required, but missing")
+	if valid, err := o.SpecVersionProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.ID == "" {
-		return errors.New("the ID property is required, but missing")
-	} else {
-		// TOOD check to make sure ID is a valid STIX ID but only if it is defined
+	if valid, err := o.IDProperty.Valid(); valid != true {
+		return valid, err
 	}
-	return nil
+
+	return true, nil
 }
 
 /*
-Verify - This method will ensure that all of the required
-properties are populated and try to ensure all of values are valid.
+Valid - This method will ensure that all of the required properties are
+populated and try to ensure all of values are valid.
 */
-func (o *CommonObjectProperties) Verify() error {
+func (o *CommonObjectProperties) Valid() (bool, error) {
 
-	if o.ObjectType == "" {
-		return errors.New("the type property is required, but missing")
+	if valid, err := o.TypeProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.SpecVersion == "" {
-		return errors.New("the spec version property is required, but missing")
+	if valid, err := o.SpecVersionProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.ID == "" {
-		return errors.New("the ID property is required, but missing")
-	} else {
-		// TOOD check to make sure ID is a valid STIX ID but only if it is defined
+	if valid, err := o.IDProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.Created == "" {
-		return errors.New("the created property is required, but missing")
-	} else {
-		// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
+	if valid, err := o.CreatedModifiedProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	if o.Modified == "" {
-		return errors.New("the modified property is required, but missing")
-	} else {
-		// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
-	}
-
-	return nil
+	return true, nil
 }

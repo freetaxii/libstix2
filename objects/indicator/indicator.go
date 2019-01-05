@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -82,19 +82,19 @@ Decode - This function will decode some JSON data encoded as a slice of bytes
 into an actual struct. It will return the object as a pointer, the STIX ID, and
 any errors.
 */
-func Decode(data []byte) (*Indicator, string, error) {
+func Decode(data []byte) (*Indicator, string, string, error) {
 	var o Indicator
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, "", err
+		return nil, "", "", err
 	}
 
-	if err := o.Verify(); err != nil {
-		return nil, "", err
+	if valid, err := o.Valid(); valid != true {
+		return nil, "", "", err
 	}
 
 	o.SetRawData(data)
-	return &o, o.ID, nil
+	return &o, o.ID, o.Modified, nil
 }
 
 /*
@@ -120,32 +120,32 @@ func (o *Indicator) EncodeToString() (string, error) {
 }
 
 /*
-Verify - This method will verify all of the properties on the object.
+Valid - This method will verify all of the properties on the object.
 */
-func (o *Indicator) Verify() error {
+func (o *Indicator) Valid() (bool, error) {
 
 	// Check common base properties first
-	if err := o.CommonObjectProperties.Verify(); err != nil {
-		return err
+	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
+		return false, err
 	}
 
 	if len(o.IndicatorTypes) == 0 {
-		return errors.New("the indicator types property is required, but missing")
+		return false, errors.New("the indicator types property is required, but missing")
 	}
 
 	if o.Pattern == "" {
-		return errors.New("the pattern property is required, but missing")
+		return false, errors.New("the pattern property is required, but missing")
 	} else {
 		// TODO verify the pattern is correct
 	}
 
 	if o.ValidFrom == "" {
-		return errors.New("the valid from property is required, but missing")
+		return false, errors.New("the valid from property is required, but missing")
 	} else {
 		// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
 	}
 
-	return nil
+	return true, nil
 }
 
 // ----------------------------------------------------------------------

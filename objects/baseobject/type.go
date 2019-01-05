@@ -1,9 +1,11 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
 package baseobject
+
+import "errors"
 
 // ----------------------------------------------------------------------
 // Types
@@ -20,6 +22,17 @@ type TypeProperty struct {
 // ----------------------------------------------------------------------
 // Public Methods - TypeProperty
 // ----------------------------------------------------------------------
+
+/*
+Valid - This method will ensure that the type property is populated and valid.
+It will return a true / false and any error information.
+*/
+func (o *TypeProperty) Valid() (bool, error) {
+	if o.ObjectType == "" {
+		return false, errors.New("the type property is required, but missing")
+	}
+	return true, nil
+}
 
 /*
 SetObjectType - This method takes in a string value representing a STIX object

@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,6 +6,8 @@
 package baseobject
 
 import (
+	"errors"
+
 	"github.com/pborman/uuid"
 )
 
@@ -24,6 +26,19 @@ type IDProperty struct {
 // ----------------------------------------------------------------------
 // Public Methods - IdProperty
 // ----------------------------------------------------------------------
+
+/*
+Valid - This method will ensure that the ID property is populated and valid.
+It will return a true / false and any error information.
+*/
+func (o *IDProperty) Valid() (bool, error) {
+	if o.ID == "" {
+		return false, errors.New("the ID property is required, but missing")
+	}
+
+	// TOOD check to make sure ID is a valid STIX ID
+	return true, nil
+}
 
 // CreateSTIXUUID - This method takes in a string value representing a STIX object
 // type and creates and returns a new ID based on the approved STIX UUIDv4 format.

@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -27,12 +27,12 @@ func main() {
 	count := 0
 	for _, v := range b.Objects {
 
-		o, id, err := objects.Decode(v)
+		o, id, version, err := objects.Decode(v)
 		if err != nil {
 			fmt.Println("ERROR:", err)
 			continue
 		}
-		fmt.Printf("ID %s\n", id)
+		fmt.Printf("ID %s\tVersion %s\n", id, version)
 
 		switch obj := o.(type) {
 		case *indicator.Indicator:

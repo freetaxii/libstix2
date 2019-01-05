@@ -1,4 +1,4 @@
-// Copyright 2015-2018 Bret Jordan, All rights reserved.
+// Copyright 2015-2019 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -76,22 +76,25 @@ func New() *Campaign {
 
 /*
 Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer, the STIX ID, and
-any errors.
+into an actual struct. It will return:
+ - the object as a pointer
+ - the STIX ID
+ - the SITX Version
+ - any errors found
 */
-func Decode(data []byte) (*Campaign, string, error) {
+func Decode(data []byte) (*Campaign, string, string, error) {
 	var o Campaign
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, "", err
+		return nil, "", "", err
 	}
 
-	if err := o.Verify(); err != nil {
-		return nil, "", err
+	if valid, err := o.Valid(); valid != true {
+		return nil, "", "", err
 	}
 
 	o.SetRawData(data)
-	return &o, o.ID, nil
+	return &o, o.ID, o.Modified, nil
 
 }
 
@@ -118,20 +121,20 @@ func (o *Campaign) EncodeToString() (string, error) {
 }
 
 /*
-Verify - This method will verify all of the properties on the object.
+Valid - This method will verify all of the properties on the object.
 */
-func (o *Campaign) Verify() error {
+func (o *Campaign) Valid() (bool, error) {
 
 	// Check common base properties first
-	if err := o.CommonObjectProperties.Verify(); err != nil {
-		return err
+	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
+		return false, err
 	}
 
 	if o.Name == "" {
-		return errors.New("the name property is required, but missing")
+		return false, errors.New("the name property is required, but missing")
 	}
 
-	return nil
+	return true, nil
 }
 
 // ----------------------------------------------------------------------
