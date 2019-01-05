@@ -6,6 +6,8 @@
 package tool
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects/baseobject"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
@@ -68,9 +70,69 @@ func New() *Tool {
 }
 
 // ----------------------------------------------------------------------
-//
+// Public Methods - Tool - Core Functionality
+// ----------------------------------------------------------------------
+
+/*
+Decode - This function will decode some JSON data encoded as a slice of bytes
+into an actual struct. It will return:
+ - the object as a pointer
+ - the STIX ID
+ - the SITX Version
+ - any errors found
+*/
+func Decode(data []byte) (*Tool, string, string, error) {
+	var o Tool
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, "", "", err
+	}
+
+	if valid, err := o.Valid(); valid != true {
+		return nil, "", "", err
+	}
+
+	o.SetRawData(data)
+	return &o, o.ID, o.Modified, nil
+}
+
+/*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Tool) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Tool) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+/*
+Valid - This method will verify all of the properties on the object.
+*/
+func (o *Tool) Valid() (bool, error) {
+
+	// Check common base properties first
+	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - Tool
-//
 // ----------------------------------------------------------------------
 
 /*

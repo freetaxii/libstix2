@@ -6,6 +6,8 @@
 package sighting
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects/baseobject"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
@@ -90,9 +92,69 @@ func New() *Sighting {
 }
 
 // ----------------------------------------------------------------------
-//
+// Public Methods - Sighting - Core Functionality
+// ----------------------------------------------------------------------
+
+/*
+Decode - This function will decode some JSON data encoded as a slice of bytes
+into an actual struct. It will return:
+ - the object as a pointer
+ - the STIX ID
+ - the SITX Version
+ - any errors found
+*/
+func Decode(data []byte) (*Sighting, string, string, error) {
+	var o Sighting
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, "", "", err
+	}
+
+	if valid, err := o.Valid(); valid != true {
+		return nil, "", "", err
+	}
+
+	o.SetRawData(data)
+	return &o, o.ID, o.Modified, nil
+}
+
+/*
+Encode - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Sighting) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object in to JSON
+*/
+func (o *Sighting) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+/*
+Valid - This method will verify all of the properties on the object.
+*/
+func (o *Sighting) Valid() (bool, error) {
+
+	// Check common base properties first
+	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - Sighting
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -126,7 +188,7 @@ func (o *Sighting) AddObservedDataRef(s string) error {
 
 /*
 AddWhereSightedRef - This method takes in a string value that represents a
-STIX identifier of the STIX Identity object that identifies where this was
+STIX identifier of the STIX Sighting object that identifies where this was
 sighted (location, sector, etc) and adds it to the where sighted ref property.
 */
 func (o *Sighting) AddWhereSightedRef(s string) error {

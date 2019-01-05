@@ -79,8 +79,11 @@ func New() *Indicator {
 
 /*
 Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer, the STIX ID, and
-any errors.
+into an actual struct. It will return:
+ - the object as a pointer
+ - the STIX ID
+ - the SITX Version
+ - any errors found
 */
 func Decode(data []byte) (*Indicator, string, string, error) {
 	var o Indicator

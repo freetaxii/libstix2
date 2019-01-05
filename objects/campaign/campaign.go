@@ -95,7 +95,6 @@ func Decode(data []byte) (*Campaign, string, string, error) {
 
 	o.SetRawData(data)
 	return &o, o.ID, o.Modified, nil
-
 }
 
 /*
