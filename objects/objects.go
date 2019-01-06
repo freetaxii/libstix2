@@ -105,10 +105,8 @@ func Decode(data []byte) (STIXObject, error) {
 		return tool.Decode(data)
 	case "vulnerability":
 		return vulnerability.Decode(data)
+	default:
+		return baseobject.Decode(data)
 	}
-	//TODO add a default that just stores the custom object
-	// probably just decode this to common properties and leave everything else
-	// as RAW data.  This is also how I could add support for all types before
-	// I get around to coding support for the actual writing to the tables.
 	return nil, nil
 }

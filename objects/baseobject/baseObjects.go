@@ -6,6 +6,8 @@
 package baseobject
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/defs"
 )
 
@@ -70,6 +72,26 @@ func (o *CommonObjectProperties) InitObject(stixType string) error {
 
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
+}
+
+/*
+Decode - This function will decode some JSON data encoded as a slice of bytes
+into an actual struct. It will return the object as a pointer and any errors found.
+This function will handle Custom STIX objects by decoding all of the common properties.
+*/
+func Decode(data []byte) (*CommonObjectProperties, error) {
+	var o CommonObjectProperties
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, err
+	}
+
+	if valid, err := o.Valid(); valid != true {
+		return nil, err
+	}
+
+	o.SetRawData(data)
+	return &o, nil
 }
 
 /*
