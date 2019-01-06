@@ -8,7 +8,7 @@ README files in each of the sub packages for more information. This API is built
 to support STIX 2.x and TAXII 2.x.
 
 ## Version ##
-0.5.1
+0.6.1
 
 ## Installation ##
 
