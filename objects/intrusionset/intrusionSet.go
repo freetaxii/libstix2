@@ -3,7 +3,7 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package intrustionset
+package intrusionset
 
 import (
 	"encoding/json"
@@ -79,25 +79,21 @@ func New() *IntrusionSet {
 
 /*
 Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return:
- - the object as a pointer
- - the STIX ID
- - the SITX Version
- - any errors found
+into an actual struct. It will return the object as a pointer and any errors found.
 */
-func Decode(data []byte) (*IntrusionSet, string, string, error) {
+func Decode(data []byte) (*IntrusionSet, error) {
 	var o IntrusionSet
 	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
 	}
 
 	if valid, err := o.Valid(); valid != true {
-		return nil, "", "", err
+		return nil, err
 	}
 
 	o.SetRawData(data)
-	return &o, o.ID, o.Modified, nil
+	return &o, nil
 }
 
 /*

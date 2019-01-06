@@ -52,6 +52,7 @@ func indicatorTypesProperties() string {
 // Private Methods - Indicator Table
 // addIndicator()
 // getIndicator()
+// addIndicatorType()
 //
 // ----------------------------------------------------------------------
 
@@ -247,7 +248,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 }
 
 /*
-addIndicatorTypes - This method will add all of the indicator types to the
+addIndicatorType - This method will add all of the indicator types to the
 database for a specific indicator based on its database ID.
 */
 func (ds *Store) addIndicatorType(datastoreID int, itype string) error {

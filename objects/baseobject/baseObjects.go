@@ -16,57 +16,33 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-CommonBaseProperties - This type includes all of the common properties
-that are used by all STIX objects
+BundleBaseProperties - This type includes all of the common properties
+that are used by by the STIX Bundle. It is done here to make it similar to
+all other STIX object definitions. Meaning, that they all use this baseobject
+package.
 */
-type CommonBaseProperties struct {
+type BundleBaseProperties struct {
 	TypeProperty
-	SpecVersionProperty
 	IDProperty
 }
 
 /*
 CommonObjectProperties - This type includes all of the common properties
-that are used by all STIX SDOs and SROs
+that are used by all STIX SDOs, SROs, Marking Definition Objects, and the
+Language object.  For objects where some of these properties are not defined,
+they will be removed / zeroed out in their respective encoding methods.
 */
 type CommonObjectProperties struct {
 	DatastoreIDProperty
-	CommonBaseProperties
+	TypeProperty
+	SpecVersionProperty
+	IDProperty
 	CreatedByRefProperty
 	CreatedModifiedProperty
 	RevokedProperty
 	LabelsProperty
 	ConfidenceProperty
 	LangProperty
-	ExternalReferencesProperty
-	MarkingProperties
-	RawProperty
-}
-
-type CommonLanguageContentProperties struct {
-	DatastoreIDProperty
-	CommonBaseProperties
-	CreatedByRefProperty
-	CreatedModifiedProperty
-	RevokedProperty
-	LabelsProperty
-	ConfidenceProperty
-	ExternalReferencesProperty
-	MarkingProperties
-	RawProperty
-}
-
-/*
-CommonMarkingDefinitionProperties - This type includes all of the common
-properties that are used by the STIX Marking Definition object. This inherits
-the CommonBaseProperties even though the Modified and Revoked properties are
-not technically valid for this object.
-*/
-type CommonMarkingDefinitionProperties struct {
-	DatastoreIDProperty
-	CommonBaseProperties
-	CreatedByRefProperty
-	CreatedModifiedProperty
 	ExternalReferencesProperty
 	MarkingProperties
 	RawProperty
@@ -92,27 +68,8 @@ func (o *CommonObjectProperties) InitObject(stixType string) error {
 	return nil
 }
 
-/*
-Valid - This method will ensure that all of the required properties are
-populated and try to ensure all of values are valid. The difference between this
-method and the one for Common Object Properties is this one is missing the check
-for the modified property.
-*/
-func (o *CommonBaseProperties) Valid() (bool, error) {
-
-	if valid, err := o.TypeProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	if valid, err := o.SpecVersionProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	if valid, err := o.IDProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	return true, nil
+func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
+	return o
 }
 
 /*

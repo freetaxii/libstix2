@@ -12,7 +12,6 @@ import (
 	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/objects/relationship"
 	"github.com/gologme/log"
 )
 
@@ -27,23 +26,27 @@ func main() {
 	count := 0
 	for _, v := range b.Objects {
 
-		o, id, version, err := objects.Decode(v)
+		o, err := objects.Decode(v)
 		if err != nil {
 			fmt.Println("ERROR:", err)
 			continue
 		}
-		fmt.Printf("ID %s\tVersion %s\n", id, version)
+		if o == nil {
+			continue
+		}
+
+		fmt.Printf("Type: %s\t\tID: %s\tVersion: %s\n", o.GetObjectType(), o.GetID(), o.GetModified())
 
 		switch obj := o.(type) {
 		case *indicator.Indicator:
-			fmt.Println(obj.ObjectType)
-		case relationship.Relationship:
-			fmt.Println(obj.ObjectType)
+			fmt.Println("I AM AN INDICATOR", obj.ObjectType)
+			// case *relationship.Relationship:
+			// 	fmt.Println(obj.GetObjectType())
 		}
 
 		count++
 	}
-	fmt.Println("Total number of objects", count)
+	fmt.Println("===========================\nTotal number of objects", count)
 
 }
 

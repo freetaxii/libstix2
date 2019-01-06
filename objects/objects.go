@@ -12,11 +12,29 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/freetaxii/libstix2/objects/attackpattern"
 	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects/campaign"
+	"github.com/freetaxii/libstix2/objects/courseofaction"
+	"github.com/freetaxii/libstix2/objects/identity"
 	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects/infrastructure"
+	"github.com/freetaxii/libstix2/objects/intrusionset"
+	"github.com/freetaxii/libstix2/objects/malware"
+	"github.com/freetaxii/libstix2/objects/observeddata"
+	"github.com/freetaxii/libstix2/objects/relationship"
+	"github.com/freetaxii/libstix2/objects/report"
+	"github.com/freetaxii/libstix2/objects/sighting"
+	"github.com/freetaxii/libstix2/objects/threatactor"
+	"github.com/freetaxii/libstix2/objects/tool"
+	"github.com/freetaxii/libstix2/objects/vulnerability"
 )
 
 type STIXObject interface {
+	GetObjectType() string
+	GetID() string
+	GetModified() string
+	GetCommonProperties() *baseobject.CommonObjectProperties
 }
 
 /*
@@ -46,42 +64,51 @@ struct, and return
  - its Modified time stamp
  - and any possible errors
 */
-func Decode(data []byte) (interface{}, string, string, error) {
+func Decode(data []byte) (STIXObject, error) {
 	var err error
 
 	// Make a first pass to decode just the object type value. Once we have this
 	// value we can easily make a second pass and decode the rest of the object.
 	stixtype, err := DecodeType(data)
 	if err != nil {
-		return nil, "", "", err
+		return nil, err
 	}
 
 	switch stixtype {
-	// case "campaign":
-	// 	return campaign.Decode(data)
+	case "attack-pattern":
+		return attackpattern.Decode(data)
+	case "campaign":
+		return campaign.Decode(data)
+	case "course-of-action":
+		return courseofaction.Decode(data)
+	case "identity":
+		return identity.Decode(data)
 	case "indicator":
 		return indicator.Decode(data)
-		// case "infrastructure":
-		// 	var o infrastructure.Infrastructure
-		// 	err = json.Unmarshal(data, &o)
-		// 	return o, o.ID, nil
-		// case "malware":
-		// 	var o malware.Malware
-		// 	err = json.Unmarshal(data, &o)
-		// 	return o, o.ID, nil
-		// case "observed-data":
-		// 	var o observeddata.ObservedData
-		// 	err = json.Unmarshal(data, &o)
-		// 	return o, o.ID, nil
-		// case "relationship":
-		// 	var o relationship.Relationship
-		// 	err = json.Unmarshal(data, &o)
-		// 	return o, o.ID, nil
-		// case "sighting":
-		// 	var o sighting.Sighting
-		// 	err = json.Unmarshal(data, &o)
-		// 	return o, o.ID, nil
+	case "infrastructure":
+		return infrastructure.Decode(data)
+	case "intrusion-set":
+		return intrusionset.Decode(data)
+	case "malware":
+		return malware.Decode(data)
+	case "observed-data":
+		return observeddata.Decode(data)
+	case "relationship":
+		return relationship.Decode(data)
+	case "report":
+		return report.Decode(data)
+	case "sighting":
+		return sighting.Decode(data)
+	case "threat-actor":
+		return threatactor.Decode(data)
+	case "tool":
+		return tool.Decode(data)
+	case "vulnerability":
+		return vulnerability.Decode(data)
 	}
 	//TODO add a default that just stores the custom object
-	return nil, "", "", nil
+	// probably just decode this to common properties and leave everything else
+	// as RAW data.  This is also how I could add support for all types before
+	// I get around to coding support for the actual writing to the tables.
+	return nil, nil
 }

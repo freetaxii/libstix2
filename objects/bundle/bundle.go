@@ -31,18 +31,18 @@ grouped together in a single container. A Bundle does not have any semantic
 meaning and Objects are not considered related by virtue of being in the same
 Bundle.
 
-Bundle is not STIX Object, so it does not have any of the Common Properties
+Bundle is not STIX Object, so it does not have any of the Bundle Properties
 other than the type and id properties. Bundle is transient and implementations
 should not assume that other implementations will treat it as a persistent
 object.
 */
 type Bundle struct {
-	baseobject.CommonBaseProperties
+	baseobject.BundleBaseProperties
 	Objects []interface{} `json:"objects,omitempty"`
 }
 
 type BundleRawDecode struct {
-	baseobject.CommonBaseProperties
+	baseobject.BundleBaseProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
