@@ -25,14 +25,16 @@ The envelope is a simple wrapper for STIX 2 content. When returning STIX 2
 content in a TAXII response the HTTP root object payload MUST be an envelope.
 This specification does not define any other form of content wrapper for objects
 outside of STIX content.
-
-For example:
 */
 type Envelope struct {
 	More    bool          `json:"more,omitempty"`
 	Objects []interface{} `json:"objects,omitempty"`
 }
 
+/*
+EnvelopeRawDecode - This type is used for decoding a TAXII envelope since the
+Objects property needs special handling.
+*/
 type EnvelopeRawDecode struct {
 	More    bool              `json:"more,omitempty"`
 	Objects []json.RawMessage `json:"objects,omitempty"`
@@ -61,19 +63,19 @@ processing when it gets to the objects. It will leave the objects as a slice of
 json.RawMessage objects. This way, later on, we can decode each one individually
 */
 func DecodeRaw(r io.Reader) (*EnvelopeRawDecode, error) {
-	var b EnvelopeRawDecode
-	err := json.NewDecoder(r).Decode(&b)
+	var e EnvelopeRawDecode
+	err := json.NewDecoder(r).Decode(&e)
 	if err != nil {
 		return nil, err
 	}
-	return &b, nil
+	return &e, nil
 }
 
 /*
 Encode - This method is a simple wrapper for encoding an object in to JSON
 */
-func (o *Envelope) Encode() ([]byte, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
+func (r *Envelope) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(r, "", "    ")
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +85,8 @@ func (o *Envelope) Encode() ([]byte, error) {
 /*
 EncodeToString - This method is a simple wrapper for encoding an object in to JSON
 */
-func (o *Envelope) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
+func (r *Envelope) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(r, "", "    ")
 	if err != nil {
 		return "", err
 	}
@@ -94,8 +96,8 @@ func (o *Envelope) EncodeToString() (string, error) {
 /*
 EncodeToString - This method is a simple wrapper for encoding an object in to JSON
 */
-func (o *EnvelopeRawDecode) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
+func (r *EnvelopeRawDecode) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(r, "", "    ")
 	if err != nil {
 		return "", err
 	}

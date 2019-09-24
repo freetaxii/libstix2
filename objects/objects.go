@@ -30,6 +30,10 @@ import (
 	"github.com/freetaxii/libstix2/objects/vulnerability"
 )
 
+/*
+STIXObject - This interface defines what methods an object must have to be
+considered a STIX Object.
+*/
 type STIXObject interface {
 	GetObjectType() string
 	GetID() string
@@ -58,14 +62,13 @@ func DecodeType(data []byte) (string, error) {
 /*
 Decode - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON, decode it to the appropriate STIX object
-struct, and return
- - object itself as an interface
- - its STIX ID
- - its Modified time stamp
- - and any possible errors
+struct, and return the object itself as an interface and any possible errors.
 */
 func Decode(data []byte) (STIXObject, error) {
 	var err error
+	// TODO this probably does not belong here, since it down references objects
+	// which is bad form.  This probably needs to be in a different part of the
+	// library or just in the application code.
 
 	// Make a first pass to decode just the object type value. Once we have this
 	// value we can easily make a second pass and decode the rest of the object.

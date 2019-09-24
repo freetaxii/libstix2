@@ -43,7 +43,7 @@ func (o *SpecVersionProperty) SetSpecVersion20() error {
 }
 
 /*
-SetSpecVersion20 - This method will set the specification version to 2.1.
+SetSpecVersion21 - This method will set the specification version to 2.1.
 */
 func (o *SpecVersionProperty) SetSpecVersion21() error {
 	o.SpecVersion = "2.1"

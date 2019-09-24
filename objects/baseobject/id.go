@@ -36,13 +36,14 @@ func (o *IDProperty) Valid() (bool, error) {
 		return false, errors.New("the ID property is required, but missing")
 	}
 
-	// TOOD check to make sure ID is a valid STIX ID
+	// TODO check to make sure ID is a valid STIX ID
 	return true, nil
 }
 
-// CreateSTIXUUID - This method takes in a string value representing a STIX object
-// type and creates and returns a new ID based on the approved STIX UUIDv4 format.
-
+/*
+CreateSTIXUUID - This method takes in a string value representing a STIX object
+type and creates and returns a new ID based on the approved STIX UUIDv4 format.
+*/
 func (o *IDProperty) CreateSTIXUUID(s string) (string, error) {
 	// TODO add check to validate that s is a valid type
 	id := s + "--" + uuid.New()

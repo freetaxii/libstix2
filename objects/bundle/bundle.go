@@ -41,6 +41,10 @@ type Bundle struct {
 	Objects []interface{} `json:"objects,omitempty"`
 }
 
+/*
+BundleRawDecode - This type is used for decoding a STIX bundle since the
+Objects property needs special handling.
+*/
 type BundleRawDecode struct {
 	baseobject.BundleBaseProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`

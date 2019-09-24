@@ -85,7 +85,7 @@ func Compare(correct, toTest *Collection) (bool, int, []string) {
 		details = append(details, str)
 
 		// If lengths are the same, then check each value
-		for index, _ := range correct.MediaTypes {
+		for index := range correct.MediaTypes {
 			if toTest.MediaTypes[index] != correct.MediaTypes[index] {
 				problemsFound++
 				str := fmt.Sprintf("-- Media Types Do Not Match: %s | %s", correct.MediaTypes[index], toTest.MediaTypes[index])

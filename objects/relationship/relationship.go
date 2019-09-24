@@ -141,8 +141,8 @@ func (o *Relationship) Valid() (bool, error) {
 // ----------------------------------------------------------------------
 
 /*
-SetRelationship - This method takes in a string value that represents the
-type name of the releationship and updates the relationship type property.
+SetRelationshipType - This method takes in a string value that represents the
+type name of the relationship and updates the relationship type property.
 */
 func (o *Relationship) SetRelationshipType(s string) error {
 	o.RelationshipType = s

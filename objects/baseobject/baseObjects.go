@@ -57,7 +57,7 @@ type CommonObjectProperties struct {
 // ----------------------------------------------------------------------
 
 /*
-InitObject- This method will initialize the object by setting all of the basic
+InitObject - This method will initialize the object by setting all of the basic
 properties.
 */
 func (o *CommonObjectProperties) InitObject(stixType string) error {
@@ -70,6 +70,10 @@ func (o *CommonObjectProperties) InitObject(stixType string) error {
 	return nil
 }
 
+/*
+GetCommonProperties - This method will return a pointer to the common properties
+of this object.
+*/
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
 }

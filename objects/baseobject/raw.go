@@ -21,7 +21,7 @@ type RawProperty struct {
 // ----------------------------------------------------------------------
 
 /*
-SetRaw - This method takes in a slice of bytes representing a full JSON object
+SetRawData - This method takes in a slice of bytes representing a full JSON object
 and updates the raw property for the object.
 */
 func (o *RawProperty) SetRawData(data []byte) error {
@@ -30,7 +30,7 @@ func (o *RawProperty) SetRawData(data []byte) error {
 }
 
 /*
-GetRaw - This method will return the raw bytes for a given STIX object.
+GetRawData - This method will return the raw bytes for a given STIX object.
 */
 func (o *RawProperty) GetRawData() []byte {
 	return o.Raw

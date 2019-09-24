@@ -49,8 +49,8 @@ func New() *Versions {
 // ----------------------------------------------------------------------
 
 /*
-AddObject - This method will take in an object as an interface and add it to
-the list of objects in the envelope
+AddVersion - This method will take in a version and append it to the Versions
+property.
 */
 func (r *Versions) AddVersion(v string) error {
 	r.Versions = append(r.Versions, v)

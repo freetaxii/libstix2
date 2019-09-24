@@ -71,7 +71,7 @@ func Compare(correct, toTest *Indicator) (bool, int, []string) {
 		errorDetails = append(errorDetails, str)
 
 		// If lengths are the same, then check each value
-		for index, _ := range correct.IndicatorTypes {
+		for index := range correct.IndicatorTypes {
 			if toTest.IndicatorTypes[index] != correct.IndicatorTypes[index] {
 				problemsFound++
 				str := fmt.Sprintf("-- Indicator Types Do Not Match: %s | %s", correct.IndicatorTypes[index], toTest.IndicatorTypes[index])
@@ -121,7 +121,7 @@ func Compare(correct, toTest *Indicator) (bool, int, []string) {
 	} else {
 		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(correct.KillChainPhases), len(toTest.KillChainPhases))
 		errorDetails = append(errorDetails, str)
-		for index, _ := range correct.KillChainPhases {
+		for index := range correct.KillChainPhases {
 			// Check Kill Chain Phases values
 			if toTest.KillChainPhases[index].KillChainName != correct.KillChainPhases[index].KillChainName {
 				problemsFound++

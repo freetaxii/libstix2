@@ -109,7 +109,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 		errorDetails = append(errorDetails, str)
 
 		// If lengths are the same, then check each value
-		for index, _ := range correct.Labels {
+		for index := range correct.Labels {
 			if toTest.Labels[index] != correct.Labels[index] {
 				problemsFound++
 				str := fmt.Sprintf("-- Labels Do Not Match: %s | %s", correct.Labels[index], toTest.Labels[index])
@@ -149,7 +149,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 	} else {
 		str := fmt.Sprintf("++ External References Length Match: %d | %d", len(correct.ExternalReferences), len(toTest.ExternalReferences))
 		errorDetails = append(errorDetails, str)
-		for index, _ := range correct.ExternalReferences {
+		for index := range correct.ExternalReferences {
 
 			// Check External Reference Source Name
 			if toTest.ExternalReferences[index].SourceName != correct.ExternalReferences[index].SourceName {
@@ -191,7 +191,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 				errorDetails = append(errorDetails, str)
 
 				// If lengths are the same, then check each value
-				for key, _ := range correct.ExternalReferences[index].Hashes {
+				for key := range correct.ExternalReferences[index].Hashes {
 					if toTest.ExternalReferences[index].Hashes[key] != correct.ExternalReferences[index].Hashes[key] {
 						problemsFound++
 						str := fmt.Sprintf("-- Hashes Do Not Match: %s | %s", correct.ExternalReferences[index].Hashes[key], toTest.ExternalReferences[index].Hashes[key])
@@ -225,7 +225,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 		errorDetails = append(errorDetails, str)
 
 		// If lengths are the same, then check each value
-		for index, _ := range correct.ObjectMarkingRefs {
+		for index := range correct.ObjectMarkingRefs {
 			if toTest.ObjectMarkingRefs[index] != correct.ObjectMarkingRefs[index] {
 				problemsFound++
 				str := fmt.Sprintf("-- Object Marking Refs Do Not Match: %s | %s", correct.ObjectMarkingRefs[index], toTest.ObjectMarkingRefs[index])
@@ -245,7 +245,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 	} else {
 		str := fmt.Sprintf("++ Granular Markings Length Match: %d | %d", len(correct.GranularMarkings), len(toTest.GranularMarkings))
 		errorDetails = append(errorDetails, str)
-		for index, _ := range correct.GranularMarkings {
+		for index := range correct.GranularMarkings {
 
 			// Check Granular Marking Languages
 			if toTest.GranularMarkings[index].Lang != correct.GranularMarkings[index].Lang {
@@ -277,7 +277,7 @@ func Compare(correct, toTest *CommonObjectProperties) (bool, int, []string) {
 				errorDetails = append(errorDetails, str)
 
 				// If lengths are the same, then check each value
-				for j, _ := range correct.GranularMarkings[index].Selectors {
+				for j := range correct.GranularMarkings[index].Selectors {
 					if toTest.GranularMarkings[index].Selectors[j] != correct.GranularMarkings[index].Selectors[j] {
 						problemsFound++
 						str := fmt.Sprintf("-- Selectors Do Not Match: %s | %s", correct.GranularMarkings[index].Selectors[j], toTest.GranularMarkings[index].Selectors[j])
