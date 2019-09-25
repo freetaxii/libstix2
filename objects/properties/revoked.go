@@ -3,35 +3,36 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package baseobject
+package properties
 
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
 
 /*
-RawProperty - A property used to store the raw bytes of the JSON object.
+RevokedProperty - A property used by one or more STIX objects that
+captures whether or not this STIX object has been revoked by the object
+// creator.
 */
-type RawProperty struct {
-	Raw []byte `json:"-"`
+type RevokedProperty struct {
+	Revoked bool `json:"revoked,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - RawProperty
+// Public Methods - RevokedProperty
 // ----------------------------------------------------------------------
 
 /*
-SetRawData - This method takes in a slice of bytes representing a full JSON object
-and updates the raw property for the object.
+SetRevoked - This method sets the revoked boolean to true
 */
-func (o *RawProperty) SetRawData(data []byte) error {
-	o.Raw = data
+func (o *RevokedProperty) SetRevoked() error {
+	o.Revoked = true
 	return nil
 }
 
 /*
-GetRawData - This method will return the raw bytes for a given STIX object.
+GetRevoked - This method returns the current value of the revoked property.
 */
-func (o *RawProperty) GetRawData() []byte {
-	return o.Raw
+func (o *RevokedProperty) GetRevoked() bool {
+	return o.Revoked
 }

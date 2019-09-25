@@ -10,45 +10,6 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
-// Common Property Types - Used to populate the common object properties
-//
-// ----------------------------------------------------------------------
-
-/*
-BundleBaseProperties - This type includes all of the common properties
-that are used by by the STIX Bundle. It is done here to make it similar to
-all other STIX object definitions. Meaning, that they all use this baseobject
-package.
-*/
-type BundleBaseProperties struct {
-	TypeProperty
-	IDProperty
-}
-
-/*
-CommonObjectProperties - This type includes all of the common properties that
-are used by all STIX SDOs, SROs, Marking Definition Objects, and the Language
-object.  For objects where some of these properties are not defined, they will
-be removed / zeroed out in their respective encoding methods.
-*/
-type CommonObjectProperties struct {
-	DatastoreIDProperty
-	TypeProperty
-	SpecVersionProperty
-	IDProperty
-	CreatedByRefProperty
-	CreatedModifiedProperty
-	RevokedProperty
-	LabelsProperty
-	ConfidenceProperty
-	LangProperty
-	ExternalReferencesProperty
-	MarkingProperties
-	RawProperty
-}
-
-// ----------------------------------------------------------------------
 // Public Methods - CommonObjectProperties
 // ----------------------------------------------------------------------
 

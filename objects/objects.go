@@ -22,6 +22,7 @@ import (
 	"github.com/freetaxii/libstix2/objects/intrusionset"
 	"github.com/freetaxii/libstix2/objects/malware"
 	"github.com/freetaxii/libstix2/objects/observeddata"
+	"github.com/freetaxii/libstix2/objects/properties"
 	"github.com/freetaxii/libstix2/objects/relationship"
 	"github.com/freetaxii/libstix2/objects/report"
 	"github.com/freetaxii/libstix2/objects/sighting"
@@ -46,7 +47,7 @@ DecodeType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
 func DecodeType(data []byte) (string, error) {
-	var o baseobject.TypeProperty
+	var o properties.TypeProperty
 	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return "", err
