@@ -101,24 +101,24 @@ Libstix2 uses the following naming conventions for methods on objects and resour
 * Methods that take in an object and add that object to a slice have a name of “Add” + the object type in the singular. Example: “AddManifestEntry” is used to add a Manifest Entry to the Objects slice in the Manifest resource. It is important to note that these methods take in a pointer to the object instead of a copy of the object itself. Some examples with full signatures:
 
 ```
-func (ezt *CollectionsType) AddCollection(o *CollectionType) (int, error) {}
-func (ezt *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {}
+func (o *CollectionsType) AddCollection(o *CollectionType) (int, error) {}
+func (o *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {}
 ```
 
 * Methods that create a new a new object inside another object and return a pointer to a slice location for the new object have a name of “New” + the object type in the singular. Example: “NewManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource. Some examples with full signatures:
 
 ```
-func (ezt *ExternalReferencesPropertyType) NewExternalReference() (*ExternalReferenceType, error) {}
-func (ezt *KillChainPhasesPropertyType) NewKillChainPhase() (*KillChainPhaseType, error) {}
-func (ezt *CollectionsType) NewCollection() (*CollectionType, error) {}
-func (ezt *ManifestType) NewManifestEntry() (*ManifestEntryType, error) {}
+func (o *ExternalReferencesPropertyType) NewExternalReference() (*ExternalReferenceType, error) {}
+func (o *KillChainPhasesPropertyType) NewKillChainPhase() (*KillChainPhaseType, error) {}
+func (o *CollectionsType) NewCollection() (*CollectionType, error) {}
+func (o *ManifestType) NewManifestEntry() (*ManifestEntryType, error) {}
 ```
 
 * Methods that create and populate a new object in a single step have a name of “Create” + the object type in the singular. Example: “CreateManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource and populates it in one step. Some examples with full signatures:
 
 ```
-func (ezt *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {}
-func (ezt *ManifestType) CreateManifestEntry(id, date, ver, media string) error {}
+func (o *KillChainPhasesPropertyType) CreateKillChainPhase(name, phase string) error {}
+func (o *ManifestType) CreateManifestEntry(id, date, ver, media string) error {}
 ```
 
 
