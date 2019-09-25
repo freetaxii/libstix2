@@ -6,8 +6,6 @@
 package baseobject
 
 import (
-	"encoding/json"
-
 	"github.com/freetaxii/libstix2/defs"
 )
 
@@ -29,10 +27,10 @@ type BundleBaseProperties struct {
 }
 
 /*
-CommonObjectProperties - This type includes all of the common properties
-that are used by all STIX SDOs, SROs, Marking Definition Objects, and the
-Language object.  For objects where some of these properties are not defined,
-they will be removed / zeroed out in their respective encoding methods.
+CommonObjectProperties - This type includes all of the common properties that
+are used by all STIX SDOs, SROs, Marking Definition Objects, and the Language
+object.  For objects where some of these properties are not defined, they will
+be removed / zeroed out in their respective encoding methods.
 */
 type CommonObjectProperties struct {
 	DatastoreIDProperty
@@ -51,9 +49,7 @@ type CommonObjectProperties struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Public Methods - CommonObjectProperties
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -76,26 +72,6 @@ of this object.
 */
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
-}
-
-/*
-Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer and any errors found.
-This function will handle Custom STIX objects by decoding all of the common properties.
-*/
-func Decode(data []byte) (*CommonObjectProperties, error) {
-	var o CommonObjectProperties
-	err := json.Unmarshal(data, &o)
-	if err != nil {
-		return nil, err
-	}
-
-	if valid, err := o.Valid(); valid != true {
-		return nil, err
-	}
-
-	o.SetRawData(data)
-	return &o, nil
 }
 
 /*

@@ -9,144 +9,154 @@ import (
 	"fmt"
 )
 
+// ----------------------------------------------------------------------
+// Public Methods
+// ----------------------------------------------------------------------
+
 /*
-Compare - This method will compare two indicators to make sure they
-are the same. The indicator receiver is the known good and represent the correct
-data, the indicator passed in as i represents the one we need to test/check.
+Compare - This method will compare two indicators to make sure they are the
+same. The indicator receiver is object 1 and the indicator passed in is object
+2. This method will return an integer that tracks the number of problems and a
+slice of strings that contain the detailed results, whether good or bad.
 */
-func (o *Indicator) Compare(toTest *Indicator) (bool, int, []string) {
-	return Compare(o, toTest)
+func (o *Indicator) Compare(obj2 *Indicator) (bool, int, []string) {
+	return Compare(o, obj2)
 }
 
+// ----------------------------------------------------------------------
+// Public Functions
+// ----------------------------------------------------------------------
+
 /*
-Compare - This function will compare two indicators to make sure they
-are the same. Indicator correct is the master and represent the correct
-data, indicator toTest represents the one we need to test.
+Compare - This function will compare two indicators (object 1 and object 2) to
+make sure they are the same. This function will return an integer that tracks
+the number of problems and a slice of strings that contain the detailed results,
+whether good or bad.
 */
-func Compare(correct, toTest *Indicator) (bool, int, []string) {
+func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 	problemsFound := 0
-	errorDetails := make([]string, 0)
+	resultDetails := make([]string, 0)
 
 	// Check common properties
-	if valid, problems, d := correct.CommonObjectProperties.Compare(&toTest.CommonObjectProperties); valid != true {
+	if valid, problems, d := obj1.CommonObjectProperties.Compare(&obj2.CommonObjectProperties); valid != true {
 		problemsFound += problems
 		for _, v := range d {
-			errorDetails = append(errorDetails, v)
+			resultDetails = append(resultDetails, v)
 		}
 	} else {
 		// The Common Properties were good, so lets just capture any details
 		// that were returned.
 		for _, v := range d {
-			errorDetails = append(errorDetails, v)
+			resultDetails = append(resultDetails, v)
 		}
 	}
 
 	// Check Name Value
-	if toTest.Name != correct.Name {
+	if obj1.Name != obj2.Name {
 		problemsFound++
-		str := fmt.Sprintf("-- Names Do Not Match: %s | %s", correct.Name, toTest.Name)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- Names Do Not Match: %s | %s", obj1.Name, obj2.Name)
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Names Match: %s | %s", correct.Name, toTest.Name)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ Names Match: %s | %s", obj1.Name, obj2.Name)
+		resultDetails = append(resultDetails, str)
 	}
 
 	// Check Description Value
-	if toTest.Description != correct.Description {
+	if obj1.Description != obj2.Description {
 		problemsFound++
-		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", correct.Description, toTest.Description)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", obj1.Description, obj2.Description)
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Descriptions Match: %s | %s", correct.Description, toTest.Description)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ Descriptions Match: %s | %s", obj1.Description, obj2.Description)
+		resultDetails = append(resultDetails, str)
 	}
 
 	// Check Indicator Types Property Length
-	if len(toTest.IndicatorTypes) != len(correct.IndicatorTypes) {
+	if len(obj1.IndicatorTypes) != len(obj2.IndicatorTypes) {
 		problemsFound++
-		str := fmt.Sprintf("-- Indicator Types Length Do Not Match: %d | %d", len(correct.IndicatorTypes), len(toTest.IndicatorTypes))
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- Indicator Types Length Do Not Match: %d | %d", len(obj1.IndicatorTypes), len(obj2.IndicatorTypes))
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Indicator Types Length Match: %d | %d", len(correct.IndicatorTypes), len(toTest.IndicatorTypes))
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ Indicator Types Length Match: %d | %d", len(obj1.IndicatorTypes), len(obj2.IndicatorTypes))
+		resultDetails = append(resultDetails, str)
 
 		// If lengths are the same, then check each value
-		for index := range correct.IndicatorTypes {
-			if toTest.IndicatorTypes[index] != correct.IndicatorTypes[index] {
+		for index := range obj1.IndicatorTypes {
+			if obj1.IndicatorTypes[index] != obj2.IndicatorTypes[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- Indicator Types Do Not Match: %s | %s", correct.IndicatorTypes[index], toTest.IndicatorTypes[index])
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("-- Indicator Types Do Not Match: %s | %s", obj1.IndicatorTypes[index], obj2.IndicatorTypes[index])
+				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Indicator Types Match: %s | %s", correct.IndicatorTypes[index], toTest.IndicatorTypes[index])
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("++ Indicator Types Match: %s | %s", obj1.IndicatorTypes[index], obj2.IndicatorTypes[index])
+				resultDetails = append(resultDetails, str)
 			}
 		}
 	}
 
 	// Check Pattern Value
-	if toTest.Pattern != correct.Pattern {
+	if obj1.Pattern != obj2.Pattern {
 		problemsFound++
-		str := fmt.Sprintf("-- Patterns Do Not Match: %s | %s", correct.Pattern, toTest.Pattern)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- Patterns Do Not Match: %s | %s", obj1.Pattern, obj2.Pattern)
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Patterns Match: %s | %s", correct.Pattern, toTest.Pattern)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ Patterns Match: %s | %s", obj1.Pattern, obj2.Pattern)
+		resultDetails = append(resultDetails, str)
 	}
 
 	// Check ValidFrom Value
-	if toTest.ValidFrom != correct.ValidFrom {
+	if obj1.ValidFrom != obj2.ValidFrom {
 		problemsFound++
-		str := fmt.Sprintf("-- ValidFrom Values Do Not Match: %s | %s", correct.ValidFrom, toTest.ValidFrom)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- ValidFrom Values Do Not Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ ValidFrom Values Match: %s | %s", correct.ValidFrom, toTest.ValidFrom)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ ValidFrom Values Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
+		resultDetails = append(resultDetails, str)
 	}
 
 	// Check ValidUntil Value
-	if toTest.ValidUntil != correct.ValidUntil {
+	if obj1.ValidUntil != obj2.ValidUntil {
 		problemsFound++
-		str := fmt.Sprintf("-- ValidUntil Values Do Not Match: %s | %s", correct.ValidUntil, toTest.ValidUntil)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- ValidUntil Values Do Not Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ ValidUntil Values Match: %s | %s", correct.ValidUntil, toTest.ValidUntil)
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("++ ValidUntil Values Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
+		resultDetails = append(resultDetails, str)
 	}
 
 	// Check Kill Chain Phases Property Length
-	if len(toTest.KillChainPhases) != len(correct.KillChainPhases) {
+	if len(obj1.KillChainPhases) != len(obj2.KillChainPhases) {
 		problemsFound++
-		str := fmt.Sprintf("-- Kill Chain Phases Length Do Not Match: %d | %d", len(correct.KillChainPhases), len(toTest.KillChainPhases))
-		errorDetails = append(errorDetails, str)
+		str := fmt.Sprintf("-- Kill Chain Phases Length Do Not Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(correct.KillChainPhases), len(toTest.KillChainPhases))
-		errorDetails = append(errorDetails, str)
-		for index := range correct.KillChainPhases {
+		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		resultDetails = append(resultDetails, str)
+		for index := range obj1.KillChainPhases {
 			// Check Kill Chain Phases values
-			if toTest.KillChainPhases[index].KillChainName != correct.KillChainPhases[index].KillChainName {
+			if obj1.KillChainPhases[index].KillChainName != obj2.KillChainPhases[index].KillChainName {
 				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Names Do Not Match: %s | %s", correct.KillChainPhases[index].KillChainName, toTest.KillChainPhases[index].KillChainName)
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("-- Kill Chain Names Do Not Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Kill Chain Names Match: %s | %s", correct.KillChainPhases[index].KillChainName, toTest.KillChainPhases[index].KillChainName)
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("++ Kill Chain Names Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				resultDetails = append(resultDetails, str)
 			}
 
 			// Check Kill Chain Phases values
-			if toTest.KillChainPhases[index].PhaseName != correct.KillChainPhases[index].PhaseName {
+			if obj1.KillChainPhases[index].PhaseName != obj2.KillChainPhases[index].PhaseName {
 				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Phases Do Not Match: %s | %s", correct.KillChainPhases[index].PhaseName, toTest.KillChainPhases[index].PhaseName)
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("-- Kill Chain Phases Do Not Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Kill Chain Phases Match: %s | %s", correct.KillChainPhases[index].PhaseName, toTest.KillChainPhases[index].PhaseName)
-				errorDetails = append(errorDetails, str)
+				str := fmt.Sprintf("++ Kill Chain Phases Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				resultDetails = append(resultDetails, str)
 			}
 		}
 	}
 
 	if problemsFound > 0 {
-		return false, problemsFound, errorDetails
+		return false, problemsFound, resultDetails
 	}
 
-	return true, 0, errorDetails
+	return true, 0, resultDetails
 }

@@ -7,6 +7,8 @@ package indicator
 
 import (
 	"encoding/json"
+
+	"github.com/freetaxii/libstix2/objects/baseobject"
 )
 
 // ----------------------------------------------------------------------
@@ -25,7 +27,7 @@ func New() *Indicator {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - Indicator - Core Functionality
+// Public Functions - JSON Decoder
 // ----------------------------------------------------------------------
 
 /*
@@ -48,24 +50,20 @@ func Decode(data []byte) (*Indicator, error) {
 	return &o, nil
 }
 
+// ----------------------------------------------------------------------
+// Public Methods - JSON Encoders
+// ----------------------------------------------------------------------
+
 /*
-Encode - This method is a simple wrapper for encoding the object in to JSON
+Encode - This method is a simple wrapper to JSON encode the object.
 */
 func (o *Indicator) Encode() ([]byte, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
+	return baseobject.Encode(o)
 }
 
 /*
-EncodeToString - This method is a simple wrapper for encoding the object in to JSON
+EncodeToString - This method is a simple wrapper to JSON encode the object.
 */
 func (o *Indicator) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
+	return baseobject.EncodeToString(o)
 }
