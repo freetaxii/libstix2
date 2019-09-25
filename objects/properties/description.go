@@ -5,6 +5,8 @@
 
 package properties
 
+import "fmt"
+
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
@@ -35,4 +37,31 @@ GetDescription - This method returns the description for an object as a string.
 */
 func (o *DescriptionProperty) GetDescription() string {
 	return o.Description
+}
+
+/*
+CompareDescriptions - This function will compare two descriptions (object 1 and object 2) to
+make sure they are the same. This function will return an integer that tracks
+the number of problems and a slice of strings that contain the detailed results,
+whether good or bad.
+*/
+func CompareDescriptions(obj1, obj2 *DescriptionProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Description Value
+	if obj1.Description != obj2.Description {
+		problemsFound++
+		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", obj1.Description, obj2.Description)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Descriptions Match: %s | %s", obj1.Description, obj2.Description)
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

@@ -5,6 +5,8 @@
 
 package properties
 
+import "fmt"
+
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
@@ -35,4 +37,31 @@ GetName - This method returns the current name of the object.
 */
 func (o *NameProperty) GetName() string {
 	return o.Name
+}
+
+/*
+CompareNames - This function will compare two names (object 1 and object 2) to
+make sure they are the same. This function will return an integer that tracks
+the number of problems and a slice of strings that contain the detailed results,
+whether good or bad.
+*/
+func CompareNames(obj1, obj2 *NameProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Name Value
+	if obj1.Name != obj2.Name {
+		problemsFound++
+		str := fmt.Sprintf("-- Names Do Not Match: %s | %s", obj1.Name, obj2.Name)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Names Match: %s | %s", obj1.Name, obj2.Name)
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

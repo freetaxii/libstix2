@@ -5,6 +5,8 @@
 
 package properties
 
+import "fmt"
+
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
@@ -27,6 +29,58 @@ type KillChainPhase struct {
 }
 
 // ----------------------------------------------------------------------
+// Public Functions - KillChainPhasesProperty
+// ----------------------------------------------------------------------
+
+/*
+CompareKillChainPhases - This function will compare two kill chain phases
+(object 1 and object 2) to make sure they are the same. This function will
+return an integer that tracks the number of problems and a slice of strings that
+contain the detailed results, whether good or bad.
+*/
+func CompareKillChainPhases(obj1, obj2 *KillChainPhasesProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Kill Chain Phases Property Length
+	if len(obj1.KillChainPhases) != len(obj2.KillChainPhases) {
+		problemsFound++
+		str := fmt.Sprintf("-- Kill Chain Phases Length Do Not Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		resultDetails = append(resultDetails, str)
+		for index := range obj1.KillChainPhases {
+			// Check Kill Chain Phases values
+			if obj1.KillChainPhases[index].KillChainName != obj2.KillChainPhases[index].KillChainName {
+				problemsFound++
+				str := fmt.Sprintf("-- Kill Chain Names Do Not Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				resultDetails = append(resultDetails, str)
+			} else {
+				str := fmt.Sprintf("++ Kill Chain Names Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				resultDetails = append(resultDetails, str)
+			}
+
+			// Check Kill Chain Phases values
+			if obj1.KillChainPhases[index].PhaseName != obj2.KillChainPhases[index].PhaseName {
+				problemsFound++
+				str := fmt.Sprintf("-- Kill Chain Phases Do Not Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				resultDetails = append(resultDetails, str)
+			} else {
+				str := fmt.Sprintf("++ Kill Chain Phases Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				resultDetails = append(resultDetails, str)
+			}
+		}
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
+}
+
+// ----------------------------------------------------------------------
 // Public Methods - KillChainPhasesProperty
 // ----------------------------------------------------------------------
 
@@ -37,7 +91,7 @@ representing the name of the kill chain being used. The second value is a
 string value representing the phase name from that kill chain.
 */
 func (o *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error {
-	k, _ := o.NewKillChainPhase()
+	k, _ := o.newKillChainPhase()
 	k.SetName(name)
 	k.SetPhase(phase)
 	return nil
@@ -48,10 +102,10 @@ func (o *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error
 // ----------------------------------------------------------------------
 
 /*
-NewKillChainPhase - This method returns a reference to a slice location. This
+newKillChainPhase - This method returns a reference to a slice location. This
 will enable the code to update an object located at that slice location.
 */
-func (o *KillChainPhasesProperty) NewKillChainPhase() (*KillChainPhase, error) {
+func (o *KillChainPhasesProperty) newKillChainPhase() (*KillChainPhase, error) {
 	var s KillChainPhase
 
 	// if o.KillChainPhases == nil {

@@ -7,6 +7,9 @@ package indicator
 
 import (
 	"fmt"
+
+	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -38,40 +41,46 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common properties
-	if valid, problems, d := obj1.CommonObjectProperties.Compare(&obj2.CommonObjectProperties); valid != true {
+	if valid, problems, details := baseobject.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties); valid != true {
 		problemsFound += problems
-		for _, v := range d {
+		for _, v := range details {
 			resultDetails = append(resultDetails, v)
 		}
 	} else {
 		// The Common Properties were good, so lets just capture any details
 		// that were returned.
-		for _, v := range d {
+		for _, v := range details {
 			resultDetails = append(resultDetails, v)
 		}
 	}
 
-	// Check Name Value
-	if obj1.Name != obj2.Name {
-		problemsFound++
-		str := fmt.Sprintf("-- Names Do Not Match: %s | %s", obj1.Name, obj2.Name)
-		resultDetails = append(resultDetails, str)
+	// Check Name Values
+	if valid, problems, details := properties.CompareNames(&obj1.NameProperty, &obj2.NameProperty); valid != true {
+		problemsFound += problems
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
+		}
 	} else {
-		str := fmt.Sprintf("++ Names Match: %s | %s", obj1.Name, obj2.Name)
-		resultDetails = append(resultDetails, str)
+		// Everything was good, let's just capture any details that were returned.
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
+		}
 	}
 
-	// Check Description Value
-	if obj1.Description != obj2.Description {
-		problemsFound++
-		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", obj1.Description, obj2.Description)
-		resultDetails = append(resultDetails, str)
+	// Check Description Values
+	if valid, problems, details := properties.CompareDescriptions(&obj1.DescriptionProperty, &obj2.DescriptionProperty); valid != true {
+		problemsFound += problems
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
+		}
 	} else {
-		str := fmt.Sprintf("++ Descriptions Match: %s | %s", obj1.Description, obj2.Description)
-		resultDetails = append(resultDetails, str)
+		// Everything was good, let's just capture any details that were returned.
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
+		}
 	}
 
-	// Check Indicator Types Property Length
+	// Check Indicator Types Property Lengths
 	if len(obj1.IndicatorTypes) != len(obj2.IndicatorTypes) {
 		problemsFound++
 		str := fmt.Sprintf("-- Indicator Types Length Do Not Match: %d | %d", len(obj1.IndicatorTypes), len(obj2.IndicatorTypes))
@@ -93,7 +102,7 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 		}
 	}
 
-	// Check Pattern Value
+	// Check Pattern Values
 	if obj1.Pattern != obj2.Pattern {
 		problemsFound++
 		str := fmt.Sprintf("-- Patterns Do Not Match: %s | %s", obj1.Pattern, obj2.Pattern)
@@ -103,7 +112,7 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	// Check PatternType Value
+	// Check PatternType Values
 	if obj1.PatternType != obj2.PatternType {
 		problemsFound++
 		str := fmt.Sprintf("-- Pattern Types Do Not Match: %s | %s", obj1.PatternType, obj2.PatternType)
@@ -113,7 +122,7 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	// Check PatternVersion Value
+	// Check PatternVersion Values
 	if obj1.PatternVersion != obj2.PatternVersion {
 		problemsFound++
 		str := fmt.Sprintf("-- Pattern Versions Do Not Match: %s | %s", obj1.PatternVersion, obj2.PatternVersion)
@@ -123,54 +132,36 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	// Check ValidFrom Value
+	// Check ValidFrom Values
 	if obj1.ValidFrom != obj2.ValidFrom {
 		problemsFound++
-		str := fmt.Sprintf("-- ValidFrom Values Do Not Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
+		str := fmt.Sprintf("-- Valid From Values Do Not Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ ValidFrom Values Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
+		str := fmt.Sprintf("++ Valid From Values Match: %s | %s", obj1.ValidFrom, obj2.ValidFrom)
 		resultDetails = append(resultDetails, str)
 	}
 
-	// Check ValidUntil Value
+	// Check ValidUntil Values
 	if obj1.ValidUntil != obj2.ValidUntil {
 		problemsFound++
-		str := fmt.Sprintf("-- ValidUntil Values Do Not Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
+		str := fmt.Sprintf("-- Valid Until Values Do Not Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ ValidUntil Values Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
+		str := fmt.Sprintf("++ Valid Until Values Match: %s | %s", obj1.ValidUntil, obj2.ValidUntil)
 		resultDetails = append(resultDetails, str)
 	}
 
-	// Check Kill Chain Phases Property Length
-	if len(obj1.KillChainPhases) != len(obj2.KillChainPhases) {
-		problemsFound++
-		str := fmt.Sprintf("-- Kill Chain Phases Length Do Not Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
-		resultDetails = append(resultDetails, str)
+	// Check Kill Chain Phases
+	if valid, problems, details := properties.CompareKillChainPhases(&obj1.KillChainPhasesProperty, &obj2.KillChainPhasesProperty); valid != true {
+		problemsFound += problems
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
+		}
 	} else {
-		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
-		resultDetails = append(resultDetails, str)
-		for index := range obj1.KillChainPhases {
-			// Check Kill Chain Phases values
-			if obj1.KillChainPhases[index].KillChainName != obj2.KillChainPhases[index].KillChainName {
-				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Names Do Not Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
-				resultDetails = append(resultDetails, str)
-			} else {
-				str := fmt.Sprintf("++ Kill Chain Names Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
-				resultDetails = append(resultDetails, str)
-			}
-
-			// Check Kill Chain Phases values
-			if obj1.KillChainPhases[index].PhaseName != obj2.KillChainPhases[index].PhaseName {
-				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Phases Do Not Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
-				resultDetails = append(resultDetails, str)
-			} else {
-				str := fmt.Sprintf("++ Kill Chain Phases Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
-				resultDetails = append(resultDetails, str)
-			}
+		// Everything was good, let's just capture any details that were returned.
+		for _, v := range details {
+			resultDetails = append(resultDetails, v)
 		}
 	}
 
