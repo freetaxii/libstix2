@@ -103,6 +103,26 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
+	// Check PatternType Value
+	if obj1.PatternType != obj2.PatternType {
+		problemsFound++
+		str := fmt.Sprintf("-- Pattern Types Do Not Match: %s | %s", obj1.PatternType, obj2.PatternType)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Pattern Types Match: %s | %s", obj1.PatternType, obj2.PatternType)
+		resultDetails = append(resultDetails, str)
+	}
+
+	// Check PatternVersion Value
+	if obj1.PatternVersion != obj2.PatternVersion {
+		problemsFound++
+		str := fmt.Sprintf("-- Pattern Versions Do Not Match: %s | %s", obj1.PatternVersion, obj2.PatternVersion)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Pattern Versions Match: %s | %s", obj1.PatternVersion, obj2.PatternVersion)
+		resultDetails = append(resultDetails, str)
+	}
+
 	// Check ValidFrom Value
 	if obj1.ValidFrom != obj2.ValidFrom {
 		problemsFound++
