@@ -25,6 +25,12 @@ func main() {
 
 	i.SetValidFrom(time.Now())
 	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
+	i.SetPattern("somedata")
+	i.SetPatternType("stix")
+
+	valid, err := i.Valid()
+	fmt.Println("Is valid:", valid)
+	fmt.Println("Error Msg:", err)
 
 	data, _ := i.EncodeToString()
 	fmt.Println(data)

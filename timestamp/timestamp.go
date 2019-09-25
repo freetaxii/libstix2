@@ -15,7 +15,7 @@ import (
 
 /*
 CurrentTime - This function will return the current time in the STIX
-time stamp format, which is in RFC 3339 format. The options are "milli",
+timestamp format, which is in RFC 3339 format. The options are "milli",
 "micro", or "" which will give you to the second.
 */
 func CurrentTime(precision string) string {
@@ -28,21 +28,22 @@ func CurrentTime(precision string) string {
 }
 
 /*
-Valid - This function will return true if the time stamp is a valid STIX
-time stamp, just the date in proper RFC3339 format, or just the year. If it
+Valid - This function will return true if the timestamp is a valid STIX
+timestamp, just the date in proper RFC3339 format, or just the year. If it
 is anything else it will return false.
 */
 func Valid(t string) bool {
 	re1 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}T[0-2]\d{1}:[0-5]\d{1}:[0-5]\d{1}(\.\d{0,6})?Z$`)
-	re2 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}$`)
-	re3 := regexp.MustCompile(`^[12]\d{3}$`)
+	//re2 := regexp.MustCompile(`^[12]\d{3}-[01]\d{1}-[0-3]\d{1}$`)
+	//re3 := regexp.MustCompile(`^[12]\d{3}$`)
 	if re1.MatchString(t) {
 		return true
-	} else if re2.MatchString(t) {
-		return true
-	} else if re3.MatchString(t) {
-		return true
 	}
+	//else if re2.MatchString(t) {
+	//	return true
+	//} else if re3.MatchString(t) {
+	//	return true
+	//}
 	return false
 }
 
@@ -71,7 +72,7 @@ func ToString(t interface{}, p string) (string, error) {
 		//TODO verify format of timestamp when in string format
 		return ts, nil
 	default:
-		return "", fmt.Errorf("The timestamp format of \"%s\" is not a valid format", ts)
+		return "", fmt.Errorf("the timestamp format of \"%s\" is not a valid format", ts)
 	}
 }
 
