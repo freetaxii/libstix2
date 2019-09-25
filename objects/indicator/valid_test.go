@@ -13,53 +13,110 @@ import "testing"
 // own logic and verification steps in them.
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+// Test the public Valid method - Make sure we hit each level and make sure
+// required property checks are working when they are left blank.
+// ----------------------------------------------------------------------
+
 /*
-TestValid - Make sure we hit each level and make sure required property checks
-are working when they are left blank
+TestValid1 - Make sure we get a value of false when Indicator Type is blank.
 */
-func TestValid(t *testing.T) {
+func TestValid1(t *testing.T) {
 	i := New()
 	want := false
 
-	// Make sure we get a value of false when blank
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Indicator Type Check 0")
 		t.Log(err)
 	}
+}
 
-	// Set the Indicator Type value so we can move to next test
+/*
+TestValid2 - Make sure we get a value of false when Pattern is blank.
+*/
+func TestValid2(t *testing.T) {
+	i := New()
+	want := false
+	// Set the Indicator Type value so we can move to next test.
 	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
 
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Pattern Check 0")
 		t.Log(err)
 	}
+}
 
-	// Set the Pattern value so we can move to the next test
+/*
+TestValid3 - Make sure we get a value of false when Pattern Type is blank.
+*/
+func TestValid3(t *testing.T) {
+	i := New()
+	want := false
+	// Set the Indicator Type and Pattern value so we can move to the next test.
+	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
 	i.Pattern = "TestPattern"
 
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Pattern Type Check 0")
 		t.Log(err)
 	}
+}
 
-	// Set the Pattern Type value so we can move to the next test
+/*
+TestValid4 - Make sure we get a value of false when Valid From is blank.
+*/
+func TestValid4(t *testing.T) {
+	i := New()
+	want := false
+	// Set the Indicator Type, Pattern, and Pattern Type value so we can move to
+	// the next test.
+	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
+	i.Pattern = "TestPattern"
 	i.PatternType = "stix"
 
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Valid From Check 0")
 		t.Log(err)
 	}
+}
 
-	// We need the next test for Valid Until to fail so lets set a bad time
+/*
+TestValid5 - Make sure we get a value of false when Valid Until is invalid.
+*/
+func TestValid5(t *testing.T) {
+	i := New()
+	want := false
+
+	// Set the Indicator Type, Pattern, and Pattern Type value so we can move to.
+	// the next test
+	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
+	i.Pattern = "TestPattern"
+	i.PatternType = "stix"
+
+	// We need the next test for Valid Until to fail so lets set a bad time.
 	i.ValidUntil = "2019-0924T20:49:12.123456Z"
 
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}
+}
 
-	// We need the next test for Valid Until to fail so lets set a bad time
+/*
+TestValid6 - Make sure we get a value of false when Valid Until is before Valid
+From.
+*/
+func TestValid6(t *testing.T) {
+	i := New()
+	want := false
+
+	// Set the Indicator Type, Pattern, and Pattern Type value so we can move to
+	// the next test.
+	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
+	i.Pattern = "TestPattern"
+	i.PatternType = "stix"
+
+	// We need the next test for Valid Until to fail so lets set a bad time.
 	i.ValidFrom = "2019-09-24T20:49:13.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:12.123456Z"
 
@@ -67,58 +124,54 @@ func TestValid(t *testing.T) {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}
+}
 
-	// Everything is now set correctly and we should pass this test
+/*
+TestValid7 - Make sure we get a value of true when everything is filled out
+correctly.
+*/
+func TestValid7(t *testing.T) {
+	i := New()
+	want := true
+
+	// Set the Indicator Type, Pattern, and Pattern Type value so we can move to
+	// the next test.
+	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
+	i.Pattern = "TestPattern"
+	i.PatternType = "stix"
+
+	// Set the timestamps correctly
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:13.123456Z"
+
 	want = true
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}
-
 }
 
+// ----------------------------------------------------------------------
+// Test individual private validation methods
+// ----------------------------------------------------------------------
+
 /*
-TestValidRequiredProperties - Make sure required property checks are working
-when properties are left blank we should get a valid response of "false" for
-each of the tests.
+TestValidIndicatorType1 - Make sure we get a value of false when the required
+Indicator Type property is left blank.
 */
-func TestValidRequiredProperties(t *testing.T) {
+func TestValidIndicatorType1(t *testing.T) {
 	i := New()
 	want := false
 
-	// Make sure we get a value of false when blank
 	if got, err := i.validIndicatorType(); got != want {
 		t.Error("Fail Indicator Type Check 1")
 		t.Log(err)
 	}
-
-	if got, err := i.validPattern(); got != want {
-		t.Error("Fail Pattern Check 1")
-		t.Log(err)
-	}
-
-	if got, err := i.validPatternType(); got != want {
-		t.Error("Fail Pattern Type Check 1")
-		t.Log(err)
-	}
-
-	if got, err := i.validValidFrom(); got != want {
-		t.Error("Fail Valid From Check 1")
-		t.Log(err)
-	}
-
-	if got, err := i.validValidFrom(); got != want {
-		t.Error("Fail Valid From Check 1")
-		t.Log(err)
-	}
-
 }
 
 /*
 TestValidIndicatorType2 - Make sure we get a value of true when the Indicator
-Type is populated
+Type is populated.
 */
 func TestValidIndicatorType2(t *testing.T) {
 	i := New()
@@ -131,8 +184,22 @@ func TestValidIndicatorType2(t *testing.T) {
 }
 
 /*
+TestValidPattern1 - Make sure we get a value of false when the required Pattern
+property is left blank.
+*/
+func TestValidPattern1(t *testing.T) {
+	i := New()
+	want := false
+
+	if got, err := i.validPattern(); got != want {
+		t.Error("Fail Pattern Check 1")
+		t.Log(err)
+	}
+}
+
+/*
 TestValidPattern2 - Make sure we get a value of true when the Pattern is
-populated
+populated.
 */
 func TestValidPattern2(t *testing.T) {
 	i := New()
@@ -145,8 +212,22 @@ func TestValidPattern2(t *testing.T) {
 }
 
 /*
+TestValidPatternType1 - Make sure we get a value of false when the required
+Pattern Type property is left blank.
+*/
+func TestValidPatternType1(t *testing.T) {
+	i := New()
+	want := false
+
+	if got, err := i.validPatternType(); got != want {
+		t.Error("Fail Pattern Type Check 1")
+		t.Log(err)
+	}
+}
+
+/*
 TestValidPatternType2 - Make sure we get a value of true when the Pattern Type
-is populated correctly
+is populated correctly.
 */
 func TestValidPatternType2(t *testing.T) {
 	i := New()
@@ -163,7 +244,7 @@ func TestValidPatternType2(t *testing.T) {
 
 /*
 TestValidPatternType3 - Make sure we get a value of false when the Pattern Type
-is populated incorrectly
+is populated incorrectly.
 */
 func TestValidPatternType3(t *testing.T) {
 	i := New()
@@ -176,10 +257,24 @@ func TestValidPatternType3(t *testing.T) {
 }
 
 /*
-TestValidFrom2 - Make sure we get a value of true when the Valid From timestamp
-is populated correctly
+TestValidValidFrom1 - Make sure we get a value of false when the required Valid
+From property is left blank.
 */
-func TestValidFrom2(t *testing.T) {
+func TestValidValidFrom1(t *testing.T) {
+	i := New()
+	want := false
+
+	if got, err := i.validValidFrom(); got != want {
+		t.Error("Fail Valid From Check 1")
+		t.Log(err)
+	}
+}
+
+/*
+TestValidValidFrom2 - Make sure we get a value of true when the Valid From
+timestamp is populated correctly.
+*/
+func TestValidValidFrom2(t *testing.T) {
 	i := New()
 	want := true
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
@@ -190,10 +285,10 @@ func TestValidFrom2(t *testing.T) {
 }
 
 /*
-TestValidFrom3 - Make sure we get a value of false when the Valid From timestamp
-is populated incorrectly
+TestValidValidFrom3 - Make sure we get a value of false when the Valid From
+timestamp is populated incorrectly.
 */
-func TestValidFrom3(t *testing.T) {
+func TestValidValidFrom3(t *testing.T) {
 	i := New()
 	want := false
 	i.ValidFrom = "20190924T20:49:12.123456Z"
@@ -204,10 +299,10 @@ func TestValidFrom3(t *testing.T) {
 }
 
 /*
-TestValidUntil2 - Make sure we get a value of true when the Valid From and Valid
-Until timestamps are populated correctly
+TestValidValidUntil2 - Make sure we get a value of true when the Valid From and
+Valid Until timestamps are populated correctly.
 */
-func TestValidUntil2(t *testing.T) {
+func TestValidValidUntil2(t *testing.T) {
 	i := New()
 	want := true
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
@@ -219,10 +314,10 @@ func TestValidUntil2(t *testing.T) {
 }
 
 /*
-TestValidUntil3 - Make sure we get a value of false when Valid Until timestamp
-is populated correctly but there is no Valid From timestamp
+TestValidValidUntil3 - Make sure we get a value of false when Valid Until
+timestamp is populated correctly but there is no Valid From timestamp.
 */
-func TestValidUntil3(t *testing.T) {
+func TestValidValidUntil3(t *testing.T) {
 	i := New()
 	want := false
 	i.ValidUntil = "2019-29-24T20:49:13.123456Z"
@@ -233,10 +328,10 @@ func TestValidUntil3(t *testing.T) {
 }
 
 /*
-TestValidUntil4 - Make sure we get a value of false when timestamps are
-populated incorrectly
+TestValidValidUntil4 - Make sure we get a value of false when timestamps are
+populated incorrectly.
 */
-func TestValidUntil4(t *testing.T) {
+func TestValidValidUntil4(t *testing.T) {
 	i := New()
 	want := false
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
@@ -248,11 +343,11 @@ func TestValidUntil4(t *testing.T) {
 }
 
 /*
-TestValidUntil5 - Make sure we get a value of false when timestamps are
+TestValidValidUntil5 - Make sure we get a value of false when timestamps are
 populated correct and are valid but the Valid Until timestamp is before the
-Valid From timestamp
+Valid From timestamp.
 */
-func TestValidUntil5(t *testing.T) {
+func TestValidValidUntil5(t *testing.T) {
 	i := New()
 	want := false
 	i.ValidFrom = "2019-09-24T20:49:13.123456Z"
