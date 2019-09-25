@@ -4,6 +4,8 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
+This package implements the STIX 2.1 Indicator object.
+
 The following information comes directly from the STIX 2.1 specification.
 
 Indicators contain a pattern that can be used to detect suspicious or malicious

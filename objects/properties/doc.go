@@ -4,8 +4,6 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-properties - This package contains all of the common properties used in various
-STIX objects. It also includes properties that may exist on multiple, but not
-all objects.
+This package contains all of the common properties used on STIX objects.
 */
 package properties
