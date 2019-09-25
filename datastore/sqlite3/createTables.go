@@ -135,14 +135,14 @@ func (ds *Store) createTAXIIIndexes(name string) {
 func (ds *Store) insertMediaTypes(name string) {
 	var stmt = `INSERT INTO "` + name + `" (media_type) values (?)`
 
-	var err error
-	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.0")
-	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.1")
-	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.2")
-	_, err = ds.DB.Exec(stmt, "application/stix+json;version=2.3")
+	mediaTypes := []string{"application/stix+json;version=2.0", "application/stix+json;version=2.1", "application/stix+json;version=2.2", "application/stix+json;version=2.3"}
+	for _, value := range mediaTypes {
+		var err error
+		_, err = ds.DB.Exec(stmt, value)
 
-	if err != nil {
-		ds.Logger.Println("ERROR: The media type item could not be inserted in to the", name, "table")
+		if err != nil {
+			ds.Logger.Println("ERROR: The media type item could not be inserted in to the", name, "table")
+		}
 	}
 }
 

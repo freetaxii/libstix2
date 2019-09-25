@@ -230,7 +230,7 @@ func (r *Status) AddFailureDetails(o *StatusDetails) (int, error) {
 }
 
 /*
-CreateSuccessDetails - This method will create a SuccessDetails type based on the
+CreateFailureDetails - This method will create a FailureDetails type based on the
 data provided and will add it to the Failures property.
 */
 func (r *Status) CreateFailureDetails(id, ver, mesg string) error {
