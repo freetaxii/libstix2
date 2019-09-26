@@ -40,12 +40,12 @@ func (o *DescriptionProperty) GetDescription() string {
 }
 
 /*
-CompareDescriptions - This function will compare two descriptions (object 1 and object 2) to
-make sure they are the same. This function will return an integer that tracks
-the number of problems and a slice of strings that contain the detailed results,
-whether good or bad.
+CompareDescriptionProperties - This function will compare two description
+properties (object 1 and object 2) to make sure they are the same. This function
+will return an integer that tracks the number of problems and a slice of strings
+that contain the detailed results, whether good or bad.
 */
-func CompareDescriptions(obj1, obj2 *DescriptionProperty) (bool, int, []string) {
+func CompareDescriptionProperties(obj1, obj2 *DescriptionProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 

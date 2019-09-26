@@ -66,9 +66,9 @@ func (o *Indicator) validIndicatorType() (bool, error) {
 func (o *Indicator) validPattern() (bool, error) {
 	if o.Pattern == "" {
 		return false, errors.New("the pattern property is required, but missing")
-	} else {
-		// TODO verify the pattern is correct
-	}
+	} //else {
+	// TODO verify the pattern is correct
+	//}
 	return true, nil
 }
 
@@ -76,10 +76,9 @@ func (o *Indicator) validPattern() (bool, error) {
 func (o *Indicator) validPatternType() (bool, error) {
 	if o.PatternType == "" {
 		return false, errors.New("the pattern_type property is required, but missing")
-	} else {
-		if o.PatternType != "stix" && o.PatternType != "snort" && o.PatternType != "yara" {
-			return false, errors.New("pattern_type contains a value other than stix, snort, or yara")
-		}
+	}
+	if o.PatternType != "stix" && o.PatternType != "snort" && o.PatternType != "yara" {
+		return false, errors.New("pattern_type contains a value other than stix, snort, or yara")
 	}
 	return true, nil
 }
@@ -88,10 +87,10 @@ func (o *Indicator) validPatternType() (bool, error) {
 func (o *Indicator) validValidFrom() (bool, error) {
 	if o.ValidFrom == "" {
 		return false, errors.New("the valid_from property is required, but missing")
-	} else {
-		if valid := timestamp.Valid(o.ValidFrom); valid == false {
-			return false, errors.New("the valid_from property does not contain a valid STIX timestamp")
-		}
+	}
+	if valid := timestamp.Valid(o.ValidFrom); valid == false {
+		return false, errors.New("the valid_from property does not contain a valid STIX timestamp")
+
 	}
 	return true, nil
 }

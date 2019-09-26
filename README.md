@@ -124,7 +124,7 @@ func (o *ManifestType) CreateManifestEntry(id, date, ver, media string) error {}
 
 ## License ##
 
-This is free software, licensed under the Apache License, Version 2.0.
+This is free software, licensed under the Apache License, Version 2.0. [Read this](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)) for a summary.
 
 
 ## Copyright ##

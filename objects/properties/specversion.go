@@ -5,7 +5,10 @@
 
 package properties
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // ----------------------------------------------------------------------
 // Types
@@ -64,4 +67,31 @@ GetSpecVersion - This method returns the version value as a string.
 */
 func (o *SpecVersionProperty) GetSpecVersion() string {
 	return o.SpecVersion
+}
+
+/*
+CompareSpecVersionProperties - This function will compare two spec version
+properties (object 1 and object 2) to make sure they are the same. This function
+will return an integer that tracks the number of problems and a slice of strings
+that contain the detailed results, whether good or bad.
+*/
+func CompareSpecVersionProperties(obj1, obj2 *SpecVersionProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Spec Version Value
+	if obj1.SpecVersion != obj2.SpecVersion {
+		problemsFound++
+		str := fmt.Sprintf("-- Spec Versions Do Not Match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Spec Versions Match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

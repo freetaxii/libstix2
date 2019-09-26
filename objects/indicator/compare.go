@@ -41,44 +41,18 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common properties
-	if valid, problems, details := baseobject.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties); valid != true {
-		problemsFound += problems
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	} else {
-		// The Common Properties were good, so lets just capture any details
-		// that were returned.
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	}
+	_, pBase, dBase := baseobject.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties)
+	problemsFound += pBase
+	resultDetails = append(resultDetails, dBase...)
 
 	// Check Name Values
-	if valid, problems, details := properties.CompareNames(&obj1.NameProperty, &obj2.NameProperty); valid != true {
-		problemsFound += problems
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	} else {
-		// Everything was good, let's just capture any details that were returned.
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	}
+	_, pNames, dNames := properties.CompareNameProperties(&obj1.NameProperty, &obj2.NameProperty)
+	problemsFound += pNames
+	resultDetails = append(resultDetails, dNames...)
 
-	// Check Description Values
-	if valid, problems, details := properties.CompareDescriptions(&obj1.DescriptionProperty, &obj2.DescriptionProperty); valid != true {
-		problemsFound += problems
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	} else {
-		// Everything was good, let's just capture any details that were returned.
-		for _, v := range details {
-			resultDetails = append(resultDetails, v)
-		}
-	}
+	_, pDescriptions, dDescriptions := properties.CompareDescriptionProperties(&obj1.DescriptionProperty, &obj2.DescriptionProperty)
+	problemsFound += pDescriptions
+	resultDetails = append(resultDetails, dDescriptions...)
 
 	// Check Indicator Types Property Lengths
 	if len(obj1.IndicatorTypes) != len(obj2.IndicatorTypes) {

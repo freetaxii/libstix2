@@ -7,6 +7,7 @@ package properties
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/freetaxii/libstix2/timestamp"
 )
@@ -117,4 +118,41 @@ first version of the object.
 */
 func (o *CreatedModifiedProperty) GetModified() string {
 	return o.Modified
+}
+
+/*
+CompareCreatedModifiedProperties - This function will compare two created and
+modified properties (object 1 and object 2) to make sure they are the same. This
+function will return an integer that tracks the number of problems and a slice
+of strings that contain the detailed results, whether good or bad.
+*/
+func CompareCreatedModifiedProperties(obj1, obj2 *CreatedModifiedProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Created Value
+	if obj1.Created != obj2.Created {
+		problemsFound++
+		str := fmt.Sprintf("-- Created Dates Do Not Match: %s | %s", obj1.Created, obj2.Created)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Created Dates Match: %s | %s", obj1.Created, obj2.Created)
+		resultDetails = append(resultDetails, str)
+	}
+
+	// Check Modified Value
+	if obj1.Modified != obj2.Modified {
+		problemsFound++
+		str := fmt.Sprintf("-- Modified Dates Do Not Match: %s | %s", obj1.Modified, obj2.Modified)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Modified Dates Match: %s | %s", obj1.Modified, obj2.Modified)
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

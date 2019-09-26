@@ -144,7 +144,6 @@ func TestValid7(t *testing.T) {
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:13.123456Z"
 
-	want = true
 	if got, err := i.Valid(); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)

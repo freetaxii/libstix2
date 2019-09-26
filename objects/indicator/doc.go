@@ -4,7 +4,7 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-This package implements the STIX 2.1 Indicator object.
+Package indicator implements the STIX 2.1 Indicator object.
 
 The following information comes directly from the STIX 2.1 specification.
 

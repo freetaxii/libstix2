@@ -42,6 +42,6 @@ type CommonObjectProperties struct {
 	properties.ConfidenceProperty
 	properties.LangProperty
 	properties.ExternalReferencesProperty
-	properties.MarkingProperties
+	properties.MarkingProperty
 	properties.RawProperty
 }

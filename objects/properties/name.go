@@ -40,12 +40,12 @@ func (o *NameProperty) GetName() string {
 }
 
 /*
-CompareNames - This function will compare two names (object 1 and object 2) to
-make sure they are the same. This function will return an integer that tracks
-the number of problems and a slice of strings that contain the detailed results,
-whether good or bad.
+CompareNameProperties - This function will compare two name properties (object 1
+and object 2) to make sure they are the same. This function will return an
+integer that tracks the number of problems and a slice of strings that contain
+the detailed results, whether good or bad.
 */
-func CompareNames(obj1, obj2 *NameProperty) (bool, int, []string) {
+func CompareNameProperties(obj1, obj2 *NameProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 

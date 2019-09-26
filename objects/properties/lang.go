@@ -5,6 +5,8 @@
 
 package properties
 
+import "fmt"
+
 // ----------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------
@@ -36,4 +38,31 @@ GetLang - This method returns the current language code for a given object.
 */
 func (o *LangProperty) GetLang() string {
 	return o.Lang
+}
+
+/*
+CompareLangProperties - This function will compare two lang properties (object 1
+and object 2) to make sure they are the same. This function will return an
+integer that tracks the number of problems and a slice of strings that contain
+the detailed results, whether good or bad.
+*/
+func CompareLangProperties(obj1, obj2 *LangProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check Lang Value
+	if obj1.Lang != obj2.Lang {
+		problemsFound++
+		str := fmt.Sprintf("-- Lang Values Do Not Match: %s | %s", obj1.Lang, obj2.Lang)
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ Lang Values Match: %s | %s", obj1.Lang, obj2.Lang)
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }
