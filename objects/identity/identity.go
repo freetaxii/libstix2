@@ -23,17 +23,6 @@ Identity - This type implements the STIX 2 Identity SDO and defines
 all of the properties methods needed to create and work with the STIX Identity
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
-
-The following information comes directly from the STIX 2 specification documents.
-
-Identities can represent actual individuals, organizations, or groups (e.g.,
-ACME, Inc.) as well as classes of individuals, organizations, or groups (e.g.,
-the finance sector).
-
-The Identity SDO can capture basic identifying information, contact information,
-and the sectors that the Identity belongs to. Identity is used in STIX to
-represent, among other things, targets of attacks, information sources, object
-creators, and threat actor identities.
 */
 type Identity struct {
 	baseobject.CommonObjectProperties

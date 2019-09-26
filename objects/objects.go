@@ -4,7 +4,7 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package objects implements the STIX 2 object model.
+Package objects implements the STIX 2.1 object model.
 */
 package objects
 

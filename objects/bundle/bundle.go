@@ -23,18 +23,6 @@ Bundle - This type implements the STIX 2 Bundle and defines
 all of the properties methods needed to create and work with the STIX Bundle.
 All of the methods not defined local to this type are inherited from
 the individual properties.
-
-The following information comes directly from the STIX 2 specification documents.
-
-A Bundle is a collection of arbitrary STIX Objects and Marking Definitions
-grouped together in a single container. A Bundle does not have any semantic
-meaning and Objects are not considered related by virtue of being in the same
-Bundle.
-
-Bundle is not STIX Object, so it does not have any of the Bundle Properties
-other than the type and id properties. Bundle is transient and implementations
-should not assume that other implementations will treat it as a persistent
-object.
 */
 type Bundle struct {
 	baseobject.BundleBaseProperties

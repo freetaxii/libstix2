@@ -23,8 +23,6 @@ Infrastructure - This type implements the STIX 2 Infrastructure SDO and defines
 all of the properties methods needed to create and work with the STIX Infrastructure
 SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
-
-The following information comes directly from the STIX 2 specification documents.
 */
 type Infrastructure struct {
 	baseobject.CommonObjectProperties
