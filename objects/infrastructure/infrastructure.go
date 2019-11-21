@@ -1,4 +1,5 @@
 // Copyright 2015-2019 Bret Jordan, All rights reserved.
+// Copyright 2019 Oleksii Morozov, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -29,6 +30,9 @@ type Infrastructure struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.KillChainPhasesProperty
+	properties.AliasesProperty
+	properties.SeenProperties
+	InfrastructureTypes []string `json:"infrastructure_types,omitempty"`
 }
 
 // ----------------------------------------------------------------------
@@ -91,20 +95,3 @@ func (o *Infrastructure) EncodeToString() (string, error) {
 	}
 	return string(data), nil
 }
-
-/*
-Valid - This method will verify all of the properties on the object.
-*/
-func (o *Infrastructure) Valid() (bool, error) {
-
-	// Check common base properties first
-	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
-		return false, err
-	}
-
-	return true, nil
-}
-
-// ----------------------------------------------------------------------
-// Public Methods - Infrastructure
-// ----------------------------------------------------------------------
