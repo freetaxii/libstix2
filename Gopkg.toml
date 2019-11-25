@@ -25,11 +25,6 @@
 #   unused-packages = true
 
 [[constraint]]
-  branch = "add_infrastructure_setters_and_validations"
-  name = "github.com/freetaxii/libstix2"
-  source = "github.com/synsec/libstix2"
-
-[[constraint]]
   branch = "master"
   name = "github.com/gologme/log"
 
