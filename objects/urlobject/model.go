@@ -8,7 +8,7 @@ package urlobject
 
 import (
 	"github.com/freetaxii/libstix2/objects/baseobject"
-	"github.com/synsec/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 /*
