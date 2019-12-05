@@ -1,4 +1,4 @@
-# FreeTAXII/libstix2 #
+# FreeTAXII/libstix2
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/freetaxii/libstix2)](https://goreportcard.com/report/github.com/freetaxii/libstix2) [![GoDoc](https://godoc.org/github.com/freetaxii/libstix2?status.png)](https://godoc.org/github.com/freetaxii/libstix2)
 
@@ -7,10 +7,10 @@ the Go (Golang) programming language. Please see the examples directory and the
 README files in each of the sub packages for more information. This API is built 
 to support STIX 2.x and TAXII 2.x.
 
-## Version ##
+## Version
 0.6.1
 
-## Installation ##
+## Installation
 
 This package can be installed with the go get command:
 
@@ -18,7 +18,16 @@ This package can be installed with the go get command:
 go get github.com/freetaxii/libstix2
 ```
 
-## Dependencies ##
+## Special Thanks
+
+I would like to thank the following contributors for there support of this project:
+
+```
+Oleksii Morozov
+```
+
+
+## Dependencies
 
 This software uses the following external libraries:
 ```
@@ -39,7 +48,7 @@ crypto/sha1, database/sql, encoding/base64, errors, fmt, log, os, regexp, string
 ```
 
 
-## Features ##
+## Features
 
 Below is a list of major features and which ones have been implemented:
 
@@ -84,7 +93,7 @@ Datastore
 - [ ] SQLite 3
 
 
-## Naming Conventions ##
+## Naming Conventions
 
 While Go does not require getters and setters, setters are used in libstix2 to enable validation and verification checks. All setters in libstix2 return an error type, even if they currently just return “nil”. This will ensure that the API will not change if/when additional validation / verification checks are added in the future. 
 
@@ -122,12 +131,12 @@ func (o *ManifestType) CreateManifestEntry(id, date, ver, media string) error {}
 ```
 
 
-## License ##
+## License
 
 This is free software, licensed under the Apache License, Version 2.0. [Read this](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)) for a summary.
 
 
-## Copyright ##
+## Copyright
 
 Copyright 2015-2019 Bret Jordan, All rights reserved.
 
