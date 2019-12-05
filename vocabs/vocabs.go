@@ -204,6 +204,21 @@ var MalwareCapabilities = []string{
 	"violates-system-operational-integrity",
 }
 
+// InfrastructureTypes
+var InfrastructureTypes = []string{
+	"amplification",
+	"anonymization",
+	"botnet",
+	"command-and-control",
+	"exfiltration",
+	"hosting-malware",
+	"hosting-target-lists",
+	"phishing",
+	"reconnaissance",
+	"staging",
+	"undefined",
+}
+
 // ReportLabel - This defines the STIX report label vocabulary.
 var ReportLabel = []string{
 	"threat-report",
