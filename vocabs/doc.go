@@ -7,14 +7,37 @@
 Package vocabs implements the STIX 2 Vocabularies.
 
 This package defines variables that contain all of the values for each vocabulary.
+
 The following information comes directly from the STIX 2 specification documents.
 
 The following sections provide object-specific listings for each of the
-vocabularies referenced in the object description sections defined in STIX™
-Version 2.0. Part 2: STIX Objects. STIX vocabularies, which all have type names
-ending in '-ov', are "open": they provide a listing of common and industry
-accepted terms as a guide to the user but do not limit the user to that defined
-list.
+vocabularies referenced in the object description sections defined in Sections
+4, 5, 6, and 7.
+
+STIX vocabularies that have type names ending in '-ov', are "open": they provide
+a listing of common and industry accepted terms as a guide to the user but do
+not limit the user to that defined list. These vocabularies are referenced from
+the STIX Objects as type open-vocab and have a statement indicating which
+vocabulary should be used.
+
+STIX vocabularies that have type names ending in '-enum' are "closed": the only
+valid values are those in the vocabulary. These vocabularies are referenced from
+the STIX Objects as type enum and have a statement indicating which enumeration
+must be used.
+
+
+
+
+Account Type Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: account-type-ov
+
+The account type vocabulary is currently used in the following SCOs:
+ * User Account
+
+An open vocabulary of User Account types.
 
 
 
@@ -43,8 +66,8 @@ defenders to implement controls tailored to each type of attack for greatest
 efficiency.
 
 This section including vocabulary items and their descriptions is based on the
-Threat Agent Motivations publication from Intel Corp in February 2015
-[Casey 2015].
+Threat Agent Motivations publication from Intel Corp in February 2015 [Casey
+2015].
 
 
 
@@ -70,6 +93,75 @@ Threat Agent Library publication from Intel Corp in September 2007 [Casey 2007].
 
 
 
+Course of Action Type Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: course-of-action-type-ov
+
+The course of action type vocabulary is currently used in the following SDO(s):
+ * Course of Action
+
+The Course of Action Type property uses an open vocabulary to describe the
+underlying language or structure of the Course of Action that is being
+represented.
+
+
+
+
+Encryption Algorithm Enumeration Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Type Name: encryption-algorithm-enum
+
+The encryption algorithm enumeration is currently used in the following SCOs:
+ * Artifact
+
+An enumeration of encryption algorithms for sharing defanged and/or confidential
+artifacts.
+
+
+
+
+Grouping Context Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: grouping-context-ov
+
+The Grouping Context open vocabulary is currently used in the following object:
+ * Grouping
+
+While the majority of this vocabulary is undefined (producers may use custom
+vocabulary entries), it has been added specifically to capture the
+suspicious-activity-event value. That value indicates that the information
+contained in the Grouping relates to a suspicious event.
+
+
+
+
+Hashing Algorithm Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: hash-algorithm-ov
+
+The Hashing Algorithm open vocabulary is currently used in the following object:
+ * External Reference
+ * Artifact
+ * File
+ * Alternate Data Stream
+ * Windows™ PE Binary File
+ * Windows™ PE Optional Header
+ * Windows™ PE Section
+ * X.509 Certificate
+
+A vocabulary of hashing algorithms.
+
+
+
+
 Identity Class Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
@@ -85,21 +177,37 @@ whether it describes an organization, group, individual, or class.
 
 
 
-Indicator Label Vocabulary
+Implementation Language Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: indicator-label-ov
+Vocabulary Name: implementation-language-ov
 
-The indicator label vocabulary is currently used in the following SDO(s):
+The implementation language vocabulary is currently used in the following SDO(s):
+ * Malware
+
+This is a non-exhaustive, open vocabulary that covers common programming
+languages and is intended to characterize the languages that may have been used
+to implement a malware instance or family.
+
+
+
+
+Indicator Type Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: indicator-type-ov
+
+The indicator type vocabulary is currently used in the following SDO(s):
  * Indicator
 
-Indicator labels is an open vocabulary used to categorize Indicators. It is
-intended to be high-level to promote consistent practices. Indicator labels
+Indicator type is an open vocabulary used to categorize Indicators. It is
+intended to be high-level to promote consistent practices. Indicator types
 should not be used to capture information that can be better captured via
 related Malware or Attack Pattern objects. It is better to link an Indicator to
-a Malware object describing Poison Ivy rather than simply labeling it with
-"poison-ivy".
+a Malware object describing Poison Ivy rather than simply providing a type or
+label of "poison-ivy".
 
 
 
@@ -120,18 +228,153 @@ lists and is not limited to "critical infrastructure" sectors.
 
 
 
-Malware Label Vocabulary
+Infrastructure Type Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: malware-label-ov
+Type Name: infrastructure-type-ov
 
-The malware label vocabulary is currently used in the following SDO(s):
+The infrastructure type vocabulary is currently used in the following SDO(s):
+ * Infrastructure
+
+A non-exhaustive enumeration of infrastructure types.
+
+
+
+
+Malware AV Result Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: malware-av-result-ov
+
+The processor architecture vocabulary is currently used in the following SDO(s):
+ * Malware Analysis
+
+This is a non-exhaustive, open vocabulary that captures common types of generic
+malware anti-virus (AV) tool results.
+
+
+
+
+
+Malware Capabilities Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: malware-capabilities-ov
+
+The malware capabilities vocabulary is currently used in the following SDO(s):
  * Malware
 
-Malware label is an open vocabulary that represents different types and
-functions of malware. Malware labels are not mutually exclusive; a malware
+This is an open vocabulary that covers common capabilities that may be exhibited
+by a malware instance or family.
+
+
+
+
+Malware Type Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: malware-type-ov
+
+The malware type vocabulary is currently used in the following SDO(s):
+ * Malware
+
+Malware type is an open vocabulary that represents different types and functions
+of malware. Malware types are not mutually exclusive; for example, a malware
 instance can be both spyware and a screen capture tool.
+
+
+
+
+Network Socket Address Family Enumeration Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: network-socket-address-family-enum
+
+The network socket address family vocabulary is currently used in the following SCO(s):
+ * Network Traffic (Network Socket extension)
+
+An enumeration of network socket address family types.
+
+
+
+
+Network Socket Type Enumeration Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: network-socket-type-enum
+
+The network socket type vocabulary is currently used in the following SCO(s):
+ * Network Traffic (Network Socket extension)
+
+An enumeration of network socket types.
+
+
+
+Opinion Enumeration Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: opinion-enum
+
+The agreement enumeration is currently used in the following SDOs:
+ * Opinion
+
+This enumeration captures a degree of agreement with the information in a STIX
+Object. It is an ordered enumeration, with the earlier terms representing
+disagreement, the middle term neutral, and the later terms representing
+agreement.
+
+
+
+
+Pattern Type Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: pattern-type-ov
+
+The pattern type vocabulary is currently used in the following SDO(s):
+ * Indicator
+
+This is a non-exhaustive, open vocabulary that covers common pattern languages
+and is intended to characterize the pattern language that the indicator pattern
+is expressed in.
+
+
+
+
+Processor Architecture Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: processor-architecture-ov
+
+The processor architecture vocabulary is currently used in the following SDO(s):
+ * Malware
+
+This is a non-exhaustive, open vocabulary that covers common processor
+architectures and is intended to characterize the architectures that a malware
+instance or family may be able to execute on.
+
+
+
+
+Region Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: region-ov
+
+The region vocabulary is currently used in the following SDO(s):
+ * Location
+
+A list of world regions based on the United Nations geoscheme [UNSD M49].
 
 
 
@@ -140,19 +383,19 @@ Report Label Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: report-label-ov
+Vocabulary Name: report-type-ov
 
-The report label vocabulary is currently used in the following SDO(s):
+The report type vocabulary is currently used in the following SDO(s):
  * Report
 
-Report label is an open vocabulary to describe the primary purpose or subject of
+Report type is an open vocabulary to describe the primary purpose or subject of
 a report. For example, a report that contains malware and indicators for that
-malware should have a report label of malware to capture that the malware is the
-primary purpose. Report labels are not mutually exclusive: a Report can be both
-a malware report and a tool report. Just because a report contains objects of a
-type does not mean that the report should include that label.  If the objects
-are there to simply provide evidence or context for other objects, it is not
-necessary to include them in the label.
+malware should have a report type of malware to capture that the malware is the
+primary purpose. Report types are not mutually exclusive: a Report can be both a
+malware report and a tool report. Just because a report contains objects of a
+type does not mean that the report should include that type. If the objects are
+there to simply provide evidence or context for other objects, it is not
+necessary to include them in the type.
 
 
 
@@ -161,15 +404,15 @@ Threat Actor Label Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: threat-actor-label-ov
+Vocabulary Name: threat-actor-type-ov
 
-The threat actor label vocabulary is currently used in the following SDO(s):
+The threat actor type vocabulary is currently used in the following SDO(s):
  * Threat Actor
 
-Threat actor label is an open vocabulary used to describe what type of threat
+Threat actor type is an open vocabulary used to describe what type of threat
 actor the individual or group is. For example, some threat actors are
 competitors who try to steal information, while others are activists who act in
-support of a social or political cause. Actor labels are not mutually exclusive:
+support of a social or political cause. Actor types are not mutually exclusive:
 a threat actor can be both a disgruntled insider and a spy. [Casey 2007])
 
 
@@ -218,11 +461,96 @@ Tool Label Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: tool-label-ov
+Vocabulary Name: tool-type-ov
 
-The tool label vocabulary is currently used in the following SDO(s):
+The tool type vocabulary is currently used in the following SDO(s):
  * Tool
 
-Tool labels describe the categories of tools that can be used to perform attacks.
+Tool types describe the categories of tools that can be used to perform attacks.
+
+
+
+
+Windows™ Integrity Level Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-integrity-level-enum
+
+The Windows integrity level enumeration is currently used in the following STIX Cyber-observable Object(s):
+ * Process (Windows Process extension)
+
+Windows integrity levels are a security feature and represent the
+trustworthiness of an object.
+
+
+
+
+Windows™ PE Binary Vocabulary
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-pebinary-type-ov
+
+The Windows PE binary vocabulary is currently used in the following SCO(s):
+ * File (Windows PE Binary extension)
+
+An open vocabulary of Windows PE binary types.
+
+
+
+
+Windows™ Registry Datatype Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-registry-datatype-enum
+
+The Windows registry datatype vocabulary is currently used in the following SCO(s):
+ * Windows Registry Key
+
+An enumeration of Windows registry data types.
+
+
+
+
+Windows™ Service Start Type Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-service-start-type-enum
+
+The Windows service start type vocabulary is currently used in the following SCO(s):
+ * Process (Windows Service extension)
+
+An enumeration of Windows service start types.
+
+
+
+
+Windows™ Service Type Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-service-type-enum
+
+The Windows service type vocabulary is currently used in the following SCO(s):
+ * Process (Windows Service extension)
+
+An enumeration of Windows service types.
+
+
+
+
+Windows™ Service Status Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: windows-service-status-enum
+
+The Windows service status vocabulary is currently used in the following SCO(s):
+ * Process (Windows Service extension)
+
+An enumeration of Windows service statuses.
 */
 package vocabs
