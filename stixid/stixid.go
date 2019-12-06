@@ -8,6 +8,8 @@ package stixid
 import (
 	"regexp"
 	"strings"
+
+	"github.com/freetaxii/libstix2/objects"
 )
 
 /*
@@ -22,7 +24,7 @@ func ValidSTIXID(id string) bool {
 	}
 
 	// First check to see if the object type is valid, if not return false.
-	if valid := ValidSTIXObjectType(idparts[0]); valid == false {
+	if valid := objects.ValidType(idparts[0]); valid == false {
 		// Short circuit if the STIX type part is wrong
 		return false
 	}
@@ -41,80 +43,4 @@ represents an actual UUIDv4 value.
 func ValidUUID(uuid string) bool {
 	r := regexp.MustCompile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
 	return r.MatchString(uuid)
-}
-
-/*
-ValidSTIXObjectType - This function will take in a STIX Object Type and return
-true if the string represents an actual STIX object type. This is used for
-determining if input from an outside source is actually a defined STIX object or
-not.
-*/
-func ValidSTIXObjectType(t string) bool {
-	//valid := false
-
-	var m = map[string]int{
-		"attack-pattern":     1,
-		"campaign":           1,
-		"course-of-action":   1,
-		"identity":           1,
-		"indicator":          1,
-		"intrusion-set":      1,
-		"location":           1,
-		"malware":            1,
-		"marking-definition": 1,
-		"note":               1,
-		"observed-data":      1,
-		"opinion":            1,
-		"relationship":       1,
-		"report":             1,
-		"sighting":           1,
-		"threat-actor":       1,
-		"tool":               1,
-		"vulnerability":      1,
-	}
-
-	if _, ok := m[t]; ok {
-		return true
-	}
-	return false
-
-	// switch t {
-	// case "attack-pattern":
-	// 	valid = true
-	// case "campaign":
-	// 	valid = true
-	// case "course-of-action":
-	// 	valid = true
-	// case "identity":
-	// 	valid = true
-	// case "indicator":
-	// 	valid = true
-	// case "intrusion-set":
-	// 	valid = true
-	// case "location":
-	// 	valid = true
-	// case "malware":
-	// 	valid = true
-	// case "marking-definition":
-	// 	valid = true
-	// case "note":
-	// 	valid = true
-	// case "observed-data":
-	// 	valid = true
-	// case "opinion":
-	// 	valid = true
-	// case "relationship":
-	// 	valid = true
-	// case "report":
-	// 	valid = true
-	// case "sighting":
-	// 	valid = true
-	// case "threat-actor":
-	// 	valid = true
-	// case "tool":
-	// 	valid = true
-	// case "vulnerability":
-	// 	valid = true
-	// }
-	// return valid
 }
