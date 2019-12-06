@@ -44,5 +44,5 @@ func (o *Infrastructure) validInfrastructureTypes() (bool, error) {
 		return false, errors.New("the InfrastructureTypes property is required, but missing")
 	}
 
-	return helpers.ValidSlice("InfrastructureTypes", o.InfrastructureTypes, vocabs.InfrastructureTypes)
+	return helpers.ValidSlice("InfrastructureTypes", o.InfrastructureTypes, vocabs.InfrastructureType)
 }
