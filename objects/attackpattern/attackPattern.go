@@ -6,16 +6,12 @@
 package attackpattern
 
 import (
-	"encoding/json"
-
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
-//
-// Define Object Type
-//
+// Define Object Model
 // ----------------------------------------------------------------------
 
 /*
@@ -25,16 +21,15 @@ SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type AttackPattern struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
+	properties.AliasesProperty
 	properties.KillChainPhasesProperty
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
 /*
@@ -48,49 +43,8 @@ func New() *AttackPattern {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - Attack Pattern - Core Functionality
+// Public Methods - Attack Pattern
 // ----------------------------------------------------------------------
-
-/*
-Decode - This function will decode some JSON data encoded as a slice of bytes
-into an actual struct. It will return the object as a pointer and any errors found.
-*/
-func Decode(data []byte) (*AttackPattern, error) {
-	var o AttackPattern
-	err := json.Unmarshal(data, &o)
-	if err != nil {
-		return nil, err
-	}
-
-	if valid, err := o.Valid(); valid != true {
-		return nil, err
-	}
-
-	o.SetRawData(data)
-	return &o, nil
-}
-
-/*
-Encode - This method is a simple wrapper for encoding an object in to JSON
-*/
-func (o *AttackPattern) Encode() ([]byte, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-/*
-EncodeToString - This method is a simple wrapper for encoding an object in to JSON
-*/
-func (o *AttackPattern) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
 
 /*
 Valid - This method will verify all of the properties on the object.
@@ -104,7 +58,3 @@ func (o *AttackPattern) Valid() (bool, error) {
 
 	return true, nil
 }
-
-// ----------------------------------------------------------------------
-// Public Methods - AttackPattern
-// ----------------------------------------------------------------------

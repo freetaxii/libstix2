@@ -8,7 +8,7 @@ package report
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 	"github.com/freetaxii/libstix2/timestamp"
 )
@@ -26,7 +26,7 @@ SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type Report struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
 	Published  string   `json:"published,omitempty"`

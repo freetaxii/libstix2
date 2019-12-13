@@ -6,7 +6,7 @@
 package domainnameobject
 
 import (
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -15,7 +15,7 @@ DomainNameObject - This type implements the STIX 2.1 DomainNameObject SCO.
 The Domain Name object represents the properties of a network domain name.
 */
 type DomainNameObject struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.ResolvesToRefsProperty
 	properties.ValueProperty
 }

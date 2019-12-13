@@ -4,7 +4,6 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package baseobject implements the common properties that exist on all STIX 2.1
-objects.
+Package objects implements the STIX 2.1 object model.
 */
-package baseobject
+package objects

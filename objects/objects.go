@@ -3,32 +3,10 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-/*
-Package objects implements the STIX 2.1 object model.
-*/
 package objects
 
 import (
-	"encoding/json"
-	"fmt"
-
-	"github.com/freetaxii/libstix2/objects/attackpattern"
-	"github.com/freetaxii/libstix2/objects/baseobject"
-	"github.com/freetaxii/libstix2/objects/campaign"
-	"github.com/freetaxii/libstix2/objects/courseofaction"
-	"github.com/freetaxii/libstix2/objects/identity"
-	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/objects/infrastructure"
-	"github.com/freetaxii/libstix2/objects/intrusionset"
-	"github.com/freetaxii/libstix2/objects/malware"
-	"github.com/freetaxii/libstix2/objects/observeddata"
-	"github.com/freetaxii/libstix2/objects/properties"
-	"github.com/freetaxii/libstix2/objects/relationship"
-	"github.com/freetaxii/libstix2/objects/report"
-	"github.com/freetaxii/libstix2/objects/sighting"
-	"github.com/freetaxii/libstix2/objects/threatactor"
-	"github.com/freetaxii/libstix2/objects/tool"
-	"github.com/freetaxii/libstix2/objects/vulnerability"
+	"github.com/freetaxii/libstix2/defs"
 )
 
 /*
@@ -38,8 +16,9 @@ considered a STIX Object.
 type STIXObject interface {
 	GetObjectType() string
 	GetID() string
-	GetModified() string
-	GetCommonProperties() *baseobject.CommonObjectProperties
+	Valid() (bool, error)
+	SetRawData([]byte) error
+	GetCommonProperties() *CommonObjectProperties
 }
 
 /*
@@ -77,74 +56,48 @@ func ValidType(t string) bool {
 }
 
 /*
-DecodeType - This function will take in a slice of bytes representing a
-random STIX object encoded as JSON and return the STIX object type as a string.
+InitObject - This method will initialize the object by setting all of the basic
+properties.
 */
-func DecodeType(data []byte) (string, error) {
-	var o properties.TypeProperty
-	err := json.Unmarshal(data, &o)
-	if err != nil {
-		return "", err
-	}
-
-	if valid, err := o.Valid(); valid != true {
-		return "", fmt.Errorf("invalid STIX object: %s", err)
-	}
-
-	return o.ObjectType, nil
+func (o *CommonObjectProperties) InitObject(stixType string) error {
+	// TODO make sure that the value coming in is a valid STIX object type
+	o.SetSpecVersion(defs.STIX_VERSION)
+	o.SetObjectType(stixType)
+	o.SetNewID(stixType)
+	o.SetCreatedToCurrentTime()
+	o.SetModifiedToCreated()
+	return nil
 }
 
 /*
-Decode - This function will take in a slice of bytes representing a
-random STIX object encoded as JSON, decode it to the appropriate STIX object
-struct, and return the object itself as an interface and any possible errors.
+GetCommonProperties - This method will return a pointer to the common properties
+of this object.
 */
-func Decode(data []byte) (STIXObject, error) {
-	var err error
-	// TODO this probably does not belong here, since it down references objects
-	// which is bad form.  This probably needs to be in a different part of the
-	// library or just in the application code.
+func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
+	return o
+}
 
-	// Make a first pass to decode just the object type value. Once we have this
-	// value we can easily make a second pass and decode the rest of the object.
-	stixtype, err := DecodeType(data)
-	if err != nil {
-		return nil, err
+/*
+Valid - This method will ensure that all of the required properties are
+populated and try to ensure all of values are valid.
+*/
+func (o *CommonObjectProperties) Valid() (bool, error) {
+
+	if valid, err := o.TypeProperty.Valid(); valid != true {
+		return valid, err
 	}
 
-	switch stixtype {
-	case "attack-pattern":
-		return attackpattern.Decode(data)
-	case "campaign":
-		return campaign.Decode(data)
-	case "course-of-action":
-		return courseofaction.Decode(data)
-	case "identity":
-		return identity.Decode(data)
-	case "indicator":
-		return indicator.Decode(data)
-	case "infrastructure":
-		return infrastructure.Decode(data)
-	case "intrusion-set":
-		return intrusionset.Decode(data)
-	case "malware":
-		return malware.Decode(data)
-	case "observed-data":
-		return observeddata.Decode(data)
-	case "relationship":
-		return relationship.Decode(data)
-	case "report":
-		return report.Decode(data)
-	case "sighting":
-		return sighting.Decode(data)
-	case "threat-actor":
-		return threatactor.Decode(data)
-	case "tool":
-		return tool.Decode(data)
-	case "vulnerability":
-		return vulnerability.Decode(data)
-	default:
-		return baseobject.Decode(data)
+	if valid, err := o.SpecVersionProperty.Valid(); valid != true {
+		return valid, err
 	}
-	return nil, nil
+
+	if valid, err := o.IDProperty.Valid(); valid != true {
+		return valid, err
+	}
+
+	if valid, err := o.CreatedModifiedProperty.Valid(); valid != true {
+		return valid, err
+	}
+
+	return true, nil
 }

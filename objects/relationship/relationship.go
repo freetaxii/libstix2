@@ -8,7 +8,7 @@ package relationship
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -25,7 +25,7 @@ SRO. All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type Relationship struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	RelationshipType string `json:"relationship_type,omitempty"`
 	properties.DescriptionProperty
 	SourceRef string `json:"source_ref,omitempty"`

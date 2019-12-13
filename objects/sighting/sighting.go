@@ -8,7 +8,7 @@ package sighting
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -25,7 +25,7 @@ SRO. All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type Sighting struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.SeenTimestampProperties
 	Count            int      `json:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`

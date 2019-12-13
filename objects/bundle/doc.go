@@ -17,5 +17,8 @@ A STIX Bundle Object is not a STIX Object but makes use of the type and id
 Common Properties. A Bundle is transient, and implementations SHOULD NOT assume
 that other implementations will treat it as a persistent object or keep any
 custom properties found on the bundle itself.
+
+The JSON MTI serialization uses the JSON Object type [RFC8259] when representing
+bundle.
 */
 package bundle

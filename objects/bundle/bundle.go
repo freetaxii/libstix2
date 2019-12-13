@@ -7,9 +7,8 @@ package bundle
 
 import (
 	"encoding/json"
-	"io"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -25,16 +24,16 @@ All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type Bundle struct {
-	baseobject.BundleBaseProperties
-	Objects []interface{} `json:"objects,omitempty"`
+	objects.CommonBundleProperties
+	Objects []objects.STIXObject `json:"objects,omitempty"`
 }
 
 /*
-BundleRawDecode - This type is used for decoding a STIX bundle since the
+bundleRawDecode - This type is used for decoding a STIX bundle since the
 Objects property needs special handling.
 */
-type BundleRawDecode struct {
-	baseobject.BundleBaseProperties
+type bundleRawDecode struct {
+	objects.CommonBundleProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
@@ -55,57 +54,6 @@ func New() *Bundle {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - Bundle - Core Functionality
-// ----------------------------------------------------------------------
-
-/*
-DecodeRaw - This function will decode the outer layer of a bundle and stop
-processing when it gets to the objects. It will leave the objects as a slice of
-json.RawMessage objects. This way, later on, we can decode each one individually
-*/
-func DecodeRaw(r io.Reader) (*BundleRawDecode, error) {
-	var b BundleRawDecode
-	err := json.NewDecoder(r).Decode(&b)
-	if err != nil {
-		return nil, err
-	}
-	return &b, nil
-}
-
-/*
-Encode - This method is a simple wrapper for encoding an object in to JSON
-*/
-func (o *Bundle) Encode() ([]byte, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-/*
-EncodeToString - This method is a simple wrapper for encoding an object in to JSON
-*/
-func (o *Bundle) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
-
-/*
-EncodeToString - This method is a simple wrapper for encoding an object in to JSON
-*/
-func (o *BundleRawDecode) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
-
-// ----------------------------------------------------------------------
 //
 // Public Methods - Bundle
 //
@@ -115,7 +63,7 @@ func (o *BundleRawDecode) EncodeToString() (string, error) {
 AddObject - This method will take in an object as an interface and add it to
 the list of objects in the bundle.
 */
-func (o *Bundle) AddObject(i interface{}) error {
+func (o *Bundle) AddObject(i objects.STIXObject) error {
 	o.Objects = append(o.Objects, i)
 	return nil
 }

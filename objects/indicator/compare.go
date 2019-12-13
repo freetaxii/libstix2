@@ -8,7 +8,7 @@ package indicator
 import (
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -41,7 +41,7 @@ func Compare(obj1, obj2 *Indicator) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common properties
-	_, pBase, dBase := baseobject.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties)
+	_, pBase, dBase := objects.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 

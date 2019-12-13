@@ -8,7 +8,7 @@ package indicator
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -58,12 +58,12 @@ func Decode(data []byte) (*Indicator, error) {
 Encode - This method is a simple wrapper to JSON encode the object.
 */
 func (o *Indicator) Encode() ([]byte, error) {
-	return baseobject.Encode(o)
+	return objects.Encode(o)
 }
 
 /*
 EncodeToString - This method is a simple wrapper to JSON encode the object.
 */
 func (o *Indicator) EncodeToString() (string, error) {
-	return baseobject.EncodeToString(o)
+	return objects.EncodeToString(o)
 }

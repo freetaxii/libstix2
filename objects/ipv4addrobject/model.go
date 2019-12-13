@@ -6,7 +6,7 @@
 package ipv4addrobject
 
 import (
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -15,7 +15,7 @@ IPv4AddrObject - This type implements the STIX 2.1 IPv4AddrObject SCO.
 The Domain Name object represents the properties of a network domain name.
 */
 type IPv4AddrObject struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.ResolvesToRefsProperty
 	properties.ValueProperty
 	properties.BelongsToRefsProperty

@@ -72,4 +72,5 @@ func TestSetPatternVersion(t *testing.T) {
 	}
 }
 
-// TODO Finish fleshing this out
+// TODO Finish fleshing this out. We need the valid from and valid until tests
+// both the positive and negative tests.

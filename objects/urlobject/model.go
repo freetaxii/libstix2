@@ -6,7 +6,7 @@
 package urlobject
 
 import (
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -15,6 +15,6 @@ UrlObject - This type implements the STIX 2.1 UrlObject SCO.
 The URL object represents the properties of a uniform resource locator (URL).
 */
 type UrlObject struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.ValueProperty
 }

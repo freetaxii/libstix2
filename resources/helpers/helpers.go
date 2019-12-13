@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-//StringInSlice - check if slice contains string
+// StringInSlice - check if slice contains string
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
@@ -26,7 +26,7 @@ func ValidSlice(methodName string, list, vocabsList []string) (bool, error) {
 	return true, nil
 }
 
-//AddToList - append comma-delimited values or array of values to the first argument or
+// AddToList - append comma-delimited values or array of values to the first argument or
 func AddToList(list []string, data interface{}) ([]string, error) {
 	arr := []string{}
 

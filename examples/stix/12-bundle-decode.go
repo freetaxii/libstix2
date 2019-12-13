@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/gologme/log"
@@ -18,26 +17,20 @@ import (
 func main() {
 	data := getdata()
 
-	b, err := bundle.DecodeRaw(strings.NewReader(data))
+	b, err := bundle.Decode(strings.NewReader(data))
 	if err != nil {
-		log.Fatalln(err)
+		for _, v := range err {
+			log.Println(v)
+		}
+		//log.Fatalln("ERROR in Decode")
 	}
 
 	count := 0
 	for _, v := range b.Objects {
 
-		o, err := objects.Decode(v)
-		if err != nil {
-			fmt.Println("ERROR:", err)
-			continue
-		}
-		if o == nil {
-			continue
-		}
+		fmt.Printf("Type: %s\t\tID: %s\n", v.GetObjectType(), v.GetID())
 
-		fmt.Printf("Type: %s\t\tID: %s\tVersion: %s\n", o.GetObjectType(), o.GetID(), o.GetModified())
-
-		switch obj := o.(type) {
+		switch obj := v.(type) {
 		case *indicator.Indicator:
 			fmt.Println("I AM AN INDICATOR", obj.ObjectType)
 			// case *relationship.Relationship:
@@ -75,7 +68,8 @@ func getdata() string {
             "description": "This indicator should detect the SpyEye malware by looking for this MD5 hash",
             "indicator_types": [ "compromised" ],
             "valid_from": "2018-05-05T12:12:13.142Z",
-            "pattern": "file-object:hashes.md5 = 84714c100d2dfc88629531f6456b8276"
+            "pattern": "file-object:hashes.md5 = 84714c100d2dfc88629531f6456b8276",
+            "pattern_type": "stix"
         },
         {
             "type": "infrastructure",
@@ -84,7 +78,8 @@ func getdata() string {
             "created": "2018-06-05T18:25:15.917Z",
             "modified": "2018-06-05T18:25:15.917Z",
             "name": "SpyEye Command and Control Servers",
-            "description": "These servers are located in a datacenter in the Netherlands and the IPs change on a weekly basis"
+            "description": "These servers are located in a datacenter in the Netherlands and the IPs change on a weekly basis",
+            "infrastructure_types": ["botnet"]
         },
         {
             "type": "observed-data",
@@ -122,9 +117,8 @@ func getdata() string {
             "id": "malware--c1587bf8-dda6-42a7-8636-0865b19192f5",
             "created": "2018-06-05T18:25:15.917Z",
             "modified": "2018-06-05T18:25:15.917Z",
-            "labels": [
-                "trojan",
-                "malware-family"
+            "malware_types": [
+                "ddos"
             ],
             "name": "Zeus"
         },
@@ -134,8 +128,8 @@ func getdata() string {
             "id": "malware--c5460773-10d2-4d06-80c1-7b0d83e73c0b",
             "created": "2018-06-05T18:25:15.917Z",
             "modified": "2018-06-05T18:25:15.917Z",
-            "labels": [
-                "trojan"
+            "malware_types": [
+                "ddos"
             ],
             "name": "SpyEye"
         },

@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -26,7 +26,7 @@ SDO. All of the methods not defined local to this type are inherited from
 the individual properties.
 */
 type Campaign struct {
-	baseobject.CommonObjectProperties
+	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.AliasesProperty
