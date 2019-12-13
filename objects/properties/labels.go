@@ -42,12 +42,14 @@ func (o *LabelsProperty) AddLabel(s string) error {
 	return nil
 }
 
-/*
-CompareLabelsProperties - This function will compare two labels properties
-(object 1 and object 2) to make sure they are the same. This function will
-return an integer that tracks the number of problems and a slice of strings that
-contain the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - LabelsProperty
+// ----------------------------------------------------------------------
+
+/* CompareLabelsProperties - This function will compare two properties to make
+sure they are the same and will return a boolean, an integer that tracks the
+number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareLabelsProperties(obj1, obj2 *LabelsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -55,20 +57,20 @@ func CompareLabelsProperties(obj1, obj2 *LabelsProperty) (bool, int, []string) {
 	// Check Labels Values
 	if len(obj1.Labels) != len(obj2.Labels) {
 		problemsFound++
-		str := fmt.Sprintf("-- Labels Length Do Not Match: %d | %d", len(obj1.Labels), len(obj2.Labels))
+		str := fmt.Sprintf("-- The number of entries in Labels do not match: %d | %d", len(obj1.Labels), len(obj2.Labels))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Labels Length Match: %d | %d", len(obj1.Labels), len(obj2.Labels))
+		str := fmt.Sprintf("++ The number of entries in Labels match: %d | %d", len(obj1.Labels), len(obj2.Labels))
 		resultDetails = append(resultDetails, str)
 
 		// If lengths are the same, then check each value
 		for index := range obj1.Labels {
 			if obj1.Labels[index] != obj2.Labels[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- Labels Do Not Match: %s | %s", obj1.Labels[index], obj2.Labels[index])
+				str := fmt.Sprintf("-- The Label values do not match: %s | %s", obj1.Labels[index], obj2.Labels[index])
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Labels Match: %s | %s", obj1.Labels[index], obj2.Labels[index])
+				str := fmt.Sprintf("++ The Label values match: %s | %s", obj1.Labels[index], obj2.Labels[index])
 				resultDetails = append(resultDetails, str)
 			}
 		}

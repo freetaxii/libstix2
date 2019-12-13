@@ -40,12 +40,14 @@ func (o *CreatedByRefProperty) GetCreatedByRef() string {
 	return o.CreatedByRef
 }
 
-/*
-CompareCreatedByRefProperties - This function will compare two created by ref
-properties (object 1 and object 2) to make sure they are the same. This function
-will return an integer that tracks the number of problems and a slice of strings
-that contain the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - CreatedByRefProperty
+// ----------------------------------------------------------------------
+
+/* CompareCreatedByRefProperties - This function will compare two properties to
+make sure they are the same and will return a boolean, an integer that tracks
+the number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareCreatedByRefProperties(obj1, obj2 *CreatedByRefProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -53,10 +55,10 @@ func CompareCreatedByRefProperties(obj1, obj2 *CreatedByRefProperty) (bool, int,
 	// Check Created By Ref Value
 	if obj1.CreatedByRef != obj2.CreatedByRef {
 		problemsFound++
-		str := fmt.Sprintf("-- Created By Refs Do Not Match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
+		str := fmt.Sprintf("-- The Created By Ref values do not match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Created By Refs Match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
+		str := fmt.Sprintf("++ The Created By Ref values match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
 		resultDetails = append(resultDetails, str)
 	}
 

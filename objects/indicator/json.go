@@ -3,7 +3,7 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package attackpattern
+package indicator
 
 import "encoding/json"
 
@@ -14,8 +14,8 @@ import "encoding/json"
 /* Decode - This function is a simple wrapper for decoding JSON data. It will
 decode a slice of bytes into an actual struct and return a pointer to that
 object along with any errors. */
-func Decode(data []byte) (*AttackPattern, error) {
-	var o AttackPattern
+func Decode(data []byte) (*Indicator, error) {
+	var o Indicator
 
 	err := json.Unmarshal(data, o)
 	if err != nil {
@@ -36,13 +36,13 @@ func Decode(data []byte) (*AttackPattern, error) {
 // ----------------------------------------------------------------------
 
 /* Encode - This method is a simple wrapper for encoding an object into JSON */
-func (o *AttackPattern) Encode() ([]byte, error) {
+func (o *Indicator) Encode() ([]byte, error) {
 	return Encode(o)
 }
 
 /* EncodeToString - This method is a simple wrapper for encoding an object into
 JSON */
-func (o *AttackPattern) EncodeToString() (string, error) {
+func (o *Indicator) EncodeToString() (string, error) {
 	return EncodeToString(o)
 }
 
@@ -52,7 +52,7 @@ func (o *AttackPattern) EncodeToString() (string, error) {
 
 /* Encode - This function is a simple wrapper for encoding an object into JSON
  */
-func Encode(o *AttackPattern) ([]byte, error) {
+func Encode(o *Indicator) ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func Encode(o *AttackPattern) ([]byte, error) {
 
 /* EncodeToString - This function is a simple wrapper for encoding an object
 into JSON */
-func EncodeToString(o *AttackPattern) (string, error) {
+func EncodeToString(o *Indicator) (string, error) {
 	data, err := Encode(o)
 	if err != nil {
 		return "", err

@@ -15,9 +15,9 @@ import (
 // ----------------------------------------------------------------------
 
 /* AttackPattern - This type implements the STIX 2 Attack Pattern SDO and
-defines all of the properties and methods needed to create and work with the
-STIX Attack Pattern SDO. All of the methods not defined local to this type are
-inherited from the individual properties. */
+defines all of the properties and methods needed to create and work with this
+object. All of the methods not defined local to this type are inherited from the
+individual properties. */
 type AttackPattern struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -31,7 +31,8 @@ type AttackPattern struct {
 // ----------------------------------------------------------------------
 
 /* New - This function will create a new STIX Attack Pattern object and return
-it as a pointer. */
+it as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *AttackPattern {
 	var obj AttackPattern
 	obj.InitObject("attack-pattern")

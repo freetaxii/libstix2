@@ -18,12 +18,10 @@ func (o *CommonObjectProperties) Compare(obj2 *CommonObjectProperties) (bool, in
 	return Compare(o, obj2)
 }
 
-/*
-Compare - This function will compare the common properties from two objects
-(object 1 and object 2) to make sure they are the same. This function will
-return an integer that tracks the number of problems and a slice of strings that
-contain the detailed results, whether good or bad.
-*/
+/* Compare - This function will compare two objects to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
 func Compare(obj1, obj2 *CommonObjectProperties) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -79,7 +77,7 @@ func Compare(obj1, obj2 *CommonObjectProperties) (bool, int, []string) {
 	resultDetails = append(resultDetails, dExternalRefereces...)
 
 	// Check Object Marking Refs and Granular Markings
-	_, pMarkings, dMarkings := properties.CompareMarkingProperties(&obj1.MarkingProperty, &obj2.MarkingProperty)
+	_, pMarkings, dMarkings := properties.CompareMarkingProperties(&obj1.MarkingProperties, &obj2.MarkingProperties)
 	problemsFound += pMarkings
 	resultDetails = append(resultDetails, dMarkings...)
 

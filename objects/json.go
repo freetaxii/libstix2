@@ -35,25 +35,24 @@ func DecodeType(data []byte) (string, error) {
 	return o.ObjectType, nil
 }
 
-/*
-Decode - This function takes in some JSON data encoded as a slice of bytes
-and a STIXObject interface. It will decode the JSON data into an actual struct
-that is provided as a STIXObject interface. This function is used by all of the
-STIX objects in this library. The function will return any errors found.
-*/
-func Decode(data []byte, o STIXObject) error {
+/* Decode - This function is a simple wrapper for decoding JSON data. It will
+decode a slice of bytes into an actual struct and return a pointer to that
+object along with any errors. */
+func Decode(data []byte) (*CommonObjectProperties, error) {
+	var o CommonObjectProperties
+
 	err := json.Unmarshal(data, o)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if valid, err := o.Valid(); valid != true {
-		return err
+		return nil, err
 	}
 
 	o.SetRawData(data)
 
-	return nil
+	return &o, nil
 }
 
 // ----------------------------------------------------------------------
@@ -63,22 +62,22 @@ func Decode(data []byte, o STIXObject) error {
 /*
 Encode - This function is a simple wrapper for encoding an object in to JSON
 */
-func Encode(o STIXObject) ([]byte, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
+// func Encode(o STIXObject) ([]byte, error) {
+// 	data, err := json.MarshalIndent(o, "", "    ")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return data, nil
+// }
 
 /*
 EncodeToString - This function is a simple wrapper for encoding an object in
 to JSON
 */
-func EncodeToString(o STIXObject) (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
-}
+// func EncodeToString(o STIXObject) (string, error) {
+// 	data, err := json.MarshalIndent(o, "", "    ")
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return string(data), nil
+// }

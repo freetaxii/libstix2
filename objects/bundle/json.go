@@ -169,13 +169,12 @@ func Decode(r io.Reader) (*Bundle, []error) {
 			}
 			b.AddObject(obj)
 		default:
-			var obj objects.CommonObjectProperties
-			err := objects.Decode(v, &obj)
+			obj, err := objects.Decode(v)
 			if err != nil {
 				allErrors = append(allErrors, err)
 				continue
 			}
-			b.AddObject(&obj)
+			b.AddObject(obj)
 		}
 	}
 

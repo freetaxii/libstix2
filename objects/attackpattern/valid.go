@@ -14,14 +14,22 @@ import "errors"
 /* Valid - This method will verify and test all of the properties on the object
 to make sure they are valid per the specification. */
 func (o *AttackPattern) Valid() (bool, error) {
+	return Valid(o)
+}
 
+// ----------------------------------------------------------------------
+// Public Functions
+// ----------------------------------------------------------------------
+/* Valid - This method will verify and test all of the properties on the object
+to make sure they are valid per the specification. */
+func Valid(o *AttackPattern) (bool, error) {
 	// Check common base properties first
 	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
 		return false, err
 	}
 
 	// Check attack pattern specific properties
-	if valid, err := o.validAttakPatternName(); valid != true {
+	if valid, err := validAttackPatternName(o); valid != true {
 		return valid, err
 	}
 
@@ -29,12 +37,12 @@ func (o *AttackPattern) Valid() (bool, error) {
 }
 
 // ----------------------------------------------------------------------
-// Private Methods
+// Private Functions
 // ----------------------------------------------------------------------
 
-func (o *AttackPattern) validAttackPatternName() (bool, error) {
+func validAttackPatternName(o *AttackPattern) (bool, error) {
 	if o.Name == "" {
-		return false, errors.New("the name property is required, but missing")
+		return false, errors.New("the name property is required but missing")
 	}
 	return true, nil
 }

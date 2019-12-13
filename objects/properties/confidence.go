@@ -39,12 +39,14 @@ func (o *ConfidenceProperty) GetConfidence() int {
 	return o.Confidence
 }
 
-/*
-CompareConfidenceProperties - This function will compare two confidence
-properties (object 1 and object 2) to make sure they are the same. This function
-will return an integer that tracks the number of problems and a slice of strings
-that contain the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - ConfidenceProperty
+// ----------------------------------------------------------------------
+
+/* CompareConfidenceProperties - This function will compare two properties to
+make sure they are the same and will return a boolean, an integer that tracks
+the number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareConfidenceProperties(obj1, obj2 *ConfidenceProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -52,10 +54,10 @@ func CompareConfidenceProperties(obj1, obj2 *ConfidenceProperty) (bool, int, []s
 	// Check Confidence Value
 	if obj1.Confidence != obj2.Confidence {
 		problemsFound++
-		str := fmt.Sprintf("-- Confidence Values Do Not Match: %d | %d", obj1.Confidence, obj2.Confidence)
+		str := fmt.Sprintf("-- The Confidence values do not match: %d | %d", obj1.Confidence, obj2.Confidence)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Confidence Values Match: %d | %d", obj1.Confidence, obj2.Confidence)
+		str := fmt.Sprintf("++ The Confidence values match: %d | %d", obj1.Confidence, obj2.Confidence)
 		resultDetails = append(resultDetails, str)
 	}
 

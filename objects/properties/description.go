@@ -39,12 +39,14 @@ func (o *DescriptionProperty) GetDescription() string {
 	return o.Description
 }
 
-/*
-CompareDescriptionProperties - This function will compare two description
-properties (object 1 and object 2) to make sure they are the same. This function
-will return an integer that tracks the number of problems and a slice of strings
-that contain the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - DescriptionProperty
+// ----------------------------------------------------------------------
+
+/* CompareDescriptionProperties - This function will compare two properties to
+make sure they are the same and will return a boolean, an integer that tracks
+the number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareDescriptionProperties(obj1, obj2 *DescriptionProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -52,10 +54,10 @@ func CompareDescriptionProperties(obj1, obj2 *DescriptionProperty) (bool, int, [
 	// Check Description Value
 	if obj1.Description != obj2.Description {
 		problemsFound++
-		str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", obj1.Description, obj2.Description)
+		str := fmt.Sprintf("-- The Description values do not match: %s | %s", obj1.Description, obj2.Description)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Descriptions Match: %s | %s", obj1.Description, obj2.Description)
+		str := fmt.Sprintf("++ The Description values match: %s | %s", obj1.Description, obj2.Description)
 		resultDetails = append(resultDetails, str)
 	}
 

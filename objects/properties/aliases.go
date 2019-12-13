@@ -5,7 +5,11 @@
 
 package properties
 
-import "github.com/freetaxii/libstix2/resources/helpers"
+import (
+	"fmt"
+
+	"github.com/freetaxii/libstix2/resources/helpers"
+)
 
 // ----------------------------------------------------------------------
 // Types
@@ -45,4 +49,44 @@ func (o *AliasesProperty) AddAliases(data interface{}) error {
 
 	o.Aliases = arr
 	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Functions - AliasesProperty
+// ----------------------------------------------------------------------
+
+/* CompareAliasesProperties - This function will compare two properties to make
+sure they are the same and will return a boolean, an integer that tracks the
+number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
+func CompareAliasesProperties(obj1, obj2 *AliasesProperty) (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	if len(obj1.Aliases) != len(obj2.Aliases) {
+		problemsFound++
+		str := fmt.Sprintf("-- The number of entries in Aliases do not match: %d | %d", len(obj1.Aliases), len(obj2.Aliases))
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The number of entries in Aliases match: %d | %d", len(obj1.Aliases), len(obj2.Aliases))
+		resultDetails = append(resultDetails, str)
+
+		// If lengths are the same, then check each value
+		for index := range obj1.Aliases {
+			if obj1.Aliases[index] != obj2.Aliases[index] {
+				problemsFound++
+				str := fmt.Sprintf("-- The Alias values do not match: %s | %s", obj1.Aliases[index], obj2.Aliases[index])
+				resultDetails = append(resultDetails, str)
+			} else {
+				str := fmt.Sprintf("++ The Alias values match: %s | %s", obj1.Aliases[index], obj2.Aliases[index])
+				resultDetails = append(resultDetails, str)
+			}
+		}
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

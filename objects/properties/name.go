@@ -39,12 +39,14 @@ func (o *NameProperty) GetName() string {
 	return o.Name
 }
 
-/*
-CompareNameProperties - This function will compare two name properties (object 1
-and object 2) to make sure they are the same. This function will return an
-integer that tracks the number of problems and a slice of strings that contain
-the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - NameProperty
+// ----------------------------------------------------------------------
+
+/* CompareNameProperties - This function will compare two properties to make
+sure they are the same and will return a boolean, an integer that tracks the
+number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareNameProperties(obj1, obj2 *NameProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -52,10 +54,10 @@ func CompareNameProperties(obj1, obj2 *NameProperty) (bool, int, []string) {
 	// Check Name Value
 	if obj1.Name != obj2.Name {
 		problemsFound++
-		str := fmt.Sprintf("-- Names Do Not Match: %s | %s", obj1.Name, obj2.Name)
+		str := fmt.Sprintf("-- The Names do not match: %s | %s", obj1.Name, obj2.Name)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Names Match: %s | %s", obj1.Name, obj2.Name)
+		str := fmt.Sprintf("++ The Names match: %s | %s", obj1.Name, obj2.Name)
 		resultDetails = append(resultDetails, str)
 	}
 

@@ -69,12 +69,14 @@ func (o *SpecVersionProperty) GetSpecVersion() string {
 	return o.SpecVersion
 }
 
-/*
-CompareSpecVersionProperties - This function will compare two spec version
-properties (object 1 and object 2) to make sure they are the same. This function
-will return an integer that tracks the number of problems and a slice of strings
-that contain the detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - SpecVersionProperty
+// ----------------------------------------------------------------------
+
+/* CompareSpecVersionProperties - This function will compare two properties to
+make sure they are the same and will return a boolean, an integer that tracks
+the number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareSpecVersionProperties(obj1, obj2 *SpecVersionProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -82,10 +84,10 @@ func CompareSpecVersionProperties(obj1, obj2 *SpecVersionProperty) (bool, int, [
 	// Check Spec Version Value
 	if obj1.SpecVersion != obj2.SpecVersion {
 		problemsFound++
-		str := fmt.Sprintf("-- Spec Versions Do Not Match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
+		str := fmt.Sprintf("-- The Spec Version values do not match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Spec Versions Match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
+		str := fmt.Sprintf("++ The Spec Version values match: %s | %s", obj1.SpecVersion, obj2.SpecVersion)
 		resultDetails = append(resultDetails, str)
 	}
 

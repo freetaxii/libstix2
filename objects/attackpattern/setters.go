@@ -5,4 +5,4 @@
 
 package attackpattern
 
-// All property setters are inherited for this object.
+// All property getters and setters are inherited for this object.

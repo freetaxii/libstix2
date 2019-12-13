@@ -32,12 +32,10 @@ type KillChainPhase struct {
 // Public Functions - KillChainPhasesProperty
 // ----------------------------------------------------------------------
 
-/*
-CompareKillChainPhases - This function will compare two kill chain phases
-(object 1 and object 2) to make sure they are the same. This function will
-return an integer that tracks the number of problems and a slice of strings that
-contain the detailed results, whether good or bad.
-*/
+/* CompareKillChainPhases - This function will compare two properties to make
+sure they are the same and will return a boolean, an integer that tracks the
+number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
 func CompareKillChainPhases(obj1, obj2 *KillChainPhasesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -45,29 +43,29 @@ func CompareKillChainPhases(obj1, obj2 *KillChainPhasesProperty) (bool, int, []s
 	// Check Kill Chain Phases Property Length
 	if len(obj1.KillChainPhases) != len(obj2.KillChainPhases) {
 		problemsFound++
-		str := fmt.Sprintf("-- Kill Chain Phases Length Do Not Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		str := fmt.Sprintf("-- The number of entries in Kill Chain Phases do not match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ Kill Chain Phases Length Match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
+		str := fmt.Sprintf("++ The number of entries in Kill Chain Phases match: %d | %d", len(obj1.KillChainPhases), len(obj2.KillChainPhases))
 		resultDetails = append(resultDetails, str)
 		for index := range obj1.KillChainPhases {
 			// Check Kill Chain Phases values
 			if obj1.KillChainPhases[index].KillChainName != obj2.KillChainPhases[index].KillChainName {
 				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Names Do Not Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				str := fmt.Sprintf("-- The Kill Chain Name values do not match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Kill Chain Names Match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
+				str := fmt.Sprintf("++ The Kill Chain Name values match: %s | %s", obj1.KillChainPhases[index].KillChainName, obj2.KillChainPhases[index].KillChainName)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check Kill Chain Phases values
 			if obj1.KillChainPhases[index].PhaseName != obj2.KillChainPhases[index].PhaseName {
 				problemsFound++
-				str := fmt.Sprintf("-- Kill Chain Phases Do Not Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				str := fmt.Sprintf("-- The Kill Chain Phase values do not match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Kill Chain Phases Match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
+				str := fmt.Sprintf("++ The Kill Chain Phase values match: %s | %s", obj1.KillChainPhases[index].PhaseName, obj2.KillChainPhases[index].PhaseName)
 				resultDetails = append(resultDetails, str)
 			}
 		}

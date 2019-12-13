@@ -138,12 +138,14 @@ func (o *ExternalReference) GetExternalID() string {
 	return o.ExternalID
 }
 
-/*
-CompareExternalReferencesProperties - This function will compare two id properties (object 1 and
-object 2) to make sure they are the same. This function will return an integer
-that tracks the number of problems and a slice of strings that contain the
-detailed results, whether good or bad.
-*/
+// ----------------------------------------------------------------------
+// Public Functions - ExternalReferencesProperty
+// ----------------------------------------------------------------------
+
+/* CompareExternalReferencesProperties - This function will compare two
+properties to make sure they are the same and will return a boolean, an integer
+that tracks the number of problems found, and a slice of strings that contain
+the detailed results, whether good or bad. */
 func CompareExternalReferencesProperties(obj1, obj2 *ExternalReferencesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -151,60 +153,60 @@ func CompareExternalReferencesProperties(obj1, obj2 *ExternalReferencesProperty)
 	// Check External References
 	if len(obj1.ExternalReferences) != len(obj2.ExternalReferences) {
 		problemsFound++
-		str := fmt.Sprintf("-- External References Length Do Not Match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
+		str := fmt.Sprintf("-- The number of entries in External References do not match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ External References Length Match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
+		str := fmt.Sprintf("++ The number of entries in External References match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
 		resultDetails = append(resultDetails, str)
 		for index := range obj1.ExternalReferences {
 
 			// Check External Reference Source Name
 			if obj1.ExternalReferences[index].SourceName != obj2.ExternalReferences[index].SourceName {
 				problemsFound++
-				str := fmt.Sprintf("-- Source Name Do Not Match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
+				str := fmt.Sprintf("-- The Source Name values do not match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Source Name Match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
+				str := fmt.Sprintf("++ The Source Name values match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference Descriptions
 			if obj1.ExternalReferences[index].Description != obj2.ExternalReferences[index].Description {
 				problemsFound++
-				str := fmt.Sprintf("-- Descriptions Do Not Match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
+				str := fmt.Sprintf("-- The Description values do not match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Descriptions Match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
+				str := fmt.Sprintf("++ The Description values match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference URLs
 			if obj1.ExternalReferences[index].URL != obj2.ExternalReferences[index].URL {
 				problemsFound++
-				str := fmt.Sprintf("-- URLs Do Not Match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
+				str := fmt.Sprintf("-- The URL values do not match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ URLs Match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
+				str := fmt.Sprintf("++ The URL values match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference Hashes
 			if len(obj1.ExternalReferences[index].Hashes) != len(obj2.ExternalReferences[index].Hashes) {
 				problemsFound++
-				str := fmt.Sprintf("-- Hashes Length Do Not Match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
+				str := fmt.Sprintf("-- The number of entries in Hashes do not match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ Hashes Length Match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
+				str := fmt.Sprintf("++ The number of entries in Hashes match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
 				resultDetails = append(resultDetails, str)
 
 				// If lengths are the same, then check each value
 				for key := range obj1.ExternalReferences[index].Hashes {
 					if obj1.ExternalReferences[index].Hashes[key] != obj2.ExternalReferences[index].Hashes[key] {
 						problemsFound++
-						str := fmt.Sprintf("-- Hashes Do Not Match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
+						str := fmt.Sprintf("-- The Hash values do not match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
 						resultDetails = append(resultDetails, str)
 					} else {
-						str := fmt.Sprintf("++ Hashes Match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
+						str := fmt.Sprintf("++ The Hash values match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
 						resultDetails = append(resultDetails, str)
 					}
 				}
@@ -213,10 +215,10 @@ func CompareExternalReferencesProperties(obj1, obj2 *ExternalReferencesProperty)
 			// Check External Reference External IDs
 			if obj1.ExternalReferences[index].ExternalID != obj2.ExternalReferences[index].ExternalID {
 				problemsFound++
-				str := fmt.Sprintf("-- External IDs Do Not Match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
+				str := fmt.Sprintf("-- The External ID values do not match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ External IDs Match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
+				str := fmt.Sprintf("++ The External ID values match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
 				resultDetails = append(resultDetails, str)
 			}
 		}
