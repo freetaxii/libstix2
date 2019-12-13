@@ -1,4 +1,4 @@
-// Copyright 2015-2019 Bret Jordan, All rights reserved.
+// Copyright 2015-2020 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -109,11 +109,11 @@ represented.
 
 
 
-Encryption Algorithm Enumeration Vocabulary
+Encryption Algorithm Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Type Name: encryption-algorithm-enum
+Enumeration Name: encryption-algorithm-enum
 
 The encryption algorithm enumeration is currently used in the following SCOs:
  * Artifact
@@ -232,7 +232,7 @@ Infrastructure Type Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Type Name: infrastructure-type-ov
+Vocabulary Name: infrastructure-type-ov
 
 The infrastructure type vocabulary is currently used in the following SDO(s):
  * Infrastructure
@@ -289,11 +289,11 @@ instance can be both spyware and a screen capture tool.
 
 
 
-Network Socket Address Family Enumeration Vocabulary
+Network Socket Address Family Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: network-socket-address-family-enum
+Enumeration Name: network-socket-address-family-enum
 
 The network socket address family vocabulary is currently used in the following SCO(s):
  * Network Traffic (Network Socket extension)
@@ -303,11 +303,11 @@ An enumeration of network socket address family types.
 
 
 
-Network Socket Type Enumeration Vocabulary
+Network Socket Type Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: network-socket-type-enum
+Enumeration Name: network-socket-type-enum
 
 The network socket type vocabulary is currently used in the following SCO(s):
  * Network Traffic (Network Socket extension)
@@ -316,11 +316,11 @@ An enumeration of network socket types.
 
 
 
-Opinion Enumeration Vocabulary
+Opinion Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: opinion-enum
+Enumeration Name: opinion-enum
 
 The agreement enumeration is currently used in the following SDOs:
  * Opinion
@@ -475,7 +475,7 @@ Windows™ Integrity Level Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: windows-integrity-level-enum
+Enumeration Name: windows-integrity-level-enum
 
 The Windows integrity level enumeration is currently used in the following STIX Cyber-observable Object(s):
  * Process (Windows Process extension)
@@ -504,7 +504,7 @@ Windows™ Registry Datatype Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: windows-registry-datatype-enum
+Enumeration Name: windows-registry-datatype-enum
 
 The Windows registry datatype vocabulary is currently used in the following SCO(s):
  * Windows Registry Key
@@ -518,7 +518,7 @@ Windows™ Service Start Type Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: windows-service-start-type-enum
+Enumeration Name: windows-service-start-type-enum
 
 The Windows service start type vocabulary is currently used in the following SCO(s):
  * Process (Windows Service extension)
@@ -532,7 +532,7 @@ Windows™ Service Type Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: windows-service-type-enum
+Enumeration Name: windows-service-type-enum
 
 The Windows service type vocabulary is currently used in the following SCO(s):
  * Process (Windows Service extension)
@@ -546,7 +546,7 @@ Windows™ Service Status Enumeration
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: windows-service-status-enum
+Enumeration Name: windows-service-status-enum
 
 The Windows service status vocabulary is currently used in the following SCO(s):
  * Process (Windows Service extension)

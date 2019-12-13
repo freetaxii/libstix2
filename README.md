@@ -138,5 +138,5 @@ This is free software, licensed under the Apache License, Version 2.0. [Read thi
 
 ## Copyright
 
-Copyright 2015-2019 Bret Jordan, All rights reserved.
+Copyright 2015-2020 Bret Jordan, All rights reserved.
 

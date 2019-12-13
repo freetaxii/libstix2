@@ -3,29 +3,25 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package urlobject
+package attackpattern
 
-import (
-	"errors"
-)
+import "errors"
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-/*
-Valid - This method will verify and test all of the properties on the object to
-make sure they are valid per the specification.
-*/
-func (o *UrlObject) Valid() (bool, error) {
+/* Valid - This method will verify and test all of the properties on the object
+to make sure they are valid per the specification. */
+func (o *AttackPattern) Valid() (bool, error) {
 
 	// Check common base properties first
 	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
 		return false, err
 	}
 
-	// Check UrlObject Specific Properties
-	if valid, err := o.validValue(); valid == false {
+	// Check attack pattern specific properties
+	if valid, err := o.validAttakPatternName(); valid != true {
 		return valid, err
 	}
 
@@ -36,10 +32,9 @@ func (o *UrlObject) Valid() (bool, error) {
 // Private Methods
 // ----------------------------------------------------------------------
 
-func (o *UrlObject) validValue() (bool, error) {
-	if o.Value == "" {
-		return false, errors.New("the Value property is required, but missing")
+func (o *AttackPattern) validAttackPatternName() (bool, error) {
+	if o.Name == "" {
+		return false, errors.New("the name property is required, but missing")
 	}
-
 	return true, nil
 }

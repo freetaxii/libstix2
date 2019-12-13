@@ -1,4 +1,4 @@
-// Copyright 2015-2019 Bret Jordan, All rights reserved.
+// Copyright 2015-2020 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,6 +6,8 @@
 package objects
 
 import (
+	"fmt"
+
 	"github.com/freetaxii/libstix2/defs"
 )
 
@@ -55,11 +57,14 @@ func ValidType(t string) bool {
 	return false
 }
 
-/*
-InitObject - This method will initialize the object by setting all of the basic
-properties.
-*/
+/* InitObject - This method will initialize the object by setting all of the
+basic properties and is called by the New() function on each object. */
 func (o *CommonObjectProperties) InitObject(stixType string) error {
+	if defs.STRICT_TYPES {
+		if valid := ValidType(stixType); valid != true {
+			return fmt.Errorf("invalid object type for InitObject with strict checks enabled")
+		}
+	}
 	// TODO make sure that the value coming in is a valid STIX object type
 	o.SetSpecVersion(defs.STIX_VERSION)
 	o.SetObjectType(stixType)
