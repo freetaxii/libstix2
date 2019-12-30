@@ -8,56 +8,51 @@ package properties
 import "fmt"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-DescriptionProperty - A property used by one or more STIX objects that
-captures the description for the object as a string.
-*/
+/* DescriptionProperty - A property used by one or more STIX objects that
+captures the description for the object as a string. */
 type DescriptionProperty struct {
 	Description string `json:"description,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - DescriptionProperty
+// Public Methods - DescriptionProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-SetDescription - This method takes in a string value representing a text
-description and updates the description property.
-*/
+/* SetDescription - This method takes in a string value representing a text
+description and updates the description property. */
 func (o *DescriptionProperty) SetDescription(s string) error {
 	o.Description = s
 	return nil
 }
 
-/*
-GetDescription - This method returns the description for an object as a string.
-*/
+/* GetDescription - This method returns the description for an object as a
+string. */
 func (o *DescriptionProperty) GetDescription() string {
 	return o.Description
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - DescriptionProperty
+// Public Methods - DescriptionProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareDescriptionProperties - This function will compare two properties to
-make sure they are the same and will return a boolean, an integer that tracks
-the number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareDescriptionProperties(obj1, obj2 *DescriptionProperty) (bool, int, []string) {
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *DescriptionProperty) Compare(obj2 *DescriptionProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Description Value
-	if obj1.Description != obj2.Description {
+	if o.Description != obj2.Description {
 		problemsFound++
-		str := fmt.Sprintf("-- The Description values do not match: %s | %s", obj1.Description, obj2.Description)
+		str := fmt.Sprintf("-- The description values do not match: %s | %s", o.Description, obj2.Description)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Description values match: %s | %s", obj1.Description, obj2.Description)
+		str := fmt.Sprintf("++ The description values match: %s | %s", o.Description, obj2.Description)
 		resultDetails = append(resultDetails, str)
 	}
 

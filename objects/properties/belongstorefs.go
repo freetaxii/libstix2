@@ -8,7 +8,7 @@ package properties
 import "github.com/freetaxii/libstix2/resources/helpers"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
 /*

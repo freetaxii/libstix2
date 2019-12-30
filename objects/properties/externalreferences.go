@@ -8,22 +8,18 @@ package properties
 import "fmt"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-ExternalReferencesProperty - A property used by one or more STIX objects
-that captures a list of external references as defined by STIX.
-*/
+/* ExternalReferencesProperty - A property used by one or more STIX objects that
+captures a list of external references as defined by STIX. */
 type ExternalReferencesProperty struct {
 	ExternalReferences []ExternalReference `json:"external_references,omitempty"`
 }
 
-/*
-ExternalReference - This type defines all of the properties associated with
+/* ExternalReference - This type defines all of the properties associated with
 the STIX External Reference type. All of the methods not defined local to this
-type are inherited from the individual properties.
-*/
+type are inherited from the individual properties. */
 type ExternalReference struct {
 	SourceName  string            `json:"source_name,omitempty"`
 	Description string            `json:"description,omitempty"`
@@ -33,14 +29,12 @@ type ExternalReference struct {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ExternalReferencesProperty
+// Public Methods - ExternalReferencesProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-NewExternalReference - This method creates a new external reference and
+/* NewExternalReference - This method creates a new external reference and
 returns a reference to a slice location. This will enable the code to update an
-object located at that slice location.
-*/
+object located at that slice location. */
 func (o *ExternalReferencesProperty) NewExternalReference() (*ExternalReference, error) {
 	var s ExternalReference
 
@@ -55,63 +49,50 @@ func (o *ExternalReferencesProperty) NewExternalReference() (*ExternalReference,
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ExternalReference
+// Public Methods - ExternalReference - Setters
 // ----------------------------------------------------------------------
 
-/*
-SetSourceName - This method takes in a string value representing the name of
-a source for an external reference and udpates the source name property.
-*/
+/* SetSourceName - This method takes in a string value representing the name of
+a source for an external reference and udpates the source name property. */
 func (o *ExternalReference) SetSourceName(s string) error {
 	o.SourceName = s
 	return nil
 }
 
-/*
-GetSourceName - This method will return the source name.
-*/
+/* GetSourceName - This method will return the source name. */
 func (o *ExternalReference) GetSourceName() string {
 	return o.SourceName
 }
 
-/*
-SetDescription - This method takes in a string value representing a text
-description and updates the description property.
-*/
+/* SetDescription - This method takes in a string value representing a text
+description and updates the description property. */
 func (o *ExternalReference) SetDescription(s string) error {
 	o.Description = s
 	return nil
 }
 
-/*
-GetDescription - This method returns the description for an object as a string.
-*/
+/* GetDescription - This method returns the description for an object as a
+string. */
 func (o *ExternalReference) GetDescription() string {
 	return o.Description
 }
 
-/*
-SetURL - This method takes in a string value representing a URL location of a
-source for an external reference and updates the url property.
-*/
+/* SetURL - This method takes in a string value representing a URL location of a
+source for an external reference and updates the url property. */
 func (o *ExternalReference) SetURL(s string) error {
 	o.URL = s
 	return nil
 }
 
-/*
-GetURL - This method returns the url for this external reference.
-*/
+/* GetURL - This method returns the url for this external reference. */
 func (o *ExternalReference) GetURL() string {
 	return o.URL
 }
 
-/*
-AddHash - This method takes in two parameters and adds the hash to the map.
+/* AddHash - This method takes in two parameters and adds the hash to the map.
 The first is a string value representing a hash type from the STIX hashes
 vocabulary. The second is a string value representing the actual hash of the
-content from the remote external reference.
-*/
+content from the remote external reference. */
 func (o *ExternalReference) AddHash(k, v string) error {
 	if o.Hashes == nil {
 		m := make(map[string]string, 0)
@@ -121,104 +102,100 @@ func (o *ExternalReference) AddHash(k, v string) error {
 	return nil
 }
 
-/*
-SetExternalID - This method takes in a string value representing an general
+/* SetExternalID - This method takes in a string value representing an general
 purpose id in a remote system for the source of this external reference and
-updates the external id property.
-*/
+updates the external id property. */
 func (o *ExternalReference) SetExternalID(s string) error {
 	o.ExternalID = s
 	return nil
 }
 
-/*
-GetExternalID - This method returns the external id for this reference.
-*/
+/* GetExternalID - This method returns the external id for this reference. */
 func (o *ExternalReference) GetExternalID() string {
 	return o.ExternalID
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - ExternalReferencesProperty
+// Public Methods - ExternalReferencesProperty - Checks
 // ----------------------------------------------------------------------
 
 /* CompareExternalReferencesProperties - This function will compare two
 properties to make sure they are the same and will return a boolean, an integer
 that tracks the number of problems found, and a slice of strings that contain
 the detailed results, whether good or bad. */
-func CompareExternalReferencesProperties(obj1, obj2 *ExternalReferencesProperty) (bool, int, []string) {
+func (o *ExternalReferencesProperty) Compare(obj2 *ExternalReferencesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check External References
-	if len(obj1.ExternalReferences) != len(obj2.ExternalReferences) {
+	if len(o.ExternalReferences) != len(obj2.ExternalReferences) {
 		problemsFound++
-		str := fmt.Sprintf("-- The number of entries in External References do not match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
+		str := fmt.Sprintf("-- The number of entries in external references do not match: %d | %d", len(o.ExternalReferences), len(obj2.ExternalReferences))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The number of entries in External References match: %d | %d", len(obj1.ExternalReferences), len(obj2.ExternalReferences))
+		str := fmt.Sprintf("++ The number of entries in external references match: %d | %d", len(o.ExternalReferences), len(obj2.ExternalReferences))
 		resultDetails = append(resultDetails, str)
-		for index := range obj1.ExternalReferences {
+		for index := range o.ExternalReferences {
 
 			// Check External Reference Source Name
-			if obj1.ExternalReferences[index].SourceName != obj2.ExternalReferences[index].SourceName {
+			if o.ExternalReferences[index].SourceName != obj2.ExternalReferences[index].SourceName {
 				problemsFound++
-				str := fmt.Sprintf("-- The Source Name values do not match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
+				str := fmt.Sprintf("-- The source name values do not match: %s | %s", o.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The Source Name values match: %s | %s", obj1.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
+				str := fmt.Sprintf("++ The source name values match: %s | %s", o.ExternalReferences[index].SourceName, obj2.ExternalReferences[index].SourceName)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference Descriptions
-			if obj1.ExternalReferences[index].Description != obj2.ExternalReferences[index].Description {
+			if o.ExternalReferences[index].Description != obj2.ExternalReferences[index].Description {
 				problemsFound++
-				str := fmt.Sprintf("-- The Description values do not match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
+				str := fmt.Sprintf("-- The description values do not match: %s | %s", o.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The Description values match: %s | %s", obj1.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
+				str := fmt.Sprintf("++ The description values match: %s | %s", o.ExternalReferences[index].Description, obj2.ExternalReferences[index].Description)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference URLs
-			if obj1.ExternalReferences[index].URL != obj2.ExternalReferences[index].URL {
+			if o.ExternalReferences[index].URL != obj2.ExternalReferences[index].URL {
 				problemsFound++
-				str := fmt.Sprintf("-- The URL values do not match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
+				str := fmt.Sprintf("-- The url values do not match: %s | %s", o.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The URL values match: %s | %s", obj1.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
+				str := fmt.Sprintf("++ The url values match: %s | %s", o.ExternalReferences[index].URL, obj2.ExternalReferences[index].URL)
 				resultDetails = append(resultDetails, str)
 			}
 
 			// Check External Reference Hashes
-			if len(obj1.ExternalReferences[index].Hashes) != len(obj2.ExternalReferences[index].Hashes) {
+			if len(o.ExternalReferences[index].Hashes) != len(obj2.ExternalReferences[index].Hashes) {
 				problemsFound++
-				str := fmt.Sprintf("-- The number of entries in Hashes do not match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
+				str := fmt.Sprintf("-- The number of entries in hashes do not match: %d | %d", len(o.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The number of entries in Hashes match: %d | %d", len(obj1.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
+				str := fmt.Sprintf("++ The number of entries in hashes match: %d | %d", len(o.ExternalReferences[index].Hashes), len(obj2.ExternalReferences[index].Hashes))
 				resultDetails = append(resultDetails, str)
 
 				// If lengths are the same, then check each value
-				for key := range obj1.ExternalReferences[index].Hashes {
-					if obj1.ExternalReferences[index].Hashes[key] != obj2.ExternalReferences[index].Hashes[key] {
+				for key := range o.ExternalReferences[index].Hashes {
+					if o.ExternalReferences[index].Hashes[key] != obj2.ExternalReferences[index].Hashes[key] {
 						problemsFound++
-						str := fmt.Sprintf("-- The Hash values do not match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
+						str := fmt.Sprintf("-- The hash values do not match: %s | %s", o.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
 						resultDetails = append(resultDetails, str)
 					} else {
-						str := fmt.Sprintf("++ The Hash values match: %s | %s", obj1.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
+						str := fmt.Sprintf("++ The hash values match: %s | %s", o.ExternalReferences[index].Hashes[key], obj2.ExternalReferences[index].Hashes[key])
 						resultDetails = append(resultDetails, str)
 					}
 				}
 			}
 
 			// Check External Reference External IDs
-			if obj1.ExternalReferences[index].ExternalID != obj2.ExternalReferences[index].ExternalID {
+			if o.ExternalReferences[index].ExternalID != obj2.ExternalReferences[index].ExternalID {
 				problemsFound++
-				str := fmt.Sprintf("-- The External ID values do not match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
+				str := fmt.Sprintf("-- The external id values do not match: %s | %s", o.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The External ID values match: %s | %s", obj1.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
+				str := fmt.Sprintf("++ The external id values match: %s | %s", o.ExternalReferences[index].ExternalID, obj2.ExternalReferences[index].ExternalID)
 				resultDetails = append(resultDetails, str)
 			}
 		}

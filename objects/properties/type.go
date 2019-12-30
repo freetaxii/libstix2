@@ -6,72 +6,72 @@
 package properties
 
 import (
-	"errors"
 	"fmt"
 )
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-TypeProperty - A property used by one or more STIX objects that
-captures the STIX object type in string format.
-*/
+/* TypeProperty - A property used by one or more STIX objects that captures the
+STIX object type in string format. */
 type TypeProperty struct {
 	ObjectType string `json:"type,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - TypeProperty
+// Public Methods - TypeProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-Valid - This method will ensure that the type property is populated and valid.
-It will return a true / false and any error information.
-*/
-func (o *TypeProperty) Valid() (bool, error) {
-	if o.ObjectType == "" {
-		return false, errors.New("the type property is required, but missing")
-	}
-	return true, nil
-}
-
-/*
-SetObjectType - This method takes in a string value representing a STIX object
-type and updates the type property.
-*/
+/* SetObjectType - This method takes in a string value representing a STIX
+object type and updates the type property. */
 func (o *TypeProperty) SetObjectType(s string) error {
 	o.ObjectType = s
 	return nil
 }
 
-/*
-GetObjectType - This method returns the object type.
-*/
+/* GetObjectType - This method returns the object type. */
 func (o *TypeProperty) GetObjectType() string {
 	return o.ObjectType
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - TypeProperty
+// Public Methods - TypeProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareTypeProperties - This function will compare two properties to make
-sure they are the same and will return a boolean, an integer that tracks the
-number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareTypeProperties(obj1, obj2 *TypeProperty) (bool, int, []string) {
+/* VerifyPresent - This method will verify that the spec version property on an
+object is present. It will return a boolean, an integer that tracks the number
+of problems found, and a slice of strings that contain the detailed results,
+whether good or bad. */
+func (o *TypeProperty) VerifyPresent() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 1)
+
+	if o.TypeProperty == "" {
+		problemsFound++
+		resultDetails[0] = fmt.Sprintf("-- The type property is required but missing")
+		return false, problemsFound, resultDetails
+	}
+
+	resultDetails[0] = fmt.Sprintf("++ The type property is required and is present")
+	return true, problemsFound, resultDetails
+}
+
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *TypeProperty) Compare(obj2 *TypeProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Type Value
-	if obj1.ObjectType != obj2.ObjectType {
+	if o.ObjectType != obj2.ObjectType {
 		problemsFound++
-		str := fmt.Sprintf("-- The Type values do not match: %s | %s", obj1.ObjectType, obj2.ObjectType)
+		str := fmt.Sprintf("-- The type values do not match: %s | %s", o.ObjectType, obj2.ObjectType)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Type values match: %s | %s", obj1.ObjectType, obj2.ObjectType)
+		str := fmt.Sprintf("++ The type values match: %s | %s", o.ObjectType, obj2.ObjectType)
 		resultDetails = append(resultDetails, str)
 	}
 

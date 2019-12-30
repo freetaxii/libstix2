@@ -24,14 +24,14 @@ type TitleProperty struct {
 SetTitle - This method takes in a string value representing a title or name
 and updates the title property.
 */
-func (p *TitleProperty) SetTitle(s string) error {
-	p.Title = s
+func (o *TitleProperty) SetTitle(s string) error {
+	o.Title = s
 	return nil
 }
 
 /*
 GetTitle - This method returns the title.
 */
-func (p *TitleProperty) GetTitle() string {
-	return p.Title
+func (o *TitleProperty) GetTitle() string {
+	return o.Title
 }

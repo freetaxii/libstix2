@@ -8,56 +8,68 @@ package properties
 import "fmt"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-NameProperty - A property used by one or more STIX objects that captures a
-vanity name for the STIX object in string format.
-*/
+/* NameProperty - A property used by one or more STIX objects that captures a
+vanity name for the STIX object in string format. */
 type NameProperty struct {
 	Name string `json:"name,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - NameProperty
+// Public Methods - NameProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-SetName - This method takes in a string value representing a name of the object
-and updates the name property.
-*/
+/* SetName - This method takes in a string value representing a name of the
+object and updates the name property. */
 func (o *NameProperty) SetName(s string) error {
 	o.Name = s
 	return nil
 }
 
-/*
-GetName - This method returns the current name of the object.
-*/
+/* GetName - This method returns the current name of the object. */
 func (o *NameProperty) GetName() string {
 	return o.Name
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - NameProperty
+// Public Functions - NameProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareNameProperties - This function will compare two properties to make
-sure they are the same and will return a boolean, an integer that tracks the
-number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareNameProperties(obj1, obj2 *NameProperty) (bool, int, []string) {
+/* VerifyPresent - This method will verify that the name property on an object
+is present. It will return a boolean, an integer that tracks the number of
+problems found, and a slice of strings that contain the detailed results,
+whether good or bad. */
+func (o *NameProperty) VerifyPresent() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 1)
+
+	if o.Name == "" {
+		problemsFound++
+		resultDetails[0] = fmt.Sprintf("-- The name property is required but missing")
+		return false, problemsFound, resultDetails
+	}
+
+	resultDetails[0] = fmt.Sprintf("++ The name property is required and is present")
+	return true, problemsFound, resultDetails
+}
+
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *NameProperty) Compare(obj2 *NameProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Name Value
-	if obj1.Name != obj2.Name {
+	if o.Name != obj2.Name {
 		problemsFound++
-		str := fmt.Sprintf("-- The Names do not match: %s | %s", obj1.Name, obj2.Name)
+		str := fmt.Sprintf("-- The names do not match: %s | %s", o.Name, obj2.Name)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Names match: %s | %s", obj1.Name, obj2.Name)
+		str := fmt.Sprintf("++ The names match: %s | %s", o.Name, obj2.Name)
 		resultDetails = append(resultDetails, str)
 	}
 

@@ -12,33 +12,28 @@ import (
 )
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-AliasesProperty - A property used by one or more STIX objects.
-*/
+/* AliasesProperty - A property used by one or more STIX objects. */
 type AliasesProperty struct {
 	Aliases []string `json:"aliases,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - AliasesProperty
+// Public Methods - AliasesProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-AddAlias - This method takes in a takes in a string value that represents an
-alias for something in STIX and adds it to the property.
-*/
+/* AddAlias - This method takes in a takes in a string value that represents an
+alias for something in STIX and adds it to the property. */
 func (o *AliasesProperty) AddAlias(s string) error {
 	o.Aliases = append(o.Aliases, s)
 	return nil
 }
 
 /*
-AddAliases - Add Aliases
-
-Alternative names used to identify this Infrastructure.
+AddAliases - This method will add alternative names used to identify this Infrastructure.
+TODO FIX
 */
 func (o *AliasesProperty) AddAliases(data interface{}) error {
 	arr, err := helpers.AddToList(o.Aliases, data)
@@ -52,33 +47,33 @@ func (o *AliasesProperty) AddAliases(data interface{}) error {
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - AliasesProperty
+// Public Methods - AliasesProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareAliasesProperties - This function will compare two properties to make
-sure they are the same and will return a boolean, an integer that tracks the
-number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareAliasesProperties(obj1, obj2 *AliasesProperty) (bool, int, []string) {
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *AliasesProperty) Compare(obj2 *AliasesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
-	if len(obj1.Aliases) != len(obj2.Aliases) {
+	if len(o.Aliases) != len(obj2.Aliases) {
 		problemsFound++
-		str := fmt.Sprintf("-- The number of entries in Aliases do not match: %d | %d", len(obj1.Aliases), len(obj2.Aliases))
+		str := fmt.Sprintf("-- The number of entries in aliases do not match: %d | %d", len(o.Aliases), len(obj2.Aliases))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The number of entries in Aliases match: %d | %d", len(obj1.Aliases), len(obj2.Aliases))
+		str := fmt.Sprintf("++ The number of entries in aliases match: %d | %d", len(o.Aliases), len(obj2.Aliases))
 		resultDetails = append(resultDetails, str)
 
 		// If lengths are the same, then check each value
-		for index := range obj1.Aliases {
-			if obj1.Aliases[index] != obj2.Aliases[index] {
+		for index := range o.Aliases {
+			if o.Aliases[index] != obj2.Aliases[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- The Alias values do not match: %s | %s", obj1.Aliases[index], obj2.Aliases[index])
+				str := fmt.Sprintf("-- The alias values do not match: %s | %s", o.Aliases[index], obj2.Aliases[index])
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The Alias values match: %s | %s", obj1.Aliases[index], obj2.Aliases[index])
+				str := fmt.Sprintf("++ The alias values match: %s | %s", o.Aliases[index], obj2.Aliases[index])
 				resultDetails = append(resultDetails, str)
 			}
 		}

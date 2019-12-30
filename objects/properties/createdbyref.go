@@ -8,13 +8,11 @@ package properties
 import "fmt"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-CreatedByRefProperty - A property used by all STIX objects that captures the STIX
-identifier of the identity that created this object.
-*/
+/* CreatedByRefProperty - A property used by all STIX objects that captures the
+STIX identifier of the identity that created this object. */
 type CreatedByRefProperty struct {
 	CreatedByRef string `json:"created_by_ref,omitempty"`
 }
@@ -23,42 +21,38 @@ type CreatedByRefProperty struct {
 // Public Methods - CreatedByRefProperty
 // ----------------------------------------------------------------------
 
-/*
-SetCreatedByRef - This method takes in a string value representing a STIX
-identifier and updates the Created By Ref property.
-*/
+/* SetCreatedByRef - This method takes in a string value representing a STIX
+identifier and updates the Created By Ref property. */
 func (o *CreatedByRefProperty) SetCreatedByRef(s string) error {
 	o.CreatedByRef = s
 	return nil
 }
 
-/*
-GetCreatedByRef - This method returns the STIX identifier for the identity
-that created this object.
-*/
+/* GetCreatedByRef - This method returns the STIX identifier for the identity
+that created this object. */
 func (o *CreatedByRefProperty) GetCreatedByRef() string {
 	return o.CreatedByRef
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - CreatedByRefProperty
+// Public Methods - CreatedByRefProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareCreatedByRefProperties - This function will compare two properties to
-make sure they are the same and will return a boolean, an integer that tracks
-the number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareCreatedByRefProperties(obj1, obj2 *CreatedByRefProperty) (bool, int, []string) {
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *CreatedByRefProperty) Compare(obj2 *CreatedByRefProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Created By Ref Value
-	if obj1.CreatedByRef != obj2.CreatedByRef {
+	if o.CreatedByRef != obj2.CreatedByRef {
 		problemsFound++
-		str := fmt.Sprintf("-- The Created By Ref values do not match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
+		str := fmt.Sprintf("-- The created by ref values do not match: %s | %s", o.CreatedByRef, obj2.CreatedByRef)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Created By Ref values match: %s | %s", obj1.CreatedByRef, obj2.CreatedByRef)
+		str := fmt.Sprintf("++ The created by ref values match: %s | %s", o.CreatedByRef, obj2.CreatedByRef)
 		resultDetails = append(resultDetails, str)
 	}
 
