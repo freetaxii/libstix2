@@ -6,18 +6,16 @@
 package properties
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------
-// Types
+// Define Object Model
 // ----------------------------------------------------------------------
 
-/*
-CreatedModifiedProperty - Timestamps to track the created and modified times.
+/* CreatedModifiedProperty - Timestamps to track the created and modified times.
 
 Created - A property used by all STIX objects that captures the date and time
 that the object was created.
@@ -32,123 +30,102 @@ type CreatedModifiedProperty struct {
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - CreatedModifiedProperty
+// Public Methods - CreatedModifiedProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-Valid - This method will ensure that the created and modified properties are populated and valid.
-It will return a true / false and any error information.
-*/
-func (o *CreatedModifiedProperty) Valid() (bool, error) {
-
-	if o.Created == "" {
-		return false, errors.New("the created property is required, but missing")
-	}
-
-	if o.Modified == "" {
-		return false, errors.New("the created property is required, but missing")
-	}
-
-	// TODO check to make sure timestamp is a valid STIX timestamp but only if it is defined
-	return true, nil
-}
-
-/*
-SetCreatedToCurrentTime - This methods sets the object created time to the
-current time
-*/
+/* SetCreatedToCurrentTime - This methods sets the object created time to the
+current time */
 func (o *CreatedModifiedProperty) SetCreatedToCurrentTime() error {
 	o.Created = timestamp.CurrentTime("milli")
 	return nil
 }
 
-/*
-SetCreated - This method takes in a timestamp in either time.Time or string
+/* SetCreated - This method takes in a timestamp in either time.Time or string
 format and updates the created property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
-correct STIX timestamp format.
-*/
+correct STIX timestamp format. */
 func (o *CreatedModifiedProperty) SetCreated(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
 	o.Created = ts
 	return nil
 }
 
-/*
-GetCreated - This method will return the created timestamp as a string.
-*/
+/* GetCreated - This method will return the created timestamp as a string. */
 func (o *CreatedModifiedProperty) GetCreated() string {
 	return o.Created
 }
 
-/*
-SetModifiedToCreated sets the object modified time to be the same as the
-created time.
-*/
+/* SetModifiedToCreated sets the object modified time to be the same as the
+created time. */
 func (o *CreatedModifiedProperty) SetModifiedToCreated() error {
 	o.Modified = o.Created
 	return nil
 }
 
-/*
-SetModifiedToCurrentTime - This methods sets the object modified time to the
-current time
-*/
-func (o *CreatedModifiedProperty) SetModifiedToCurrentTime() error {
-	o.Modified = timestamp.CurrentTime("milli")
-	return nil
-}
-
-/*
-SetModified - This method takes in a timestamp in either time.Time or string
+/* SetModified - This method takes in a timestamp in either time.Time or string
 format and updates the modifed property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
-correct STIX timestamp format.
-*/
+correct STIX timestamp format. */
 func (o *CreatedModifiedProperty) SetModified(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
 	o.Modified = ts
 	return nil
 }
 
-/*
-GetModified - This method will return the modified timestamp as a string. If
-the value is the same as the created timestamp, then this object is the
-first version of the object.
-*/
+/* GetModified - This method will return the modified timestamp as a string. If
+the value is the same as the created timestamp, then this object is the first
+version of the object. */
 func (o *CreatedModifiedProperty) GetModified() string {
 	return o.Modified
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - CreatedModifiedProperty
+// Public Methods - SpecVersionProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareCreatedModifiedProperties - This function will compare two properties
-to make sure they are the same and will return a boolean, an integer that tracks
-the number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareCreatedModifiedProperties(obj1, obj2 *CreatedModifiedProperty) (bool, int, []string) {
+/* VerifyPresent - This method will verify that the created and modified
+properties on an object is present. It will return a boolean, an integer that
+tracks the number of problems found, and a slice of strings that contain the
+detailed results, whether good or bad. */
+func (o *CreatedModifiedProperty) VerifyPresent() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 1)
+
+	if o.Created == "" {
+		problemsFound++
+		resultDetails[0] = fmt.Sprintf("-- The created property is required but missing")
+		return false, problemsFound, resultDetails
+	}
+
+	resultDetails[0] = fmt.Sprintf("++ The created property is required and is present")
+	return true, problemsFound, resultDetails
+}
+
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *CreatedModifiedProperty) Compare(obj1, obj2 *CreatedModifiedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Created Value
-	if obj1.Created != obj2.Created {
+	if o.Created != obj2.Created {
 		problemsFound++
-		str := fmt.Sprintf("-- The Created dates do not match: %s | %s", obj1.Created, obj2.Created)
+		str := fmt.Sprintf("-- The Created dates do not match: %s | %s", o.Created, obj2.Created)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Created dates match: %s | %s", obj1.Created, obj2.Created)
+		str := fmt.Sprintf("++ The Created dates match: %s | %s", o.Created, obj2.Created)
 		resultDetails = append(resultDetails, str)
 	}
 
 	// Check Modified Value
-	if obj1.Modified != obj2.Modified {
+	if o.Modified != obj2.Modified {
 		problemsFound++
-		str := fmt.Sprintf("-- The Modified dates do not match: %s | %s", obj1.Modified, obj2.Modified)
+		str := fmt.Sprintf("-- The Modified dates do not match: %s | %s", o.Modified, obj2.Modified)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Modified dates match: %s | %s", obj1.Modified, obj2.Modified)
+		str := fmt.Sprintf("++ The Modified dates match: %s | %s", o.Modified, obj2.Modified)
 		resultDetails = append(resultDetails, str)
 	}
 
