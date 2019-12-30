@@ -37,22 +37,6 @@ func Decode(data []byte) (*AttackPattern, error) {
 
 /* Encode - This method is a simple wrapper for encoding an object into JSON */
 func (o *AttackPattern) Encode() ([]byte, error) {
-	return Encode(o)
-}
-
-/* EncodeToString - This method is a simple wrapper for encoding an object into
-JSON */
-func (o *AttackPattern) EncodeToString() (string, error) {
-	return EncodeToString(o)
-}
-
-// ----------------------------------------------------------------------
-// Public Functions JSON Encoders
-// ----------------------------------------------------------------------
-
-/* Encode - This function is a simple wrapper for encoding an object into JSON
- */
-func Encode(o *AttackPattern) ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
@@ -62,9 +46,9 @@ func Encode(o *AttackPattern) ([]byte, error) {
 	return data, nil
 }
 
-/* EncodeToString - This function is a simple wrapper for encoding an object
-into JSON */
-func EncodeToString(o *AttackPattern) (string, error) {
+/* EncodeToString - This method is a simple wrapper for encoding an object into
+JSON */
+func (o *AttackPattern) EncodeToString() (string, error) {
 	data, err := Encode(o)
 	if err != nil {
 		return "", err

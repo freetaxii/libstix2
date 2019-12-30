@@ -5,44 +5,53 @@
 
 package attackpattern
 
-import "errors"
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* Valid - This method will verify and test all of the properties on the object
-to make sure they are valid per the specification. */
-func (o *AttackPattern) Valid() (bool, error) {
-	return Valid(o)
-}
+/* Valid - This method will verify and test all of the properties on an object
+to make sure they are valid per the specification. It will return a boolean, an
+integer that tracks the number of problems found, and a slice of strings that
+contain the detailed results, whether good or bad. */
+func (o *AttackPattern) Valid() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
 
-// ----------------------------------------------------------------------
-// Public Functions
-// ----------------------------------------------------------------------
-/* Valid - This method will verify and test all of the properties on the object
-to make sure they are valid per the specification. */
-func Valid(o *AttackPattern) (bool, error) {
 	// Check common base properties first
-	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
-		return false, err
-	}
+	_, pBase, dBase := o.CommonObjectProperties.Valid()
+	problemsFound += pBase
+	resultDetails = append(resultDetails, dBase...)
 
 	// Check attack pattern specific properties
-	if valid, err := validAttackPatternName(o); valid != true {
-		return valid, err
+	_, pSpecific, dSpecific := o.validSpecificProperties()
+	problemsFound += pSpecific
+	resultDetails = append(resultDetails, dSpecific...)
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
 	}
 
-	return true, nil
+	return true, 0, resultDetails
 }
 
 // ----------------------------------------------------------------------
-// Private Functions
+// Private Methods
 // ----------------------------------------------------------------------
 
-func validAttackPatternName(o *AttackPattern) (bool, error) {
+// TODO This needs to be moved to the name property
+func (o *AttackPattern) validSpecificProperties() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
 	if o.Name == "" {
-		return false, errors.New("the name property is required but missing")
+		problemsFound++
+		str := fmtSprintf("-- The Name property is required on Attack Pattern but is missing")
+		resultDetails = append(resultDetails, str)
 	}
-	return true, nil
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

@@ -6,7 +6,7 @@
 package manifest
 
 import (
-	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -92,9 +92,9 @@ the location in the slice where the manifest entry object was added. This method
 would be used if the manifest entry was created separately and it just needs to
 be added in whole to the manifest list.
 */
-func (r *Manifest) AddRecord(o *ManifestRecord) (int, error) {
-	positionThatAppendWillUse := len(r.Objects)
-	r.Objects = append(r.Objects, *o)
+func (o *Manifest) AddRecord(m *ManifestRecord) (int, error) {
+	positionThatAppendWillUse := len(o.Objects)
+	o.Objects = append(o.Objects, *m)
 	return positionThatAppendWillUse, nil
 }
 
@@ -103,19 +103,19 @@ NewRecord - This method is used to create a manifest entry and automatically
 add it to the objects array. It returns a resources.ManifestRecord which is a
 pointer to the actual manifest entry that was created in the manifest slice.
 */
-func (r *Manifest) NewRecord() (*ManifestRecord, error) {
-	o := NewRecord()
-	positionThatAppendWillUse := len(r.Objects)
-	r.Objects = append(r.Objects, *o)
-	return &r.Objects[positionThatAppendWillUse], nil
+func (o *Manifest) NewRecord() (*ManifestRecord, error) {
+	obj := NewRecord()
+	positionThatAppendWillUse := len(o.Objects)
+	o.Objects = append(o.Objects, *obj)
+	return &o.Objects[positionThatAppendWillUse], nil
 }
 
 /*
 CreateRecord - This method is used to create and add a manifest entry in
 a single step, by taking in all of the values as parameters.
 */
-func (r *Manifest) CreateRecord(id, date, ver, media string) error {
-	m, _ := r.NewRecord()
+func (o *Manifest) CreateRecord(id, date, ver, media string) error {
+	m, _ := o.NewRecord()
 	m.SetID(id)
 	m.SetDateAdded(date)
 	m.SetVersion(ver)
@@ -126,15 +126,15 @@ func (r *Manifest) CreateRecord(id, date, ver, media string) error {
 /*
 GetMore - This method will return the more property
 */
-func (r *Manifest) GetMore() bool {
-	return r.More
+func (o *Manifest) GetMore() bool {
+	return o.More
 }
 
 /*
 SetMore - This method will set the more property to true
 */
-func (r *Manifest) SetMore() error {
-	r.More = true
+func (o *Manifest) SetMore() error {
+	o.More = true
 	return nil
 }
 
@@ -145,23 +145,23 @@ func (r *Manifest) SetMore() error {
 /*
 SetDateAdded - This method will add the date added to the manifest entry
 */
-func (r *ManifestRecord) SetDateAdded(s string) error {
-	r.DateAdded = s
+func (o *ManifestRecord) SetDateAdded(s string) error {
+	o.DateAdded = s
 	return nil
 }
 
 /*
 SetVersion - This method will add the version to the manifest entry
 */
-func (r *ManifestRecord) SetVersion(s string) error {
-	r.Version = s
+func (o *ManifestRecord) SetVersion(s string) error {
+	o.Version = s
 	return nil
 }
 
 /*
 SetMediaType - This method will add the media type to the manifest entry
 */
-func (r *ManifestRecord) SetMediaType(s string) error {
-	r.MediaType = s
+func (o *ManifestRecord) SetMediaType(s string) error {
+	o.MediaType = s
 	return nil
 }

@@ -39,20 +39,22 @@ func Compare(obj1, obj2 *AttackPattern) (bool, int, []string) {
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	// Check Name Values
+	// Check Name Property
 	_, pNames, dNames := properties.CompareNameProperties(&obj1.NameProperty, &obj2.NameProperty)
 	problemsFound += pNames
 	resultDetails = append(resultDetails, dNames...)
 
+	// Check Description Property
 	_, pDescriptions, dDescriptions := properties.CompareDescriptionProperties(&obj1.DescriptionProperty, &obj2.DescriptionProperty)
 	problemsFound += pDescriptions
 	resultDetails = append(resultDetails, dDescriptions...)
 
-	// Check Aliases Types Property Lengths
+	// Check Aliases Property
 	_, pAliases, dAliases := properties.CompareAliasesProperties(&obj1.AliasesProperty, &obj2.AliasesProperty)
 	problemsFound += pAliases
 	resultDetails = append(resultDetails, dAliases...)
 
+	// Check KillChainPhases Property
 	_, pKillChainPhases, dKillChainPhases := properties.CompareKillChainPhases(&obj1.KillChainPhasesProperty, &obj2.KillChainPhasesProperty)
 	problemsFound += pKillChainPhases
 	resultDetails = append(resultDetails, dKillChainPhases...)

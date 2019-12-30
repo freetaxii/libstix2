@@ -6,7 +6,7 @@
 package discovery
 
 import (
-	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -66,8 +66,8 @@ func New() *Discovery {
 SetContact - This methods takes in a string value representing contact
 information and updates the contact property.
 */
-func (r *Discovery) SetContact(s string) error {
-	r.Contact = s
+func (o *Discovery) SetContact(s string) error {
+	o.Contact = s
 	return nil
 }
 
@@ -75,35 +75,35 @@ func (r *Discovery) SetContact(s string) error {
 GetContact - This method returns the contact information from the contact
 property.
 */
-func (r *Discovery) GetContact() string {
-	return r.Contact
+func (o *Discovery) GetContact() string {
+	return o.Contact
 }
 
 /*
 SetDefault - This methods takes in a string value representing a default
 api-root and updates the default property.
 */
-func (r *Discovery) SetDefault(s string) error {
-	r.Default = s
+func (o *Discovery) SetDefault(s string) error {
+	o.Default = s
 	return nil
 }
 
 /*
 GetDefault - This methods returns the default api-root.
 */
-func (r *Discovery) GetDefault() string {
-	return r.Default
+func (o *Discovery) GetDefault() string {
+	return o.Default
 }
 
 /*
 AddAPIRoot - This method takes in a string value that represents an api-root
 and adds it to the list in the APIRoots property.
 */
-func (r *Discovery) AddAPIRoot(s string) error {
-	if r.APIRoots == nil {
+func (o *Discovery) AddAPIRoot(s string) error {
+	if o.APIRoots == nil {
 		a := make([]string, 0)
-		r.APIRoots = a
+		o.APIRoots = a
 	}
-	r.APIRoots = append(r.APIRoots, s)
+	o.APIRoots = append(o.APIRoots, s)
 	return nil
 }
