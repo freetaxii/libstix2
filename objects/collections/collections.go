@@ -6,10 +6,10 @@
 package collections
 
 import (
-	"github.com/freetaxii/libstix2/resources/envelope"
-	"github.com/freetaxii/libstix2/resources/manifest"
-	"github.com/freetaxii/libstix2/resources/properties"
-	"github.com/freetaxii/libstix2/resources/versions"
+	"github.com/freetaxii/libstix2/objects/envelope"
+	"github.com/freetaxii/libstix2/objects/manifest"
+	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects/versions"
 )
 
 // ----------------------------------------------------------------------
@@ -171,10 +171,10 @@ the location in the slice where the collection object was added. This method
 would be used if the collection was created separately and it just needs to be
 added in whole to the collections list.
 */
-func (r *Collections) AddCollection(o *Collection) (int, error) {
-	//r.initCollectionsProperty()
-	positionThatAppendWillUse := len(r.Collections)
-	r.Collections = append(r.Collections, *o)
+func (o *Collections) AddCollection(c *Collection) (int, error) {
+	//o.initCollectionsProperty()
+	positionThatAppendWillUse := len(o.Collections)
+	o.Collections = append(o.Collections, *c)
 	return positionThatAppendWillUse, nil
 }
 
@@ -184,12 +184,12 @@ add it to the collections array. It returns a resources.Collection which
 is a pointer to the actual Collection that was created in the collections
 slice.
 */
-func (r *Collections) NewCollection() (*Collection, error) {
-	//r.initCollectionsProperty()
-	o := NewCollection()
-	positionThatAppendWillUse := len(r.Collections)
-	r.Collections = append(r.Collections, *o)
-	return &r.Collections[positionThatAppendWillUse], nil
+func (o *Collections) NewCollection() (*Collection, error) {
+	//o.initCollectionsProperty()
+	c := NewCollection()
+	positionThatAppendWillUse := len(o.Collections)
+	o.Collections = append(o.Collections, *c)
+	return &o.Collections[positionThatAppendWillUse], nil
 }
 
 // ----------------------------------------------------------------------
@@ -200,10 +200,10 @@ func (r *Collections) NewCollection() (*Collection, error) {
 initCollectionsProperty - This method will initialize the Collections
 slice if it has not already been initialized.
 */
-// func (r *Collections) initCollectionsProperty() error {
-// 	if r.Collections == nil {
+// func (o *Collections) initCollectionsProperty() error {
+// 	if o.Collections == nil {
 // 		a := make([]Collection, 0)
-// 		r.Collections = a
+// 		o.Collections = a
 // 	}
 // 	return nil
 // }
@@ -215,63 +215,63 @@ slice if it has not already been initialized.
 /*
 SetEnabled - This method will set the collection to be enabled.
 */
-func (r *Collection) SetEnabled() error {
-	r.Enabled = true
+func (o *Collection) SetEnabled() error {
+	o.Enabled = true
 	return nil
 }
 
 /*
 SetDisabled - This method will set the collection to be disabled.
 */
-func (r *Collection) SetDisabled() error {
-	r.Enabled = false
+func (o *Collection) SetDisabled() error {
+	o.Enabled = false
 	return nil
 }
 
 /*
 SetHidden - This method will set the collection to be hidden.
 */
-func (r *Collection) SetHidden() error {
-	r.Hidden = true
+func (o *Collection) SetHidden() error {
+	o.Hidden = true
 	return nil
 }
 
 /*
 SetVisible - This method will set the collection to be visible.
 */
-func (r *Collection) SetVisible() error {
-	r.Hidden = false
+func (o *Collection) SetVisible() error {
+	o.Hidden = false
 	return nil
 }
 
 /*
 SetCanRead - This method will set the can_read boolean to true.
 */
-func (r *Collection) SetCanRead() error {
-	r.CanRead = true
+func (o *Collection) SetCanRead() error {
+	o.CanRead = true
 	return nil
 }
 
 /*
 GetCanRead - This method will return the value of Can Read.
 */
-func (r *Collection) GetCanRead() bool {
-	return r.CanRead
+func (o *Collection) GetCanRead() bool {
+	return o.CanRead
 }
 
 /*
 SetCanWrite - This method will set the can_write boolean to true.
 */
-func (r *Collection) SetCanWrite() error {
-	r.CanWrite = true
+func (o *Collection) SetCanWrite() error {
+	o.CanWrite = true
 	return nil
 }
 
 /*
 GetCanWrite - This method will return the value of Can Write.
 */
-func (r *Collection) GetCanWrite() bool {
-	return r.CanWrite
+func (o *Collection) GetCanWrite() bool {
+	return o.CanWrite
 }
 
 /*
@@ -279,11 +279,11 @@ AddMediaType - This method takes in a string value that represents a version
 of the TAXII api that is supported and adds it to the list in media types
 property.
 */
-func (r *Collection) AddMediaType(s string) error {
-	if r.MediaTypes == nil {
+func (o *Collection) AddMediaType(s string) error {
+	if o.MediaTypes == nil {
 		a := make([]string, 0)
-		r.MediaTypes = a
+		o.MediaTypes = a
 	}
-	r.MediaTypes = append(r.MediaTypes, s)
+	o.MediaTypes = append(o.MediaTypes, s)
 	return nil
 }

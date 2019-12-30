@@ -6,7 +6,7 @@
 package status
 
 import (
-	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 	"github.com/freetaxii/libstix2/timestamp"
 )
 
@@ -78,16 +78,16 @@ func NewStatusDetails() *StatusDetails {
 /*
 SetStatusCompleted - This method will set the status to completed.
 */
-func (r *Status) SetStatusCompleted() error {
-	r.Status = "Completed"
+func (o *Status) SetStatusCompleted() error {
+	o.Status = "Completed"
 	return nil
 }
 
 /*
 SetStatusPending - This method will set the status to pending.
 */
-func (r *Status) SetStatusPending() error {
-	r.Status = "Pending"
+func (o *Status) SetStatusPending() error {
+	o.Status = "Pending"
 	return nil
 }
 
@@ -95,8 +95,8 @@ func (r *Status) SetStatusPending() error {
 SetRequestTimestamp - This method will set the Request time stamp to the provided
 value.
 */
-func (r *Status) SetRequestTimestamp(s string) error {
-	r.RequestTimestamp = s
+func (o *Status) SetRequestTimestamp(s string) error {
+	o.RequestTimestamp = s
 	return nil
 }
 
@@ -104,72 +104,72 @@ func (r *Status) SetRequestTimestamp(s string) error {
 SetRequestTimestampToCurrentTime - This method will set the Request time stamp
 to the current time with micro second precision.
 */
-func (r *Status) SetRequestTimestampToCurrentTime() error {
-	r.RequestTimestamp = timestamp.CurrentTime("micro")
+func (o *Status) SetRequestTimestampToCurrentTime() error {
+	o.RequestTimestamp = timestamp.CurrentTime("micro")
 	return nil
 }
 
 /*
 SetTotalCount - Set Total Count to value provided.
 */
-func (r *Status) SetTotalCount(i int) error {
-	r.TotalCount = i
+func (o *Status) SetTotalCount(i int) error {
+	o.TotalCount = i
 	return nil
 }
 
 /*
 IncreaseTotalCount - Increase Total count number.
 */
-func (r *Status) IncreaseTotalCount() error {
-	r.TotalCount++
+func (o *Status) IncreaseTotalCount() error {
+	o.TotalCount++
 	return nil
 }
 
 /*
 SetSuccessCount - Set Success Count to value provided.
 */
-func (r *Status) SetSuccessCount(i int) error {
-	r.SuccessCount = i
+func (o *Status) SetSuccessCount(i int) error {
+	o.SuccessCount = i
 	return nil
 }
 
 /*
 IncreaseSuccessCount - Increase Success count number.
 */
-func (r *Status) IncreaseSuccessCount() error {
-	r.SuccessCount++
+func (o *Status) IncreaseSuccessCount() error {
+	o.SuccessCount++
 	return nil
 }
 
 /*
 SetFailureCount - Set Failure Count to value provided.
 */
-func (r *Status) SetFailureCount(i int) error {
-	r.FailureCount = i
+func (o *Status) SetFailureCount(i int) error {
+	o.FailureCount = i
 	return nil
 }
 
 /*
 IncreaseFailureCount - Increase Failure count number.
 */
-func (r *Status) IncreaseFailureCount() error {
-	r.FailureCount++
+func (o *Status) IncreaseFailureCount() error {
+	o.FailureCount++
 	return nil
 }
 
 /*
 SetPendingCount - Set Pending Count to value provided.
 */
-func (r *Status) SetPendingCount(i int) error {
-	r.PendingCount = i
+func (o *Status) SetPendingCount(i int) error {
+	o.PendingCount = i
 	return nil
 }
 
 /*
 IncreasePendingCount - Increase Pending count number.
 */
-func (r *Status) IncreasePendingCount() error {
-	r.PendingCount++
+func (o *Status) IncreasePendingCount() error {
+	o.PendingCount++
 	return nil
 }
 
@@ -177,11 +177,11 @@ func (r *Status) IncreasePendingCount() error {
 NewSuccessDetails - This method will create an empty SuccessDetails type, add it
 to the Successes property, and return a pointer to that instance.
 */
-func (r *Status) NewSuccessDetails() (*StatusDetails, error) {
-	o := NewStatusDetails()
-	positionThatAppendWillUse := len(r.Successes)
-	r.Successes = append(r.Successes, *o)
-	return &r.Successes[positionThatAppendWillUse], nil
+func (o *Status) NewSuccessDetails() (*StatusDetails, error) {
+	obj := NewStatusDetails()
+	positionThatAppendWillUse := len(o.Successes)
+	o.Successes = append(o.Successes, *obj)
+	return &o.Successes[positionThatAppendWillUse], nil
 }
 
 /*
@@ -189,9 +189,9 @@ AddSuccessDetails - This method will take in a SuccessDetails type as a pointer
 and add it to the Successes property. One would use this if they manually created
 their own SuccessDetails type and then wanted to add it to the Successes property.
 */
-func (r *Status) AddSuccessDetails(o *StatusDetails) (int, error) {
-	positionThatAppendWillUse := len(r.Successes)
-	r.Successes = append(r.Successes, *o)
+func (o *Status) AddSuccessDetails(s *StatusDetails) (int, error) {
+	positionThatAppendWillUse := len(o.Successes)
+	o.Successes = append(o.Successes, *s)
 	return positionThatAppendWillUse, nil
 }
 
@@ -199,7 +199,7 @@ func (r *Status) AddSuccessDetails(o *StatusDetails) (int, error) {
 CreateSuccessDetails - This method will create a SuccessDetails type based on the
 data provided and will add it to the Successes property.
 */
-func (r *Status) CreateSuccessDetails(id, ver, mesg string) error {
+func (o *Status) CreateSuccessDetails(id, ver, mesg string) error {
 	s, _ := r.NewSuccessDetails()
 	s.SetID(id)
 	s.SetVersion(ver)
@@ -211,11 +211,11 @@ func (r *Status) CreateSuccessDetails(id, ver, mesg string) error {
 NewFailureDetails - This method will create an empty SuccessDetails type, add it
 to the Failures property, and return a pointer to that instance.
 */
-func (r *Status) NewFailureDetails() (*StatusDetails, error) {
-	o := NewStatusDetails()
-	positionThatAppendWillUse := len(r.Failures)
-	r.Failures = append(r.Failures, *o)
-	return &r.Failures[positionThatAppendWillUse], nil
+func (o *Status) NewFailureDetails() (*StatusDetails, error) {
+	obj := NewStatusDetails()
+	positionThatAppendWillUse := len(o.Failures)
+	o.Failures = append(o.Failures, *obj)
+	return &o.Failures[positionThatAppendWillUse], nil
 }
 
 /*
@@ -223,9 +223,9 @@ AddFailureDetails - This method will take in a SuccessDetails type as a pointer
 and add it to the Failures property. One would use this if they manually created
 their own SuccessDetails type and then wanted to add it to the Failures property.
 */
-func (r *Status) AddFailureDetails(o *StatusDetails) (int, error) {
-	positionThatAppendWillUse := len(r.Failures)
-	r.Failures = append(r.Failures, *o)
+func (o *Status) AddFailureDetails(o *StatusDetails) (int, error) {
+	positionThatAppendWillUse := len(o.Failures)
+	o.Failures = append(o.Failures, *o)
 	return positionThatAppendWillUse, nil
 }
 
@@ -233,8 +233,8 @@ func (r *Status) AddFailureDetails(o *StatusDetails) (int, error) {
 CreateFailureDetails - This method will create a FailureDetails type based on the
 data provided and will add it to the Failures property.
 */
-func (r *Status) CreateFailureDetails(id, ver, mesg string) error {
-	s, _ := r.NewFailureDetails()
+func (o *Status) CreateFailureDetails(id, ver, mesg string) error {
+	s, _ := o.NewFailureDetails()
 	s.SetID(id)
 	s.SetVersion(ver)
 	s.SetMessage(mesg)
@@ -245,10 +245,10 @@ func (r *Status) CreateFailureDetails(id, ver, mesg string) error {
 NewPendingDetails - This method will create an empty SuccessDetails type, add it
 to the Pendings property, and return a pointer to that instance.
 */
-func (r *Status) NewPendingDetails() (*StatusDetails, error) {
-	o := NewStatusDetails()
-	positionThatAppendWillUse := len(r.Pendings)
-	r.Pendings = append(r.Pendings, *o)
+func (o *Status) NewPendingDetails() (*StatusDetails, error) {
+	obj := NewStatusDetails()
+	positionThatAppendWillUse := len(o.Pendings)
+	o.Pendings = append(r.Pendings, *obj)
 	return &r.Pendings[positionThatAppendWillUse], nil
 }
 
@@ -257,9 +257,9 @@ AddPendingDetails - This method will take in a SuccessDetails type as a pointer
 and add it to the Pendings property. One would use this if they manually created
 their own SuccessDetails type and then wanted to add it to the Pendings property.
 */
-func (r *Status) AddPendingDetails(o *StatusDetails) (int, error) {
-	positionThatAppendWillUse := len(r.Pendings)
-	r.Pendings = append(r.Pendings, *o)
+func (o *Status) AddPendingDetails(o *StatusDetails) (int, error) {
+	positionThatAppendWillUse := len(o.Pendings)
+	o.Pendings = append(o.Pendings, *o)
 	return positionThatAppendWillUse, nil
 }
 
@@ -267,7 +267,7 @@ func (r *Status) AddPendingDetails(o *StatusDetails) (int, error) {
 CreatePendingDetails - This method will create a SuccessDetails type based on the
 data provided and will add it to the Pending property.
 */
-func (r *Status) CreatePendingDetails(id, ver, mesg string) error {
+func (o *Status) CreatePendingDetails(id, ver, mesg string) error {
 	s, _ := r.NewPendingDetails()
 	s.SetID(id)
 	s.SetVersion(ver)
@@ -282,23 +282,23 @@ func (r *Status) CreatePendingDetails(id, ver, mesg string) error {
 /*
 SetID - This method will set the ID to the provided value.
 */
-func (r *StatusDetails) SetID(s string) error {
-	r.ID = s
+func (o *StatusDetails) SetID(s string) error {
+	o.ID = s
 	return nil
 }
 
 /*
 SetVersion - This method will set the Version to the provided value.
 */
-func (r *StatusDetails) SetVersion(s string) error {
-	r.Version = s
+func (o *StatusDetails) SetVersion(s string) error {
+	o.Version = s
 	return nil
 }
 
 /*
 SetMessage - This method will set the Message to the provided value.
 */
-func (r *StatusDetails) SetMessage(s string) error {
-	r.Message = s
+func (o *StatusDetails) SetMessage(s string) error {
+	o.Message = s
 	return nil
 }

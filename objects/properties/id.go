@@ -6,7 +6,6 @@
 package properties
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/pborman/uuid"
@@ -28,17 +27,27 @@ type IDProperty struct {
 // Public Methods - IdProperty
 // ----------------------------------------------------------------------
 
-/*
-Valid - This method will ensure that the ID property is populated and valid.
-It will return a true / false and any error information.
-*/
-func (o *IDProperty) Valid() (bool, error) {
-	if o.ID == "" {
-		return false, errors.New("the ID property is required, but missing")
-	}
+/* Valid - This method will verify and test the id property on an object to make
+sure they are valid per the specification. It will return a boolean, an integer
+that tracks the number of problems found, and a slice of strings that contain
+the detailed results, whether good or bad. */
+func (o *IDProperty) Valid() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
 
 	// TODO check to make sure ID is a valid STIX ID
-	return true, nil
+
+	if o.ID == "" {
+		problemsFound++
+		str := fmt.Sprintf("-- The ID property is required but missing")
+		resultDetails = append(resultDetails, str)
+	}
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }
 
 /*
@@ -52,11 +61,30 @@ func (o *IDProperty) CreateSTIXUUID(s string) (string, error) {
 }
 
 /*
-SetNewID - This method takes in a string value representing a STIX object
+CreateTAXIIUUID - This method does not take in any parameters. It is used to create
+a new ID based on the approved TAXII UUIDv4 format.
+*/
+func (o *IDProperty) CreateTAXIIUUID() (string, error) {
+	id := uuid.New()
+	return id, nil
+}
+
+/*
+SetNewID - This method does not take in any parameters. It is used to create
+a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
+property.
+*/
+func (o *IDProperty) SetNewTAXIIID() error {
+	o.ID, _ = o.CreateTAXIIUUID()
+	return nil
+}
+
+/*
+SetNewSTIXID - This method takes in a string value representing a STIX object
 type and creates a new ID based on the approved STIX UUIDv4 format and update
 the id property for the object.
 */
-func (o *IDProperty) SetNewID(s string) error {
+func (o *IDProperty) SetNewSTIXID(s string) error {
 	// TODO Add check to validate input value
 	o.ID, _ = o.CreateSTIXUUID(s)
 	return nil
@@ -93,10 +121,10 @@ func CompareIDProperties(obj1, obj2 *IDProperty) (bool, int, []string) {
 	// Check ID Value
 	if obj1.ID != obj2.ID {
 		problemsFound++
-		str := fmt.Sprintf("-- The ID values Do Not Match: %s | %s", obj1.ID, obj2.ID)
+		str := fmt.Sprintf("-- The ID values do not match: %s | %s", obj1.ID, obj2.ID)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The ID values Match: %s | %s", obj1.ID, obj2.ID)
+		str := fmt.Sprintf("++ The ID values match: %s | %s", obj1.ID, obj2.ID)
 		resultDetails = append(resultDetails, str)
 	}
 

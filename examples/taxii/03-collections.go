@@ -9,14 +9,14 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/freetaxii/libstix2/objects/collections"
 )
 
 func main() {
 	o := collections.New()
 
 	c, _ := o.NewCollection()
-	c.SetNewID()
+	c.SetNewTAXIIID()
 	c.SetCanRead()
 
 	// You can do this manually by creating your own Collection object

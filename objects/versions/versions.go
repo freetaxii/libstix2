@@ -52,22 +52,22 @@ func New() *Versions {
 AddVersion - This method will take in a version and append it to the Versions
 property.
 */
-func (r *Versions) AddVersion(v string) error {
-	r.Versions = append(r.Versions, v)
+func (o *Versions) AddVersion(v string) error {
+	o.Versions = append(o.Versions, v)
 	return nil
 }
 
 /*
 GetMore - This method will return the more property
 */
-func (r *Versions) GetMore() bool {
-	return r.More
+func (o *Versions) GetMore() bool {
+	return o.More
 }
 
 /*
 SetMore - This method will set the more property to true
 */
-func (r *Versions) SetMore() error {
-	r.More = true
+func (o *Versions) SetMore() error {
+	o.More = true
 	return nil
 }

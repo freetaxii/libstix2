@@ -6,7 +6,7 @@
 package taxiierror
 
 import (
-	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -74,8 +74,8 @@ for this particular error instance and updates the Error ID property. A TAXII
 Server might choose to assign each error occurrence it's own identifier in
 order to facilitate debugging.
 */
-func (r *TAXIIError) SetErrorID(s string) error {
-	r.ErrorID = s
+func (o *TAXIIError) SetErrorID(s string) error {
+	o.ErrorID = s
 	return nil
 }
 
@@ -86,8 +86,8 @@ might choose to assign a common error code to all errors of the same type.
 Error codes are application-specific and not intended to be meaningful across
 different TAXII Servers.
 */
-func (r *TAXIIError) SetErrorCode(s string) error {
-	r.ErrorCode = s
+func (o *TAXIIError) SetErrorCode(s string) error {
+	o.ErrorCode = s
 	return nil
 }
 
@@ -95,8 +95,8 @@ func (r *TAXIIError) SetErrorCode(s string) error {
 SetHTTPStatus - This method takes in a string value representing the HTTP
 status code applicable to this error and updates the HTTP Status property.
 */
-func (r *TAXIIError) SetHTTPStatus(s string) error {
-	r.HTTPStatus = s
+func (o *TAXIIError) SetHTTPStatus(s string) error {
+	o.HTTPStatus = s
 	return nil
 }
 
@@ -107,7 +107,7 @@ For example, this could be a URL pointing to a knowledge base article
 describing the error code. Absence of this field indicates that there are no
 additional details.
 */
-func (r *TAXIIError) SetExternalDetails(s string) error {
-	r.ExternalDetails = s
+func (o *TAXIIError) SetExternalDetails(s string) error {
+	o.ExternalDetails = s
 	return nil
 }

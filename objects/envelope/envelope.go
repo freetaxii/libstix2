@@ -74,8 +74,8 @@ func DecodeRaw(r io.Reader) (*EnvelopeRawDecode, error) {
 /*
 Encode - This method is a simple wrapper for encoding an object in to JSON
 */
-func (r *Envelope) Encode() ([]byte, error) {
-	data, err := json.MarshalIndent(r, "", "    ")
+func (o *Envelope) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +85,8 @@ func (r *Envelope) Encode() ([]byte, error) {
 /*
 EncodeToString - This method is a simple wrapper for encoding an object in to JSON
 */
-func (r *Envelope) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(r, "", "    ")
+func (o *Envelope) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return "", err
 	}
@@ -96,8 +96,8 @@ func (r *Envelope) EncodeToString() (string, error) {
 /*
 EncodeToString - This method is a simple wrapper for encoding an object in to JSON
 */
-func (r *EnvelopeRawDecode) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(r, "", "    ")
+func (o *EnvelopeRawDecode) EncodeToString() (string, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return "", err
 	}
@@ -112,22 +112,22 @@ func (r *EnvelopeRawDecode) EncodeToString() (string, error) {
 AddObject - This method will take in an object as an interface and add it to
 the list of objects in the envelope
 */
-func (r *Envelope) AddObject(o interface{}) error {
-	r.Objects = append(r.Objects, o)
+func (o *Envelope) AddObject(obj interface{}) error {
+	o.Objects = append(o.Objects, obj)
 	return nil
 }
 
 /*
 GetMore - This method will return the more property
 */
-func (r *Envelope) GetMore() bool {
-	return r.More
+func (o *Envelope) GetMore() bool {
+	return o.More
 }
 
 /*
 SetMore - This method will set the more property to true
 */
-func (r *Envelope) SetMore() error {
-	r.More = true
+func (o *Envelope) SetMore() error {
+	o.More = true
 	return nil
 }

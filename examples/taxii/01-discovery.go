@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/resources/discovery"
+	"github.com/freetaxii/libstix2/objects/discovery"
 )
 
 func main() {

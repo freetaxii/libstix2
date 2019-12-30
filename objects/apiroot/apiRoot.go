@@ -6,7 +6,7 @@
 package apiroot
 
 import (
-	"github.com/freetaxii/libstix2/resources/properties"
+	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -59,12 +59,12 @@ func New() *APIRoot {
 AddVersion - This method takes in a string value that represents a version of
 the TAXII api that is supported and adds it to the versions property.
 */
-func (r *APIRoot) AddVersion(s string) error {
-	if r.Versions == nil {
+func (o *APIRoot) AddVersion(s string) error {
+	if o.Versions == nil {
 		a := make([]string, 0)
-		r.Versions = a
+		o.Versions = a
 	}
-	r.Versions = append(r.Versions, s)
+	o.Versions = append(o.Versions, s)
 	return nil
 }
 
@@ -73,8 +73,8 @@ SetMaxContentLength - This method takes in an integer value representing the
 max content length that the server can support and updates the max content
 length property.
 */
-func (r *APIRoot) SetMaxContentLength(i int) error {
-	r.MaxContentLength = i
+func (o *APIRoot) SetMaxContentLength(i int) error {
+	o.MaxContentLength = i
 	return nil
 }
 
@@ -82,6 +82,6 @@ func (r *APIRoot) SetMaxContentLength(i int) error {
 GetMaxContentLength - This method returns the max content length as an
 integer.
 */
-func (r *APIRoot) GetMaxContentLength() int {
-	return r.MaxContentLength
+func (o *APIRoot) GetMaxContentLength() int {
+	return o.MaxContentLength
 }

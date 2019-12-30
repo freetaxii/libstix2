@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/resources/apiroot"
+	"github.com/freetaxii/libstix2/objects/apiroot"
 )
 
 func main() {
