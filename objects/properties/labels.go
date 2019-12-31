@@ -11,27 +11,23 @@ import (
 )
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-LabelsProperty - A property used by one or more STIX objects that
-captures a list of labels or tags for a STIX object. On some objects the
-labels property is defined as coming from an open-vocab.
-*/
+/* LabelsProperty - A property used by one or more STIX objects that captures a
+list of labels or tags for a STIX object. On some objects the labels property is
+defined as coming from an open-vocab. */
 type LabelsProperty struct {
 	Labels []string `json:"labels,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - LabelsProperty
+// Public Methods - LabelsProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-AddLabel - This method takes in a string value that represents one or more
+/* AddLabel - This method takes in a string value that represents one or more
 labels separated by a command for a STIX object and adds it to the list of
-labels in the labels property.
-*/
+labels in the labels property. */
 func (o *LabelsProperty) AddLabel(s string) error {
 
 	labels := strings.Split(s, ",")
@@ -43,34 +39,34 @@ func (o *LabelsProperty) AddLabel(s string) error {
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - LabelsProperty
+// Public Methods - LabelsProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareLabelsProperties - This function will compare two properties to make
-sure they are the same and will return a boolean, an integer that tracks the
-number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareLabelsProperties(obj1, obj2 *LabelsProperty) (bool, int, []string) {
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *LabelsProperty) Compare(obj2 *LabelsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Labels Values
-	if len(obj1.Labels) != len(obj2.Labels) {
+	if len(o.Labels) != len(obj2.Labels) {
 		problemsFound++
-		str := fmt.Sprintf("-- The number of entries in Labels do not match: %d | %d", len(obj1.Labels), len(obj2.Labels))
+		str := fmt.Sprintf("-- The number of entries in labels do not match: %d | %d", len(o.Labels), len(obj2.Labels))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The number of entries in Labels match: %d | %d", len(obj1.Labels), len(obj2.Labels))
+		str := fmt.Sprintf("++ The number of entries in labels match: %d | %d", len(o.Labels), len(obj2.Labels))
 		resultDetails = append(resultDetails, str)
 
 		// If lengths are the same, then check each value
-		for index := range obj1.Labels {
-			if obj1.Labels[index] != obj2.Labels[index] {
+		for index := range o.Labels {
+			if o.Labels[index] != obj2.Labels[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- The Label values do not match: %s | %s", obj1.Labels[index], obj2.Labels[index])
+				str := fmt.Sprintf("-- The label values do not match: %s | %s", o.Labels[index], obj2.Labels[index])
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The Label values match: %s | %s", obj1.Labels[index], obj2.Labels[index])
+				str := fmt.Sprintf("++ The label values match: %s | %s", o.Labels[index], obj2.Labels[index])
 				resultDetails = append(resultDetails, str)
 			}
 		}

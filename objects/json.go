@@ -7,7 +7,6 @@ package objects
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/freetaxii/libstix2/objects/properties"
 )
@@ -20,7 +19,7 @@ import (
 DecodeType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
-func DecodeType(data []byte) (string, error) {
+func DecodeType(data []byte) (string, int, []string) {
 	var o properties.TypeProperty
 	err := json.Unmarshal(data, &o)
 	if err != nil {
@@ -28,17 +27,19 @@ func DecodeType(data []byte) (string, error) {
 	}
 
 	// This will call the Valid function on the TypeProperty type
-	if valid, err := o.Valid(); valid != true {
-		return "", fmt.Errorf("invalid STIX object: %s", err)
+	if valid, problems, details := o.Valid(); valid != true {
+		return "", problems, details
 	}
 
-	return o.ObjectType, nil
+	return o.ObjectType, 0, nil
 }
 
 /* Decode - This function is a simple wrapper for decoding JSON data. It will
 decode a slice of bytes into an actual struct and return a pointer to that
 object along with any errors. */
-func Decode(data []byte) (*CommonObjectProperties, error) {
+func Decode(data []byte) (*CommonObjectProperties, int, []string) {
+
+	// This is called from the Bundle Decoder
 	var o CommonObjectProperties
 
 	err := json.Unmarshal(data, o)
@@ -46,13 +47,13 @@ func Decode(data []byte) (*CommonObjectProperties, error) {
 		return nil, err
 	}
 
-	if valid, err := o.Valid(); valid != true {
-		return nil, err
+	if valid, problems, details := o.Valid(); valid != true {
+		return nil, problems, details
 	}
 
 	o.SetRawData(data)
 
-	return &o, nil
+	return &o, 0, nil
 }
 
 // ----------------------------------------------------------------------

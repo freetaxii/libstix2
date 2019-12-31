@@ -5,8 +5,6 @@
 
 package objects
 
-import "github.com/freetaxii/libstix2/objects/properties"
-
 /*
 Compare - This method will compare the common properties from two objects to
 make sure they are the same. The common properties receiver is object 1 and the
@@ -27,57 +25,62 @@ func Compare(obj1, obj2 *CommonObjectProperties) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check Type Value
-	_, pTypes, dTypes := properties.CompareTypeProperties(&obj1.TypeProperty, &obj2.TypeProperty)
+	_, pTypes, dTypes := obj1.TypeProperty.Compare(&obj2.TypeProperty)
 	problemsFound += pTypes
 	resultDetails = append(resultDetails, dTypes...)
 
 	// Check Spec Version Value
-	_, pSpecVersions, dSpecVersions := properties.CompareSpecVersionProperties(&obj1.SpecVersionProperty, &obj2.SpecVersionProperty)
+	_, pSpecVersions, dSpecVersions := obj1.SpecVersionProperty.Compare(&obj2.SpecVersionProperty)
 	problemsFound += pSpecVersions
 	resultDetails = append(resultDetails, dSpecVersions...)
 
 	// Check ID Value
-	_, pIDs, dIDs := properties.CompareIDProperties(&obj1.IDProperty, &obj2.IDProperty)
+	_, pIDs, dIDs := obj1.IDProperty.Compare(&obj2.IDProperty)
 	problemsFound += pIDs
 	resultDetails = append(resultDetails, dIDs...)
 
 	// Check Created By Ref Value
-	_, pCreatedByRefs, dCreatedByRefs := properties.CompareCreatedByRefProperties(&obj1.CreatedByRefProperty, &obj2.CreatedByRefProperty)
+	_, pCreatedByRefs, dCreatedByRefs := obj1.CreatedByRefProperty.Compare(&obj2.CreatedByRefProperty)
 	problemsFound += pCreatedByRefs
 	resultDetails = append(resultDetails, dCreatedByRefs...)
 
-	// Check Created and Modified Values
-	_, pCreatedModified, dCreatedModified := properties.CompareCreatedModifiedProperties(&obj1.CreatedModifiedProperty, &obj2.CreatedModifiedProperty)
-	problemsFound += pCreatedModified
-	resultDetails = append(resultDetails, dCreatedModified...)
+	// Check Created Values
+	_, pCreated, dCreated := obj1.CreatedProperty.Compare(&obj2.CreatedProperty)
+	problemsFound += pCreated
+	resultDetails = append(resultDetails, dCreated...)
+
+	// Check Modified Values
+	_, pModified, dModified := obj1.ModifiedProperty.Compare(&obj2.ModifiedProperty)
+	problemsFound += pModified
+	resultDetails = append(resultDetails, dModified...)
 
 	// Check Revoked Value
-	_, pRevoked, dRevoked := properties.CompareRevokedProperties(&obj1.RevokedProperty, &obj2.RevokedProperty)
+	_, pRevoked, dRevoked := obj1.RevokedProperty.Compare(&obj2.RevokedProperty)
 	problemsFound += pRevoked
 	resultDetails = append(resultDetails, dRevoked...)
 
 	// Check Labels Values
-	_, pLabels, dLabels := properties.CompareLabelsProperties(&obj1.LabelsProperty, &obj2.LabelsProperty)
+	_, pLabels, dLabels := obj1.LabelsProperty.Compare(&obj2.LabelsProperty)
 	problemsFound += pLabels
 	resultDetails = append(resultDetails, dLabels...)
 
 	// Check Confidence Value
-	_, pConfidences, dConfidences := properties.CompareConfidenceProperties(&obj1.ConfidenceProperty, &obj2.ConfidenceProperty)
+	_, pConfidences, dConfidences := obj1.ConfidenceProperty.Compare(&obj2.ConfidenceProperty)
 	problemsFound += pConfidences
 	resultDetails = append(resultDetails, dConfidences...)
 
 	// Check Lang Value
-	_, pLangs, dLangs := properties.CompareLangProperties(&obj1.LangProperty, &obj2.LangProperty)
+	_, pLangs, dLangs := obj1.LangProperty.Compare(&obj2.LangProperty)
 	problemsFound += pLangs
 	resultDetails = append(resultDetails, dLangs...)
 
 	// Check External References
-	_, pExternalRefereces, dExternalRefereces := properties.CompareExternalReferencesProperties(&obj1.ExternalReferencesProperty, &obj2.ExternalReferencesProperty)
+	_, pExternalRefereces, dExternalRefereces := obj1.ExternalReferencesProperty.Compare(&obj2.ExternalReferencesProperty)
 	problemsFound += pExternalRefereces
 	resultDetails = append(resultDetails, dExternalRefereces...)
 
 	// Check Object Marking Refs and Granular Markings
-	_, pMarkings, dMarkings := properties.CompareMarkingProperties(&obj1.MarkingProperties, &obj2.MarkingProperties)
+	_, pMarkings, dMarkings := obj1.MarkingProperties.Compare(&obj2.MarkingProperties)
 	problemsFound += pMarkings
 	resultDetails = append(resultDetails, dMarkings...)
 

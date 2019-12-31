@@ -8,23 +8,19 @@ package properties
 import "github.com/freetaxii/libstix2/resources/helpers"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-ResolvesToRefsProperty -
-*/
+/* ResolvesToRefsProperty - */
 type ResolvesToRefsProperty struct {
 	ResolvesToRefs []string `json:"resolves_to_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ResolvesToRefsProperty
+// Public Methods - ResolvesToRefsProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-AddResolvesToRefs -
-*/
+/* AddResolvesToRefs - */
 func (o *ResolvesToRefsProperty) AddResolvesToRefs(ids []string) error {
 	arr, err := helpers.AddToList(o.ResolvesToRefs, ids)
 
@@ -37,7 +33,7 @@ func (o *ResolvesToRefsProperty) AddResolvesToRefs(ids []string) error {
 	return nil
 }
 
-// AddResolvesToRef -
+/* AddResolvesToRef - */
 func (o *ResolvesToRefsProperty) AddResolvesToRef(id string) error {
 	o.ResolvesToRefs = append(o.ResolvesToRefs, id)
 

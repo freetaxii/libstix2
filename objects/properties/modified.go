@@ -77,7 +77,7 @@ func (o *ModifiedProperty) VerifyPresent() (bool, int, []string) {
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
 bad. */
-func (o *ModifiedProperty) Compare(obj2 *CreatedModifiedProperty) (bool, int, []string) {
+func (o *ModifiedProperty) Compare(obj2 *ModifiedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 

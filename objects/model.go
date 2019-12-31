@@ -17,7 +17,8 @@ type CommonObjectProperties struct {
 	properties.SpecVersionProperty
 	properties.IDProperty
 	properties.CreatedByRefProperty
-	properties.CreatedModifiedProperty
+	properties.CreatedProperty
+	properties.ModifiedProperty
 	properties.RevokedProperty
 	properties.LabelsProperty
 	properties.ConfidenceProperty

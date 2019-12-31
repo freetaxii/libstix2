@@ -8,56 +8,50 @@ package properties
 import "fmt"
 
 // ----------------------------------------------------------------------
-// Types
+// Define Types
 // ----------------------------------------------------------------------
 
-/*
-RevokedProperty - A property used by one or more STIX objects that
-captures whether or not this STIX object has been revoked by the object
-// creator.
-*/
+/* RevokedProperty - A property used by one or more STIX objects that captures
+whether or not this STIX object has been revoked by the object creator. */
 type RevokedProperty struct {
 	Revoked bool `json:"revoked,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - RevokedProperty
+// Public Methods - RevokedProperty - Setters
 // ----------------------------------------------------------------------
 
-/*
-SetRevoked - This method sets the revoked boolean to true
-*/
+/* SetRevoked - This method sets the revoked boolean to true */
 func (o *RevokedProperty) SetRevoked() error {
 	o.Revoked = true
 	return nil
 }
 
-/*
-GetRevoked - This method returns the current value of the revoked property.
-*/
+/* GetRevoked - This method returns the current value of the revoked property.
+ */
 func (o *RevokedProperty) GetRevoked() bool {
 	return o.Revoked
 }
 
 // ----------------------------------------------------------------------
-// Public Functions - RevokedProperty
+// Public Methods - RevokedProperty - Checks
 // ----------------------------------------------------------------------
 
-/* CompareRevokedProperties - This function will compare two properties to make
-sure they are the same and will return a boolean, an integer that tracks the
-number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
-func CompareRevokedProperties(obj1, obj2 *RevokedProperty) (bool, int, []string) {
+/* Compare - This method will compare two properties to make sure they are the
+same and will return a boolean, an integer that tracks the number of problems
+found, and a slice of strings that contain the detailed results, whether good or
+bad. */
+func (o *RevokedProperty) Compare(obj2 *RevokedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check Revoked Value
-	if obj1.Revoked != obj2.Revoked {
+	if o.Revoked != obj2.Revoked {
 		problemsFound++
-		str := fmt.Sprintf("-- The Revoked values do not match: %t | %t", obj1.Revoked, obj2.Revoked)
+		str := fmt.Sprintf("-- The revoked values do not match: %t | %t", o.Revoked, obj2.Revoked)
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The Revoked values match: %t | %t", obj1.Revoked, obj2.Revoked)
+		str := fmt.Sprintf("++ The revoked values match: %t | %t", o.Revoked, obj2.Revoked)
 		resultDetails = append(resultDetails, str)
 	}
 

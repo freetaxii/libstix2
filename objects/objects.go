@@ -18,8 +18,6 @@ considered a STIX Object.
 type STIXObject interface {
 	GetObjectType() string
 	GetID() string
-	Valid() (bool, error)
-	SetRawData([]byte) error
 	GetCommonProperties() *CommonObjectProperties
 }
 
@@ -57,9 +55,9 @@ func ValidType(t string) bool {
 	return false
 }
 
-/* InitObject - This method will initialize the object by setting all of the
-basic properties and is called by the New() function on each object. */
-func (o *CommonObjectProperties) InitObject(stixType string) error {
+/* InitSTIXDomainObject - This method will initialize the object by setting all
+of the basic properties and is called by the New() function on each object. */
+func (o *CommonObjectProperties) InitSTIXDomainObject(stixType string) error {
 	if defs.STRICT_TYPES {
 		if valid := ValidType(stixType); valid != true {
 			return fmt.Errorf("invalid object type for InitObject with strict checks enabled")
@@ -70,7 +68,7 @@ func (o *CommonObjectProperties) InitObject(stixType string) error {
 	o.SetObjectType(stixType)
 	o.SetNewID(stixType)
 	o.SetCreatedToCurrentTime()
-	o.SetModifiedToCreated()
+	o.SetModified(o.GetCreated())
 	return nil
 }
 
@@ -80,29 +78,4 @@ of this object.
 */
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
-}
-
-/*
-Valid - This method will ensure that all of the required properties are
-populated and try to ensure all of values are valid.
-*/
-func (o *CommonObjectProperties) Valid() (bool, error) {
-
-	if valid, err := o.TypeProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	if valid, err := o.SpecVersionProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	if valid, err := o.IDProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	if valid, err := o.CreatedModifiedProperty.Valid(); valid != true {
-		return valid, err
-	}
-
-	return true, nil
 }
