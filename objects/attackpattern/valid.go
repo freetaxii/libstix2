@@ -5,6 +5,8 @@
 
 package attackpattern
 
+import "fmt"
+
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -45,7 +47,7 @@ func (o *AttackPattern) validSpecificProperties() (bool, int, []string) {
 
 	if o.Name == "" {
 		problemsFound++
-		str := fmtSprintf("-- The Name property is required on Attack Pattern but is missing")
+		str := fmt.Sprintf("-- The Name property is required on Attack Pattern but is missing")
 		resultDetails = append(resultDetails, str)
 	}
 

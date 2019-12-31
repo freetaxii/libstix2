@@ -5,11 +5,6 @@
 
 package attackpattern
 
-import (
-	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
-)
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -19,7 +14,39 @@ same. The receiver is object 1 and the object passed in is object 2. This method
 will return a boolean, an integer that tracks the number of problems found, and
 a slice of strings that contain the detailed results, whether good or bad. */
 func (o *AttackPattern) Compare(obj2 *AttackPattern) (bool, int, []string) {
-	return Compare(o, obj2)
+	problemsFound := 0
+	resultDetails := make([]string, 0)
+
+	// Check common properties
+	_, pBase, dBase := o.CommonObjectProperties.Compare(&obj2.CommonObjectProperties)
+	problemsFound += pBase
+	resultDetails = append(resultDetails, dBase...)
+
+	// Check Name Property
+	_, pNames, dNames := o.NameProperty.Compare(&obj2.NameProperty)
+	problemsFound += pNames
+	resultDetails = append(resultDetails, dNames...)
+
+	// Check Description Property
+	_, pDescriptions, dDescriptions := o.DescriptionProperty.Compare(&obj2.DescriptionProperty)
+	problemsFound += pDescriptions
+	resultDetails = append(resultDetails, dDescriptions...)
+
+	// Check Aliases Property
+	_, pAliases, dAliases := o.AliasesProperty.Compare(&obj2.AliasesProperty)
+	problemsFound += pAliases
+	resultDetails = append(resultDetails, dAliases...)
+
+	// Check KillChainPhases Property
+	_, pKillChainPhases, dKillChainPhases := o.KillChainPhasesProperty.Compare(&obj2.KillChainPhasesProperty)
+	problemsFound += pKillChainPhases
+	resultDetails = append(resultDetails, dKillChainPhases...)
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }
 
 // ----------------------------------------------------------------------
@@ -31,37 +58,5 @@ same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
 bad. */
 func Compare(obj1, obj2 *AttackPattern) (bool, int, []string) {
-	problemsFound := 0
-	resultDetails := make([]string, 0)
-
-	// Check common properties
-	_, pBase, dBase := objects.Compare(&obj1.CommonObjectProperties, &obj2.CommonObjectProperties)
-	problemsFound += pBase
-	resultDetails = append(resultDetails, dBase...)
-
-	// Check Name Property
-	_, pNames, dNames := properties.CompareNameProperties(&obj1.NameProperty, &obj2.NameProperty)
-	problemsFound += pNames
-	resultDetails = append(resultDetails, dNames...)
-
-	// Check Description Property
-	_, pDescriptions, dDescriptions := properties.CompareDescriptionProperties(&obj1.DescriptionProperty, &obj2.DescriptionProperty)
-	problemsFound += pDescriptions
-	resultDetails = append(resultDetails, dDescriptions...)
-
-	// Check Aliases Property
-	_, pAliases, dAliases := properties.CompareAliasesProperties(&obj1.AliasesProperty, &obj2.AliasesProperty)
-	problemsFound += pAliases
-	resultDetails = append(resultDetails, dAliases...)
-
-	// Check KillChainPhases Property
-	_, pKillChainPhases, dKillChainPhases := properties.CompareKillChainPhases(&obj1.KillChainPhasesProperty, &obj2.KillChainPhasesProperty)
-	problemsFound += pKillChainPhases
-	resultDetails = append(resultDetails, dKillChainPhases...)
-
-	if problemsFound > 0 {
-		return false, problemsFound, resultDetails
-	}
-
-	return true, 0, resultDetails
+	return obj1.Compare(obj2)
 }

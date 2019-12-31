@@ -66,7 +66,7 @@ func (o *CommonObjectProperties) InitSTIXDomainObject(stixType string) error {
 	// TODO make sure that the value coming in is a valid STIX object type
 	o.SetSpecVersion(defs.STIX_VERSION)
 	o.SetObjectType(stixType)
-	o.SetNewID(stixType)
+	o.SetNewSTIXID(stixType)
 	o.SetCreatedToCurrentTime()
 	o.SetModified(o.GetCreated())
 	return nil

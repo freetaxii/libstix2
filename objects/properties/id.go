@@ -74,11 +74,11 @@ func (o *IDProperty) GetID() string {
 // Public Methods - IDProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyPresent - This method will verify that the ID property on an object is
-present. It will return a boolean, an integer that tracks the number of problems
-found, and a slice of strings that contain the detailed results, whether good or
-bad. */
-func (o *IDProperty) VerifyPresent() (bool, int, []string) {
+/* VerifyExists - This method will verify that the id property on an object is
+present if required. It will return a boolean, an integer that tracks the number
+of problems found, and a slice of strings that contain the detailed results,
+whether good or bad. */
+func (o *IDProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
 

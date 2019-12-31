@@ -5,7 +5,9 @@
 
 package attackpattern
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // ----------------------------------------------------------------------
 // Public Functions - JSON Decoder
@@ -19,10 +21,6 @@ func Decode(data []byte) (*AttackPattern, error) {
 
 	err := json.Unmarshal(data, o)
 	if err != nil {
-		return nil, err
-	}
-
-	if valid, err := o.Valid(); valid != true {
 		return nil, err
 	}
 
@@ -49,7 +47,7 @@ func (o *AttackPattern) Encode() ([]byte, error) {
 /* EncodeToString - This method is a simple wrapper for encoding an object into
 JSON */
 func (o *AttackPattern) EncodeToString() (string, error) {
-	data, err := Encode(o)
+	data, err := o.Encode()
 	if err != nil {
 		return "", err
 	}

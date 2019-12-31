@@ -26,7 +26,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	data1, _ := attackpattern.EncodeToString(o1)
+	data1, _ := o1.EncodeToString()
 	fmt.Println(data1)
 
 }

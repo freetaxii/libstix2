@@ -55,11 +55,11 @@ func (o *ModifiedProperty) GetModified() string {
 // Public Methods - ModifiedProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyPresent - This method will verify that the created and modified
-properties on an object is present. It will return a boolean, an integer that
-tracks the number of problems found, and a slice of strings that contain the
-detailed results, whether good or bad. */
-func (o *ModifiedProperty) VerifyPresent() (bool, int, []string) {
+/* VerifyExists - This method will verify that the modified property on an object
+is present if required. It will return a boolean, an integer that tracks the
+number of problems found, and a slice of strings that contain the detailed
+results, whether good or bad. */
+func (o *ModifiedProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
 
