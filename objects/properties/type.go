@@ -47,7 +47,7 @@ func (o *TypeProperty) VerifyPresent() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
 
-	if o.TypeProperty == "" {
+	if o.ObjectType == "" {
 		problemsFound++
 		resultDetails[0] = fmt.Sprintf("-- The type property is required but missing")
 		return false, problemsFound, resultDetails
