@@ -18,7 +18,9 @@ import (
 
 /* DecodeType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
-*/
+This is called from the Bundle Decode() to determine which type of STIX object
+the data represents, so that the data can be dispatched to the right object
+decoder. */
 func DecodeType(data []byte) (string, error) {
 	var o properties.TypeProperty
 	err := json.Unmarshal(data, &o)
@@ -36,7 +38,9 @@ func DecodeType(data []byte) (string, error) {
 
 /* Decode - This function is a simple wrapper for decoding JSON data. It will
 decode a slice of bytes into an actual struct and return a pointer to that
-object along with any errors. */
+object along with any errors. This is called from the Bundle Decode() if the
+object type can not be determined. So for custom objects, it will at least
+decode any of the common object properties that might be found.*/
 func Decode(data []byte) (*CommonObjectProperties, error) {
 	var o CommonObjectProperties
 

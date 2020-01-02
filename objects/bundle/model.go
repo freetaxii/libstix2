@@ -35,11 +35,9 @@ type bundleRawDecode struct {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Bundle object and return it as
-a pointer. This function can not use the InitNewObject() function as a Bundle
-does not have all of the fields that are common to a standard object.
-*/
+/* New - This function will create a new STIX Bundle object and return it as a
+pointer. This function can not use the InitNewObject() function as a Bundle does
+not have all of the fields that are common to a standard object. */
 func New() *Bundle {
 	var obj Bundle
 	obj.InitBundle()

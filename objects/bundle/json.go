@@ -182,39 +182,29 @@ func Decode(r io.Reader) (*Bundle, []error) {
 }
 
 // ----------------------------------------------------------------------
-// Public Functions / Methods - JSON Encoders
+// Public Methods JSON Encoders
+// The encoding is done here at the individual object level instead of at
+// the STIX Object level so that individual pre/post processing rules can
+// be applied. Since some of the STIX Objects do not follow a universal
+// model, we need to cleanup some things that were inherited but not valid
+// for the object.
 // ----------------------------------------------------------------------
 
-/*
-Encode - This function is a simple wrapper for encoding an object into JSON
-*/
-func Encode(o *Bundle) ([]byte, error) {
-	return o.Encode()
-}
-
-/*
-Encode - This method is a simple wrapper for encoding an object in to JSON
-*/
+/* Encode - This method is a simple wrapper for encoding an object into JSON */
 func (o *Bundle) Encode() ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
 	}
+
+	// Any needed preprocessing would be done here
 	return data, nil
 }
 
-/*
-EncodeToString - This function is a simple wrapper for encoding an object into JSON
-*/
-func EncodeToString(o *Bundle) (string, error) {
-	return o.EncodeToString()
-}
-
-/*
-EncodeToString - This method is a simple wrapper for encoding an object in to JSON
-*/
+/* EncodeToString - This method is a simple wrapper for encoding an object into
+JSON */
 func (o *Bundle) EncodeToString() (string, error) {
-	data, err := json.MarshalIndent(o, "", "    ")
+	data, err := o.Encode()
 	if err != nil {
 		return "", err
 	}
