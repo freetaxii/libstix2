@@ -5,7 +5,9 @@
 
 package indicator
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // ----------------------------------------------------------------------
 // Public Functions - JSON Decoder
@@ -17,12 +19,8 @@ object along with any errors. */
 func Decode(data []byte) (*Indicator, error) {
 	var o Indicator
 
-	err := json.Unmarshal(data, o)
+	err := json.Unmarshal(data, &o)
 	if err != nil {
-		return nil, err
-	}
-
-	if valid, err := o.Valid(); valid != true {
 		return nil, err
 	}
 
@@ -33,26 +31,15 @@ func Decode(data []byte) (*Indicator, error) {
 
 // ----------------------------------------------------------------------
 // Public Methods JSON Encoders
+// The encoding is done here at the individual object level instead of at
+// the STIX Object level so that individual pre/post processing rules can
+// be applied. Since some of the STIX Objects do not follow a universal
+// model, we need to cleanup some things that were inherited but not valid
+// for the object.
 // ----------------------------------------------------------------------
 
 /* Encode - This method is a simple wrapper for encoding an object into JSON */
 func (o *Indicator) Encode() ([]byte, error) {
-	return Encode(o)
-}
-
-/* EncodeToString - This method is a simple wrapper for encoding an object into
-JSON */
-func (o *Indicator) EncodeToString() (string, error) {
-	return EncodeToString(o)
-}
-
-// ----------------------------------------------------------------------
-// Public Functions JSON Encoders
-// ----------------------------------------------------------------------
-
-/* Encode - This function is a simple wrapper for encoding an object into JSON
- */
-func Encode(o *Indicator) ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
 		return nil, err
@@ -62,10 +49,10 @@ func Encode(o *Indicator) ([]byte, error) {
 	return data, nil
 }
 
-/* EncodeToString - This function is a simple wrapper for encoding an object
-into JSON */
-func EncodeToString(o *Indicator) (string, error) {
-	data, err := Encode(o)
+/* EncodeToString - This method is a simple wrapper for encoding an object into
+JSON */
+func (o *Indicator) EncodeToString() (string, error) {
+	data, err := o.Encode()
 	if err != nil {
 		return "", err
 	}

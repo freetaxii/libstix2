@@ -6,7 +6,7 @@
 package indicator
 
 import (
-	"errors"
+	"fmt"
 	"time"
 
 	"github.com/freetaxii/libstix2/timestamp"
@@ -16,97 +16,84 @@ import (
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* Valid - This method will verify and test all of the properties on the object
-to make sure they are valid per the specification. */
-func (o *Indicator) Valid() (bool, error) {
+/* Valid - This method will verify and test all of the properties on an object
+to make sure they are valid per the specification. It will return a boolean, an
+integer that tracks the number of problems found, and a slice of strings that
+contain the detailed results, whether good or bad. */
+func (o *Indicator) Valid() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
-		return false, err
-	}
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
+	problemsFound += pBase
+	resultDetails = append(resultDetails, dBase...)
 
-	// Check Indicator Specific Properties
-	if valid, err := o.validIndicatorType(); valid == false {
-		return valid, err
-	}
-
-	if valid, err := o.validPattern(); valid == false {
-		return valid, err
-	}
-
-	if valid, err := o.validPatternType(); valid == false {
-		return valid, err
-	}
-
-	if valid, err := o.validValidFrom(); valid == false {
-		return valid, err
-	}
-
-	if valid, err := o.validValidUntil(); valid == false {
-		return valid, err
-	}
-
-	return true, nil
-}
-
-// ----------------------------------------------------------------------
-// Private Methods
-// ----------------------------------------------------------------------
-
-func (o *Indicator) validIndicatorType() (bool, error) {
 	if len(o.IndicatorTypes) == 0 {
-		return false, errors.New("the indicator types property is required, but missing")
+		problemsFound++
+		str := fmt.Sprintf("-- The indicator types property is required but missing")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The indicator types property is required and is present")
+		resultDetails = append(resultDetails, str)
 	}
-	return true, nil
-}
 
-// First check to see if present and then see if it is valid
-func (o *Indicator) validPattern() (bool, error) {
 	if o.Pattern == "" {
-		return false, errors.New("the pattern property is required, but missing")
-	} //else {
-	// TODO verify the pattern is correct
-	//}
-	return true, nil
-}
+		problemsFound++
+		str := fmt.Sprintf("-- The pattern property is required but missing")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The pattern property is required and is present")
+		resultDetails = append(resultDetails, str)
+	}
 
-// First check to see if present and then see if it is valid
-func (o *Indicator) validPatternType() (bool, error) {
+	// TODO, check value to see if it comes from open vocabulary
 	if o.PatternType == "" {
-		return false, errors.New("the pattern_type property is required, but missing")
+		problemsFound++
+		str := fmt.Sprintf("-- The pattern type property is required but missing")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The pattern type property is required and is present")
+		resultDetails = append(resultDetails, str)
 	}
-	if o.PatternType != "stix" && o.PatternType != "snort" && o.PatternType != "yara" {
-		return false, errors.New("pattern_type contains a value other than stix, snort, or yara")
-	}
-	return true, nil
-}
 
-// First check to see if present and then see if it is valid
-func (o *Indicator) validValidFrom() (bool, error) {
 	if o.ValidFrom == "" {
-		return false, errors.New("the valid_from property is required, but missing")
+		problemsFound++
+		str := fmt.Sprintf("-- The valid from property is required but missing")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The valid from property is required and is present")
+		resultDetails = append(resultDetails, str)
 	}
+
 	if valid := timestamp.Valid(o.ValidFrom); valid == false {
-		return false, errors.New("the valid_from property does not contain a valid STIX timestamp")
-
+		problemsFound++
+		str := fmt.Sprintf("-- the valid from property does not contain a valid STIX timestamp")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ the valid from property does contain a valid STIX timestamp")
+		resultDetails = append(resultDetails, str)
 	}
-	return true, nil
-}
 
-// If the value_until property is populated, we need to check it. First lets
-// see if it is in a valid format and then see if it is newer than the
-// timestamp in the valid_from property.
-func (o *Indicator) validValidUntil() (bool, error) {
-	if o.ValidUntil != "" {
-		// Valid From must be present if Valid Until is present
-		if valid := timestamp.Valid(o.ValidFrom); valid != true {
-			return false, errors.New("the valid_from property does not contain a valid STIX timestamp")
-		}
-		validFrom, _ := time.Parse(time.RFC3339, o.ValidFrom)
-		validUntil, _ := time.Parse(time.RFC3339, o.ValidUntil)
-		if yes := validUntil.After(validFrom); yes != true {
-			return false, errors.New("the valid_until timestamp is not later than the valid_from timestamp")
-		}
+	if valid := timestamp.Valid(o.ValidUntil); valid == false {
+		problemsFound++
+		str := fmt.Sprintf("-- the valid until property does not contain a valid STIX timestamp")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ the valid until property does contain a valid STIX timestamp")
+		resultDetails = append(resultDetails, str)
 	}
-	return true, nil
+
+	validFrom, _ := time.Parse(time.RFC3339, o.ValidFrom)
+	validUntil, _ := time.Parse(time.RFC3339, o.ValidUntil)
+	if yes := validUntil.After(validFrom); yes != true {
+		problemsFound++
+		str := fmt.Sprintf("-- the valid until timestamp is not later than the valid from timestamp")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ the valid until timestamp is later than the valid from timestamp")
+		resultDetails = append(resultDetails, str)
+	}
+
+	return true, 0, resultDetails
 }

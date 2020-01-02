@@ -40,6 +40,6 @@ a pointer. It will also initialize the object by setting all of the basic
 properties. */
 func New() *Indicator {
 	var obj Indicator
-	obj.InitObject("indicator")
+	obj.InitSDO("indicator")
 	return &obj
 }

@@ -35,10 +35,10 @@ func (o *Grouping) Valid() (bool, int, []string) {
 
 	if len(o.ObjectRefs) == 0 {
 		problemsFound++
-		str := fmt.Sprintf("-- The object_refs property is required but missing")
+		str := fmt.Sprintf("-- The object refs property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The object_refs property is required and is present")
+		str := fmt.Sprintf("++ The object refs property is required and is present")
 		resultDetails = append(resultDetails, str)
 	}
 
