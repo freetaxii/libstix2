@@ -5,38 +5,25 @@
 
 package objects
 
-import (
-	"fmt"
-
-	"github.com/freetaxii/libstix2/defs"
-)
-
-/*
-STIXObject - This interface defines what methods an object must have to be
-considered a STIX Object.
-*/
-type STIXObject interface {
-	GetObjectType() string
-	GetID() string
-	GetCommonProperties() *CommonObjectProperties
-}
-
-/*
-ValidType - This function will take in a STIX Object Type and return true if
-the string represents an actual STIX object type. This is used for determining
-if input from an outside source is actually a defined STIX object or not.
-*/
-func ValidType(t string) bool {
+/* ValidObjectType - This function will take in a STIX object type and return
+true if the string represents an actual STIX object type. This is used for
+determining if input from an outside source is actually a defined STIX object or
+not. */
+func ValidObjectType(t string) bool {
 
 	var m = map[string]int{
 		"attack-pattern":     1,
 		"campaign":           1,
 		"course-of-action":   1,
+		"grouping":           1,
 		"identity":           1,
 		"indicator":          1,
+		"infrastructure":     1,
 		"intrusion-set":      1,
+		"language-content":   1,
 		"location":           1,
 		"malware":            1,
+		"malware-analysis":   1,
 		"marking-definition": 1,
 		"note":               1,
 		"observed-data":      1,
@@ -53,23 +40,6 @@ func ValidType(t string) bool {
 		return true
 	}
 	return false
-}
-
-/* InitSTIXDomainObject - This method will initialize the object by setting all
-of the basic properties and is called by the New() function on each object. */
-func (o *CommonObjectProperties) InitSTIXDomainObject(stixType string) error {
-	if defs.STRICT_TYPES {
-		if valid := ValidType(stixType); valid != true {
-			return fmt.Errorf("invalid object type for InitObject with strict checks enabled")
-		}
-	}
-	// TODO make sure that the value coming in is a valid STIX object type
-	o.SetSpecVersion(defs.STIX_VERSION)
-	o.SetObjectType(stixType)
-	o.SetNewSTIXID(stixType)
-	o.SetCreatedToCurrentTime()
-	o.SetModified(o.GetCreated())
-	return nil
 }
 
 /*

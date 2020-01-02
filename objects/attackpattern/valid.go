@@ -5,8 +5,6 @@
 
 package attackpattern
 
-import "fmt"
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -20,36 +18,14 @@ func (o *AttackPattern) Valid() (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.Valid()
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	// Check attack pattern specific properties
-	_, pSpecific, dSpecific := o.validSpecificProperties()
-	problemsFound += pSpecific
-	resultDetails = append(resultDetails, dSpecific...)
-
-	if problemsFound > 0 {
-		return false, problemsFound, resultDetails
-	}
-
-	return true, 0, resultDetails
-}
-
-// ----------------------------------------------------------------------
-// Private Methods
-// ----------------------------------------------------------------------
-
-// TODO This needs to be moved to the name property
-func (o *AttackPattern) validSpecificProperties() (bool, int, []string) {
-	problemsFound := 0
-	resultDetails := make([]string, 0)
-
-	if o.Name == "" {
-		problemsFound++
-		str := fmt.Sprintf("-- The Name property is required on Attack Pattern but is missing")
-		resultDetails = append(resultDetails, str)
-	}
+	// Verify object Name property is present
+	_, pName, dName := o.NameProperty.VerifyExists()
+	problemsFound += pName
+	resultDetails = append(resultDetails, dName...)
 
 	if problemsFound > 0 {
 		return false, problemsFound, resultDetails

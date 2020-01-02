@@ -35,6 +35,6 @@ it as a pointer. It will also initialize the object by setting all of the basic
 properties. */
 func New() *AttackPattern {
 	var obj AttackPattern
-	obj.InitSTIXDomainObject("attack-pattern")
+	obj.InitSDO("attack-pattern")
 	return &obj
 }

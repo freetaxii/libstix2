@@ -37,11 +37,11 @@ func (o *NameProperty) GetName() string {
 // Public Functions - NameProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyPresent - This method will verify that the name property on an object
+/* VerifyExists - This method will verify that the name property on an object
 is present. It will return a boolean, an integer that tracks the number of
 problems found, and a slice of strings that contain the detailed results,
 whether good or bad. */
-func (o *NameProperty) VerifyPresent() (bool, int, []string) {
+func (o *NameProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
 

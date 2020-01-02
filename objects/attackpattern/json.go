@@ -19,7 +19,7 @@ object along with any errors. */
 func Decode(data []byte) (*AttackPattern, error) {
 	var o AttackPattern
 
-	err := json.Unmarshal(data, o)
+	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return nil, err
 	}
@@ -31,6 +31,11 @@ func Decode(data []byte) (*AttackPattern, error) {
 
 // ----------------------------------------------------------------------
 // Public Methods JSON Encoders
+// The encoding is done here at the individual object level instead of at
+// the STIX Object level so that individual pre/post processing rules can
+// be applied. Since some of the STIX Objects do not follow a universal
+// model, we need to cleanup some things that were inherited but not valid
+// for the object.
 // ----------------------------------------------------------------------
 
 /* Encode - This method is a simple wrapper for encoding an object into JSON */

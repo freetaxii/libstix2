@@ -16,8 +16,7 @@ import (
 // Public Functions - JSON Decoders
 // ----------------------------------------------------------------------
 
-/*
-DecodeType - This function will take in a slice of bytes representing a
+/* DecodeType - This function will take in a slice of bytes representing a
 random STIX object encoded as JSON and return the STIX object type as a string.
 */
 func DecodeType(data []byte) (string, error) {
@@ -50,30 +49,3 @@ func Decode(data []byte) (*CommonObjectProperties, error) {
 
 	return &o, nil
 }
-
-// ----------------------------------------------------------------------
-// Public Functions / Methods - JSON Encoders
-// ----------------------------------------------------------------------
-
-/*
-Encode - This function is a simple wrapper for encoding an object in to JSON
-*/
-// func Encode(o STIXObject) ([]byte, error) {
-// 	data, err := json.MarshalIndent(o, "", "    ")
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return data, nil
-// }
-
-/*
-EncodeToString - This function is a simple wrapper for encoding an object in
-to JSON
-*/
-// func EncodeToString(o STIXObject) (string, error) {
-// 	data, err := json.MarshalIndent(o, "", "    ")
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return string(data), nil
-// }

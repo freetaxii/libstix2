@@ -20,14 +20,14 @@ properties and methods needed to create and work with this object. All of the
 methods not defined local to this type are inherited from the individual
 properties. */
 type Bundle struct {
-	objects.CommonBundleProperties
+	objects.CommonObjectProperties
 	Objects []objects.STIXObject `json:"objects,omitempty"`
 }
 
 /* bundleRawDecode - This type is used for decoding a STIX bundle since the
 Objects property needs special handling. */
 type bundleRawDecode struct {
-	objects.CommonBundleProperties
+	objects.CommonObjectProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
 }
 
@@ -42,7 +42,6 @@ does not have all of the fields that are common to a standard object.
 */
 func New() *Bundle {
 	var obj Bundle
-	obj.SetObjectType("bundle")
-	obj.SetNewID("bundle")
+	obj.InitBundle()
 	return &obj
 }
