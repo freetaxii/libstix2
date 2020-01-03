@@ -23,9 +23,9 @@ sighting unless you have something that has been sighted. Sighting does not make
 sense without the relationship to what was sighted.
 
 Sighting relationships relate three aspects of the sighting: What was sighted,
-such as the Indicator, Malware, Campaign, or other SDO (sighting_of_ref) Who
+such as the Indicator, Malware, Campaign, or other SDO (sighting_of_ref), Who
 sighted it and/or where it was sighted, represented as an Identity
-(where_sighted_refs) and What was actually seen on systems and networks,
+(where_sighted_refs), What was actually seen on systems and networks,
 represented as Observed Data (observed_data_refs)
 
 What was sighted is required; a sighting does not make sense unless you say what
