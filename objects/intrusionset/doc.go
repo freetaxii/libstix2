@@ -11,7 +11,7 @@ The following information comes directly from the STIX 2.1 specification.
 An Intrusion Set is a grouped set of adversarial behaviors and resources with
 common properties that is believed to be orchestrated by a single organization.
 An Intrusion Set may capture multiple Campaigns or other activities that are all
-tied together by shared attributes indicating a common known or unknown Threat
+tied together by shared attributes indicating a commonly known or unknown Threat
 Actor. New activity can be attributed to an Intrusion Set even if the Threat
 Actors behind the attack are not known. Threat Actors can move from supporting
 one Intrusion Set to supporting another, or they may support multiple Intrusion
