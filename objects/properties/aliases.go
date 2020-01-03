@@ -25,7 +25,7 @@ type AliasesProperty struct {
 // ----------------------------------------------------------------------
 
 /* AddAliases - This method takes in a string value, a comma separated list of
-string values, or a slice of string values that represents a alias and adds it
+string values, or a slice of string values that represents an alias and adds it
 to the aliases property. */
 func (o *AliasesProperty) AddAliases(values interface{}) error {
 	return resources.AddValuesToList(&o.Aliases, values)

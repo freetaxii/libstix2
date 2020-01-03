@@ -3,13 +3,9 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package grouping
+package note
 
 import "fmt"
-
-// ----------------------------------------------------------------------
-// Public Methods
-// ----------------------------------------------------------------------
 
 /* Valid - This method will verify and test all of the properties on an object
 to make sure they are valid per the specification. It will return a boolean, an
@@ -24,12 +20,12 @@ func (o *Grouping) Valid() (bool, int, []string) {
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	if o.Context == "" {
+	if o.Content == "" {
 		problemsFound++
-		str := fmt.Sprintf("-- The context property is required but missing")
+		str := fmt.Sprintf("-- The content property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The context property is required and is present")
+		str := fmt.Sprintf("++ The content property is required and is present")
 		resultDetails = append(resultDetails, str)
 	}
 

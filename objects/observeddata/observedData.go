@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 
 	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/properties"
 	"github.com/freetaxii/libstix2/timestamp"
 )
 
@@ -26,6 +27,7 @@ type ObservedData struct {
 	LastObserved   string `json:"last_observed,omitempty"`
 	NumberObserved int    `json:"number_observed,omitempty"`
 	Objects        string `json:"objects,omitempty"`
+	properties.ObjectRefsProperty
 }
 
 // ----------------------------------------------------------------------
