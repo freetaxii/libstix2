@@ -15,27 +15,27 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* ObjectRefsProperty - A property used by one or more STIX objects. */
-type ObjectRefsProperty struct {
-	ObjectRefs []string `json:"aliases,omitempty"`
+/* AuthorsProperty - A property used by one or more STIX objects. */
+type AuthorsProperty struct {
+	Authors []string `json:"authors,omitempty"`
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ObjectRefsProperty - Setters
+// Public Methods - AuthorsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddObjectRefs - This method takes in a string value, a comma separated list of
+/* AddAuthors - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents a alias and adds it
-to the object refs property. */
-func (o *ObjectRefsProperty) AddObjectRefs(values interface{}) error {
-	return resources.AddValuesToList(&o.ObjectRefs, values)
+to the authors property. */
+func (o *AuthorsProperty) AddAuthors(values interface{}) error {
+	return resources.AddValuesToList(&o.Authors, values)
 }
 
 // ----------------------------------------------------------------------
-// Public Methods - ObjectRefsProperty - Checks
+// Public Methods - AuthorsProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the object refs property on an
+/* VerifyExists - This method will verify that the authors property on an
 object is present. It will return a boolean, an integer that tracks the number
 of problems found, and a slice of strings that contain the detailed results,
 whether good or bad. */
@@ -43,13 +43,13 @@ func (o *NameProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
 
-	if len(o.ObjectRefs) == 0 {
+	if len(o.Authors) == 0 {
 		problemsFound++
-		resultDetails[0] = fmt.Sprintf("-- The object refs property is required but missing")
+		resultDetails[0] = fmt.Sprintf("-- The authors property is required but missing")
 		return false, problemsFound, resultDetails
 	}
 
-	resultDetails[0] = fmt.Sprintf("++ The object refs property is required and is present")
+	resultDetails[0] = fmt.Sprintf("++ The authors property is required and is present")
 	return true, problemsFound, resultDetails
 }
 
@@ -57,26 +57,26 @@ func (o *NameProperty) VerifyExists() (bool, int, []string) {
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
 bad. */
-func (o *ObjectRefsProperty) Compare(obj2 *ObjectRefsProperty) (bool, int, []string) {
+func (o *AuthorsProperty) Compare(obj2 *AuthorsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
-	if len(o.ObjectRefs) != len(obj2.ObjectRefs) {
+	if len(o.Authors) != len(obj2.Authors) {
 		problemsFound++
-		str := fmt.Sprintf("-- The number of entries in object refs do not match: %d | %d", len(o.ObjectRefs), len(obj2.ObjectRefs))
+		str := fmt.Sprintf("-- The number of entries in authors do not match: %d | %d", len(o.Authors), len(obj2.Authors))
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The number of entries in object refs match: %d | %d", len(o.ObjectRefs), len(obj2.ObjectRefs))
+		str := fmt.Sprintf("++ The number of entries in authors match: %d | %d", len(o.Authors), len(obj2.Authors))
 		resultDetails = append(resultDetails, str)
 
 		// If lengths are the same, then check each value
-		for index := range o.ObjectRefs {
-			if o.ObjectRefs[index] != obj2.ObjectRefs[index] {
+		for index := range o.Authors {
+			if o.Authors[index] != obj2.Authors[index] {
 				problemsFound++
-				str := fmt.Sprintf("-- The object ref values do not match: %s | %s", o.ObjectRefs[index], obj2.ObjectRefs[index])
+				str := fmt.Sprintf("-- The author values do not match: %s | %s", o.Authors[index], obj2.Authors[index])
 				resultDetails = append(resultDetails, str)
 			} else {
-				str := fmt.Sprintf("++ The object ref values match: %s | %s", o.ObjectRefs[index], obj2.ObjectRefs[index])
+				str := fmt.Sprintf("++ The author values match: %s | %s", o.Authors[index], obj2.Authors[index])
 				resultDetails = append(resultDetails, str)
 			}
 		}
