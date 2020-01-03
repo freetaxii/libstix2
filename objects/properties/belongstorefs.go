@@ -5,10 +5,7 @@
 
 package properties
 
-import (
-	"errors"
-	"strings"
-)
+import "github.com/freetaxii/libstix2/resources"
 
 // ----------------------------------------------------------------------
 // Define Types
@@ -26,19 +23,8 @@ type BelongsToRefsProperty struct {
 // ----------------------------------------------------------------------
 
 /* AddBelongsToRefs - This method takes in a string value, a comma separated
-list of string values, or a slice of string values that all representing an id
-of an objects that this object belongs / is related to. */
-func (o *BelongsToRefsProperty) AddBelongsToRefs(data interface{}) error {
-
-	switch data.(type) {
-	case string:
-		types := strings.Split(data.(string), ",")
-		o.BelongsToRefs = append(o.BelongsToRefs, types...)
-	case []string:
-		o.BelongsToRefs = append(o.BelongsToRefs, data.([]string)...)
-	default:
-		return errors.New("wrong data type passed in to AddBelongsToRefs()")
-	}
-
-	return nil
+list of string values, or a slice of string values that represents an id that
+this object belongs to and adds it to the belongs to refs property. */
+func (o *BelongsToRefsProperty) AddBelongsToRefs(values interface{}) error {
+	return resources.AddValuesToList(&o.BelongsToRefs, values)
 }

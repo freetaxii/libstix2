@@ -7,16 +7,17 @@ package properties
 
 import (
 	"fmt"
-	"strings"
+
+	"github.com/freetaxii/libstix2/resources"
 )
 
 // ----------------------------------------------------------------------
 // Define Types
 // ----------------------------------------------------------------------
 
-/* LabelsProperty - A property used by one or more STIX objects that captures a
-list of labels or tags for a STIX object. On some objects the labels property is
-defined as coming from an open-vocab. */
+/* LabelsProperty - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that represents a label and adds it to
+the labels property. */
 type LabelsProperty struct {
 	Labels []string `json:"labels,omitempty"`
 }
@@ -25,17 +26,11 @@ type LabelsProperty struct {
 // Public Methods - LabelsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddLabel - This method takes in a string value that represents one or more
-labels separated by a command for a STIX object and adds it to the list of
-labels in the labels property. */
-func (o *LabelsProperty) AddLabel(s string) error {
-
-	labels := strings.Split(s, ",")
-	for _, label := range labels {
-		o.Labels = append(o.Labels, label)
-	}
-
-	return nil
+/* AddLabels - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that all representing a
+label and adds it to the labels property. */
+func (o *LabelsProperty) AddLabels(values interface{}) error {
+	return resources.AddValuesToList(&o.Labels, values)
 }
 
 // ----------------------------------------------------------------------

@@ -6,9 +6,9 @@
 package properties
 
 import (
-	"errors"
 	"fmt"
-	"strings"
+
+	"github.com/freetaxii/libstix2/resources"
 )
 
 // ----------------------------------------------------------------------
@@ -25,21 +25,10 @@ type AliasesProperty struct {
 // ----------------------------------------------------------------------
 
 /* AddAliases - This method takes in a string value, a comma separated list of
-string values, or a slice of string values that all representing an alias for
-something in STIX and adds it to property. */
-func (o *AliasesProperty) AddAliases(data interface{}) error {
-
-	switch data.(type) {
-	case string:
-		types := strings.Split(data.(string), ",")
-		o.Aliases = append(o.Aliases, types...)
-	case []string:
-		o.Aliases = append(o.Aliases, data.([]string)...)
-	default:
-		return errors.New("wrong data type passed in to AddAliases()")
-	}
-
-	return nil
+string values, or a slice of string values that represents a alias and adds it
+to the aliases property. */
+func (o *AliasesProperty) AddAliases(values interface{}) error {
+	return resources.AddValuesToList(&o.Aliases, values)
 }
 
 // ----------------------------------------------------------------------

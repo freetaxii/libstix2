@@ -5,15 +5,17 @@
 
 package identity
 
+import "github.com/freetaxii/libstix2/resources"
+
 // ----------------------------------------------------------------------
 // Public Methods - Identity
 // ----------------------------------------------------------------------
 
-/* AddRole - This method takes in a string value that represents an Identity
-/* role and adds it to the identity object. */
-func (o *Identity) AddRole(s string) error {
-	o.Roles = append(o.Roles, s)
-	return nil
+/* AddRoles - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that represents a role and adds it to
+the roles property. */
+func (o *Identity) AddRoles(values interface{}) error {
+	return resources.AddValuesToList(&o.Roles, values)
 }
 
 /* SetIdentityClass - This method takes in a string value representing a STIX
@@ -24,11 +26,11 @@ func (o *Identity) SetIdentityClass(s string) error {
 	return nil
 }
 
-/* AddSector - This method takes in a string value that represents a STIX sector
-from the vocab industry-sector-ov and adds it to the identity object. */
-func (o *Identity) AddSector(s string) error {
-	o.Sectors = append(o.Sectors, s)
-	return nil
+/* AddSector - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that represents a sector and adds it
+to the sectors property. */
+func (o *Identity) AddSector(values interface{}) error {
+	return resources.AddValuesToList(&o.Sectors, values)
 }
 
 /* SetContactInformation - This method takes in a string value representing

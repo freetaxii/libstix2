@@ -5,6 +5,8 @@
 
 package properties
 
+import "github.com/freetaxii/libstix2/resources"
+
 // ----------------------------------------------------------------------
 // Define Types
 // ----------------------------------------------------------------------
@@ -19,13 +21,9 @@ type GoalsProperty struct {
 // Public Methods - GoalsType - Setters
 // ----------------------------------------------------------------------
 
-/* AddGoal - This method takes in a string value that represents a goal and adds
-it to the list of goals in the goals property. */
-func (o *GoalsProperty) AddGoal(s string) error {
-	// if this.Goals == nil {
-	// 	a := make([]string, 0)
-	// 	this.Goals = a
-	// }
-	o.Goals = append(o.Goals, s)
-	return nil
+/* AddGoals - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that represents a goal and adds it to
+the goals property. */
+func (o *GoalsProperty) AddGoals(values interface{}) error {
+	return resources.AddValuesToList(&o.Goals, values)
 }

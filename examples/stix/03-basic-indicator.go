@@ -16,10 +16,10 @@ func main() {
 	i := indicator.New()
 
 	i.SetName("Malware C2 Indicator 2016")
-	i.AddLabel("BadStuff")
+	i.AddLabels("BadStuff")
 	i.AddTypes("compromised")
-	i.AddTypes("test1,test2,test3")
-	t := []string{"test4", "test5", "test6"}
+	i.AddTypes("test1,test2 , test3")
+	t := []string{"test4 ", " test5", "test6"}
 	i.AddTypes(t)
 
 	// Set modified time to be one hour from now

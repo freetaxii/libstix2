@@ -7,8 +7,8 @@ package indicator
 
 import (
 	"errors"
-	"strings"
 
+	"github.com/freetaxii/libstix2/resources"
 	"github.com/freetaxii/libstix2/timestamp"
 )
 
@@ -17,22 +17,11 @@ import (
 // ----------------------------------------------------------------------
 
 /* AddTypes - This method takes in a string value, a comma separated list of
-string values, or a slice of string values that all representing a
-categorization for this indicator. The values SHOULD come from the
+string values, or a slice of string values that represents an indicator type and
+adds it to the indicator types property. The values SHOULD come from the
 indicator-type-ov open vocabulary. */
-func (o *Indicator) AddTypes(data interface{}) error {
-
-	switch data.(type) {
-	case string:
-		types := strings.Split(data.(string), ",")
-		o.IndicatorTypes = append(o.IndicatorTypes, types...)
-	case []string:
-		o.IndicatorTypes = append(o.IndicatorTypes, data.([]string)...)
-	default:
-		return errors.New("wrong data type passed in to AddTypes()")
-	}
-
-	return nil
+func (o *Indicator) AddTypes(values interface{}) error {
+	return resources.AddValuesToList(&o.IndicatorTypes, values)
 }
 
 /* SetPattern - This method takes in a string value representing a complete and

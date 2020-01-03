@@ -42,10 +42,8 @@ func ValidObjectType(t string) bool {
 	return false
 }
 
-/*
-GetCommonProperties - This method will return a pointer to the common properties
-of this object.
-*/
+/* GetCommonProperties - This method will return a pointer to the common
+properties of this object. */
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
 }

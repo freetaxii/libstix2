@@ -16,7 +16,7 @@ func main() {
 	i := indicator.New()
 
 	i.SetName("Malware C2 Indicator 2016")
-	i.AddLabel("BadStuff")
+	i.AddLabels("BadStuff")
 	i.AddTypes("compromised")
 
 	// Set modified time to be one hour from now
@@ -39,7 +39,7 @@ func main() {
 	i2 := indicator.New()
 
 	i2.SetName("Malware C2 Indicator 2016")
-	i2.AddLabel("BadStuff1")
+	i2.AddLabels("BadStuff1")
 	i2.AddTypes("compromised1")
 
 	i2.SetValidFrom(time.Now())

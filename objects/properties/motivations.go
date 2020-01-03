@@ -5,6 +5,8 @@
 
 package properties
 
+import "github.com/freetaxii/libstix2/resources"
+
 // ----------------------------------------------------------------------
 // Define Types
 // ----------------------------------------------------------------------
@@ -33,10 +35,9 @@ func (o *MotivationProperties) GetPrimaryMotivation() string {
 	return o.PrimaryMotivation
 }
 
-/* AddSecondaryMotivation - This method takes in a string value that represents
-a motivation from the attack-motivation-ov vocab and adds it to the list of
-motivations in the secondary motivations property. */
-func (o *MotivationProperties) AddSecondaryMotivation(s string) error {
-	o.SecondaryMotivations = append(o.SecondaryMotivations, s)
-	return nil
+/* AddSecondaryMotivations - This method takes in a string value, a comma
+separated list of string values, or a slice of string values that represents a
+secondary motivation and adds it to the secondary motivations property. */
+func (o *MotivationProperties) AddSecondaryMotivations(values interface{}) error {
+	return resources.AddValuesToList(&o.SecondaryMotivations, values)
 }

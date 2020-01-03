@@ -5,10 +5,7 @@
 
 package properties
 
-import (
-	"errors"
-	"strings"
-)
+import "github.com/freetaxii/libstix2/resources"
 
 // ----------------------------------------------------------------------
 // Define Types
@@ -24,19 +21,8 @@ type ResolvesToRefsProperty struct {
 // ----------------------------------------------------------------------
 
 /* AddResolvesToRefs - This method takes in a string value, a comma separated
-list of string values, or a slice of string values that all representing an id
-of an objects that this object resolves to. */
-func (o *ResolvesToRefsProperty) AddResolvesToRefs(data interface{}) error {
-
-	switch data.(type) {
-	case string:
-		types := strings.Split(data.(string), ",")
-		o.ResolvesToRefs = append(o.ResolvesToRefs, types...)
-	case []string:
-		o.ResolvesToRefs = append(o.ResolvesToRefs, data.([]string)...)
-	default:
-		return errors.New("wrong data type passed in to AddResolvesToRefs()")
-	}
-
-	return nil
+list of string values, or a slice of string values that represents an id of an
+object that this resolves to and adds it to the resolves to refs property. */
+func (o *ResolvesToRefsProperty) AddResolvesToRefs(values interface{}) error {
+	return resources.AddValuesToList(&o.ResolvesToRefs, values)
 }
