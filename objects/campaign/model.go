@@ -23,7 +23,7 @@ type Campaign struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.AliasesProperty
-	properties.SeenTimestampProperties
+	properties.SeenProperties
 	Objective string `json:"objective,omitempty"`
 }
 

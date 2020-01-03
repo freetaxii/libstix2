@@ -26,7 +26,7 @@ the individual properties.
 */
 type Sighting struct {
 	objects.CommonObjectProperties
-	properties.SeenTimestampProperties
+	properties.SeenProperties
 	Count            int      `json:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`
 	ObservedDataRefs []string `json:"observed_data_refs,omitempty"`

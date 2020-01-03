@@ -16,7 +16,7 @@ import (
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* AddType - This method takes in a string value, a comma separated list of
+/* AddTypes - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that all representing a
 categorization for this indicator. The values SHOULD come from the
 indicator-type-ov open vocabulary. */
@@ -29,7 +29,7 @@ func (o *Indicator) AddTypes(data interface{}) error {
 	case []string:
 		o.IndicatorTypes = append(o.IndicatorTypes, data.([]string)...)
 	default:
-		return errors.New("wrong data type passed in to AddType()")
+		return errors.New("wrong data type passed in to AddTypes()")
 	}
 
 	return nil
