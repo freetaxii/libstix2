@@ -23,7 +23,7 @@ type Identity struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	Roles              []string `json:"roles,omitempty"`
+	properties.RolesProperty
 	IdentityClass      string   `json:"identity_class,omitempty"`
 	Sectors            []string `json:"sectors,omitempty"`
 	ContactInformation string   `json:"contact_information,omitempty"`
