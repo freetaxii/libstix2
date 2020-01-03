@@ -15,7 +15,7 @@ func main() {
 	o := attackpattern.New()
 
 	o.SetName("Phishing")
-	o.AddAlias("BadStuff")
+	o.AddAliases("BadStuff")
 
 	o.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
 

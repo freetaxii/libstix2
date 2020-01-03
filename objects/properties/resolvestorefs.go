@@ -5,7 +5,10 @@
 
 package properties
 
-import "github.com/freetaxii/libstix2/resources/helpers"
+import (
+	"errors"
+	"strings"
+)
 
 // ----------------------------------------------------------------------
 // Define Types
@@ -20,22 +23,20 @@ type ResolvesToRefsProperty struct {
 // Public Methods - ResolvesToRefsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddResolvesToRefs - */
-func (o *ResolvesToRefsProperty) AddResolvesToRefs(ids []string) error {
-	arr, err := helpers.AddToList(o.ResolvesToRefs, ids)
+/* AddResolvesToRefs - This method takes in a string value, a comma separated
+list of string values, or a slice of string values that all representing an id
+of an objects that this object resolves to. */
+func (o *ResolvesToRefsProperty) AddResolvesToRefs(data interface{}) error {
 
-	if err != nil {
-		return err
+	switch data.(type) {
+	case string:
+		types := strings.Split(data.(string), ",")
+		o.ResolvesToRefs = append(o.ResolvesToRefs, types...)
+	case []string:
+		o.ResolvesToRefs = append(o.ResolvesToRefs, data.([]string)...)
+	default:
+		return errors.New("wrong data type passed in to AddResolvesToRefs()")
 	}
-
-	o.ResolvesToRefs = arr
-
-	return nil
-}
-
-/* AddResolvesToRef - */
-func (o *ResolvesToRefsProperty) AddResolvesToRef(id string) error {
-	o.ResolvesToRefs = append(o.ResolvesToRefs, id)
 
 	return nil
 }

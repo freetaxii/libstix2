@@ -98,7 +98,7 @@ func (o *CommonObjectProperties) InitSCO(objectType string) error {
 /* InitBundle - This method will initialize a STIX Bundle by setting all of the
 basic properties and is called by the New() function from that object. */
 func (o *CommonObjectProperties) InitBundle() error {
-	obj.SetObjectType("bundle")
-	obj.SetNewID("bundle")
+	o.SetObjectType("bundle")
+	o.SetNewSTIXID("bundle")
 	return nil
 }

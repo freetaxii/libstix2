@@ -17,7 +17,10 @@ func main() {
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
-	i.AddType("compromised")
+	i.AddTypes("compromised")
+	i.AddTypes("test1,test2,test3")
+	t := []string{"test4", "test5", "test6"}
+	i.AddTypes(t)
 
 	// Set modified time to be one hour from now
 	//modifiedTime := time.Now().Add(time.Hour)
@@ -28,9 +31,10 @@ func main() {
 	i.SetPattern("somedata")
 	i.SetPatternType("stix")
 
-	valid, err := i.Valid()
+	valid, problems, details := i.Valid()
 	fmt.Println("Is valid:", valid)
-	fmt.Println("Error Msg:", err)
+	fmt.Println("Problems:", problems)
+	fmt.Println("Error Msg:", details)
 
 	data, _ := i.EncodeToString()
 	fmt.Println(data)

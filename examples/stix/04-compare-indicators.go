@@ -17,7 +17,7 @@ func main() {
 
 	i.SetName("Malware C2 Indicator 2016")
 	i.AddLabel("BadStuff")
-	i.AddType("compromised")
+	i.AddTypes("compromised")
 
 	// Set modified time to be one hour from now
 	//modifiedTime := time.Now().Add(time.Hour)
@@ -28,9 +28,10 @@ func main() {
 	i.SetPattern("somedata")
 	i.SetPatternType("stix")
 
-	valid, err := i.Valid()
+	valid, problems, details := i.Valid()
 	fmt.Println("Is valid:", valid)
-	fmt.Println("Error Msg:", err)
+	fmt.Println("Problems:", problems)
+	fmt.Println("Error Msg:", details)
 
 	data1, _ := i.EncodeToString()
 	fmt.Println(data1)
@@ -39,7 +40,7 @@ func main() {
 
 	i2.SetName("Malware C2 Indicator 2016")
 	i2.AddLabel("BadStuff1")
-	i2.AddType("compromised1")
+	i2.AddTypes("compromised1")
 
 	i2.SetValidFrom(time.Now())
 	i2.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")

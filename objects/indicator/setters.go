@@ -16,15 +16,22 @@ import (
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* AddType - This method takes in a string representing a categorization for
-this indicator. The values SHOULD come from the indicator-type-ov open
-vocabulary. */
-func (o *Indicator) AddType(s string) error {
+/* AddType - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that all representing a
+categorization for this indicator. The values SHOULD come from the
+indicator-type-ov open vocabulary. */
+func (o *Indicator) AddTypes(data interface{}) error {
 
-	indicatorTypes := strings.Split(s, ",")
-	for _, iType := range indicatorTypes {
-		o.IndicatorTypes = append(o.IndicatorTypes, iType)
+	switch data.(type) {
+	case string:
+		types := strings.Split(data.(string), ",")
+		o.IndicatorTypes = append(o.IndicatorTypes, types...)
+	case []string:
+		o.IndicatorTypes = append(o.IndicatorTypes, data.([]string)...)
+	default:
+		return errors.New("wrong data type passed in to AddType()")
 	}
+
 	return nil
 }
 

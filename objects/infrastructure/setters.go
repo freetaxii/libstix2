@@ -6,40 +6,29 @@
 package infrastructure
 
 import (
-	"github.com/freetaxii/libstix2/resources/helpers"
+	"errors"
+	"strings"
 )
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-/*
-AddInfrastructureTypes - add malware types.
+/* AddType - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that all representing a
+categorization for this infrastructure. The values SHOULD come from the
+infrastructure-type-ov open vocabulary. */
+func (o *Infrastructure) AddTypes(data interface{}) error {
 
-The type of infrastructure being described.
-
-This is an open vocabulary and values SHOULD come from the infrastructure-type-ov vocabulary.
-*/
-func (o *Infrastructure) AddInfrastructureTypes(data interface{}) error {
-	arr, err := helpers.AddToList(o.InfrastructureTypes, data)
-
-	if err != nil {
-		return err
+	switch data.(type) {
+	case string:
+		types := strings.Split(data.(string), ",")
+		o.InfrastructureTypes = append(o.InfrastructureTypes, types...)
+	case []string:
+		o.InfrastructureTypes = append(o.InfrastructureTypes, data.([]string)...)
+	default:
+		return errors.New("wrong data type passed in to AddType()")
 	}
-
-	o.InfrastructureTypes = arr
-	return nil
-}
-
-/*
-AddInfrastructureType - add malware type.
-
-The type of infrastructure being described.
-
-This is an open vocabulary and values SHOULD come from the infrastructure-type-ov vocabulary.
-*/
-func (o *Infrastructure) AddInfrastructureType(s string) error {
-	o.InfrastructureTypes = append(o.InfrastructureTypes, s)
 
 	return nil
 }

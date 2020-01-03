@@ -5,44 +5,45 @@
 
 package infrastructure
 
-import (
-	"errors"
-
-	"github.com/freetaxii/libstix2/resources/helpers"
-	"github.com/freetaxii/libstix2/vocabs"
-)
+import "fmt"
 
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
 
-/*
-Valid - This method will verify and test all of the properties on the object to
-make sure they are valid per the specification.
-*/
-func (o *Infrastructure) Valid() (bool, error) {
+/* Valid - This method will verify and test all of the properties on an object
+to make sure they are valid per the specification. It will return a boolean, an
+integer that tracks the number of problems found, and a slice of strings that
+contain the detailed results, whether good or bad. */
+func (o *AttackPattern) Valid() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	if valid, err := o.CommonObjectProperties.Valid(); valid != true {
-		return false, err
-	}
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
+	problemsFound += pBase
+	resultDetails = append(resultDetails, dBase...)
 
-	// Check Infrastructure Specific Properties
-	if valid, err := o.validInfrastructureTypes(); valid == false {
-		return valid, err
-	}
+	// Verify object Name property is present
+	_, pName, dName := o.NameProperty.VerifyExists()
+	problemsFound += pName
+	resultDetails = append(resultDetails, dName...)
 
-	return true, nil
-}
-
-// ----------------------------------------------------------------------
-// Private Methods
-// ----------------------------------------------------------------------
-
-func (o *Infrastructure) validInfrastructureTypes() (bool, error) {
 	if len(o.InfrastructureTypes) == 0 {
-		return false, errors.New("the InfrastructureTypes property is required, but missing")
+		problemsFound++
+		str := fmt.Sprintf("-- The infrastructure types property is required but missing")
+		resultDetails = append(resultDetails, str)
+	} else {
+		str := fmt.Sprintf("++ The infrastructure types property is required and is present")
+		resultDetails = append(resultDetails, str)
 	}
 
-	return helpers.ValidSlice("InfrastructureTypes", o.InfrastructureTypes, vocabs.InfrastructureType)
+	// TODO add check to make sure values are from vocabulary. Something like
+	// helpers.ValidSlice("InfrastructureTypes", o.InfrastructureTypes, vocabs.InfrastructureType)
+
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+
+	return true, 0, resultDetails
 }

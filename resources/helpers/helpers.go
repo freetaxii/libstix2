@@ -26,22 +26,22 @@ func ValidSlice(methodName string, list, vocabsList []string) (bool, error) {
 	return true, nil
 }
 
-// AddToList - append comma-delimited values or array of values to the first argument or
-func AddToList(list []string, data interface{}) ([]string, error) {
-	arr := []string{}
+// // AddToList - append comma-delimited values or array of values to the first argument or
+// func AddToList(list []string, data interface{}) ([]string, error) {
+// 	arr := []string{}
 
-	switch data.(type) {
-	case string:
-		arr = strings.Split(data.(string), ",")
-	case []string:
-		arr = data.([]string)
-	default:
-		return list, errors.New("Wrong data param type")
-	}
+// 	switch data.(type) {
+// 	case string:
+// 		arr = strings.Split(data.(string), ",")
+// 	case []string:
+// 		arr = data.([]string)
+// 	default:
+// 		return list, errors.New("Wrong data param type")
+// 	}
 
-	for _, val := range arr {
-		list = append(list, strings.TrimSpace(val))
-	}
+// 	for _, val := range arr {
+// 		list = append(list, strings.TrimSpace(val))
+// 	}
 
-	return list, nil
-}
+// 	return list, nil
+// }
