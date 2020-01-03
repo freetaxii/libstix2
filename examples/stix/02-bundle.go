@@ -71,14 +71,14 @@ func main() {
 	// Define a family of malware
 	m1 := malware.New()
 	m1.SetName("Zeus")
-	m1.AddLabel("trojan")
-	m1.AddLabel("malware-family")
+	m1.AddLabels("trojan")
+	m1.AddLabels("malware-family")
 	sm.AddObject(m1)
 
 	// Define a piece of malware
 	m2 := malware.New()
 	m2.SetName("SpyEye")
-	m2.AddLabel("trojan")
+	m2.AddLabels("trojan")
 	// m2.AddFilename("cleansweep.exe")
 	// m2.AddFilename("spyeye2_exe")
 	// m2.AddFilename("build_1_.exe")

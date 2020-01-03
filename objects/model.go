@@ -16,6 +16,14 @@ import (
 // Define Object Model
 // ----------------------------------------------------------------------
 
+/* STIXObject - This interface defines what methods an object must have to be
+considered a STIX Object. So any new object that is created that inherits the
+CommonObjectProperties is considered a STIX Object by this code. This interface
+is currently used by the Bundle object to add objects to the Bundle. */
+type STIXObject interface {
+	GetCommonProperties() *CommonObjectProperties
+}
+
 /* CommonObjectProperties - This type defines the properties that are common to
 most STIX objects. If an object does not use all of these properties, then the
 Encode() function for that object will clean up and remove the properties that

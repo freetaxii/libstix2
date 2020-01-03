@@ -13,17 +13,13 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Object Type
-//
 // ----------------------------------------------------------------------
 
-/*
-ThreatActor - This type implements the STIX 2 Threat Actor SDO and defines
-all of the properties methods needed to create and work with the STIX Threat Actor
-SDO. All of the methods not defined local to this type are inherited from
-the individual properties.
-*/
+/* ThreatActor - This type implements the STIX 2 Threat Actor SDO and defines
+all of the properties and methods needed to create and work with this object.
+All of the methods not defined local to this type are inherited from the
+individual properties. */
 type ThreatActor struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -39,18 +35,15 @@ type ThreatActor struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Threat Actor object and return it as
-a pointer.
-*/
+/* New - This function will create a new STIX Threat Actor object and return it
+as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *ThreatActor {
 	var obj ThreatActor
-	obj.InitObject("threat-actor")
+	obj.InitSDO("threat-actor")
 	return &obj
 }
 

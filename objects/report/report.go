@@ -14,17 +14,13 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Object Type
-//
 // ----------------------------------------------------------------------
 
-/*
-Report - This type implements the STIX 2 Report SDO and defines
-all of the properties methods needed to create and work with the STIX Report
-SDO. All of the methods not defined local to this type are inherited from
-the individual properties.
-*/
+/* Report - This type implements the STIX 2 Report SDO and defines all of the
+properties and methods needed to create and work with this object. All of the
+methods not defined local to this type are inherited from the individual
+properties. */
 type Report struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -34,18 +30,15 @@ type Report struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Report object and return it as a
-pointer.
-*/
+/* New - This function will create a new STIX Report object and return
+it as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *Report {
 	var obj Report
-	obj.InitObject("report")
+	obj.InitSDO("report")
 	return &obj
 }
 

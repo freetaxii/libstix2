@@ -13,17 +13,13 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Object Type
-//
 // ----------------------------------------------------------------------
 
-/*
-ObservedData - This type implements the STIX 2 Observed Data SDO and defines
-all of the properties methods needed to create and work with the STIX Observed Data
-SDO. All of the methods not defined local to this type are inherited from
-the individual properties.
-*/
+/* ObservedData - This type implements the STIX 2 Observed Data SDO and defines
+all of the properties and methods needed to create and work with this object.
+All of the methods not defined local to this type are inherited from the
+individual properties. */
 type ObservedData struct {
 	objects.CommonObjectProperties
 	FirstObserved  string `json:"first_observed,omitempty"`
@@ -33,18 +29,15 @@ type ObservedData struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Observed Data object and return it as
-a pointer.
-*/
+/* New - This function will create a new STIX Observed Data object and return
+it as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *ObservedData {
 	var obj ObservedData
-	obj.InitObject("observed-data")
+	obj.InitSDO("observed-data")
 	return &obj
 }
 

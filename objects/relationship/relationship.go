@@ -13,17 +13,13 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Object Type
-//
 // ----------------------------------------------------------------------
 
-/*
-Relationship - This type implements the STIX 2 Relationship SRO and defines
-all of the properties methods needed to create and work with the STIX Relationship
-SRO. All of the methods not defined local to this type are inherited from
-the individual properties.
-*/
+/* Relationship - This type implements the STIX 2 Relationship SRO and defines
+all of the properties and methods needed to create and work with this object.
+All of the methods not defined local to this type are inherited from the
+individual properties. */
 type Relationship struct {
 	objects.CommonObjectProperties
 	RelationshipType string `json:"relationship_type,omitempty"`
@@ -33,18 +29,15 @@ type Relationship struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Relationship object and return it as
-a pointer.
-*/
+/* New - This function will create a new STIX Relationship object and return
+it as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *Relationship {
 	var obj Relationship
-	obj.InitObject("relationship")
+	obj.InitSRO("relationship")
 	return &obj
 }
 

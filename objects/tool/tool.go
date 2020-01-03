@@ -13,17 +13,13 @@ import (
 )
 
 // ----------------------------------------------------------------------
-//
 // Define Object Type
-//
 // ----------------------------------------------------------------------
 
-/*
-Tool - This type implements the STIX 2 Tool SDO and defines
-all of the properties methods needed to create and work with the STIX Tool
-SDO. All of the methods not defined local to this type are inherited from
-the individual properties.
-*/
+/* Tool - This type implements the STIX 2 Tool SDO and defines all of the
+properties and methods needed to create and work with this object. All of the
+methods not defined local to this type are inherited from the individual
+properties. */
 type Tool struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -33,18 +29,15 @@ type Tool struct {
 }
 
 // ----------------------------------------------------------------------
-//
 // Initialization Functions
-//
 // ----------------------------------------------------------------------
 
-/*
-New - This function will create a new STIX Tool object and return it as a
-pointer.
-*/
+/* New - This function will create a new STIX Tool object and return
+it as a pointer. It will also initialize the object by setting all of the basic
+properties. */
 func New() *Tool {
 	var obj Tool
-	obj.InitObject("tool")
+	obj.InitSDO("tool")
 	return &obj
 }
 
