@@ -21,32 +21,32 @@ func main() {
 	r.SetPublished(time.Now())
 
 	m, _ := r.CreateSTIXUUID("malware")
-	r.AddObject(m)
+	r.AddObjectRefs(m)
 
 	c, _ := r.CreateSTIXUUID("campaign")
-	r.AddObject(c)
+	r.AddObjectRefs(c)
 
 	s1, _ := r.CreateSTIXUUID("sighting")
-	r.AddObject(s1)
+	r.AddObjectRefs(s1)
 
 	s2, _ := r.CreateSTIXUUID("sighting")
-	r.AddObject(s2)
+	r.AddObjectRefs(s2)
 
 	t1, _ := r.CreateSTIXUUID("threat-actor")
-	r.AddObject(t1)
+	r.AddObjectRefs(t1)
 
 	t2, _ := r.CreateSTIXUUID("threat-actor")
-	r.AddObject(t2)
+	r.AddObjectRefs(t2)
 
 	for i := 0; i <= 8; i++ {
 		r1, _ := r.CreateSTIXUUID("relationship")
-		r.AddObject(r1)
+		r.AddObjectRefs(r1)
 
 	}
 
 	for j := 0; j <= 4; j++ {
 		i, _ := r.CreateSTIXUUID("indicator")
-		r.AddObject(i)
+		r.AddObjectRefs(i)
 	}
 
 	var data []byte

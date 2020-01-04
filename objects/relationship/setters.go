@@ -46,16 +46,16 @@ func (o *Relationship) SetSourceTarget(s, t string) error {
 
 /* SetStartTime - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value. */
-func (o *Indicator) SetStartTime(t interface{}) error {
+func (o *Relationship) SetStartTime(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	o.ValidFrom = ts
+	o.StartTime = ts
 	return nil
 }
 
 /* SetStopTime - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value. */
-func (o *Indicator) SetStopTime(t interface{}) error {
+func (o *Relationship) SetStopTime(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
-	o.ValidFrom = ts
+	o.StopTime = ts
 	return nil
 }

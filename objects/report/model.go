@@ -22,7 +22,8 @@ type Report struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	Published string `json:"published,omitempty"`
+	ReportTypes []string `json:"report_types,omitempty"`
+	Published   string   `json:"published,omitempty"`
 	properties.ObjectRefsProperty
 }
 

@@ -100,43 +100,43 @@ func main() {
 
 	// Connect the malware sample to a malware family
 	r1 := relationship.New()
-	r1.SetRelationshipType("member-of")
+	r1.SetType("member-of")
 	r1.SetSourceTarget(m1.GetID(), m2.GetID())
 	sm.AddObject(r1)
 
 	// Identify that this campaign uses this piece of malware
 	r2 := relationship.New()
-	r2.SetRelationshipType("uses")
+	r2.SetType("uses")
 	r2.SetSourceTarget(c.GetID(), m2.GetID())
 	sm.AddObject(r2)
 
 	// Identify that this campaign uses this infrastructure
 	r3 := relationship.New()
-	r3.SetRelationshipType("uses")
+	r3.SetType("uses")
 	r3.SetSourceTarget(c.GetID(), infra.GetID())
 	sm.AddObject(r3)
 
 	// Identify that this malware uses this infrastructure
 	r4 := relationship.New()
-	r4.SetRelationshipType("uses")
+	r4.SetType("uses")
 	r4.SetSourceTarget(m2.GetID(), infra.GetID())
 	sm.AddObject(r4)
 
 	// Identify that this indicator can indicate the presence of this malware
 	r5 := relationship.New()
-	r5.SetRelationshipType("indicates")
+	r5.SetType("indicates")
 	r5.SetSourceTarget(i.GetID(), m2.GetID())
 	sm.AddObject(r5)
 
 	// Attach some Observed Data to an Infrastructure Object
 	r6 := relationship.New()
-	r6.SetRelationshipType("part-of")
+	r6.SetType("part-of")
 	r6.SetSourceTarget(od1.GetID(), infra.GetID())
 	sm.AddObject(r6)
 
 	// Attach some Observed Data to an Infrastructure Object
 	r7 := relationship.New()
-	r7.SetRelationshipType("part-of")
+	r7.SetType("part-of")
 	r7.SetSourceTarget(od2.GetID(), infra.GetID())
 	sm.AddObject(r7)
 
@@ -154,7 +154,7 @@ func main() {
 	s2.SetLastSeen("2016-09-01T10:30:00Z")
 	s2.SetCount(10)
 	s2.SetSightingOfRef(infra.GetID())
-	s2.AddObservedDataRef(od3.GetID())
+	s2.AddObservedDataRefs(od3.GetID())
 	sm.AddObject(s2)
 
 	var data []byte

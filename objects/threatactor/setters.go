@@ -15,7 +15,7 @@ import "github.com/freetaxii/libstix2/resources"
 string values, or a slice of string values that represents an threat actor type
 and adds it to the threat actor types property. The values SHOULD come from the
 threat-actor-type-ov open vocabulary. */
-func (o *Indicator) AddTypes(values interface{}) error {
+func (o *ThreatActor) AddTypes(values interface{}) error {
 	return resources.AddValuesToList(&o.ThreatActorTypes, values)
 }
 
