@@ -5,8 +5,6 @@
 
 package urlobject
 
-import "fmt"
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -24,15 +22,10 @@ func (o *URLObject) Valid() (bool, int, []string) {
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	// Verify the value property exists
-	if o.Value == "" {
-		problemsFound++
-		str := fmt.Sprintf("-- The value property is required but missing")
-		resultDetails = append(resultDetails, str)
-	} else {
-		str := fmt.Sprintf("++ The value property is required and is present")
-		resultDetails = append(resultDetails, str)
-	}
+	// Verify object value property present
+	_, pValue, dValue := o.ValueProperty.VerifyExists()
+	problemsFound += pValue
+	resultDetails = append(resultDetails, dValue...)
 
 	if problemsFound > 0 {
 		return false, problemsFound, resultDetails
