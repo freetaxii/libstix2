@@ -4,7 +4,7 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package package apiroot implements the TAXII 2.1 API Root resource.
+Package apiroot implements the TAXII 2.1 API Root resource.
 
 The following information comes directly from the TAXII 2.1 specification.
 

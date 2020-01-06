@@ -6,10 +6,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/discovery"
+	"github.com/freetaxii/libstix2/objects/taxii/discovery"
 )
 
 func main() {
@@ -20,11 +19,9 @@ func main() {
 	d.SetDescription("This service will display API roots that this TAXII knows about.")
 	d.SetContact("FreeTAXII")
 	d.SetDefault("https://www.freetaxii.com/api1")
-	d.AddAPIRoot("https://www.freetaxii.com/api1")
-	d.AddAPIRoot("https://www.freetaxii.com/api2")
+	d.AddAPIRoots("https://www.freetaxii.com/api1")
+	d.AddAPIRoots("https://www.freetaxii.com/api2")
+	data, _ := d.EncodeToString()
 
-	var data []byte
-	data, _ = json.MarshalIndent(d, "", "    ")
-
-	fmt.Println(string(data))
+	fmt.Println(data)
 }
