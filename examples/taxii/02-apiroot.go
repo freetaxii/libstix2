@@ -6,22 +6,19 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/apiroot"
+	"github.com/freetaxii/libstix2/objects/taxii/apiroot"
 )
 
 func main() {
-	d := apiroot.New()
+	a := apiroot.New()
 
-	d.SetTitle("FreeTAXII API Root 1")
-	d.SetDescription("This API Root contains OSINT.")
-	d.SetMaxContentLength(10485760)
-	d.AddVersion("taxii-2.0")
+	a.SetTitle("FreeTAXII API Root 1")
+	a.SetDescription("This API Root contains OSINT.")
+	a.SetMaxContentLength(10485760)
+	a.AddVersions("taxii-2.0")
 
-	var data []byte
-	data, _ = json.MarshalIndent(d, "", "    ")
-
-	fmt.Println(string(data))
+	data, _ := a.EncodeToString()
+	fmt.Println(data)
 }
