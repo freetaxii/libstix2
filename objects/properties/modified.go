@@ -19,7 +19,6 @@ import (
 and time that the object was modified or changed. This property effectively
 tracks the version of the object. */
 type ModifiedProperty struct {
-	Created  string `json:"created,omitempty"`
 	Modified string `json:"modified,omitempty"`
 }
 
@@ -30,7 +29,7 @@ type ModifiedProperty struct {
 /* SetModifiedToCurrentTime - This methods sets the object created time to the
 current time */
 func (o *ModifiedProperty) SetModifiedToCurrentTime() error {
-	o.Created = timestamp.CurrentTime("milli")
+	o.Modified = timestamp.CurrentTime("milli")
 	return nil
 }
 
