@@ -6,31 +6,27 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/freetaxii/libstix2/objects/attackpattern"
 )
 
 func main() {
-	o := attackpattern.New()
 
-	o.SetName("Phishing")
-	o.AddAliases("BadStuff")
-
-	o.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")
-
-	data, _ := o.EncodeToString()
-	fmt.Println("Step 1: Print a basic attack pattern created in this script")
-	fmt.Println(data)
-
-	o1, err := attackpattern.Decode([]byte(getdata()))
+	// Decode the data defined down below with the custom property data being
+	// stored in a map that is called "custom"
+	o, err := attackpattern.Decode([]byte(getdata()))
 	if err != nil {
 		fmt.Println(err)
 	}
-	data1, _ := o1.EncodeToString()
-	fmt.Println("Step 2: Print a basic attack pattern from data found in the script")
-	fmt.Println("This data has been decoded and then re-encoded")
-	fmt.Println(data1)
+
+	fmt.Println(o.Custom)
+
+	// Since we know the data is a string, lets create a variable to unmarshal the data to
+	var foo string
+	json.Unmarshal(o.Custom["some_custom_property"], &foo)
+	fmt.Println(foo)
 
 }
 
@@ -43,7 +39,8 @@ func getdata() string {
     "created": "2018-06-05T18:25:15.917Z",
     "modified": "2018-06-05T18:25:15.917Z",
     "name": "Phishing",
-    "aliases": ["Banking1", "ATM2"]
+    "aliases": ["Banking1", "ATM2"],
+    "some_custom_property": "some_custom_value"
 }
 `
 	return s

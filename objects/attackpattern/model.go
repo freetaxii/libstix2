@@ -38,3 +38,7 @@ func New() *AttackPattern {
 	obj.InitSDO("attack-pattern")
 	return &obj
 }
+
+func (o AttackPattern) New() {
+	o.InitSDO("attack-pattern")
+}

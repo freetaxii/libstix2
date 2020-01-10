@@ -29,6 +29,60 @@ func Decode(data []byte) (*AttackPattern, error) {
 	return &o, nil
 }
 
+/* UnmarshalJSON - This method will over right the default UnmarshalJSON method
+to enable custom properties that this library does not know about. It will store
+them as map of byte arrays. This way a tool that does know how to deal with them
+can then further process them after this is done. */
+func (o *AttackPattern) UnmarshalJSON(b []byte) error {
+	// First thing is to capture all of the properties in a map so we can remove
+	// what we know about. This will leave us with just the custom properties.
+	var customProperties map[string]*json.RawMessage
+	if err := json.Unmarshal(b, &customProperties); err != nil {
+		return err
+	}
+
+	// Now delete the properties we know about
+	delete(customProperties, "type")
+	delete(customProperties, "spec_version")
+	delete(customProperties, "id")
+	delete(customProperties, "created_by_ref")
+	delete(customProperties, "created")
+	delete(customProperties, "modified")
+	delete(customProperties, "revoked")
+	delete(customProperties, "labels")
+	delete(customProperties, "confidence")
+	delete(customProperties, "lang")
+	delete(customProperties, "external_references")
+	delete(customProperties, "object_marking_refs")
+	delete(customProperties, "granular_markings")
+
+	delete(customProperties, "name")
+	delete(customProperties, "description")
+	delete(customProperties, "aliases")
+	delete(customProperties, "kill_chain_phases")
+
+	// Unmarshal the properties that we understand. We need to alias the object
+	// so that we do not recursively call Unmarshal on this object.
+	type alias AttackPattern
+	temp := &struct {
+		*alias
+	}{
+		alias: (*alias)(o),
+	}
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+
+	// If there are any custom properties left store them in the custom property
+	if len(customProperties) > 0 {
+		o.Custom = make(map[string][]byte)
+		for k, v := range customProperties {
+			o.Custom[k] = *v
+		}
+	}
+	return nil
+}
+
 // ----------------------------------------------------------------------
 // Public Methods JSON Encoders
 // The encoding is done here at the individual object level instead of at

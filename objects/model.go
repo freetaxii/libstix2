@@ -45,6 +45,7 @@ type CommonObjectProperties struct {
 	properties.LangProperty
 	properties.ExternalReferencesProperty
 	properties.MarkingProperties
+	Custom map[string][]byte `json:"custom,omitempty"`
 	properties.RawProperty
 }
 
