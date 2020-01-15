@@ -10,8 +10,10 @@ import (
 	"strings"
 )
 
-/* AddValuesToList - This function will add a single value, a comma separated
-list of values, or a slice of values to an slice. */
+/*
+AddValuesToList - This function will add a single value, a comma separated
+list of values, or a slice of values to an slice.
+*/
 func AddValuesToList(list *[]string, values interface{}) error {
 
 	switch values.(type) {
