@@ -11,9 +11,11 @@ import "github.com/freetaxii/libstix2/resources"
 // Public Methods - APIRoot
 // ----------------------------------------------------------------------
 
-/* AddVersions - This method takes in a string value, a comma separated list of
+/*
+AddVersions - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents a version of the
-TaXII API that is supported and adds it to the versions property. */
+TaXII API that is supported and adds it to the versions property.
+*/
 func (o *APIRoot) AddVersions(values interface{}) error {
 	// if o.Versions == nil {
 	// 	a := make([]string, 0)
@@ -23,16 +25,20 @@ func (o *APIRoot) AddVersions(values interface{}) error {
 	return resources.AddValuesToList(&o.Versions, values)
 }
 
-/* SetMaxContentLength - This method takes in an integer value representing the
+/*
+SetMaxContentLength - This method takes in an integer value representing the
 max content length that the server can support and updates the max content
-length property. */
+length property.
+*/
 func (o *APIRoot) SetMaxContentLength(i int) error {
 	o.MaxContentLength = i
 	return nil
 }
 
-/* GetMaxContentLength - This method returns the max content length as an
-integer. */
+/*
+GetMaxContentLength - This method returns the max content length as an
+integer.
+*/
 func (o *APIRoot) GetMaxContentLength() int {
 	return o.MaxContentLength
 }

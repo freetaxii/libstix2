@@ -13,7 +13,8 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-/* APIRoot - This type implements the TAXII 2 API Root and defines all of the
+/*
+APIRoot - This type implements the TAXII 2 API Root and defines all of the
 properties and methods needed to create and work with this resource. All of the
 methods not defined local to this type are inherited from the individual
 properties.
@@ -23,7 +24,8 @@ The following information comes directly from the TAXII 2.1 specification.
 The API Root resource contains general information about the API Root, such as a
 human-readable title and description, the TAXII versions it supports, and the
 maximum size (max_content_length) of the content body it will accept in a PUT or
-POST request. */
+POST request.
+*/
 type APIRoot struct {
 	properties.TitleProperty
 	properties.DescriptionProperty
@@ -35,8 +37,10 @@ type APIRoot struct {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new TAXII API Root resource and return
-it as a pointer. */
+/*
+New - This function will create a new TAXII API Root resource and return
+it as a pointer.
+*/
 func New() *APIRoot {
 	var obj APIRoot
 	return &obj

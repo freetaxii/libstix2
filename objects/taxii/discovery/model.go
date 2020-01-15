@@ -13,7 +13,8 @@ import (
 // Define Message Type
 // ----------------------------------------------------------------------
 
-/* Discovery - This type implements the TAXII 2 Discovery and defines all of the
+/*
+Discovery - This type implements the TAXII 2 Discovery and defines all of the
 properties and methods needed to create and work with this resource. All of the
 methods not defined local to this type are inherited from the individual
 properties.
@@ -24,7 +25,8 @@ The discovery resource contains information about a TAXII Server, such as a
 human-readable title, description, and contact information, as well as a list of
 API Roots that it is advertising. It also has an indication of which API Root it
 considers the default, or the one to use in the absence of another
-information/user choice. */
+information/user choice.
+*/
 type Discovery struct {
 	properties.TitleProperty
 	properties.DescriptionProperty
@@ -37,8 +39,10 @@ type Discovery struct {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new TAXII Discovery resource and return
-it as a pointer. */
+/*
+New - This function will create a new TAXII Discovery resource and return
+it as a pointer.
+*/
 func New() *Discovery {
 	var obj Discovery
 	return &obj
