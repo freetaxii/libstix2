@@ -15,17 +15,21 @@ import (
 // Define Object Model
 // ----------------------------------------------------------------------
 
-/* Bundle - This type implements the STIX 2 Bundle SDO and defines all of the
+/*
+Bundle - This type implements the STIX 2 Bundle SDO and defines all of the
 properties and methods needed to create and work with this object. All of the
 methods not defined local to this type are inherited from the individual
-properties. */
+properties.
+*/
 type Bundle struct {
 	objects.CommonObjectProperties
 	Objects []objects.STIXObject `json:"objects,omitempty"`
 }
 
-/* bundleRawDecode - This type is used for decoding a STIX bundle since the
-Objects property needs special handling. */
+/*
+bundleRawDecode - This type is used for decoding a STIX bundle since the
+Objects property needs special handling.
+*/
 type bundleRawDecode struct {
 	objects.CommonObjectProperties
 	Objects []json.RawMessage `json:"objects,omitempty"`
@@ -35,9 +39,11 @@ type bundleRawDecode struct {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Bundle object and return it as a
+/*
+New - This function will create a new STIX Bundle object and return it as a
 pointer. This function can not use the InitNewObject() function as a Bundle does
-not have all of the fields that are common to a standard object. */
+not have all of the fields that are common to a standard object.
+*/
 func New() *Bundle {
 	var obj Bundle
 	obj.InitBundle()

@@ -15,9 +15,11 @@ import (
 // Public Functions - JSON Decoder
 // ----------------------------------------------------------------------
 
-/* Decode - This function is a simple wrapper for decoding JSON data. It will
+/*
+Decode - This function is a simple wrapper for decoding JSON data. It will
 decode a slice of bytes into an actual struct and return a pointer to that
-object along with any errors. */
+object along with any errors.
+*/
 func Decode(data []byte) (*Indicator, error) {
 	var o Indicator
 
@@ -28,11 +30,13 @@ func Decode(data []byte) (*Indicator, error) {
 	return &o, nil
 }
 
-/* UnmarshalJSON - This method will over write the default UnmarshalJSON method
+/*
+UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom properties that this library does not know about. It will store
 them as map where the value of each key is a byte arrays. This way a tool that
 does know how to deal with them can then further process them after this is
-done. This will also allow the storage of the raw JSON data. */
+done. This will also allow the storage of the raw JSON data.
+*/
 func (o *Indicator) UnmarshalJSON(b []byte) error {
 
 	type alias Indicator
@@ -70,7 +74,9 @@ func (o *Indicator) UnmarshalJSON(b []byte) error {
 // for the object.
 // ----------------------------------------------------------------------
 
-/* Encode - This method is a simple wrapper for encoding an object into JSON */
+/*
+Encode - This method is a simple wrapper for encoding an object into JSON
+*/
 func (o *Indicator) Encode() ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
@@ -81,8 +87,10 @@ func (o *Indicator) Encode() ([]byte, error) {
 	return data, nil
 }
 
-/* EncodeToString - This method is a simple wrapper for encoding an object into
-JSON */
+/*
+EncodeToString - This method is a simple wrapper for encoding an object into
+JSON
+*/
 func (o *Indicator) EncodeToString() (string, error) {
 	data, err := o.Encode()
 	if err != nil {

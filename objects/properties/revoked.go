@@ -11,8 +11,10 @@ import "fmt"
 // Define Types
 // ----------------------------------------------------------------------
 
-/* RevokedProperty - A property used by one or more STIX objects that captures
-whether or not this STIX object has been revoked by the object creator. */
+/*
+RevokedProperty - A property used by one or more STIX objects that captures
+whether or not this STIX object has been revoked by the object creator.
+*/
 type RevokedProperty struct {
 	Revoked bool `json:"revoked,omitempty"`
 }
@@ -21,14 +23,17 @@ type RevokedProperty struct {
 // Public Methods - RevokedProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetRevoked - This method sets the revoked boolean to true */
+/*
+SetRevoked - This method sets the revoked boolean to true
+*/
 func (o *RevokedProperty) SetRevoked() error {
 	o.Revoked = true
 	return nil
 }
 
-/* GetRevoked - This method returns the current value of the revoked property.
- */
+/*
+GetRevoked - This method returns the current value of the revoked property.
+*/
 func (o *RevokedProperty) GetRevoked() bool {
 	return o.Revoked
 }
@@ -37,10 +42,12 @@ func (o *RevokedProperty) GetRevoked() bool {
 // Public Methods - RevokedProperty - Checks
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *RevokedProperty) Compare(obj2 *RevokedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

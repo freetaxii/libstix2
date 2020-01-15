@@ -15,7 +15,9 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* AuthorsProperty - A property used by one or more STIX objects. */
+/*
+AuthorsProperty - A property used by one or more STIX objects.
+*/
 type AuthorsProperty struct {
 	Authors []string `json:"authors,omitempty"`
 }
@@ -24,9 +26,11 @@ type AuthorsProperty struct {
 // Public Methods - AuthorsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddAuthors - This method takes in a string value, a comma separated list of
+/*
+AddAuthors - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents a alias and adds it
-to the authors property. */
+to the authors property.
+*/
 func (o *AuthorsProperty) AddAuthors(values interface{}) error {
 	return resources.AddValuesToList(&o.Authors, values)
 }
@@ -35,10 +39,12 @@ func (o *AuthorsProperty) AddAuthors(values interface{}) error {
 // Public Methods - AuthorsProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the authors property on an
+/*
+VerifyExists - This method will verify that the authors property on an
 object is present. It will return a boolean, an integer that tracks the number
 of problems found, and a slice of strings that contain the detailed results,
-whether good or bad. */
+whether good or bad.
+*/
 func (o *AuthorsProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -53,10 +59,12 @@ func (o *AuthorsProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *AuthorsProperty) Compare(obj2 *AuthorsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

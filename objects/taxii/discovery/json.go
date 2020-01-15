@@ -19,8 +19,7 @@ object along with any errors. */
 func Decode(data []byte) (*Discovery, error) {
 	var o Discovery
 
-	err := json.Unmarshal(data, &o)
-	if err != nil {
+	if err := json.Unmarshal(data, &o); err != nil {
 		return nil, err
 	}
 

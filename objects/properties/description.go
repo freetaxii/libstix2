@@ -11,8 +11,10 @@ import "fmt"
 // Define Types
 // ----------------------------------------------------------------------
 
-/* DescriptionProperty - A property used by one or more STIX objects that
-captures the description for the object as a string. */
+/*
+DescriptionProperty - A property used by one or more STIX objects that
+captures the description for the object as a string.
+*/
 type DescriptionProperty struct {
 	Description string `json:"description,omitempty"`
 }
@@ -21,15 +23,19 @@ type DescriptionProperty struct {
 // Public Methods - DescriptionProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetDescription - This method takes in a string value representing a text
-description and updates the description property. */
+/*
+SetDescription - This method takes in a string value representing a text
+description and updates the description property.
+*/
 func (o *DescriptionProperty) SetDescription(s string) error {
 	o.Description = s
 	return nil
 }
 
-/* GetDescription - This method returns the description for an object as a
-string. */
+/*
+GetDescription - This method returns the description for an object as a
+string.
+*/
 func (o *DescriptionProperty) GetDescription() string {
 	return o.Description
 }
@@ -38,10 +44,12 @@ func (o *DescriptionProperty) GetDescription() string {
 // Public Methods - DescriptionProperty - Checks
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *DescriptionProperty) Compare(obj2 *DescriptionProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

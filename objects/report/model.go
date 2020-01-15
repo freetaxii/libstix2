@@ -14,10 +14,12 @@ import (
 // Define Object Type
 // ----------------------------------------------------------------------
 
-/* Report - This type implements the STIX 2 Report SDO and defines all of the
+/*
+Report - This type implements the STIX 2 Report SDO and defines all of the
 properties and methods needed to create and work with this object. All of the
 methods not defined local to this type are inherited from the individual
-properties. */
+properties.
+*/
 type Report struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -27,9 +29,11 @@ type Report struct {
 	properties.ObjectRefsProperty
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *Report) GetPropertyList() []string {
 	return []string{"name", "description", "report_types", "published", "object_refs"}
 }
@@ -38,9 +42,11 @@ func (o *Report) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Report object and return
+/*
+New - This function will create a new STIX Report object and return
 it as a pointer. It will also initialize the object by setting all of the basic
-properties. */
+properties.
+*/
 func New() *Report {
 	var obj Report
 	obj.InitSDO("report")

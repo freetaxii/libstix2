@@ -15,7 +15,9 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* AliasesProperty - A property used by one or more STIX objects. */
+/*
+AliasesProperty - A property used by one or more STIX objects.
+*/
 type AliasesProperty struct {
 	Aliases []string `json:"aliases,omitempty"`
 }
@@ -24,9 +26,11 @@ type AliasesProperty struct {
 // Public Methods - AliasesProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddAliases - This method takes in a string value, a comma separated list of
+/*
+AddAliases - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents an alias and adds it
-to the aliases property. */
+to the aliases property.
+*/
 func (o *AliasesProperty) AddAliases(values interface{}) error {
 	return resources.AddValuesToList(&o.Aliases, values)
 }
@@ -35,10 +39,12 @@ func (o *AliasesProperty) AddAliases(values interface{}) error {
 // Public Methods - AliasesProperty - Checks
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *AliasesProperty) Compare(obj2 *AliasesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

@@ -14,10 +14,12 @@ import (
 // Define Object Model
 // ----------------------------------------------------------------------
 
-/* IPv4Addr - This type implements the STIX 2 IPv4 Address SCO and defines
+/*
+IPv4Addr - This type implements the STIX 2 IPv4 Address SCO and defines
 all of the properties and methods needed to create and work with this object.
 All of the methods not defined local to this type are inherited from the
-individual properties. */
+individual properties.
+*/
 type IPv4Addr struct {
 	objects.CommonObjectProperties
 	properties.ValueProperty
@@ -25,9 +27,11 @@ type IPv4Addr struct {
 	properties.BelongsToRefsProperty
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *IPv4Addr) GetPropertyList() []string {
 	return []string{"value", "resolves_to_refs", "belongs_to_refs"}
 }
@@ -36,9 +40,11 @@ func (o *IPv4Addr) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX IPv4 Address SCO and return it as
+/*
+New - This function will create a new STIX IPv4 Address SCO and return it as
 a pointer. It will also initialize the object by setting all of the basic
-properties. */
+properties.
+*/
 func New() *IPv4Addr {
 	var obj IPv4Addr
 	obj.InitSCO("ipv4-addr")

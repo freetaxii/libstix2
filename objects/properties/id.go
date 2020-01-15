@@ -15,8 +15,10 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* IDProperty - A property used by one or more STIX objects that captures the
-STIX That identifier in string format. */
+/*
+IDProperty - A property used by one or more STIX objects that captures the
+STIX That identifier in string format.
+*/
 type IDProperty struct {
 	ID string `json:"id,omitempty"`
 }
@@ -25,47 +27,59 @@ type IDProperty struct {
 // Public Methods - IDProperty - Setters
 // ----------------------------------------------------------------------
 
-/* CreateSTIXUUID - This method takes in a string value representing a STIX
+/*
+CreateSTIXUUID - This method takes in a string value representing a STIX
 object type and creates and returns a new ID based on the approved STIX UUIDv4
-format. */
+format.
+*/
 func (o *IDProperty) CreateSTIXUUID(s string) (string, error) {
 	// TODO add check to validate that s is a valid type
 	id := s + "--" + uuid.New()
 	return id, nil
 }
 
-/* CreateTAXIIUUID - This method does not take in any parameters. It is used to
-create a new ID based on the approved TAXII UUIDv4 format. */
+/*
+CreateTAXIIUUID - This method does not take in any parameters. It is used to
+create a new ID based on the approved TAXII UUIDv4 format.
+*/
 func (o *IDProperty) CreateTAXIIUUID() (string, error) {
 	id := uuid.New()
 	return id, nil
 }
 
-/* SetNewID - This method does not take in any parameters. It is used to create
-a new ID based on the approved TAXII UUIDv4 format and assigns it to the ID
-property. */
+/*
+SetNewTAXIIID - This method does not take in any parameters. It is used to
+create a new ID based on the approved TAXII UUIDv4 format and assigns it to the
+ID property.
+*/
 func (o *IDProperty) SetNewTAXIIID() error {
 	o.ID, _ = o.CreateTAXIIUUID()
 	return nil
 }
 
-/* SetNewSTIXID - This method takes in a string value representing a STIX object
+/*
+SetNewSTIXID - This method takes in a string value representing a STIX object
 type and creates a new ID based on the approved STIX UUIDv4 format and update
-the id property for the object. */
+the id property for the object.
+*/
 func (o *IDProperty) SetNewSTIXID(s string) error {
 	// TODO Add check to validate input value
 	o.ID, _ = o.CreateSTIXUUID(s)
 	return nil
 }
 
-/* SetID - This method takes in a string value representing an existing STIX id
-and updates the id property for the object. */
+/*
+SetID - This method takes in a string value representing an existing STIX id
+and updates the id property for the object.
+*/
 func (o *IDProperty) SetID(s string) error {
 	o.ID = s
 	return nil
 }
 
-/* GetID - This method will return the id for a given STIX object. */
+/*
+GetID - This method will return the id for a given STIX object.
+*/
 func (o *IDProperty) GetID() string {
 	return o.ID
 }
@@ -74,10 +88,12 @@ func (o *IDProperty) GetID() string {
 // Public Methods - IDProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the id property on an object is
+/*
+VerifyExists - This method will verify that the id property on an object is
 present if required. It will return a boolean, an integer that tracks the number
 of problems found, and a slice of strings that contain the detailed results,
-whether good or bad. */
+whether good or bad.
+*/
 func (o *IDProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -92,10 +108,12 @@ func (o *IDProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *IDProperty) Compare(obj2 *IDProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

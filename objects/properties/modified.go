@@ -15,9 +15,11 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* ModifiedProperty - A property used by all STIX objects that captures the date
+/*
+ModifiedProperty - A property used by all STIX objects that captures the date
 and time that the object was modified or changed. This property effectively
-tracks the version of the object. */
+tracks the version of the object.
+*/
 type ModifiedProperty struct {
 	Modified string `json:"modified,omitempty"`
 }
@@ -26,26 +28,32 @@ type ModifiedProperty struct {
 // Public Methods - ModifiedProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetModifiedToCurrentTime - This methods sets the object created time to the
-current time */
+/*
+SetModifiedToCurrentTime - This methods sets the object created time to the
+current time
+*/
 func (o *ModifiedProperty) SetModifiedToCurrentTime() error {
 	o.Modified = timestamp.CurrentTime("milli")
 	return nil
 }
 
-/* SetModified - This method takes in a timestamp in either time.Time or string
-format and updates the modifed property with it. The value is stored as a
+/*
+SetModified - This method takes in a timestamp in either time.Time or string
+format and updates the modified property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
-correct STIX timestamp format. */
+correct STIX timestamp format.
+*/
 func (o *ModifiedProperty) SetModified(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
 	o.Modified = ts
 	return nil
 }
 
-/* GetModified - This method will return the modified timestamp as a string. If
+/*
+GetModified - This method will return the modified timestamp as a string. If
 the value is the same as the created timestamp, then this object is the first
-version of the object. */
+version of the object.
+*/
 func (o *ModifiedProperty) GetModified() string {
 	return o.Modified
 }
@@ -54,10 +62,12 @@ func (o *ModifiedProperty) GetModified() string {
 // Public Methods - ModifiedProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the modified property on an object
+/*
+VerifyExists - This method will verify that the modified property on an object
 is present if required. It will return a boolean, an integer that tracks the
 number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
+results, whether good or bad.
+*/
 func (o *ModifiedProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -72,10 +82,12 @@ func (o *ModifiedProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *ModifiedProperty) Compare(obj2 *ModifiedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

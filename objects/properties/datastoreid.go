@@ -9,9 +9,11 @@ package properties
 // Define Types
 // ----------------------------------------------------------------------
 
-/* DatastoreIDProperty - A property used by all STIX objects that captures the
+/*
+DatastoreIDProperty - A property used by all STIX objects that captures the
 unique database ID for this object. This is not included in the JSON
-serialization, but is used with some datastores. */
+serialization, but is used with some datastores.
+*/
 type DatastoreIDProperty struct {
 	DatastoreID int `json:"-"`
 }
@@ -20,14 +22,18 @@ type DatastoreIDProperty struct {
 // Public Methods - DatastoreIDProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetDatastoreID - This method takes in a int representing the database ID and
-updates the DatastoreID property. */
+/*
+SetDatastoreID - This method takes in a int representing the database ID and
+updates the DatastoreID property.
+*/
 func (o *DatastoreIDProperty) SetDatastoreID(i int) error {
 	o.DatastoreID = i
 	return nil
 }
 
-/* GetDatastoreID - This method returns the database ID value. */
+/*
+GetDatastoreID - This method returns the database ID value.
+*/
 func (o *DatastoreIDProperty) GetDatastoreID() int {
 	return o.DatastoreID
 }

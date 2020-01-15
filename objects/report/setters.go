@@ -11,8 +11,10 @@ import "github.com/freetaxii/libstix2/timestamp"
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* SetPublished - This method takes in a timestamp in either time.Time or string
-format and updates the published timestamp property. */
+/*
+SetPublished - This method takes in a timestamp in either time.Time or string
+format and updates the published timestamp property.
+*/
 func (o *Report) SetPublished(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "micro")
 	o.Published = ts

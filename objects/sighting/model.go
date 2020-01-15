@@ -14,10 +14,12 @@ import (
 // Define Object Type
 // ----------------------------------------------------------------------
 
-/* Sighting - This type implements the STIX 2 Sighting SRO and defines all of
+/*
+Sighting - This type implements the STIX 2 Sighting SRO and defines all of
 the properties and methods needed to create and work with this object. All of
 the methods not defined local to this type are inherited from the individual
-properties. */
+properties.
+*/
 type Sighting struct {
 	objects.CommonObjectProperties
 	properties.DescriptionProperty
@@ -29,9 +31,11 @@ type Sighting struct {
 	Summary          bool     `json:"summary,omitempty"`
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *Sighting) GetPropertyList() []string {
 	return []string{"description", "first_seen", "last_seen", "count", "sighting_of_ref", "observed_data_refs", "where_sighted_refs", "summary"}
 }
@@ -40,9 +44,11 @@ func (o *Sighting) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Sighting object and return
+/*
+New - This function will create a new STIX Sighting object and return
 it as a pointer. It will also initialize the object by setting all of the basic
-properties. */
+properties.
+*/
 func New() *Sighting {
 	var obj Sighting
 	obj.InitSRO("sighting")

@@ -5,10 +5,12 @@
 
 package objects
 
-/* ValidObjectType - This function will take in a STIX object type and return
+/*
+ValidObjectType - This function will take in a STIX object type and return
 true if the string represents an actual STIX object type. This is used for
 determining if input from an outside source is actually a defined STIX object or
-not. */
+not.
+*/
 func ValidObjectType(t string) bool {
 
 	var m = map[string]int{
@@ -42,8 +44,10 @@ func ValidObjectType(t string) bool {
 	return false
 }
 
-/* GetCommonProperties - This method will return a pointer to the common
-properties of this object. */
+/*
+GetCommonProperties - This method will return a pointer to the common
+properties of this object.
+*/
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
 }

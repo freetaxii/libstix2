@@ -22,9 +22,11 @@ type BelongsToRefsProperty struct {
 // Public Methods - BelongsToRefsProperty
 // ----------------------------------------------------------------------
 
-/* AddBelongsToRefs - This method takes in a string value, a comma separated
+/*
+AddBelongsToRefs - This method takes in a string value, a comma separated
 list of string values, or a slice of string values that represents an id that
-this object belongs to and adds it to the belongs to refs property. */
+this object belongs to and adds it to the belongs to refs property.
+*/
 func (o *BelongsToRefsProperty) AddBelongsToRefs(values interface{}) error {
 	return resources.AddValuesToList(&o.BelongsToRefs, values)
 }

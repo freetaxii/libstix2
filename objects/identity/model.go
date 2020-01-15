@@ -18,7 +18,8 @@ import (
 Identity - This type implements the STIX 2 Identity SDO and
 defines all of the properties and methods needed to create and work with this
 object. All of the methods not defined local to this type are inherited from the
-individual properties. */
+individual properties.
+*/
 type Identity struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -29,9 +30,11 @@ type Identity struct {
 	ContactInformation string   `json:"contact_information,omitempty"`
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *Identity) GetPropertyList() []string {
 	return []string{"name", "description", "roles", "identity_class", "sectors", "contact_information"}
 }
@@ -40,8 +43,10 @@ func (o *Identity) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Identity object and return it as a
-pointer. */
+/*
+New - This function will create a new STIX Identity object and return it as a
+pointer.
+*/
 func New() *Identity {
 	var obj Identity
 	obj.InitSDO("identity")

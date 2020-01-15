@@ -9,8 +9,10 @@ package campaign
 // Public Methods - Campaign
 // ----------------------------------------------------------------------
 
-/* SetObjective - This method will take in a string representing an objective,
-goal, desired outcome, or intended effect and update the objective property. */
+/*
+SetObjective - This method will take in a string representing an objective,
+goal, desired outcome, or intended effect and update the objective property.
+*/
 func (o *Campaign) SetObjective(s string) error {
 	o.Objective = s
 	return nil

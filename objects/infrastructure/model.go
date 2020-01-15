@@ -14,10 +14,12 @@ import (
 // Define Object Type
 // ----------------------------------------------------------------------
 
-/* Infrastructure - This type implements the STIX 2 Infrastructure SDO and
+/*
+Infrastructure - This type implements the STIX 2 Infrastructure SDO and
 defines all of the properties and methods needed to create and work with this
 object. All of the methods not defined local to this type are inherited from the
-individual properties. */
+individual properties.
+*/
 type Infrastructure struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
@@ -28,9 +30,11 @@ type Infrastructure struct {
 	properties.SeenProperties
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *Infrastructure) GetPropertyList() []string {
 	return []string{"name", "description", "infrastructure_types", "aliases", "kill_chain_phases", "first_seen", "last_seen"}
 }
@@ -39,9 +43,11 @@ func (o *Infrastructure) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Infrastructure object and return
+/*
+New - This function will create a new STIX Infrastructure object and return
 it as a pointer. It will also initialize the object by setting all of the basic
-properties. */
+properties.
+*/
 func New() *Infrastructure {
 	var obj Infrastructure
 	obj.InitSDO("infrastructure")

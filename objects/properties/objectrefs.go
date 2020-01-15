@@ -15,7 +15,9 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* ObjectRefsProperty - A property used by one or more STIX objects. */
+/*
+ObjectRefsProperty - A property used by one or more STIX objects.
+*/
 type ObjectRefsProperty struct {
 	ObjectRefs []string `json:"aliases,omitempty"`
 }
@@ -24,9 +26,11 @@ type ObjectRefsProperty struct {
 // Public Methods - ObjectRefsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddObjectRefs - This method takes in a string value, a comma separated list of
+/*
+AddObjectRefs - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents a alias and adds it
-to the object refs property. */
+to the object refs property.
+*/
 func (o *ObjectRefsProperty) AddObjectRefs(values interface{}) error {
 	return resources.AddValuesToList(&o.ObjectRefs, values)
 }
@@ -35,10 +39,12 @@ func (o *ObjectRefsProperty) AddObjectRefs(values interface{}) error {
 // Public Methods - ObjectRefsProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the object refs property on an
+/*
+VerifyExists - This method will verify that the object refs property on an
 object is present. It will return a boolean, an integer that tracks the number
 of problems found, and a slice of strings that contain the detailed results,
-whether good or bad. */
+whether good or bad.
+*/
 func (o *ObjectRefsProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -53,10 +59,12 @@ func (o *ObjectRefsProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *ObjectRefsProperty) Compare(obj2 *ObjectRefsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

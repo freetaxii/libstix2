@@ -9,10 +9,12 @@ package location
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* Valid - This method will verify and test all of the properties on an object
+/*
+Valid - This method will verify and test all of the properties on an object
 to make sure they are valid per the specification. It will return a boolean, an
 integer that tracks the number of problems found, and a slice of strings that
-contain the detailed results, whether good or bad. */
+contain the detailed results, whether good or bad.
+*/
 func (o *Location) Valid() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

@@ -16,10 +16,12 @@ func (o *CommonObjectProperties) Compare(obj2 *CommonObjectProperties) (bool, in
 	return Compare(o, obj2)
 }
 
-/* Compare - This function will compare two objects to make sure they are the
+/*
+Compare - This function will compare two objects to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func Compare(obj1, obj2 *CommonObjectProperties) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

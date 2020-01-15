@@ -11,16 +11,20 @@ import "github.com/freetaxii/libstix2/resources"
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* AddTypes - This method takes in a string value, a comma separated list of
+/*
+AddTypes - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents an tool type and
 adds it to the tool types property. The values SHOULD come from the
-tool-type-ov open vocabulary. */
+tool-type-ov open vocabulary.
+*/
 func (o *Tool) AddTypes(values interface{}) error {
 	return resources.AddValuesToList(&o.ToolTypes, values)
 }
 
-/* SetToolVersion - This method takes in a string value representing the version
-of the tool and updates the tool version property. */
+/*
+SetToolVersion - This method takes in a string value representing the version
+of the tool and updates the tool version property.
+*/
 func (o *Tool) SetToolVersion(s string) error {
 	o.ToolVersion = s
 	return nil

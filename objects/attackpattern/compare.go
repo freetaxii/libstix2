@@ -9,10 +9,12 @@ package attackpattern
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two objects to make sure they are the
+/*
+Compare - This method will compare two objects to make sure they are the
 same. The receiver is object 1 and the object passed in is object 2. This method
 will return a boolean, an integer that tracks the number of problems found, and
-a slice of strings that contain the detailed results, whether good or bad. */
+a slice of strings that contain the detailed results, whether good or bad.
+*/
 func (o *AttackPattern) Compare(obj2 *AttackPattern) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
@@ -53,10 +55,12 @@ func (o *AttackPattern) Compare(obj2 *AttackPattern) (bool, int, []string) {
 // Public Functions
 // ----------------------------------------------------------------------
 
-/* Compare - This function will compare two objects to make sure they are the
+/*
+Compare - This function will compare two objects to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func Compare(obj1, obj2 *AttackPattern) (bool, int, []string) {
 	return obj1.Compare(obj2)
 }

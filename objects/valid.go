@@ -9,10 +9,12 @@ package objects
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* ValidSDO - This method will verify and test all of the properties on a STIX
+/*
+ValidSDO - This method will verify and test all of the properties on a STIX
 Domain Object to make sure they are valid per the specification. It will return
 a boolean, an integer that tracks the number of problems found, and a slice of
-strings that contain the detailed results, whether good or bad. */
+strings that contain the detailed results, whether good or bad.
+*/
 func (o *CommonObjectProperties) ValidSDO() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

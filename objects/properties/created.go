@@ -15,8 +15,10 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* CreatedProperty - A property used by all STIX objects that captures the date
-and time that the object was created. */
+/*
+CreatedProperty - A property used by all STIX objects that captures the date
+and time that the object was created.
+*/
 type CreatedProperty struct {
 	Created string `json:"created,omitempty"`
 }
@@ -25,24 +27,30 @@ type CreatedProperty struct {
 // Public Methods - CreatedProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetCreatedToCurrentTime - This methods sets the object created time to the
-current time */
+/*
+SetCreatedToCurrentTime - This methods sets the object created time to the
+current time
+*/
 func (o *CreatedProperty) SetCreatedToCurrentTime() error {
 	o.Created = timestamp.CurrentTime("milli")
 	return nil
 }
 
-/* SetCreated - This method takes in a timestamp in either time.Time or string
+/*
+SetCreated - This method takes in a timestamp in either time.Time or string
 format and updates the created property with it. The value is stored as a
 string, so if the value is in time.Time format, it will be converted to the
-correct STIX timestamp format. */
+correct STIX timestamp format.
+*/
 func (o *CreatedProperty) SetCreated(t interface{}) error {
 	ts, _ := timestamp.ToString(t, "milli")
 	o.Created = ts
 	return nil
 }
 
-/* GetCreated - This method will return the created timestamp as a string. */
+/*
+GetCreated - This method will return the created timestamp as a string.
+*/
 func (o *CreatedProperty) GetCreated() string {
 	return o.Created
 }
@@ -51,10 +59,12 @@ func (o *CreatedProperty) GetCreated() string {
 // Public Methods - CreatedProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the created property on an object
+/*
+VerifyExists - This method will verify that the created property on an object
 is present if required. It will return a boolean, an integer that tracks the
 number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
+results, whether good or bad.
+*/
 func (o *CreatedProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -69,10 +79,12 @@ func (o *CreatedProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *CreatedProperty) Compare(obj2 *CreatedProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

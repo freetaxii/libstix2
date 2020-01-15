@@ -13,8 +13,10 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* TypeProperty - A property used by one or more STIX objects that captures the
-STIX object type in string format. */
+/*
+TypeProperty - A property used by one or more STIX objects that captures the
+STIX object type in string format.
+*/
 type TypeProperty struct {
 	ObjectType string `json:"type,omitempty"`
 }
@@ -23,14 +25,18 @@ type TypeProperty struct {
 // Public Methods - TypeProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetObjectType - This method takes in a string value representing a STIX
-object type and updates the type property. */
+/*
+SetObjectType - This method takes in a string value representing a STIX
+object type and updates the type property.
+*/
 func (o *TypeProperty) SetObjectType(s string) error {
 	o.ObjectType = s
 	return nil
 }
 
-/* GetObjectType - This method returns the object type. */
+/*
+GetObjectType - This method returns the object type.
+*/
 func (o *TypeProperty) GetObjectType() string {
 	return o.ObjectType
 }
@@ -39,10 +45,12 @@ func (o *TypeProperty) GetObjectType() string {
 // Public Methods - TypeProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the type property on an object
+/*
+VerifyExists - This method will verify that the type property on an object
 is present if required. It will return a boolean, an integer that tracks the
 number of problems found, and a slice of strings that contain the detailed
-results, whether good or bad. */
+results, whether good or bad.
+*/
 func (o *TypeProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -57,10 +65,12 @@ func (o *TypeProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *TypeProperty) Compare(obj2 *TypeProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

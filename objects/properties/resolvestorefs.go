@@ -11,7 +11,9 @@ import "github.com/freetaxii/libstix2/resources"
 // Define Types
 // ----------------------------------------------------------------------
 
-/* ResolvesToRefsProperty - */
+/*
+ResolvesToRefsProperty -
+*/
 type ResolvesToRefsProperty struct {
 	ResolvesToRefs []string `json:"resolves_to_refs,omitempty"`
 }
@@ -20,9 +22,11 @@ type ResolvesToRefsProperty struct {
 // Public Methods - ResolvesToRefsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddResolvesToRefs - This method takes in a string value, a comma separated
+/*
+AddResolvesToRefs - This method takes in a string value, a comma separated
 list of string values, or a slice of string values that represents an id of an
-object that this resolves to and adds it to the resolves to refs property. */
+object that this resolves to and adds it to the resolves to refs property.
+*/
 func (o *ResolvesToRefsProperty) AddResolvesToRefs(values interface{}) error {
 	return resources.AddValuesToList(&o.ResolvesToRefs, values)
 }

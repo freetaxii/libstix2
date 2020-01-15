@@ -9,8 +9,10 @@ package properties
 // Define Types
 // ----------------------------------------------------------------------
 
-/* CustomProperties - A property used by all STIX objects that captures any
-custom properties. These are all stored in a map. */
+/*
+CustomProperties - A property used by all STIX objects that captures any
+custom properties. These are all stored in a map.
+*/
 type CustomProperties struct {
 	Custom map[string][]byte `json:"custom,omitempty"`
 }

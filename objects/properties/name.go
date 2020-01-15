@@ -11,8 +11,10 @@ import "fmt"
 // Define Types
 // ----------------------------------------------------------------------
 
-/* NameProperty - A property used by one or more STIX objects that captures a
-vanity name for the STIX object in string format. */
+/*
+NameProperty - A property used by one or more STIX objects that captures a
+vanity name for the STIX object in string format.
+*/
 type NameProperty struct {
 	Name string `json:"name,omitempty"`
 }
@@ -21,14 +23,18 @@ type NameProperty struct {
 // Public Methods - NameProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetName - This method takes in a string value representing a name of the
-object and updates the name property. */
+/*
+SetName - This method takes in a string value representing a name of the
+object and updates the name property.
+*/
 func (o *NameProperty) SetName(s string) error {
 	o.Name = s
 	return nil
 }
 
-/* GetName - This method returns the current name of the object. */
+/*
+GetName - This method returns the current name of the object.
+*/
 func (o *NameProperty) GetName() string {
 	return o.Name
 }
@@ -37,10 +43,12 @@ func (o *NameProperty) GetName() string {
 // Public Functions - NameProperty - Checks
 // ----------------------------------------------------------------------
 
-/* VerifyExists - This method will verify that the name property on an object
+/*
+VerifyExists - This method will verify that the name property on an object
 is present. It will return a boolean, an integer that tracks the number of
 problems found, and a slice of strings that contain the detailed results,
-whether good or bad. */
+whether good or bad.
+*/
 func (o *NameProperty) VerifyExists() (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 1)
@@ -55,10 +63,12 @@ func (o *NameProperty) VerifyExists() (bool, int, []string) {
 	return true, problemsFound, resultDetails
 }
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *NameProperty) Compare(obj2 *NameProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

@@ -14,19 +14,23 @@ import (
 // Define Object Model
 // ----------------------------------------------------------------------
 
-/* DomainName - This type implements the STIX 2 Domain Name SCO and defines
+/*
+DomainName - This type implements the STIX 2 Domain Name SCO and defines
 all of the properties and methods needed to create and work with this object.
 All of the methods not defined local to this type are inherited from the
-individual properties. */
+individual properties.
+*/
 type DomainName struct {
 	objects.CommonObjectProperties
 	properties.ValueProperty
 	properties.ResolvesToRefsProperty
 }
 
-/* GetProperties - This method will return a list of all of the properties that
+/*
+GetPropertyList - This method will return a list of all of the properties that
 are unique to this object. This is used by the custom UnmarshalJSON for this
-object. It is defined here in this file to make it easy to keep in sync. */
+object. It is defined here in this file to make it easy to keep in sync.
+*/
 func (o *DomainName) GetPropertyList() []string {
 	return []string{"value", "resolves_to_refs"}
 }
@@ -35,9 +39,11 @@ func (o *DomainName) GetPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* New - This function will create a new STIX Domain Name SCO and return it as a
+/*
+New - This function will create a new STIX Domain Name SCO and return it as a
 pointer. It will also initialize the object by setting all of the basic
-properties. */
+properties.
+*/
 func New() *DomainName {
 	var obj DomainName
 	obj.InitSCO("domain-name")

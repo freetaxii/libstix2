@@ -16,21 +16,25 @@ import (
 // Define Object Model
 // ----------------------------------------------------------------------
 
-/* STIXObject - This interface defines what methods an object must have to be
+/*
+STIXObject - This interface defines what methods an object must have to be
 considered a STIX Object. So any new object that is created that inherits the
 CommonObjectProperties is considered a STIX Object by this code. This interface
-is currently used by the Bundle object to add objects to the Bundle. */
+is currently used by the Bundle object to add objects to the Bundle.
+*/
 type STIXObject interface {
 	GetCommonProperties() *CommonObjectProperties
 }
 
-/* CommonObjectProperties - This type defines the properties that are common to
+/*
+CommonObjectProperties - This type defines the properties that are common to
 most STIX objects. If an object does not use all of these properties, then the
 Encode() function for that object will clean up and remove the properties that
 might get populated by mistake. Also, there will be Init() functions for each
 type of STIX object to help with populating the right properties for that type
 of object. This was done so that we would only need one type that could be used
-by all objects, to simplify the code. */
+by all objects, to simplify the code.
+*/
 type CommonObjectProperties struct {
 	properties.DatastoreIDProperty
 	properties.TypeProperty
@@ -49,10 +53,12 @@ type CommonObjectProperties struct {
 	properties.RawProperty
 }
 
-/* GetCommonPropertyList - This method will return a list of all of the
+/*
+GetCommonPropertyList - This method will return a list of all of the
 properties that are common to all objects. This is used by the
 FindCustomProperties method. It is defined here in this file to make it easy to
-keep in sync as new properties are added. */
+keep in sync as new properties are added.
+*/
 func (o *CommonObjectProperties) GetCommonPropertyList() []string {
 	return []string{
 		"type",
@@ -75,8 +81,10 @@ func (o *CommonObjectProperties) GetCommonPropertyList() []string {
 // Initialization Functions
 // ----------------------------------------------------------------------
 
-/* InitSDO - This method will initialize a STIX Domain Object by setting all
-of the basic properties and is called by the New() function from each object. */
+/*
+InitSDO - This method will initialize a STIX Domain Object by setting all
+of the basic properties and is called by the New() function from each object.
+*/
 func (o *CommonObjectProperties) InitSDO(objectType string) error {
 	if defs.STRICT_TYPES {
 		if valid := ValidObjectType(objectType); valid != true {
@@ -92,9 +100,11 @@ func (o *CommonObjectProperties) InitSDO(objectType string) error {
 	return nil
 }
 
-/* InitSRO - This method will initialize a STIX Relationship Object by setting
+/*
+InitSRO - This method will initialize a STIX Relationship Object by setting
 all of the basic properties and is called by the New() function from each
-object. */
+object.
+*/
 func (o *CommonObjectProperties) InitSRO(objectType string) error {
 	if defs.STRICT_TYPES {
 		if valid := ValidObjectType(objectType); valid != true {
@@ -110,9 +120,11 @@ func (o *CommonObjectProperties) InitSRO(objectType string) error {
 	return nil
 }
 
-/* InitSCO - This method will initialize a STIX Cyber Observable Object by
+/*
+InitSCO - This method will initialize a STIX Cyber Observable Object by
 setting all of the basic properties and is called by the New() function from
-each object. */
+each object.
+*/
 func (o *CommonObjectProperties) InitSCO(objectType string) error {
 	if defs.STRICT_TYPES {
 		if valid := ValidObjectType(objectType); valid != true {
@@ -126,8 +138,10 @@ func (o *CommonObjectProperties) InitSCO(objectType string) error {
 	return nil
 }
 
-/* InitBundle - This method will initialize a STIX Bundle by setting all of the
-basic properties and is called by the New() function from that object. */
+/*
+InitBundle - This method will initialize a STIX Bundle by setting all of the
+basic properties and is called by the New() function from that object.
+*/
 func (o *CommonObjectProperties) InitBundle() error {
 	o.SetObjectType("bundle")
 	o.SetNewSTIXID("bundle")

@@ -11,14 +11,18 @@ import "fmt"
 // Define Types
 // ----------------------------------------------------------------------
 
-/* KillChainPhasesProperty - A property used by one or more STIX objects that
-captures a list of kll chain phases as defined by STIX. */
+/*
+KillChainPhasesProperty - A property used by one or more STIX objects that
+captures a list of kll chain phases as defined by STIX.
+*/
 type KillChainPhasesProperty struct {
 	KillChainPhases []KillChainPhase `json:"kill_chain_phases,omitempty"`
 }
 
-/* KillChainPhase - This type defines all of the properties associated with the
-STIX Kill Chain Phase type. */
+/*
+KillChainPhase - This type defines all of the properties associated with the
+STIX Kill Chain Phase type.
+*/
 type KillChainPhase struct {
 	KillChainName string `json:"kill_chain_name,omitempty"`
 	PhaseName     string `json:"phase_name,omitempty"`
@@ -28,10 +32,12 @@ type KillChainPhase struct {
 // Public Methods - KillChainPhasesProperty - Setters
 // ----------------------------------------------------------------------
 
-/* CreateKillChainPhase - This method takes in two parameters and creates and
+/*
+CreateKillChainPhase - This method takes in two parameters and creates and
 adds a new kill chain phase to the list. The first value is a string value
 representing the name of the kill chain being used. The second value is a string
-value representing the phase name from that kill chain. */
+value representing the phase name from that kill chain.
+*/
 func (o *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error {
 	k, _ := o.newKillChainPhase()
 	k.SetName(name)
@@ -43,8 +49,10 @@ func (o *KillChainPhasesProperty) CreateKillChainPhase(name, phase string) error
 // Private Methods - KillChainPhasesProperty - Setters
 // ----------------------------------------------------------------------
 
-/* newKillChainPhase - This method returns a reference to a slice location. This
-will enable the code to update an object located at that slice location. */
+/*
+newKillChainPhase - This method returns a reference to a slice location. This
+will enable the code to update an object located at that slice location.
+*/
 func (o *KillChainPhasesProperty) newKillChainPhase() (*KillChainPhase, error) {
 	var s KillChainPhase
 
@@ -62,15 +70,19 @@ func (o *KillChainPhasesProperty) newKillChainPhase() (*KillChainPhase, error) {
 // Public Methods - KillChainPhase - Setters
 // ----------------------------------------------------------------------
 
-/* SetName - This method takes in a string value representing the name of a kill
-chain and updates the kill chain name property. */
+/*
+SetName - This method takes in a string value representing the name of a kill
+chain and updates the kill chain name property.
+*/
 func (o *KillChainPhase) SetName(s string) error {
 	o.KillChainName = s
 	return nil
 }
 
-/* SetPhase - This method takes in a string value representing the phase of a
-kill chain and updates the phase name property. */
+/*
+SetPhase - This method takes in a string value representing the phase of a
+kill chain and updates the phase name property.
+*/
 func (o *KillChainPhase) SetPhase(s string) error {
 	o.PhaseName = s
 	return nil
@@ -80,10 +92,12 @@ func (o *KillChainPhase) SetPhase(s string) error {
 // Public Methods - KillChainPhasesProperty - Checks
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *KillChainPhasesProperty) Compare(obj2 *KillChainPhasesProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)

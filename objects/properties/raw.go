@@ -9,7 +9,9 @@ package properties
 // Define Types
 // ----------------------------------------------------------------------
 
-/* RawProperty - A property used to store the raw bytes of the JSON object. */
+/*
+RawProperty - A property used to store the raw bytes of the JSON object.
+*/
 type RawProperty struct {
 	Raw []byte `json:"-"`
 }
@@ -18,15 +20,18 @@ type RawProperty struct {
 // Public Methods - RawProperty - Setters
 // ----------------------------------------------------------------------
 
-/* SetRawData - This method takes in a slice of bytes representing a full JSON
-object and updates the raw property for the object. */
+/*
+SetRawData - This method takes in a slice of bytes representing a full JSON
+object and updates the raw property for the object.
+*/
 func (o *RawProperty) SetRawData(data []byte) error {
 	o.Raw = data
 	return nil
 }
 
-/* GetRawData - This method will return the raw bytes for a given STIX object.
- */
+/*
+GetRawData - This method will return the raw bytes for a given STIX object.
+*/
 func (o *RawProperty) GetRawData() []byte {
 	return o.Raw
 }

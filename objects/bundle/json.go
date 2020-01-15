@@ -31,8 +31,10 @@ import (
 // Public Functions - JSON Decoder
 // ----------------------------------------------------------------------
 
-/* Decode - This function will decode a bundle and return the object as a pointer
-along with any errors found. */
+/*
+Decode - This function will decode a bundle and return the object as a pointer
+along with any errors found.
+*/
 func Decode(r io.Reader) (*Bundle, []error) {
 	allErrors := make([]error, 0)
 
@@ -190,7 +192,9 @@ func Decode(r io.Reader) (*Bundle, []error) {
 // for the object.
 // ----------------------------------------------------------------------
 
-/* Encode - This method is a simple wrapper for encoding an object into JSON */
+/*
+Encode - This method is a simple wrapper for encoding an object into JSON
+*/
 func (o *Bundle) Encode() ([]byte, error) {
 	data, err := json.MarshalIndent(o, "", "    ")
 	if err != nil {
@@ -201,8 +205,10 @@ func (o *Bundle) Encode() ([]byte, error) {
 	return data, nil
 }
 
-/* EncodeToString - This method is a simple wrapper for encoding an object into
-JSON */
+/*
+EncodeToString - This method is a simple wrapper for encoding an object into
+JSON
+*/
 func (o *Bundle) EncodeToString() (string, error) {
 	data, err := o.Encode()
 	if err != nil {

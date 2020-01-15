@@ -11,8 +11,10 @@ import "github.com/freetaxii/libstix2/objects"
 // Public Methods
 // ----------------------------------------------------------------------
 
-/* AddObject - This method will take in an object as an interface and add it to
-the list of objects in the bundle. */
+/*
+AddObject - This method will take in an object as an interface and add it to
+the list of objects in the bundle.
+*/
 func (o *Bundle) AddObject(i objects.STIXObject) error {
 	o.Objects = append(o.Objects, i)
 	return nil

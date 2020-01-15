@@ -15,9 +15,11 @@ import (
 // Define Types
 // ----------------------------------------------------------------------
 
-/* LabelsProperty - This method takes in a string value, a comma separated list of
+/*
+LabelsProperty - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that represents a label and adds it to
-the labels property. */
+the labels property.
+*/
 type LabelsProperty struct {
 	Labels []string `json:"labels,omitempty"`
 }
@@ -26,9 +28,11 @@ type LabelsProperty struct {
 // Public Methods - LabelsProperty - Setters
 // ----------------------------------------------------------------------
 
-/* AddLabels - This method takes in a string value, a comma separated list of
+/*
+AddLabels - This method takes in a string value, a comma separated list of
 string values, or a slice of string values that all representing a
-label and adds it to the labels property. */
+label and adds it to the labels property.
+*/
 func (o *LabelsProperty) AddLabels(values interface{}) error {
 	return resources.AddValuesToList(&o.Labels, values)
 }
@@ -37,10 +41,12 @@ func (o *LabelsProperty) AddLabels(values interface{}) error {
 // Public Methods - LabelsProperty - Checks
 // ----------------------------------------------------------------------
 
-/* Compare - This method will compare two properties to make sure they are the
+/*
+Compare - This method will compare two properties to make sure they are the
 same and will return a boolean, an integer that tracks the number of problems
 found, and a slice of strings that contain the detailed results, whether good or
-bad. */
+bad.
+*/
 func (o *LabelsProperty) Compare(obj2 *LabelsProperty) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
