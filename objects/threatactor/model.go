@@ -33,6 +33,13 @@ type ThreatActor struct {
 	PersonalMotivations []string `json:"personal_motivations,omitempty"`
 }
 
+/* GetProperties - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. It is defined here in this file to make it easy to keep in sync. */
+func (o *ThreatActor) GetPropertyList() []string {
+	return []string{"name", "description", "threat_actor_types", "aliases", "first_seen", "last_seen", "roles", "goals", "sophistication", "resource_level", "primary_motivation", "secondary_motivations", "personal_motivations"}
+}
+
 // ----------------------------------------------------------------------
 // Initialization Functions
 // ----------------------------------------------------------------------

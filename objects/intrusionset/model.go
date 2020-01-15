@@ -29,6 +29,13 @@ type IntrusionSet struct {
 	properties.MotivationProperties
 }
 
+/* GetProperties - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. It is defined here in this file to make it easy to keep in sync. */
+func (o *IntrusionSet) GetPropertyList() []string {
+	return []string{"name", "description", "aliases", "first_seen", "last_seen", "goals", "resource_level", "primary_motivation", "secondary_motivations"}
+}
+
 // ----------------------------------------------------------------------
 // Initialization Functions
 // ----------------------------------------------------------------------

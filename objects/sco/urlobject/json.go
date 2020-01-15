@@ -7,6 +7,8 @@ package urlobject
 
 import (
 	"encoding/json"
+
+	"github.com/freetaxii/libstix2/defs"
 )
 
 // ----------------------------------------------------------------------
@@ -19,14 +21,44 @@ object along with any errors. */
 func Decode(data []byte) (*URLObject, error) {
 	var o URLObject
 
-	err := json.Unmarshal(data, &o)
-	if err != nil {
+	if err := json.Unmarshal(data, &o); err != nil {
 		return nil, err
 	}
 
-	o.SetRawData(data)
-
 	return &o, nil
+}
+
+/* UnmarshalJSON - This method will over write the default UnmarshalJSON method
+to enable custom properties that this library does not know about. It will store
+them as map where the value of each key is a byte arrays. This way a tool that
+does know how to deal with them can then further process them after this is
+done. This will also allow the storage of the raw JSON data. */
+func (o *URLObject) UnmarshalJSON(b []byte) error {
+
+	type alias URLObject
+	temp := &struct {
+		*alias
+	}{
+		alias: (*alias)(o),
+	}
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+
+	// This will create a map of all of the custom properties and store them in a
+	// property called o.Custom
+	if err := o.FindCustomProperties(b, o.GetPropertyList()); err != nil {
+		return err
+	}
+
+	// This will store a complete copy of the original JSON in a byte array called
+	// o.Raw. This could be useful if you need to digitally sign the JSON or do
+	// verification on what was actually received.
+	if defs.KEEP_RAW_DATA == true {
+		o.SetRawData(b)
+	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------------

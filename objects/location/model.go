@@ -33,6 +33,13 @@ type Location struct {
 	PostalCode         string  `json:"postal_code,omitempty"`
 }
 
+/* GetProperties - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. It is defined here in this file to make it easy to keep in sync. */
+func (o *Location) GetPropertyList() []string {
+	return []string{"name", "description", "latitude", "longitude", "precision", "region", "country", "administrative_area", "city", "street_address", "postal_code"}
+}
+
 // ----------------------------------------------------------------------
 // Initialization Functions
 // ----------------------------------------------------------------------

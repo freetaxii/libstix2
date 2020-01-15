@@ -24,6 +24,7 @@ func main() {
 	// customAP.AttackPattern = o
 
 	customAP.SomeCustomProperty = "some custom string data"
+	customAP.SetName("Phishing 123")
 
 	data2, err1 := json.MarshalIndent(customAP, "", "    ")
 	if err1 != nil {

@@ -53,3 +53,28 @@ func Decode(data []byte) (*CommonObjectProperties, error) {
 
 	return &o, nil
 }
+
+func (o *CommonObjectProperties) FindCustomProperties(b []byte, p []string) error {
+	// First thing is to capture all of the properties in a map so we can remove
+	// what we know about. This will leave us with just the custom properties.
+	var customProperties map[string]*json.RawMessage
+	if err := json.Unmarshal(b, &customProperties); err != nil {
+		return err
+	}
+
+	for _, v := range o.GetCommonPropertyList() {
+		delete(customProperties, v)
+	}
+	for _, v := range p {
+		delete(customProperties, v)
+	}
+
+	// If there are any custom properties left store them in the custom property
+	if len(customProperties) > 0 {
+		o.Custom = make(map[string][]byte)
+		for k, v := range customProperties {
+			o.Custom[k] = *v
+		}
+	}
+	return nil
+}

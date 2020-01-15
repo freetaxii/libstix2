@@ -24,6 +24,13 @@ type DomainName struct {
 	properties.ResolvesToRefsProperty
 }
 
+/* GetProperties - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. It is defined here in this file to make it easy to keep in sync. */
+func (o *DomainName) GetPropertyList() []string {
+	return []string{"value", "resolves_to_refs"}
+}
+
 // ----------------------------------------------------------------------
 // Initialization Functions
 // ----------------------------------------------------------------------

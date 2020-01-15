@@ -7,6 +7,8 @@ package attackpattern
 
 import (
 	"encoding/json"
+
+	"github.com/freetaxii/libstix2/defs"
 )
 
 // ----------------------------------------------------------------------
@@ -19,50 +21,20 @@ object along with any errors. */
 func Decode(data []byte) (*AttackPattern, error) {
 	var o AttackPattern
 
-	err := json.Unmarshal(data, &o)
-	if err != nil {
+	if err := json.Unmarshal(data, &o); err != nil {
 		return nil, err
 	}
-
-	o.SetRawData(data)
 
 	return &o, nil
 }
 
-/* UnmarshalJSON - This method will over right the default UnmarshalJSON method
+/* UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom properties that this library does not know about. It will store
-them as map of byte arrays. This way a tool that does know how to deal with them
-can then further process them after this is done. */
+them as map where the value of each key is a byte arrays. This way a tool that
+does know how to deal with them can then further process them after this is
+done. This will also allow the storage of the raw JSON data. */
 func (o *AttackPattern) UnmarshalJSON(b []byte) error {
-	// First thing is to capture all of the properties in a map so we can remove
-	// what we know about. This will leave us with just the custom properties.
-	var customProperties map[string]*json.RawMessage
-	if err := json.Unmarshal(b, &customProperties); err != nil {
-		return err
-	}
 
-	// Now delete the properties we know about
-	delete(customProperties, "type")
-	delete(customProperties, "spec_version")
-	delete(customProperties, "id")
-	delete(customProperties, "created_by_ref")
-	delete(customProperties, "created")
-	delete(customProperties, "modified")
-	delete(customProperties, "revoked")
-	delete(customProperties, "labels")
-	delete(customProperties, "confidence")
-	delete(customProperties, "lang")
-	delete(customProperties, "external_references")
-	delete(customProperties, "object_marking_refs")
-	delete(customProperties, "granular_markings")
-
-	delete(customProperties, "name")
-	delete(customProperties, "description")
-	delete(customProperties, "aliases")
-	delete(customProperties, "kill_chain_phases")
-
-	// Unmarshal the properties that we understand. We need to alias the object
-	// so that we do not recursively call Unmarshal on this object.
 	type alias AttackPattern
 	temp := &struct {
 		*alias
@@ -73,13 +45,19 @@ func (o *AttackPattern) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	// If there are any custom properties left store them in the custom property
-	if len(customProperties) > 0 {
-		o.Custom = make(map[string][]byte)
-		for k, v := range customProperties {
-			o.Custom[k] = *v
-		}
+	// This will create a map of all of the custom properties and store them in a
+	// property called o.Custom
+	if err := o.FindCustomProperties(b, o.GetPropertyList()); err != nil {
+		return err
 	}
+
+	// This will store a complete copy of the original JSON in a byte array called
+	// o.Raw. This could be useful if you need to digitally sign the JSON or do
+	// verification on what was actually received.
+	if defs.KEEP_RAW_DATA == true {
+		o.SetRawData(b)
+	}
+
 	return nil
 }
 

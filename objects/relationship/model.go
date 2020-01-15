@@ -28,6 +28,13 @@ type Relationship struct {
 	StopTime  string `json:"stop_time,omitempty"`
 }
 
+/* GetProperties - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. It is defined here in this file to make it easy to keep in sync. */
+func (o *Relationship) GetPropertyList() []string {
+	return []string{"relationship_type", "description", "source_ref", "target_ref", "start_time", "stop_time"}
+}
+
 // ----------------------------------------------------------------------
 // Initialization Functions
 // ----------------------------------------------------------------------

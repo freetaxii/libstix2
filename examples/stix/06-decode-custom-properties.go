@@ -20,13 +20,18 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(o)
 
+	fmt.Println("Just the custom properties:")
 	fmt.Println(o.Custom)
 
 	// Since we know the data is a string, lets create a variable to unmarshal the data to
 	var foo string
 	json.Unmarshal(o.Custom["some_custom_property"], &foo)
 	fmt.Println(foo)
+
+	data2, _ := o.EncodeToString()
+	fmt.Println(data2)
 
 }
 
@@ -40,7 +45,8 @@ func getdata() string {
     "modified": "2018-06-05T18:25:15.917Z",
     "name": "Phishing",
     "aliases": ["Banking1", "ATM2"],
-    "some_custom_property": "some_custom_value"
+    "some_custom_property": "some_custom_value",
+    "some_custom_property1": "some_custom_value1"
 }
 `
 	return s

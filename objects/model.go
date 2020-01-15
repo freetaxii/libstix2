@@ -45,8 +45,30 @@ type CommonObjectProperties struct {
 	properties.LangProperty
 	properties.ExternalReferencesProperty
 	properties.MarkingProperties
-	Custom map[string][]byte `json:"custom,omitempty"`
+	properties.CustomProperties
 	properties.RawProperty
+}
+
+/* GetCommonPropertyList - This method will return a list of all of the
+properties that are common to all objects. This is used by the
+FindCustomProperties method. It is defined here in this file to make it easy to
+keep in sync as new properties are added. */
+func (o *CommonObjectProperties) GetCommonPropertyList() []string {
+	return []string{
+		"type",
+		"spec_version",
+		"id",
+		"created_by_ref",
+		"created",
+		"modified",
+		"revoked",
+		"labels",
+		"confidence",
+		"lang",
+		"external_references",
+		"object_marking_refs",
+		"granular_markings",
+	}
 }
 
 // ----------------------------------------------------------------------
