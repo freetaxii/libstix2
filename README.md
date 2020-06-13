@@ -114,7 +114,7 @@ func (o *CollectionsType) AddCollection(o *CollectionType) (int, error) {}
 func (o *ManifestType) AddManifestEntry(o *ManifestEntryType) (int, error) {}
 ```
 
-* Methods that create a new a new object inside another object and return a pointer to a slice location for the new object have a name of “New” + the object type in the singular. Example: “NewManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource. Some examples with full signatures:
+* Methods that create a new object inside another object and return a pointer to a slice location for the new object have a name of “New” + the object type in the singular. Example: “NewManifestEntry” is used to create a new Manifest Entry in the Objects slice in the Manifest resource. Some examples with full signatures:
 
 ```
 func (o *ExternalReferencesPropertyType) NewExternalReference() (*ExternalReferenceType, error) {}
