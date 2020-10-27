@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="89602c5e-1645-46c4-9526-2cb48019a22e" name="Default Changelist" comment="" />
+    <list default="true" id="89602c5e-1645-46c4-9526-2cb48019a22e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,13 +23,40 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../src/0day-cve" />
+  </component>
+  <component name="RunManager" selected="Go Build.go build github.com/wxj95/libstix2/examples/stix">
+    <configuration name="go build github.com/wxj95/libstix2/examples/stix" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="libstix2" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/examples/stix/02-bundle.go" />
+      <package value="github.com/wxj95/libstix2/examples/stix" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestValid1 in github.com/wxj95/libstix2/objects/markingdefinition" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="libstix2" />
+      <working_directory value="$PROJECT_DIR$/objects/markingdefinition" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/wxj95/libstix2/objects/markingdefinition" />
+      <pattern value="^TestValid1$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build github.com/wxj95/libstix2/examples/stix" />
+        <item itemvalue="Go Test.TestValid1 in github.com/wxj95/libstix2/objects/markingdefinition" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
@@ -35,9 +65,33 @@
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1603762196128">
+    <state x="656" y="144" key="#go_build_github.com/wxj95/libstix2/examples/stix" timestamp="1603766557397">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1603762196128" />
+    <state x="656" y="144" key="#go_build_github.com/wxj95/libstix2/examples/stix/0.0.1920.1040@0.0.1920.1040" timestamp="1603766557397" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1603766294855">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1603766294855" />
+    <state width="1877" height="388" key="GridCell.Tab.0.bottom" timestamp="1603768481372">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="388" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1603768481372" />
+    <state width="1877" height="388" key="GridCell.Tab.0.center" timestamp="1603768481372">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="388" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1603768481372" />
+    <state width="1877" height="388" key="GridCell.Tab.0.left" timestamp="1603768481372">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="388" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1603768481372" />
+    <state width="1877" height="388" key="GridCell.Tab.0.right" timestamp="1603768481372">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="388" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1603768481372" />
+    <state x="662" y="254" width="596" height="584" key="find.popup" timestamp="1603765806198">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="662" y="254" width="596" height="584" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1603765806198" />
   </component>
 </project>
