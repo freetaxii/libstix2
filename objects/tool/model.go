@@ -24,7 +24,7 @@ type Tool struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	ToolTypes []string `json:"tool_types,omitempty`
+	ToolTypes []string `json:"tool_types,omitempty"`
 	properties.AliasesProperty
 	properties.KillChainPhasesProperty
 	ToolVersion string `json:"tool_version,omitempty"`
