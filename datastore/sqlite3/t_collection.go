@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/wxj95/libstix2/defs"
+	"github.com/wxj95/libstix2/resources/collections"
 )
 
 // ----------------------------------------------------------------------

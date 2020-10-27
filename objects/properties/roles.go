@@ -5,7 +5,7 @@
 
 package properties
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/wxj95/libstix2/resources"
 
 // ----------------------------------------------------------------------
 // Define Types

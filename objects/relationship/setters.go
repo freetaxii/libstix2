@@ -5,7 +5,7 @@
 
 package relationship
 
-import "github.com/freetaxii/libstix2/timestamp"
+import "github.com/wxj95/libstix2/timestamp"
 
 // ----------------------------------------------------------------------
 // Public Methods

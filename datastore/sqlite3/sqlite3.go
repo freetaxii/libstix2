@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/wxj95/libstix2/objects/indicator"
+	"github.com/wxj95/libstix2/resources/collections"
 	"github.com/gologme/log"
 	// Need to import just the symbols from the sqlite3 package
 	_ "github.com/mattn/go-sqlite3"

@@ -8,7 +8,7 @@ package properties
 import (
 	"fmt"
 
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/wxj95/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------

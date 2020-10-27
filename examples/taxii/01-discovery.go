@@ -8,7 +8,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/taxii/discovery"
+	"github.com/wxj95/libstix2/objects/taxii/discovery"
 )
 
 func main() {

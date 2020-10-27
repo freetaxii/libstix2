@@ -7,7 +7,7 @@ package sqlite3
 
 // import (
 // 	"bytes"
-// 	"github.com/freetaxii/libstix2/datastore"
+// 	"github.com/wxj95/libstix2/datastore"
 // )
 
 // ----------------------------------------------------------------------

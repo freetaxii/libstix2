@@ -7,7 +7,7 @@ package markingdefinition
 
 import (
 	"encoding/json"
-	"github.com/freetaxii/libstix2/defs"
+	"github.com/wxj95/libstix2/defs"
 )
 
 func Decode(data []byte) (*MarkingDefinition, error) {

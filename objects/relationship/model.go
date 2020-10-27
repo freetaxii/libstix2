@@ -6,8 +6,8 @@
 package relationship
 
 import (
-	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/wxj95/libstix2/objects"
+	"github.com/wxj95/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------

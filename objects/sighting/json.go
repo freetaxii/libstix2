@@ -8,7 +8,7 @@ package sighting
 import (
 	"encoding/json"
 
-	"github.com/freetaxii/libstix2/defs"
+	"github.com/wxj95/libstix2/defs"
 )
 
 // ----------------------------------------------------------------------

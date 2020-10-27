@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/wxj95/libstix2/objects/indicator"
 )
 
 func main() {

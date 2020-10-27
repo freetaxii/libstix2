@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/collections"
+	"github.com/wxj95/libstix2/objects/collections"
 )
 
 func main() {

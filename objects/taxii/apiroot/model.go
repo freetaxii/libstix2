@@ -6,7 +6,7 @@
 package apiroot
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/wxj95/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # FreeTAXII/libstix2
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/freetaxii/libstix2)](https://goreportcard.com/report/github.com/freetaxii/libstix2) [![GoDoc](https://godoc.org/github.com/freetaxii/libstix2?status.png)](https://godoc.org/github.com/freetaxii/libstix2)
+[![Go Report Card](https://goreportcard.com/badge/github.com/wxj95/libstix2)](https://goreportcard.com/report/github.com/wxj95/libstix2) [![GoDoc](https://godoc.org/github.com/wxj95/libstix2?status.png)](https://godoc.org/github.com/wxj95/libstix2)
 
 libstix2 an API for generating JSON based STIX objects and TAXII messages with 
 the Go (Golang) programming language. Please see the examples directory and the 
@@ -15,7 +15,7 @@ to support STIX 2.x and TAXII 2.x.
 This package can be installed with the go get command:
 
 ```
-go get github.com/freetaxii/libstix2
+go get github.com/wxj95/libstix2
 ```
 
 ## Special Thanks
