@@ -19,7 +19,7 @@ import (
 ObjectRefsProperty - A property used by one or more STIX objects.
 */
 type ObjectRefsProperty struct {
-	ObjectRefs []string `json:"aliases,omitempty"`
+	ObjectRefs []string `json:"object_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------
