@@ -1,466 +1,569 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
 package vocabs
 
-// Account - This defines the STIX account vocabulary.
-var Account = []string{
-	"facebook",
-	"ldap",
-	"nis",
-	"openid",
-	"radius",
-	"skype",
-	"tacacs",
-	"twitter",
-	"unix",
-	"windows-local",
-	"windows-domain",
+// IsVocabEntryValid - This function determine will take in a vocabulary and a
+// value and return true if it is found and false if it is not found.
+func IsVocabEntryValid(vocab map[string]bool, s string) bool {
+	if _, found := vocab[s]; found == true {
+		return true
+	}
+	return false
 }
 
-// AttackMotivation - This defines the STIX attack motivation vocabulary.
-var AttackMotivation = []string{
-	"accidental",
-	"coercion",
-	"dominance",
-	"ideology",
-	"notoriety",
-	"organizational-gain",
-	"personal-gain",
-	"personal-satisfaction",
-	"revenge",
-	"unpredictable",
+// GetAccountVocab - This function will return the STIX account vocabulary.
+func GetAccountVocab() map[string]bool {
+	return (map[string]bool{
+		"facebook":       true,
+		"ldap":           true,
+		"nis":            true,
+		"openid":         true,
+		"radius":         true,
+		"skype":          true,
+		"tacacs":         true,
+		"twitter":        true,
+		"unix":           true,
+		"windows-local":  true,
+		"windows-domain": true,
+	})
 }
 
-// AttackResourceLevel - This defines the STIX attack resource level vocabulary.
-var AttackResourceLevel = []string{
-	"individual",
-	"club",
-	"contest",
-	"team",
-	"organization",
-	"government",
+// GetAttackMotivationVocab - This function will return the STIX attack
+// motivation vocabulary.
+func GetAttackMotivationVocab() map[string]bool {
+	return (map[string]bool{
+		"accidental":            true,
+		"coercion":              true,
+		"dominance":             true,
+		"ideology":              true,
+		"notoriety":             true,
+		"organizational-gain":   true,
+		"personal-gain":         true,
+		"personal-satisfaction": true,
+		"revenge":               true,
+		"unpredictable":         true,
+	})
 }
 
-// CourseOfAction - This defines the STIX course of action vocabulary.
-var CourseOfAction = []string{
-	"textual:text/plain",
-	"textual:text/html",
-	"textual:text/md",
-	"textual:pdf",
+// GetAttackResourceLevelVocab - This function will return the STIX attack
+// resource level vocabulary.
+func GetAttackResourceLevelVocab() map[string]bool {
+	return (map[string]bool{
+		"individual":   true,
+		"club":         true,
+		"contest":      true,
+		"team":         true,
+		"organization": true,
+		"government":   true,
+	})
 }
 
-// Encryption - This defines the STIX encryption enumeration.
-var Encryption = []string{
-	"AES-256-GCM",
-	"ChaCha20-Poly1305",
-	"mime-type-indicated",
+// GetEncryptionVocab - This function will return the STIX encryption
+// enumeration.
+func GetEncryptionVocab() map[string]bool {
+	return (map[string]bool{
+		"AES-256-GCM":         true,
+		"ChaCha20-Poly1305":   true,
+		"mime-type-indicated": true,
+	})
 }
 
-// Grouping - This defines the STIX grouping vocabulary.
-var Grouping = []string{
-	"suspicious-activity",
-	"malware-analysis",
-	"unspecified",
+// GetExtensionTypesVocab - This function will return the STIX extension types
+// enumeration.
+func GetExtensionTypesVocab() map[string]bool {
+	return (map[string]bool{
+		"new-sdo":                     true,
+		"new-sco":                     true,
+		"new-sro":                     true,
+		"property-extension":          true,
+		"toplevel-property-extension": true,
+	})
 }
 
-// HashingAlgorithm - This defines the STIX hashing algorithm vocabulary.
-var HashingAlgorithm = []string{
-	"MD5",
-	"SHA-1",
-	"SHA-256",
-	"SHA-512",
-	"SHA3-256",
-	"SHA3-512",
-	"SSDEEP",
-	"TLSH",
+// GetGroupingVocab - This function will return the STIX grouping vocabulary
+func GetGroupingVocab() map[string]bool {
+	return (map[string]bool{
+		"suspicious-activity": true,
+		"malware-analysis":    true,
+		"unspecified":         true,
+	})
 }
 
-// IdentityClass - This defines the STIX identity class vocabulary.
-var IdentityClass = []string{
-	"individual",
-	"group",
-	"system",
-	"organization",
-	"class",
-	"unspecified",
+// GetHashingAlgorithmVocab - This function will return the STIX hashing
+// algorithm vocabulary
+func GetHashingAlgorithmVocab() map[string]bool {
+	return (map[string]bool{
+		"MD5":      true,
+		"SHA-1":    true,
+		"SHA-256":  true,
+		"SHA-512":  true,
+		"SHA3-256": true,
+		"SHA3-512": true,
+		"SSDEEP":   true,
+		"TLSH":     true,
+	})
 }
 
-// IndicatorLabel - This defines the STIX indicator label vocabulary.
-var IndicatorLabel = []string{
-	"anomalous-activity",
-	"anonymization",
-	"benign",
-	"compromised",
-	"malicious-activity",
-	"attribution",
+// GetIdentityClassVocab - This function will return the STIX identity class
+// vocabulary
+func GetIdentityClassVocab() map[string]bool {
+	return (map[string]bool{
+		"individual":   true,
+		"group":        true,
+		"system":       true,
+		"organization": true,
+		"class":        true,
+		"unknown":      true,
+	})
 }
 
-// ImplementationLanguage - This defines the STIX implementation language vocabulary.
-var ImplementationLanguage = []string{
-	"applescript",
-	"bash",
-	"c",
-	"c++",
-	"c#",
-	"go",
-	"java",
-	"javascript",
-	"lua",
-	"objective-c",
-	"perl",
-	"php",
-	"powershell",
-	"python",
-	"ruby",
-	"scala",
-	"swift",
-	"typescript",
-	"visual-basic",
-	"x86-32",
-	"x86-64",
+// GetImplementationLanguageVocab - This function will return the STIX
+// implementation language vocabulary
+func GetImplementationLanguageVocab() map[string]bool {
+	return (map[string]bool{
+		"applescript":  true,
+		"bash":         true,
+		"c":            true,
+		"c++":          true,
+		"c#":           true,
+		"go":           true,
+		"java":         true,
+		"javascript":   true,
+		"lua":          true,
+		"objective-c":  true,
+		"perl":         true,
+		"php":          true,
+		"powershell":   true,
+		"python":       true,
+		"ruby":         true,
+		"scala":        true,
+		"swift":        true,
+		"typescript":   true,
+		"visual-basic": true,
+		"x86-32":       true,
+		"x86-64":       true,
+	})
 }
 
-// IndicatorType - This defines the STIX indicator type vocabulary.
-var IndicatorType = []string{
-	"anomalous-activity",
-	"anonymization",
-	"benign",
-	"compromised",
-	"malicious-activity",
-	"attribution",
-	"unknown",
+// GetIndicatorTypeVocab - This function will return the STIX indicator type
+// vocabulary
+func GetIndicatorTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"anomalous-activity": true,
+		"anonymization":      true,
+		"benign":             true,
+		"compromised":        true,
+		"malicious-activity": true,
+		"attribution":        true,
+		"unknown":            true,
+	})
 }
 
-// IndustrySector - This defines the STIX industry sector vocabulary.
-var IndustrySector = []string{
-	"agriculture",
-	"aerospace",
-	"automotive",
-	"communications",
-	"construction",
-	"defense",
-	"education",
-	"energy",
-	"entertainment",
-	"financial-services",
-	"government-national",
-	"government-regional",
-	"government-local",
-	"government-public-services",
-	"healthcare",
-	"hospitality-leisure",
-	"infrastructure",
-	"insurance",
-	"manufacturing",
-	"mining",
-	"non-profit",
-	"pharmaceuticals",
-	"retail",
-	"technology",
-	"telecommunications",
-	"transportation",
-	"utilities",
+// GetIndustrySectorVocab - This function will return the STIX industry sector
+// vocabulary
+func GetIndustrySectorVocab() map[string]bool {
+	return (map[string]bool{
+		"agriculture":                   true,
+		"aerospace":                     true,
+		"automotive":                    true,
+		"chemical":                      true,
+		"commercial":                    true,
+		"communications":                true,
+		"construction":                  true,
+		"defense":                       true,
+		"education":                     true,
+		"energy":                        true,
+		"entertainment":                 true,
+		"financial-services":            true,
+		"government":                    true,
+		"government-emergency-services": true,
+		"government-local":              true,
+		"government-national":           true,
+		"government-public-services":    true,
+		"government-regional":           true,
+		"healthcare":                    true,
+		"hospitality-leisure":           true,
+		"infrastructure":                true,
+		"infrastructure-dams":           true,
+		"infrastructure-nuclear":        true,
+		"infrastructure-water":          true,
+		"insurance":                     true,
+		"manufacturing":                 true,
+		"mining":                        true,
+		"non-profit":                    true,
+		"pharmaceuticals":               true,
+		"retail":                        true,
+		"technology":                    true,
+		"telecommunications":            true,
+		"transportation":                true,
+		"utilities":                     true,
+	})
 }
 
-// InfrastructureType - This defines the STIX infrastructure type vocabulary.
-var InfrastructureType = []string{
-	"amplification",
-	"anonymization",
-	"botnet",
-	"command-and-control",
-	"exfiltration",
-	"hosting-malware",
-	"hosting-target-lists",
-	"phishing",
-	"reconnaissance",
-	"staging",
-	"undefined",
+// GetInfrastructureTypeVocab - This function will return the STIX
+// infrastructure type vocabulary
+func GetInfrastructureTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"amplification":        true,
+		"anonymization":        true,
+		"botnet":               true,
+		"command-and-control":  true,
+		"control-system":       true,
+		"exfiltration":         true,
+		"firewall":             true,
+		"hosting-malware":      true,
+		"hosting-target-lists": true,
+		"phishing":             true,
+		"reconnaissance":       true,
+		"routers-switches":     true,
+		"staging":              true,
+		"workstation":          true,
+		"unknown":              true,
+	})
 }
 
-// MalwareAVResults - This defines the STIX malware av results vocabulary.
-var MalwareAVResults = []string{
-	"malicious",
-	"suspicious",
-	"benign",
-	"unknown",
+// GetMalwareAVResultsVocab - This function will return the STIX malware AV
+// results vocabulary
+func GetMalwareAVResultsVocab() map[string]bool {
+	return (map[string]bool{
+		"malicious":  true,
+		"suspicious": true,
+		"benign":     true,
+		"unknown":    true,
+	})
 }
 
-// MalwareCapabilities - This defines the STIX malware capabilities vocabulary.
-var MalwareCapabilities = []string{
-	"accesses-remote-machines",
-	"anti-debugging",
-	"anti-disassembly",
-	"anti-emulation",
-	"anti-memory-forensics",
-	"anti-sandbox",
-	"anti-vm",
-	"captures-input-peripherals",
-	"captures-output-peripherals",
-	"captures-system-state-data",
-	"cleans-traces-of-infection",
-	"commits-fraud",
-	"communicates-with-c2",
-	"compromises-data-availability",
-	"compromises-data-integrity",
-	"compromises-system-availability",
-	"controls-local-machine",
-	"degrades-security-software",
-	"degrades-system-updates",
-	"determines-c2-server",
-	"emails-spam",
-	"escalates-privileges",
-	"evades-av",
-	"exfiltrates-data",
-	"fingerprints-host",
-	"hides-artifacts",
-	"hides-executing-code",
-	"infects-files",
-	"infects-remote-machines",
-	"installs-other-components",
-	"persists-after-system-reboot",
-	"prevents-artifact-access",
-	"prevents-artifact-deletion",
-	"probes-network-environment",
-	"self-modifies",
-	"steals-authentication-credentials",
-	"violates-system-operational-integrity",
+// GetMalwareCapabilitiesVocab - This function will return the STIX malware
+// capabilities vocabulary
+func GetMalwareCapabilitiesVocab() map[string]bool {
+	return (map[string]bool{
+		"accesses-remote-machines":              true,
+		"anti-debugging":                        true,
+		"anti-disassembly":                      true,
+		"anti-emulation":                        true,
+		"anti-memory-forensics":                 true,
+		"anti-sandbox":                          true,
+		"anti-vm":                               true,
+		"captures-input-peripherals":            true,
+		"captures-output-peripherals":           true,
+		"captures-system-state-data":            true,
+		"cleans-traces-of-infection":            true,
+		"commits-fraud":                         true,
+		"communicates-with-c2":                  true,
+		"compromises-data-availability":         true,
+		"compromises-data-integrity":            true,
+		"compromises-system-availability":       true,
+		"controls-local-machine":                true,
+		"degrades-security-software":            true,
+		"degrades-system-updates":               true,
+		"determines-c2-server":                  true,
+		"emails-spam":                           true,
+		"escalates-privileges":                  true,
+		"evades-av":                             true,
+		"exfiltrates-data":                      true,
+		"fingerprints-host":                     true,
+		"hides-artifacts":                       true,
+		"hides-executing-code":                  true,
+		"infects-files":                         true,
+		"infects-remote-machines":               true,
+		"installs-other-components":             true,
+		"persists-after-system-reboot":          true,
+		"prevents-artifact-access":              true,
+		"prevents-artifact-deletion":            true,
+		"probes-network-environment":            true,
+		"self-modifies":                         true,
+		"steals-authentication-credentials":     true,
+		"violates-system-operational-integrity": true,
+	})
 }
 
-// MalwareType - This defines the STIX malware type vocabulary.
-var MalwareType = []string{
-	"adware",
-	"backdoor",
-	"bot",
-	"bootkit",
-	"ddos",
-	"downloader",
-	"dropper",
-	"exploit-kit",
-	"keylogger",
-	"ransomware",
-	"remote-access-trojan",
-	"resource-exploitation",
-	"rogue-security-software",
-	"rootkit",
-	"screen-capture",
-	"spyware",
-	"trojan",
-	"unknown",
-	"virus",
-	"webshell",
-	"wiper",
-	"worm",
+// GetMalwareTypeVocab - This function will return the STIX malware type
+// vocabulary
+func GetMalwareTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"adware":                  true,
+		"backdoor":                true,
+		"bot":                     true,
+		"bootkit":                 true,
+		"ddos":                    true,
+		"downloader":              true,
+		"dropper":                 true,
+		"exploit-kit":             true,
+		"keylogger":               true,
+		"ransomware":              true,
+		"remote-access-trojan":    true,
+		"resource-exploitation":   true,
+		"rogue-security-software": true,
+		"rootkit":                 true,
+		"screen-capture":          true,
+		"spyware":                 true,
+		"trojan":                  true,
+		"unknown":                 true,
+		"virus":                   true,
+		"webshell":                true,
+		"wiper":                   true,
+		"worm":                    true,
+	})
 }
 
-// NetworkSocketAddressFamily - This defines the STIX network socket address family enumeration.
-var NetworkSocketAddressFamily = []string{
-	"AF_UNSPEC",
-	"AF_INET",
-	"AF_IPX",
-	"AF_APPLETALK",
-	"AF_NETBIOS",
-	"AF_INET6",
-	"AF_IRDA",
-	"AF_BTH",
+// GetNetworkSocketAddressFamilyVocab - This function will return the STIX
+// network socket address family vocabulary
+func GetNetworkSocketAddressFamilyVocab() map[string]bool {
+	return (map[string]bool{
+		"AF_UNSPEC":    true,
+		"AF_INET":      true,
+		"AF_IPX":       true,
+		"AF_APPLETALK": true,
+		"AF_NETBIOS":   true,
+		"AF_INET6":     true,
+		"AF_IRDA":      true,
+		"AF_BTH":       true,
+	})
 }
 
-// NetworkSocketType - This defines the STIX network socket type enumeration.
-var NetworkSocketType = []string{
-	"SOCK_STREAM",
-	"AF_ISOCK_DGRAMNET",
-	"SOCK_RAW, SOCK_RDM",
-	"SOCK_SEQPACKET",
+// GetNetworkSocketTypeVocab - This function will return the STIX network socket
+// type family vocabulary
+func GetNetworkSocketTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"SOCK_STREAM":    true,
+		"SOC_DGRAM":      true,
+		"SOCK_RAW":       true,
+		"SOCK_RDM":       true,
+		"SOCK_SEQPACKET": true,
+	})
 }
 
-// Opinion - This defines the STIX opinion enumeration.
-var Opinion = []string{
-	"strongly-disagree",
-	"disagree",
-	"neutral",
-	"agree",
-	"strongly-agree",
+// GetOpinionVocab - This function will return the STIX opinion vocabulary
+func GetOpinionVocab() map[string]bool {
+	return (map[string]bool{
+		"strongly-disagree": true,
+		"disagree":          true,
+		"neutral":           true,
+		"agree":             true,
+		"strongly-agree":    true,
+	})
 }
 
-// PatternType - This defines the STIX pattern type vocabulary.
-var PatternType = []string{
-	"stix",
-	"pcre",
-	"sigma",
-	"snort",
-	"suricata",
-	"yara",
+// GetPatternTypeVocab - This function will return the STIX pattern type
+// vocabulary
+func GetPatternTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"stix":     true,
+		"pcre":     true,
+		"sigma":    true,
+		"snort":    true,
+		"suricata": true,
+		"yara":     true,
+	})
 }
 
-// ProcessorArchitecture - This defines the STIX processor architecture vocabulary.
-var ProcessorArchitecture = []string{
-	"alpha",
-	"arm",
-	"ia-64",
-	"mips",
-	"powerpc",
-	"sparc",
-	"x86",
-	"x86-64",
+// GetProcessorArchitectureVocab - This function will return the STIX processor
+// architecture vocabulary
+func GetProcessorArchitectureVocab() map[string]bool {
+	return (map[string]bool{
+		"alpha":   true,
+		"arm":     true,
+		"ia-64":   true,
+		"mips":    true,
+		"powerpc": true,
+		"sparc":   true,
+		"x86":     true,
+		"x86-64":  true,
+	})
 }
 
-// Region - This defines the STIX region vocabulary.
-var Region = []string{
-	"africa",
-	"eastern-africa",
-	"middle-africa",
-	"northern-africa",
-	"southern-africa",
-	"western-africa",
-	"americas",
-	"latin-america-caribbean",
-	"south-america",
-	"caribbean",
-	"central-america",
-	"northern-america",
-	"asia",
-	"central-asia",
-	"eastern-asia",
-	"southern-asia",
-	"south-eastern-asia",
-	"western-asia",
-	"europe",
-	"eastern-europe",
-	"northern-europe",
-	"southern-europe",
-	"western-europe",
-	"oceania",
-	"antarctica",
-	"australia-new-zealand",
-	"melanesia",
-	"micronesia",
-	"polynesia",
+// GetRegionVocab - This function will return the STIX region vocabulary
+func GetRegionVocab() map[string]bool {
+	return (map[string]bool{
+		"africa":                  true,
+		"eastern-africa":          true,
+		"middle-africa":           true,
+		"northern-africa":         true,
+		"southern-africa":         true,
+		"western-africa":          true,
+		"americas":                true,
+		"caribbean":               true,
+		"central-america":         true,
+		"latin-america-caribbean": true,
+		"northern-america":        true,
+		"south-america":           true,
+		"asia":                    true,
+		"central-asia":            true,
+		"eastern-asia":            true,
+		"southern-asia":           true,
+		"south-eastern-asia":      true,
+		"western-asia":            true,
+		"europe":                  true,
+		"eastern-europe":          true,
+		"northern-europe":         true,
+		"southern-europe":         true,
+		"western-europe":          true,
+		"oceania":                 true,
+		"antarctica":              true,
+		"australia-new-zealand":   true,
+		"melanesia":               true,
+		"micronesia":              true,
+		"polynesia":               true,
+	})
 }
 
-// ReportType - This defines the STIX report type vocabulary.
-var ReportType = []string{
-	"attack-pattern",
-	"campaign",
-	"identity",
-	"indicator",
-	"intrusion-set",
-	"malware",
-	"observed-data",
-	"threat-actor",
-	"threat-report",
-	"tool",
-	"vulnerability",
+// GetReportTypeVocab - This function will return the STIX report type
+// vocabulary
+func GetReportTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"attack-pattern": true,
+		"campaign":       true,
+		"identity":       true,
+		"indicator":      true,
+		"intrusion-set":  true,
+		"malware":        true,
+		"observed-data":  true,
+		"threat-actor":   true,
+		"threat-report":  true,
+		"tool":           true,
+		"vulnerability":  true,
+	})
 }
 
-// ThreatActorType - This defines the STIX threat actor type vocabulary.
-var ThreatActorType = []string{
-	"activist",
-	"competitor",
-	"crime-syndicate",
-	"criminal",
-	"hacker",
-	"insider-accidental",
-	"insider-disgruntled",
-	"nation-state",
-	"sensationalist",
-	"spy",
-	"terrorist",
-	"unknown",
+// GetThreatActorTypeVocab - This function will return the STIX threat actor
+// type vocabulary
+func GetThreatActorTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"activist":            true,
+		"competitor":          true,
+		"crime-syndicate":     true,
+		"criminal":            true,
+		"hacker":              true,
+		"insider-accidental":  true,
+		"insider-disgruntled": true,
+		"nation-state":        true,
+		"sensationalist":      true,
+		"spy":                 true,
+		"terrorist":           true,
+		"unknown":             true,
+	})
 }
 
-// ThreatActorRole - This defines the STIX threat actor role vocabulary.
-var ThreatActorRole = []string{
-	"agent",
-	"director",
-	"independent",
-	"infrastructure-architect",
-	"infrastructure-operator",
-	"malware-author",
-	"sponsor",
+// GetThreatActorRoleVocab - This function will return the STIX threat actor
+// role vocabulary
+func GetThreatActorRoleVocab() map[string]bool {
+	return (map[string]bool{
+		"agent":                    true,
+		"director":                 true,
+		"independent":              true,
+		"infrastructure-architect": true,
+		"infrastructure-operator":  true,
+		"malware-author":           true,
+		"sponsor":                  true,
+	})
 }
 
-// ThreatActorSophistication - This defines the STIX threat actor sophistication vocabulary.
-var ThreatActorSophistication = []string{
-	"none",
-	"minimal",
-	"intermediate",
-	"advanced",
-	"expert",
-	"innovator",
-	"strategic",
+// GetThreatActorSophisticationVocab - This function will return the STIX
+// threat actor sophistication vocabulary
+func GetThreatActorSophisticationVocab() map[string]bool {
+	return (map[string]bool{
+		"none":         true,
+		"minimal":      true,
+		"intermediate": true,
+		"advanced":     true,
+		"expert":       true,
+		"innovator":    true,
+		"strategic":    true,
+	})
 }
 
-// ToolType - This defines the STIX tool type vocabulary.
-var ToolType = []string{
-	"denial-of-service",
-	"exploitation",
-	"information-gathering",
-	"network-capture",
-	"credential-exploitation",
-	"remote-access",
-	"vulnerability-scanning",
-	"unknown",
+// GetToolTypeVocab - This function will return the STIX tool type vocabulary
+func GetToolTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"denial-of-service":       true,
+		"exploitation":            true,
+		"information-gathering":   true,
+		"network-capture":         true,
+		"credential-exploitation": true,
+		"remote-access":           true,
+		"vulnerability-scanning":  true,
+		"unknown":                 true,
+	})
 }
 
-// WindowsIntegrityLevel - This defines the STIX Windows integrity level enumeration
-var WindowsIntegrityLevel = []string{
-	"low",
-	"medium",
-	"high",
-	"system",
+// GetWindowsIntegrityLevelVocab - This function will return the STIX Windows
+// integrity level vocabulary
+func GetWindowsIntegrityLevelVocab() map[string]bool {
+	return (map[string]bool{
+		"low":    true,
+		"medium": true,
+		"high":   true,
+		"system": true,
+	})
 }
 
-// WindowsPEBinary - This defines the STIX Windows pe binary vocabulary
-var WindowsPEBinary = []string{
-	"dll",
-	"exe",
-	"sys",
+// GetWindowsPEBinaryVocab - This function will return the STIX
+// Windows PE binary vocabulary
+func GetWindowsPEBinaryVocab() map[string]bool {
+	return (map[string]bool{
+		"dll": true,
+		"exe": true,
+		"sys": true,
+	})
 }
 
-// WindowsRegistryDatatype - This defines the STIX Windows registry datatype enumeration.
-var WindowsRegistryDatatype = []string{
-	"REG_NONE",
-	"REG_SZ",
-	"REG_EXPAND_SZ",
-	"REG_BINARY",
-	"REG_DWORD",
-	"REG_DWORD_BIG_ENDIAN",
-	"REG_DWORD_LITTLE_ENDIAN",
-	"REG_LINK",
-	"REG_MULTI_SZ",
-	"REG_RESOURCE_LIST",
-	"REG_FULL_RESOURCE_DESCRIPTION",
-	"REG_RESOURCE_REQUIREMENTS_LIST",
-	"REG_QWORD",
-	"REG_INVALID_TYPE",
+// GetWindowsRegistryDatatypeVocab - This function will return the STIX Windows
+// registry datatype vocabulary
+func GetWindowsRegistryDatatypeVocab() map[string]bool {
+	return (map[string]bool{
+		"REG_NONE":                       true,
+		"REG_SZ":                         true,
+		"REG_EXPAND_SZ":                  true,
+		"REG_BINARY":                     true,
+		"REG_DWORD":                      true,
+		"REG_DWORD_BIG_ENDIAN":           true,
+		"REG_DWORD_LITTLE_ENDIAN":        true,
+		"REG_LINK":                       true,
+		"REG_MULTI_SZ":                   true,
+		"REG_RESOURCE_LIST":              true,
+		"REG_FULL_RESOURCE_DESCRIPTION":  true,
+		"REG_RESOURCE_REQUIREMENTS_LIST": true,
+		"REG_QWORD":                      true,
+		"REG_INVALID_TYPE":               true,
+	})
 }
 
-// WindowsServiceStartType - This defines the STIX Windows service start type enumeration.
-var WindowsServiceStartType = []string{
-	"SERVICE_AUTO_START",
-	"SERVICE_BOOT_START",
-	"SERVICE_DEMAND_START",
-	"SERVICE_DISABLED",
-	"SERVICE_SYSTEM_ALERT",
+// GetWindowsServiceStartTypeVocab - This function will return the STIX
+// Windows service start type vocabulary
+func GetWindowsServiceStartTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"SERVICE_AUTO_START":   true,
+		"SERVICE_BOOT_START":   true,
+		"SERVICE_DEMAND_START": true,
+		"SERVICE_DISABLED":     true,
+		"SERVICE_SYSTEM_ALERT": true,
+	})
 }
 
-// WindowsServiceType - This defines the STIX Windows service type enumeration.
-var WindowsServiceType = []string{
-	"SERVICE_KERNEL_DRIVER",
-	"SERVICE_FILE_SYSTEM_DRIVER",
-	"SERVICE_WIN32_OWN_PROCESS",
-	"SERVICE_WIN32_SHARE_PROCESS",
+// GetWindowsServiceTypeVocab - This function will return the STIX
+// Windows service type vocabulary
+func GetWindowsServiceTypeVocab() map[string]bool {
+	return (map[string]bool{
+		"SERVICE_KERNEL_DRIVER":       true,
+		"SERVICE_FILE_SYSTEM_DRIVER":  true,
+		"SERVICE_WIN32_OWN_PROCESS":   true,
+		"SERVICE_WIN32_SHARE_PROCESS": true,
+	})
 }
 
-// WindowsServiceStatus - This defines the STIX Windows service status enumeration.
-var WindowsServiceStatus = []string{
-	"SERVICE_CONTINUE_PENDING",
-	"SERVICE_PAUSE_PENDING",
-	"SERVICE_PAUSED",
-	"SERVICE_RUNNING",
-	"SERVICE_START_PENDING",
-	"SERVICE_STOP_PENDING",
-	"SERVICE_STOPPED",
+// GetWindowsServiceStatusVocab - This function will return the STIX
+// Windows service status vocabulary
+func GetWindowsServiceStatusVocab() map[string]bool {
+	return (map[string]bool{
+		"SERVICE_CONTINUE_PENDING": true,
+		"SERVICE_PAUSE_PENDING":    true,
+		"SERVICE_PAUSED":           true,
+		"SERVICE_RUNNING":          true,
+		"SERVICE_START_PENDING":    true,
+		"SERVICE_STOP_PENDING":     true,
+		"SERVICE_STOPPED":          true,
+	})
 }

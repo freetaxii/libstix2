@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -6,9 +6,7 @@
 /*
 Package vocabs implements the STIX 2 Vocabularies.
 
-This package defines variables that contain all of the values for each vocabulary.
-
-The following information comes directly from the STIX 2 specification documents.
+This package defines functions for working with STIX vocabularies.
 
 The following sections provide object-specific listings for each of the
 vocabularies referenced in the object description sections defined in Sections
@@ -21,9 +19,9 @@ the STIX Objects as type open-vocab and have a statement indicating which
 vocabulary should be used.
 
 STIX vocabularies that have type names ending in '-enum' are "closed": the only
-valid values are those in the vocabulary. These vocabularies are referenced from
-the STIX Objects as type enum and have a statement indicating which enumeration
-must be used.
+valid values are those in the vocabulary. These vocabularies are referenced
+from the STIX Objects as type enum and have a statement indicating which
+enumeration must be used.
 
 
 
@@ -66,8 +64,8 @@ defenders to implement controls tailored to each type of attack for greatest
 efficiency.
 
 This section including vocabulary items and their descriptions is based on the
-Threat Agent Motivations publication from Intel Corp in February 2015 [Casey
-2015].
+Threat Agent Motivations publication from Intel Corp in February 2015
+[Casey 2015].
 
 
 
@@ -88,23 +86,8 @@ It ranges from individual, a person acting alone, to government, the resources
 of a national government.
 
 This section including vocabulary items and their descriptions is based on the
-Threat Agent Library publication from Intel Corp in September 2007 [Casey 2007].
-
-
-
-
-Course of Action Type Vocabulary
-
-The following information comes directly from the STIX 2 specification documents.
-
-Vocabulary Name: course-of-action-type-ov
-
-The course of action type vocabulary is currently used in the following SDO(s):
- * Course of Action
-
-The Course of Action Type property uses an open vocabulary to describe the
-underlying language or structure of the Course of Action that is being
-represented.
+Threat Agent Library publication from Intel Corp in September 2007
+[Casey 2007].
 
 
 
@@ -120,6 +103,17 @@ The encryption algorithm enumeration is currently used in the following SCOs:
 
 An enumeration of encryption algorithms for sharing defanged and/or confidential
 artifacts.
+
+
+
+
+Extension Types Enumeration
+
+The following information comes directly from the STIX 2 specification documents.
+
+Vocabulary Name: extension-type-enum
+
+The Extensions Type enumeration is used in the Extension meta-object.
 
 
 
@@ -147,7 +141,8 @@ The following information comes directly from the STIX 2 specification documents
 
 Vocabulary Name: hash-algorithm-ov
 
-The Hashing Algorithm open vocabulary is currently used in the following object:
+The Hashing Algorithm open vocabulary is currently used in the following
+objects:
  * External Reference
  * Artifact
  * File
@@ -242,17 +237,17 @@ A non-exhaustive enumeration of infrastructure types.
 
 
 
-Malware AV Result Vocabulary
+Malware Result Vocabulary
 
 The following information comes directly from the STIX 2 specification documents.
 
-Vocabulary Name: malware-av-result-ov
+Vocabulary Name: malware-result-ov
 
 The processor architecture vocabulary is currently used in the following SDO(s):
  * Malware Analysis
 
-This is a non-exhaustive, open vocabulary that captures common types of generic
-malware anti-virus (AV) tool results.
+This is a non-exhaustive, open vocabulary that captures common types of scanner
+or tool analysis process results.
 
 
 
@@ -313,6 +308,7 @@ The network socket type vocabulary is currently used in the following SCO(s):
  * Network Traffic (Network Socket extension)
 
 An enumeration of network socket types.
+
 
 
 
@@ -391,8 +387,8 @@ The report type vocabulary is currently used in the following SDO(s):
 Report type is an open vocabulary to describe the primary purpose or subject of
 a report. For example, a report that contains malware and indicators for that
 malware should have a report type of malware to capture that the malware is the
-primary purpose. Report types are not mutually exclusive: a Report can be both a
-malware report and a tool report. Just because a report contains objects of a
+primary purpose. Report types are not mutually exclusive: a Report can be both
+a malware report and a tool report. Just because a report contains objects of a
 type does not mean that the report should include that type. If the objects are
 there to simply provide evidence or context for other objects, it is not
 necessary to include them in the type.
@@ -448,11 +444,12 @@ Threat actor sophistication vocabulary is currently used in the following SDO(s)
  * Threat Actor
 
 Threat actor sophistication vocabulary captures the skill level of a threat
-actor. It ranges from "none", which describes a complete novice, to "strategic",
-which describes an attacker who is able to influence supply chains to introduce
-vulnerabilities. This vocabulary is separate from resource level because an
-innovative, highly-skilled threat actor may have access to very few resources
-while a minimal-level actor might have the resources of an organized crime ring.
+actor. It ranges from "none", which describes a complete novice,
+to "strategic", which describes an attacker who is able to influence supply
+chains to introduce vulnerabilities. This vocabulary is separate from resource
+level because an innovative, highly-skilled threat actor may have access to
+very few resources while a minimal-level actor might have the resources of an
+organized crime ring.
 
 
 
@@ -466,7 +463,8 @@ Vocabulary Name: tool-type-ov
 The tool type vocabulary is currently used in the following SDO(s):
  * Tool
 
-Tool types describe the categories of tools that can be used to perform attacks.
+Tool types describe the categories of tools that can be used to perform
+attacks.
 
 
 
@@ -477,7 +475,8 @@ The following information comes directly from the STIX 2 specification documents
 
 Enumeration Name: windows-integrity-level-enum
 
-The Windows integrity level enumeration is currently used in the following STIX Cyber-observable Object(s):
+The Windows integrity level enumeration is currently used in the following STIX
+Cyber-observable Object(s):
  * Process (Windows Process extension)
 
 Windows integrity levels are a security feature and represent the
