@@ -8,7 +8,7 @@ README files in each of the sub packages for more information. This API is built
 to support STIX 2.x and TAXII 2.x.
 
 ## Version
-0.6.1
+0.7.1
 
 ## Installation
 
@@ -138,5 +138,5 @@ This is free software, licensed under the Apache License, Version 2.0. [Read thi
 
 ## Copyright
 
-Copyright 2015-2020 Bret Jordan, All rights reserved.
+Copyright 2015-2022 Bret Jordan, All rights reserved.
 
