@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -16,8 +16,8 @@ MotivationProperties - Properties used by one or more STIX objects that
 capture the primary and secondary motivations.
 */
 type MotivationProperties struct {
-	PrimaryMotivation    string   `json:"primary_motivation,omitempty"`
-	SecondaryMotivations []string `json:"secondary_motivations,omitempty"`
+	PrimaryMotivation    string   `json:"primary_motivation,omitempty" bson:"primary_motivation,omitempty"`
+	SecondaryMotivations []string `json:"secondary_motivations,omitempty" bson:"secondary_motivations,omitempty"`
 }
 
 // ----------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -16,7 +16,7 @@ ExternalReferencesProperty - A property used by one or more STIX objects that
 captures a list of external references as defined by STIX.
 */
 type ExternalReferencesProperty struct {
-	ExternalReferences []ExternalReference `json:"external_references,omitempty"`
+	ExternalReferences []ExternalReference `json:"external_references,omitempty" bson:"external_references,omitempty"`
 }
 
 /*
@@ -25,11 +25,11 @@ the STIX External Reference type. All of the methods not defined local to this
 type are inherited from the individual properties.
 */
 type ExternalReference struct {
-	SourceName  string            `json:"source_name,omitempty"`
-	Description string            `json:"description,omitempty"`
-	URL         string            `json:"url,omitempty"`
-	Hashes      map[string]string `json:"hashes,omitempty"`
-	ExternalID  string            `json:"external_id,omitempty"`
+	SourceName  string            `json:"source_name,omitempty" bson:"source_name,omitempty"`
+	Description string            `json:"description,omitempty" bson:"description,omitempty"`
+	URL         string            `json:"url,omitempty" bson:"url,omitempty"`
+	Hashes      map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
+	ExternalID  string            `json:"external_id,omitempty" bson:"external_id,omitempty"`
 }
 
 // ----------------------------------------------------------------------

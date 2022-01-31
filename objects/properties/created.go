@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -20,7 +20,7 @@ CreatedProperty - A property used by all STIX objects that captures the date
 and time that the object was created.
 */
 type CreatedProperty struct {
-	Created string `json:"created,omitempty"`
+	Created string `json:"created,omitempty" bson:"created,omitempty"`
 }
 
 // ----------------------------------------------------------------------

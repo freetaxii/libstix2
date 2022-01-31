@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -18,7 +18,7 @@ TypeProperty - A property used by one or more STIX objects that captures the
 STIX object type in string format.
 */
 type TypeProperty struct {
-	ObjectType string `json:"type,omitempty"`
+	ObjectType string `json:"type,omitempty" bson:"type,omitempty"`
 }
 
 // ----------------------------------------------------------------------

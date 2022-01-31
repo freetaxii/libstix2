@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -24,11 +24,11 @@ type Sighting struct {
 	objects.CommonObjectProperties
 	properties.DescriptionProperty
 	properties.SeenProperties
-	Count            int      `json:"count,omitempty"`
-	SightingOfRef    string   `json:"sighting_of_ref,omitempty"`
-	ObservedDataRefs []string `json:"observed_data_refs,omitempty"`
-	WhereSightedRefs []string `json:"where_sighted_refs,omitempty"`
-	Summary          bool     `json:"summary,omitempty"`
+	Count            int      `json:"count,omitempty" bson:"count,omitempty"`
+	SightingOfRef    string   `json:"sighting_of_ref,omitempty" bson:"sighting_of_ref,omitempty"`
+	ObservedDataRefs []string `json:"observed_data_refs,omitempty" bson:"observed_data_refs,omitempty"`
+	WhereSightedRefs []string `json:"where_sighted_refs,omitempty" bson:"where_sighted_refs,omitempty"`
+	Summary          bool     `json:"summary,omitempty" bson:"summary,omitempty"`
 }
 
 /*

@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -16,7 +16,7 @@ DescriptionProperty - A property used by one or more STIX objects that
 captures the description for the object as a string.
 */
 type DescriptionProperty struct {
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" bson:"description,omitempty"`
 }
 
 // ----------------------------------------------------------------------

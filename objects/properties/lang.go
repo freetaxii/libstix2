@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -17,7 +17,7 @@ lang string as defined in RFC 5646. This is used to record the language that a
 given object is using.
 */
 type LangProperty struct {
-	Lang string `json:"lang,omitempty"`
+	Lang string `json:"lang,omitempty" bson:"lang,omitempty"`
 }
 
 // ----------------------------------------------------------------------

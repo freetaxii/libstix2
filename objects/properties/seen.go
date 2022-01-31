@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -17,8 +17,8 @@ captures the time that this object was first and last seen in STIX timestamp
 format.
 */
 type SeenProperties struct {
-	FirstSeen string `json:"first_seen,omitempty"`
-	LastSeen  string `json:"last_seen,omitempty"`
+	FirstSeen string `json:"first_seen,omitempty" bson:"first_seen,omitempty"`
+	LastSeen  string `json:"last_seen,omitempty" bson:"last_seen,omitempty"`
 }
 
 // ----------------------------------------------------------------------

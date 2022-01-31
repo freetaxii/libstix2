@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -19,8 +19,8 @@ represent marking definition objects. The granular markings is a list of
 granular markings.
 */
 type MarkingProperties struct {
-	ObjectMarkingRefs []string          `json:"object_marking_refs,omitempty"`
-	GranularMarkings  []GranularMarking `json:"granular_markings,omitempty"`
+	ObjectMarkingRefs []string          `json:"object_marking_refs,omitempty" bson:"object_marking_refs,omitempty"`
+	GranularMarkings  []GranularMarking `json:"granular_markings,omitempty" bson:"granular_markings,omitempty"`
 }
 
 /*
@@ -30,8 +30,8 @@ are inherited from the individual properties.
 */
 type GranularMarking struct {
 	LangProperty
-	MarkingRef string   `json:"marking_ref,omitempty"`
-	Selectors  []string `json:"selectors,omitempty"`
+	MarkingRef string   `json:"marking_ref,omitempty" bson:"marking_ref,omitempty"`
+	Selectors  []string `json:"selectors,omitempty" bson:"selectors,omitempty"`
 }
 
 // ----------------------------------------------------------------------

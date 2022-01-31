@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -24,8 +24,8 @@ type Report struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	ReportTypes []string `json:"report_types,omitempty"`
-	Published   string   `json:"published,omitempty"`
+	ReportTypes []string `json:"report_types,omitempty" bson:"report_types,omitempty"`
+	Published   string   `json:"published,omitempty" bson:"published,omitempty"`
 	properties.ObjectRefsProperty
 }
 

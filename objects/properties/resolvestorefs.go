@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -15,7 +15,7 @@ import "github.com/freetaxii/libstix2/resources"
 ResolvesToRefsProperty -
 */
 type ResolvesToRefsProperty struct {
-	ResolvesToRefs []string `json:"resolves_to_refs,omitempty"`
+	ResolvesToRefs []string `json:"resolves_to_refs,omitempty" bson:"resolves_to_refs,omitempty"`
 }
 
 // ----------------------------------------------------------------------

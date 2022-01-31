@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -22,12 +22,12 @@ individual properties.
 */
 type Relationship struct {
 	objects.CommonObjectProperties
-	RelationshipType string `json:"relationship_type,omitempty"`
+	RelationshipType string `json:"relationship_type,omitempty" bson:"relationship_type,omitempty"`
 	properties.DescriptionProperty
-	SourceRef string `json:"source_ref,omitempty"`
-	TargetRef string `json:"target_ref,omitempty"`
-	StartTime string `json:"start_time,omitempty"`
-	StopTime  string `json:"stop_time,omitempty"`
+	SourceRef string `json:"source_ref,omitempty" bson:"source_ref,omitempty"`
+	TargetRef string `json:"target_ref,omitempty" bson:"target_ref,omitempty"`
+	StartTime string `json:"start_time,omitempty" bson:"start_time,omitempty"`
+	StopTime  string `json:"stop_time,omitempty" bson:"stop_time,omitempty"`
 }
 
 /*

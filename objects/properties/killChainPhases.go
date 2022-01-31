@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -16,7 +16,7 @@ KillChainPhasesProperty - A property used by one or more STIX objects that
 captures a list of kll chain phases as defined by STIX.
 */
 type KillChainPhasesProperty struct {
-	KillChainPhases []KillChainPhase `json:"kill_chain_phases,omitempty"`
+	KillChainPhases []KillChainPhase `json:"kill_chain_phases,omitempty" bson:"kill_chain_phases,omitempty"`
 }
 
 /*
@@ -24,8 +24,8 @@ KillChainPhase - This type defines all of the properties associated with the
 STIX Kill Chain Phase type.
 */
 type KillChainPhase struct {
-	KillChainName string `json:"kill_chain_name,omitempty"`
-	PhaseName     string `json:"phase_name,omitempty"`
+	KillChainName string `json:"kill_chain_name,omitempty" bson:"kill_chain_name,omitempty"`
+	PhaseName     string `json:"phase_name,omitempty" bson:"phase_name,omitempty"`
 }
 
 // ----------------------------------------------------------------------

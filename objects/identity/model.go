@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -25,9 +25,9 @@ type Identity struct {
 	properties.NameProperty
 	properties.DescriptionProperty
 	properties.RolesProperty
-	IdentityClass      string   `json:"identity_class,omitempty"`
-	Sectors            []string `json:"sectors,omitempty"`
-	ContactInformation string   `json:"contact_information,omitempty"`
+	IdentityClass      string   `json:"identity_class,omitempty" bson:"identity_class,omitempty"`
+	Sectors            []string `json:"sectors,omitempty" bson:"sectors,omitempty"`
+	ContactInformation string   `json:"contact_information,omitempty" bson:"contact_information,omitempty"`
 }
 
 /*

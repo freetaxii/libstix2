@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -24,15 +24,15 @@ type Location struct {
 	objects.CommonObjectProperties
 	properties.NameProperty
 	properties.DescriptionProperty
-	Latitude           float64 `json:"latitude,omitempty"`
-	Longitude          float64 `json:"longitude,omitempty"`
-	Precision          float64 `json:"precision,omitempty"`
-	Region             string  `json:"region,omitempty"`
-	Country            string  `json:"country,omitempty"`
-	AdministrativeArea string  `json:"administrative_area,omitempty"`
-	City               string  `json:"city,omitempty"`
-	StreetAddress      string  `json:"street_address,omitempty"`
-	PostalCode         string  `json:"postal_code,omitempty"`
+	Latitude           float64 `json:"latitude,omitempty" bson:"latitude,omitempty"`
+	Longitude          float64 `json:"longitude,omitempty" bson:"longitude,omitempty"`
+	Precision          float64 `json:"precision,omitempty" bson:"precision,omitempty"`
+	Region             string  `json:"region,omitempty" bson:"region,omitempty"`
+	Country            string  `json:"country,omitempty" bson:"country,omitempty"`
+	AdministrativeArea string  `json:"administrative_area,omitempty" bson:"administrative_area,omitempty"`
+	City               string  `json:"city,omitempty" bson:"city,omitempty"`
+	StreetAddress      string  `json:"street_address,omitempty" bson:"street_address,omitempty"`
+	PostalCode         string  `json:"postal_code,omitempty" bson:"postal_code,omitempty"`
 }
 
 /*
