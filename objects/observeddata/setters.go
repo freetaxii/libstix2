@@ -5,7 +5,7 @@
 
 package observeddata
 
-import "github.com/freetaxii/libstix2/timestamp"
+import "github.com/freetaxii/libstix2/resources"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -16,7 +16,7 @@ SetFirstObservedToCurrentTime - This methods sets the first observed time to
 the current time
 */
 func (o *ObservedData) SetFirstObservedToCurrentTime() error {
-	o.FirstObserved = timestamp.CurrentTime("micro")
+	o.FirstObserved = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -25,7 +25,7 @@ SetFirstObserved - This method takes in a timestamp in either time.Time or
 string format and updates the first observed property.
 */
 func (o *ObservedData) SetFirstObserved(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 	o.FirstObserved = ts
 	return nil
 }
@@ -35,7 +35,7 @@ SetLastObservedToCurrentTime - This methods sets the last observed time to
 the current time
 */
 func (o *ObservedData) SetLastObservedToCurrentTime() error {
-	o.LastObserved = timestamp.CurrentTime("micro")
+	o.LastObserved = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -44,7 +44,7 @@ SetLastObserved - This method takes in a timestamp in either time.Time or
 string format and updates the last observed property.
 */
 func (o *ObservedData) SetLastObserved(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 	o.LastObserved = ts
 	return nil
 }

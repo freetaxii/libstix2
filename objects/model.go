@@ -1,4 +1,4 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
@@ -92,7 +92,7 @@ func (o *CommonObjectProperties) InitSDO(objectType string) error {
 		}
 	}
 
-	o.SetSpecVersion(defs.STIX_VERSION)
+	o.SetSpecVersion(defs.CurrentSTIXVersion)
 	o.SetObjectType(objectType)
 	o.SetNewSTIXID(objectType)
 	o.SetCreatedToCurrentTime()
@@ -112,7 +112,7 @@ func (o *CommonObjectProperties) InitSRO(objectType string) error {
 		}
 	}
 
-	o.SetSpecVersion(defs.STIX_VERSION)
+	o.SetSpecVersion(defs.CurrentSTIXVersion)
 	o.SetObjectType(objectType)
 	o.SetNewSTIXID(objectType)
 	o.SetCreatedToCurrentTime()
@@ -132,7 +132,7 @@ func (o *CommonObjectProperties) InitSCO(objectType string) error {
 		}
 	}
 
-	o.SetSpecVersion(defs.STIX_VERSION)
+	o.SetSpecVersion(defs.CurrentSTIXVersion)
 	o.SetObjectType(objectType)
 	o.SetNewSTIXID(objectType)
 	return nil

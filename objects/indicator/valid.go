@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/freetaxii/libstix2/resources"
 )
 
 // ----------------------------------------------------------------------
@@ -68,7 +68,7 @@ func (o *Indicator) Valid() (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	if valid := timestamp.Valid(o.ValidFrom); valid == false {
+	if valid := resources.IsTimestampValid(o.ValidFrom); valid == false {
 		problemsFound++
 		str := fmt.Sprintf("-- the valid from property does not contain a valid STIX timestamp")
 		resultDetails = append(resultDetails, str)
@@ -77,7 +77,7 @@ func (o *Indicator) Valid() (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	if valid := timestamp.Valid(o.ValidUntil); valid == false {
+	if valid := resources.IsTimestampValid(o.ValidUntil); valid == false {
 		problemsFound++
 		str := fmt.Sprintf("-- the valid until property does not contain a valid STIX timestamp")
 		resultDetails = append(resultDetails, str)

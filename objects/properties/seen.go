@@ -5,7 +5,7 @@
 
 package properties
 
-import "github.com/freetaxii/libstix2/timestamp"
+import "github.com/freetaxii/libstix2/resources"
 
 // ----------------------------------------------------------------------
 // Define Types
@@ -30,7 +30,7 @@ SetFirstSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
 func (o *SeenProperties) SetFirstSeenToCurrentTime() error {
-	o.FirstSeen = timestamp.CurrentTime("micro")
+	o.FirstSeen = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -41,7 +41,7 @@ as a string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
 func (o *SeenProperties) SetFirstSeen(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 	o.FirstSeen = ts
 	return nil
 }
@@ -51,7 +51,7 @@ SetLastSeenToCurrentTime - This methods sets the first seen time to the
 current time
 */
 func (o *SeenProperties) SetLastSeenToCurrentTime() error {
-	o.LastSeen = timestamp.CurrentTime("micro")
+	o.LastSeen = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -62,7 +62,7 @@ a string, so if the value is in time.Time format, it will be converted to the
 correct STIX time stamp format.
 */
 func (o *SeenProperties) SetLastSeen(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 	o.LastSeen = ts
 	return nil
 }

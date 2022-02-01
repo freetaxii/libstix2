@@ -9,7 +9,6 @@ import (
 	"errors"
 
 	"github.com/freetaxii/libstix2/resources"
-	"github.com/freetaxii/libstix2/timestamp"
 )
 
 // ----------------------------------------------------------------------
@@ -66,7 +65,7 @@ SetValidFromToCurrentTime - This method will set the valid_from timestamp to
 the current time.
 */
 func (o *Indicator) SetValidFromToCurrentTime() error {
-	o.ValidFrom = timestamp.CurrentTime("micro")
+	o.ValidFrom = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -75,7 +74,7 @@ SetValidFrom - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value.
 */
 func (o *Indicator) SetValidFrom(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 	o.ValidFrom = ts
 	return nil
 }
@@ -85,7 +84,7 @@ SetValidUntilToCurrentTime - This method will set the valid_until time to the
 current time.
 */
 func (o *Indicator) SetValidUntilToCurrentTime() error {
-	o.ValidUntil = timestamp.CurrentTime("micro")
+	o.ValidUntil = resources.GetCurrentTime("micro")
 	return nil
 }
 
@@ -94,7 +93,7 @@ SetValidUntil - This method will take in a timestamp in either time.Time or
 string format and will set the valid_until property to that value.
 */
 func (o *Indicator) SetValidUntil(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "micro")
+	ts, _ := resources.TimeToString(t, "micro")
 
 	// TODO check to make sure this is later than the vaild_from
 	o.ValidUntil = ts

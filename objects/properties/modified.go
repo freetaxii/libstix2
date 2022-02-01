@@ -8,7 +8,7 @@ package properties
 import (
 	"fmt"
 
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/freetaxii/libstix2/resources"
 )
 
 // ----------------------------------------------------------------------
@@ -33,7 +33,7 @@ SetModifiedToCurrentTime - This methods sets the object created time to the
 current time
 */
 func (o *ModifiedProperty) SetModifiedToCurrentTime() error {
-	o.Modified = timestamp.CurrentTime("milli")
+	o.Modified = resources.GetCurrentTime("milli")
 	return nil
 }
 
@@ -44,7 +44,7 @@ string, so if the value is in time.Time format, it will be converted to the
 correct STIX timestamp format.
 */
 func (o *ModifiedProperty) SetModified(t interface{}) error {
-	ts, _ := timestamp.ToString(t, "milli")
+	ts, _ := resources.TimeToString(t, "milli")
 	o.Modified = ts
 	return nil
 }

@@ -1,16 +1,14 @@
-// Copyright 2015-2020 Bret Jordan, All rights reserved.
+// Copyright 2015-2022 Bret Jordan, All rights reserved.
 //
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
 package objects
 
-/*
-ValidObjectType - This function will take in a STIX object type and return
-true if the string represents an actual STIX object type. This is used for
-determining if input from an outside source is actually a defined STIX object or
-not.
-*/
+// ValidObjectType - This function will take in a STIX object type and return
+// true if the string represents an actual STIX object type. This is used for
+// determining if input from an outside source is actually a defined STIX object or
+// not.
 func ValidObjectType(t string) bool {
 
 	var m = map[string]int{
@@ -44,10 +42,8 @@ func ValidObjectType(t string) bool {
 	return false
 }
 
-/*
-GetCommonProperties - This method will return a pointer to the common
-properties of this object.
-*/
+// GetCommonProperties - This method will return a pointer to the common
+// properties of this object.
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
 }

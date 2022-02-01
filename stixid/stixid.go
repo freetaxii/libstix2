@@ -5,42 +5,35 @@
 
 package stixid
 
-import (
-	"regexp"
-	"strings"
-
-	"github.com/freetaxii/libstix2/objects"
-)
-
 /*
 ValidSTIXID - This function will take in a STIX ID and return true if the
 string represents an actual STIX ID in the correct format.
 */
-func ValidSTIXID(id string) bool {
-	idparts := strings.Split(id, "--")
+// func ValidSTIXID(id string) bool {
+// 	idparts := strings.Split(id, "--")
 
-	if idparts == nil {
-		return false
-	}
+// 	if idparts == nil {
+// 		return false
+// 	}
 
-	// First check to see if the object type is valid, if not return false.
-	if valid := objects.ValidType(idparts[0]); valid == false {
-		// Short circuit if the STIX type part is wrong
-		return false
-	}
+// 	// First check to see if the object type is valid, if not return false.
+// 	if valid := objects.ValidType(idparts[0]); valid == false {
+// 		// Short circuit if the STIX type part is wrong
+// 		return false
+// 	}
 
-	// If the type is valid, then check to see if the ID is a UUID, if not return
-	// false.
-	valid := ValidUUID(idparts[1])
+// 	// If the type is valid, then check to see if the ID is a UUID, if not return
+// 	// false.
+// 	valid := ValidUUID(idparts[1])
 
-	return valid
-}
+// 	return valid
+// }
 
 /*
 ValidUUID - This function will take in a string and return true if the string
 represents an actual UUIDv4 value.
 */
-func ValidUUID(uuid string) bool {
-	r := regexp.MustCompile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
-	return r.MatchString(uuid)
-}
+// func ValidUUID(uuid string) bool {
+// 	r := regexp.MustCompile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4-5][a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
+// 	return r.MatchString(uuid)
+// }
