@@ -8,7 +8,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/attackpattern"
+	"github.com/freetaxii/libstix2/vocabs"
 )
 
 func main() {
@@ -31,6 +33,9 @@ func main() {
 	fmt.Println("Step 2: Print a basic attack pattern from data found in the script")
 	fmt.Println("This data has been decoded and then re-encoded")
 	fmt.Println(data1)
+
+	vocabtest := objects.IsVocabEntryValid(vocabs.GetAccountVocab(), "foo")
+	fmt.Println("DATA: ", vocabtest)
 
 }
 

@@ -7,7 +7,6 @@ package indicator
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,15 +21,15 @@ properties.
 */
 type Indicator struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	IndicatorTypes []string `json:"indicator_types,omitempty" bson:"indicator_types,omitempty"`
 	Pattern        string   `json:"pattern,omitempty" bson:"pattern,omitempty"`
 	PatternType    string   `json:"pattern_type,omitempty" bson:"pattern_type,omitempty"`
 	PatternVersion string   `json:"pattern_version,omitempty" bson:"pattern_version,omitempty"`
 	ValidFrom      string   `json:"valid_from,omitempty" bson:"valid_from,omitempty"`
 	ValidUntil     string   `json:"valid_until,omitempty" bson:"valid_until,omitempty"`
-	properties.KillChainPhasesProperty
+	objects.KillChainPhasesProperty
 }
 
 /*

@@ -24,16 +24,16 @@ func (o *Indicator) Compare(obj2 *Indicator) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common properties
-	_, pBase, dBase := o.CommonObjectProperties.Compare(&obj2.CommonObjectProperties)
+	_, pBase, dBase := o.CommonObjectProperties.Compare(&obj2.CommonObjectProperties, false)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
 	// Check Name Values
-	_, pNames, dNames := o.NameProperty.Compare(&obj2.NameProperty)
+	_, pNames, dNames := o.NameProperty.Compare(&obj2.NameProperty, false)
 	problemsFound += pNames
 	resultDetails = append(resultDetails, dNames...)
 
-	_, pDescriptions, dDescriptions := o.DescriptionProperty.Compare(&obj2.DescriptionProperty)
+	_, pDescriptions, dDescriptions := o.DescriptionProperty.Compare(&obj2.DescriptionProperty, false)
 	problemsFound += pDescriptions
 	resultDetails = append(resultDetails, dDescriptions...)
 
@@ -110,7 +110,7 @@ func (o *Indicator) Compare(obj2 *Indicator) (bool, int, []string) {
 	}
 
 	// Check Kill Chain Phases
-	if valid, problems, details := o.KillChainPhasesProperty.Compare(&obj2.KillChainPhasesProperty); valid != true {
+	if valid, problems, details := o.KillChainPhasesProperty.Compare(&obj2.KillChainPhasesProperty, false); valid != true {
 		problemsFound += problems
 		for _, v := range details {
 			resultDetails = append(resultDetails, v)

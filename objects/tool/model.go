@@ -7,7 +7,6 @@ package tool
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,11 +21,11 @@ properties.
 */
 type Tool struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	ToolTypes []string `json:"tool_types,omitempty"`
-	properties.AliasesProperty
-	properties.KillChainPhasesProperty
+	objects.AliasesProperty
+	objects.KillChainPhasesProperty
 	ToolVersion string `json:"tool_version,omitempty"`
 }
 

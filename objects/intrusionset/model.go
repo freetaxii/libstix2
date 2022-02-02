@@ -7,7 +7,6 @@ package intrusionset
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,13 +21,13 @@ individual properties.
 */
 type IntrusionSet struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
-	properties.AliasesProperty
-	properties.SeenProperties
-	properties.GoalsProperty
-	properties.ResourceLevelProperty
-	properties.MotivationProperties
+	objects.NameProperty
+	objects.DescriptionProperty
+	objects.AliasesProperty
+	objects.SeenProperties
+	objects.GoalsProperty
+	objects.ResourceLevelProperty
+	objects.MotivationProperties
 }
 
 /*

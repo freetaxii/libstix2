@@ -7,7 +7,6 @@ package opinion
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -23,9 +22,9 @@ properties.
 type Opinion struct {
 	objects.CommonObjectProperties
 	Explanation string `json:"explanation,omitempty" bson:"explanation,omitempty"`
-	properties.AuthorsProperty
+	objects.AuthorsProperty
 	Opinion string `json:"opinion,omitempty" bson:"opinion,omitempty"`
-	properties.ObjectRefsProperty
+	objects.ObjectRefsProperty
 }
 
 /*

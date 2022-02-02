@@ -5,7 +5,7 @@
 
 package threatactor
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/objects"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -18,7 +18,7 @@ and adds it to the threat actor types property. The values SHOULD come from the
 threat-actor-type-ov open vocabulary.
 */
 func (o *ThreatActor) AddTypes(values interface{}) error {
-	return resources.AddValuesToList(&o.ThreatActorTypes, values)
+	return objects.AddValuesToList(&o.ThreatActorTypes, values)
 }
 
 /*

@@ -9,56 +9,71 @@ import (
 	"fmt"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
 // Define Object Model
 // ----------------------------------------------------------------------
 
-/*
-STIXObject - This interface defines what methods an object must have to be
-considered a STIX Object. So any new object that is created that inherits the
-CommonObjectProperties is considered a STIX Object by this code. This interface
-is currently used by the Bundle object to add objects to the Bundle.
-*/
+// STIXObject - This interface defines what methods an object must have to be
+// considered a STIX Object. So any new object that is created that inherits
+// the CommonObjectProperties is considered a STIX Object by this code. This
+// interface is currently used by the Bundle object to add objects to the
+// Bundle.
 type STIXObject interface {
 	GetCommonProperties() *CommonObjectProperties
 }
 
-/*
-CommonObjectProperties - This type defines the properties that are common to
-most STIX objects. If an object does not use all of these properties, then the
-Encode() function for that object will clean up and remove the properties that
-might get populated by mistake. Also, there will be Init() functions for each
-type of STIX object to help with populating the right properties for that type
-of object. This was done so that we would only need one type that could be used
-by all objects, to simplify the code.
-*/
+// CommonObjectProperties - This type defines the properties that are common to
+// most STIX objects. If an object does not use all of these properties, then
+// the Encode() function for that object will clean up and remove the
+// properties that might get populated by mistake. Also, there will be Init
+// () functions for each type of STIX object to help with populating the right
+// properties for that type of object. This was done so that we would only need
+// one type that could be used by all objects, to simplify the code.
 type CommonObjectProperties struct {
-	properties.DatastoreIDProperty
-	properties.TypeProperty
-	properties.SpecVersionProperty
-	properties.IDProperty
-	properties.CreatedByRefProperty
-	properties.CreatedProperty
-	properties.ModifiedProperty
-	properties.RevokedProperty
-	properties.LabelsProperty
-	properties.ConfidenceProperty
-	properties.LangProperty
-	properties.ExternalReferencesProperty
-	properties.MarkingProperties
-	properties.CustomProperties
-	properties.RawProperty
+	DatastoreID        int                 `json:"-" bson:"-"`
+	ObjectType         string              `json:"type,omitempty" bson:"type,omitempty"`
+	SpecVersion        string              `json:"spec_version,omitempty" bson:"spec_version,omitempty"`
+	ID                 string              `json:"id,omitempty" bson:"id,omitempty"`
+	CreatedByRef       string              `json:"created_by_ref,omitempty" bson:"created_by_ref,omitempty"`
+	Created            string              `json:"created,omitempty" bson:"created,omitempty"`
+	Modified           string              `json:"modified,omitempty" bson:"modified,omitempty"`
+	Revoked            bool                `json:"revoked,omitempty" bson:"revoked,omitempty"`
+	Labels             []string            `json:"labels,omitempty" bson:"labels,omitempty"`
+	Confidence         int                 `json:"confidence,omitempty" bson:"confidence,omitempty"`
+	Lang               string              `json:"lang,omitempty" bson:"lang,omitempty"`
+	ExternalReferences []ExternalReference `json:"external_references,omitempty" bson:"external_references,omitempty"`
+	ObjectMarkingRefs  []string            `json:"object_marking_refs,omitempty" bson:"object_marking_refs,omitempty"`
+	GranularMarkings   []GranularMarking   `json:"granular_markings,omitempty" bson:"granular_markings,omitempty"`
+	Custom             map[string][]byte   `json:"custom,omitempty" bson:"custom,omitempty"`
+	Raw                []byte              `json:"-" bson:"-"`
 }
 
-/*
-GetCommonPropertyList - This method will return a list of all of the
-properties that are common to all objects. This is used by the
-FindCustomProperties method. It is defined here in this file to make it easy to
-keep in sync as new properties are added.
-*/
+// ExternalReference - This type defines all of the properties associated with
+// the STIX External Reference type. All of the methods not defined local to
+// this type are inherited from the individual properties.
+type ExternalReference struct {
+	SourceName  string            `json:"source_name,omitempty" bson:"source_name,omitempty"`
+	Description string            `json:"description,omitempty" bson:"description,omitempty"`
+	URL         string            `json:"url,omitempty" bson:"url,omitempty"`
+	Hashes      map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
+	ExternalID  string            `json:"external_id,omitempty" bson:"external_id,omitempty"`
+}
+
+// GranularMarking - This type defines all of the properties associated with the
+// STIX Granular Marking type. All of the methods not defined local to this type
+// are inherited from the individual properties.
+type GranularMarking struct {
+	Lang       string   `json:"lang,omitempty" bson:"lang,omitempty"`
+	MarkingRef string   `json:"marking_ref,omitempty" bson:"marking_ref,omitempty"`
+	Selectors  []string `json:"selectors,omitempty" bson:"selectors,omitempty"`
+}
+
+// GetCommonPropertyList - This method will return a list of all of the
+// properties that are common to all objects. This is used by the
+// FindCustomProperties method. It is defined here in this file to make it easy
+// to keep in sync as new properties are added.
 func (o *CommonObjectProperties) GetCommonPropertyList() []string {
 	return []string{
 		"type",
@@ -75,6 +90,13 @@ func (o *CommonObjectProperties) GetCommonPropertyList() []string {
 		"object_marking_refs",
 		"granular_markings",
 	}
+}
+
+// This type is used to capture results from the Valid() and Compare() functions
+type results struct {
+	debug         bool
+	problemsFound int
+	resultDetails []string
 }
 
 // ----------------------------------------------------------------------

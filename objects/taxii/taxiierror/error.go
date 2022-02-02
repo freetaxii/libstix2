@@ -6,7 +6,7 @@
 package taxiierror
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -42,8 +42,8 @@ shouldn't assume consistent meaning across TAXII Servers even if the codes, IDs,
 or titles are the same.
 */
 type TAXIIError struct {
-	properties.TitleProperty
-	properties.DescriptionProperty
+	objects.TitleProperty
+	objects.DescriptionProperty
 	ErrorID         string                 `json:"error_id,omitempty"`
 	ErrorCode       string                 `json:"error_code,omitempty"`
 	HTTPStatus      string                 `json:"http_status,omitempty"`

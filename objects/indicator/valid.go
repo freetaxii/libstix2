@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -22,12 +22,12 @@ to make sure they are valid per the specification. It will return a boolean, an
 integer that tracks the number of problems found, and a slice of strings that
 contain the detailed results, whether good or bad.
 */
-func (o *Indicator) Valid() (bool, int, []string) {
+func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
@@ -68,7 +68,7 @@ func (o *Indicator) Valid() (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	if valid := resources.IsTimestampValid(o.ValidFrom); valid == false {
+	if valid := objects.IsTimestampValid(o.ValidFrom); valid == false {
 		problemsFound++
 		str := fmt.Sprintf("-- the valid from property does not contain a valid STIX timestamp")
 		resultDetails = append(resultDetails, str)
@@ -77,7 +77,7 @@ func (o *Indicator) Valid() (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	if valid := resources.IsTimestampValid(o.ValidUntil); valid == false {
+	if valid := objects.IsTimestampValid(o.ValidUntil); valid == false {
 		problemsFound++
 		str := fmt.Sprintf("-- the valid until property does not contain a valid STIX timestamp")
 		resultDetails = append(resultDetails, str)

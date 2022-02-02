@@ -6,7 +6,7 @@
 package discovery
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -28,8 +28,8 @@ considers the default, or the one to use in the absence of another
 information/user choice.
 */
 type Discovery struct {
-	properties.TitleProperty
-	properties.DescriptionProperty
+	objects.TitleProperty
+	objects.DescriptionProperty
 	Contact  string   `json:"contact,omitempty"`
 	Default  string   `json:"default,omitempty"`
 	APIRoots []string `json:"api_roots,omitempty"`

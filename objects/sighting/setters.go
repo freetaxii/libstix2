@@ -5,7 +5,9 @@
 
 package sighting
 
-import "github.com/freetaxii/libstix2/resources"
+import (
+	"github.com/freetaxii/libstix2/objects"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -37,7 +39,7 @@ observed data object that identifies what was sighted and adds it to the
 observed data refs property.
 */
 func (o *Sighting) AddObservedDataRefs(values interface{}) error {
-	return resources.AddValuesToList(&o.ObservedDataRefs, values)
+	return objects.AddValuesToList(&o.ObservedDataRefs, values)
 }
 
 /*
@@ -47,7 +49,7 @@ location object that identifies where this was sighted (location, sector, etc)
 and adds it to the where sighted refs property.
 */
 func (o *Sighting) AddWhereSightedRefs(values interface{}) error {
-	return resources.AddValuesToList(&o.WhereSightedRefs, values)
+	return objects.AddValuesToList(&o.WhereSightedRefs, values)
 }
 
 /*

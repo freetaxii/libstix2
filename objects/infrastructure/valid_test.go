@@ -27,7 +27,7 @@ func TestValid1(t *testing.T) {
 	m := New()
 	want := false
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail Infrastructure Object should be invalid when empty")
 		t.Log(err)
 	}
@@ -40,7 +40,7 @@ func TestValid2(t *testing.T) {
 
 	m.AddInfrastructureTypes("botnet")
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail Infrastructure Object should be valid when require fields not empty")
 		t.Log(err)
 	}
@@ -54,12 +54,12 @@ func TestValid5(t *testing.T) {
 
 	m.AddInfrastructureTypes("asdasdasd")
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail Infrastructure Object InfrastructureTypes added value not from vocab")
 		t.Log(err)
 	}
 
-	if _, err := m.Valid(); err.Error() != wantMessage {
+	if _, err := m.Valid(false); err.Error() != wantMessage {
 		t.Error("Fail Infrastructure Object InfrastructureTypes added value not from vocab. Wrong error message")
 		t.Log(err)
 	}
@@ -74,7 +74,7 @@ func TestValid9(t *testing.T) {
 
 	m.AddAliases("botnet2")
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail Infrastructure Object shoulf be valid")
 		t.Log(err)
 	}

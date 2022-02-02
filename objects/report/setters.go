@@ -5,7 +5,7 @@
 
 package report
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/objects"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -16,7 +16,7 @@ SetPublished - This method takes in a timestamp in either time.Time or string
 format and updates the published timestamp property.
 */
 func (o *Report) SetPublished(t interface{}) error {
-	ts, _ := resources.TimeToString(t, "micro")
+	ts, _ := objects.TimeToString(t, "micro")
 	o.Published = ts
 	return nil
 }

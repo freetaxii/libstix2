@@ -7,7 +7,6 @@ package identity
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,9 +21,9 @@ individual properties.
 */
 type Identity struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
-	properties.RolesProperty
+	objects.NameProperty
+	objects.DescriptionProperty
+	objects.RolesProperty
 	IdentityClass      string   `json:"identity_class,omitempty" bson:"identity_class,omitempty"`
 	Sectors            []string `json:"sectors,omitempty" bson:"sectors,omitempty"`
 	ContactInformation string   `json:"contact_information,omitempty" bson:"contact_information,omitempty"`

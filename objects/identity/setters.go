@@ -5,7 +5,9 @@
 
 package identity
 
-import "github.com/freetaxii/libstix2/resources"
+import (
+	"github.com/freetaxii/libstix2/objects"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods - Identity
@@ -27,7 +29,7 @@ string values, or a slice of string values that represents a sector and adds it
 to the sectors property.
 */
 func (o *Identity) AddSectors(values interface{}) error {
-	return resources.AddValuesToList(&o.Sectors, values)
+	return objects.AddValuesToList(&o.Sectors, values)
 }
 
 /*

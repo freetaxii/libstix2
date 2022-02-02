@@ -7,7 +7,6 @@ package relationship
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -23,7 +22,7 @@ individual properties.
 type Relationship struct {
 	objects.CommonObjectProperties
 	RelationshipType string `json:"relationship_type,omitempty" bson:"relationship_type,omitempty"`
-	properties.DescriptionProperty
+	objects.DescriptionProperty
 	SourceRef string `json:"source_ref,omitempty" bson:"source_ref,omitempty"`
 	TargetRef string `json:"target_ref,omitempty" bson:"target_ref,omitempty"`
 	StartTime string `json:"start_time,omitempty" bson:"start_time,omitempty"`

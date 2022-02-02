@@ -7,7 +7,6 @@ package observeddata
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -26,7 +25,7 @@ type ObservedData struct {
 	LastObserved   string `json:"last_observed,omitempty" bson:"last_observed,omitempty"`
 	NumberObserved int    `json:"number_observed,omitempty" bson:"number_observed,omitempty"`
 	Objects        string `json:"objects,omitempty" bson:"objects,omitempty"`
-	properties.ObjectRefsProperty
+	objects.ObjectRefsProperty
 }
 
 /*

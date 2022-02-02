@@ -7,7 +7,6 @@ package attackpattern
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,10 +21,10 @@ individual properties.
 */
 type AttackPattern struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
-	properties.AliasesProperty
-	properties.KillChainPhasesProperty
+	objects.NameProperty
+	objects.DescriptionProperty
+	objects.AliasesProperty
+	objects.KillChainPhasesProperty
 }
 
 /*

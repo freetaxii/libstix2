@@ -5,7 +5,9 @@
 
 package apiroot
 
-import "github.com/freetaxii/libstix2/resources"
+import (
+	"github.com/freetaxii/libstix2/objects"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods - APIRoot
@@ -22,7 +24,7 @@ func (o *APIRoot) AddVersions(values interface{}) error {
 	// 	o.Versions = a
 	// }
 	//o.Versions = append(o.Versions, s)
-	return resources.AddValuesToList(&o.Versions, values)
+	return objects.AddValuesToList(&o.Versions, values)
 }
 
 /*

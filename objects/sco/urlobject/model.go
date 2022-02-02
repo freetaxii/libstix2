@@ -7,7 +7,6 @@ package urlobject
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,7 +21,7 @@ properties.
 */
 type URLObject struct {
 	objects.CommonObjectProperties
-	properties.ValueProperty
+	objects.ValueProperty
 }
 
 /*

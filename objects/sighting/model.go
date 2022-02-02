@@ -7,7 +7,6 @@ package sighting
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,8 +21,8 @@ properties.
 */
 type Sighting struct {
 	objects.CommonObjectProperties
-	properties.DescriptionProperty
-	properties.SeenProperties
+	objects.DescriptionProperty
+	objects.SeenProperties
 	Count            int      `json:"count,omitempty" bson:"count,omitempty"`
 	SightingOfRef    string   `json:"sighting_of_ref,omitempty" bson:"sighting_of_ref,omitempty"`
 	ObservedDataRefs []string `json:"observed_data_refs,omitempty" bson:"observed_data_refs,omitempty"`

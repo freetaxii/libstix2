@@ -7,7 +7,6 @@ package infrastructure
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,12 +21,12 @@ individual properties.
 */
 type Infrastructure struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	InfrastructureTypes []string `json:"infrastructure_types,omitempty" bson:"infrastructure_types,omitempty"`
-	properties.AliasesProperty
-	properties.KillChainPhasesProperty
-	properties.SeenProperties
+	objects.AliasesProperty
+	objects.KillChainPhasesProperty
+	objects.SeenProperties
 }
 
 /*

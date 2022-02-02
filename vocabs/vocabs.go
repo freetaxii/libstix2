@@ -5,15 +5,6 @@
 
 package vocabs
 
-// IsVocabEntryValid - This function determine will take in a vocabulary and a
-// value and return true if it is found and false if it is not found.
-func IsVocabEntryValid(vocab map[string]bool, s string) bool {
-	if _, found := vocab[s]; found == true {
-		return true
-	}
-	return false
-}
-
 // GetAccountVocab - This function will return the STIX account vocabulary.
 func GetAccountVocab() map[string]bool {
 	return (map[string]bool{

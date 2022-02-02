@@ -31,7 +31,7 @@ func main() {
 	i.SetPattern("somedata")
 	i.SetPatternType("stix")
 
-	valid, problems, details := i.Valid()
+	valid, problems, details := i.Valid(false)
 	fmt.Println("Is valid:", valid)
 	fmt.Println("Problems:", problems)
 	fmt.Println("Error Msg:", details)

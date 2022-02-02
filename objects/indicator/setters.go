@@ -8,7 +8,7 @@ package indicator
 import (
 	"errors"
 
-	"github.com/freetaxii/libstix2/resources"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -22,7 +22,7 @@ adds it to the indicator types property. The values SHOULD come from the
 indicator-type-ov open vocabulary.
 */
 func (o *Indicator) AddTypes(values interface{}) error {
-	return resources.AddValuesToList(&o.IndicatorTypes, values)
+	return objects.AddValuesToList(&o.IndicatorTypes, values)
 }
 
 /*
@@ -65,7 +65,7 @@ SetValidFromToCurrentTime - This method will set the valid_from timestamp to
 the current time.
 */
 func (o *Indicator) SetValidFromToCurrentTime() error {
-	o.ValidFrom = resources.GetCurrentTime("micro")
+	o.ValidFrom = objects.GetCurrentTime("micro")
 	return nil
 }
 
@@ -74,7 +74,7 @@ SetValidFrom - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value.
 */
 func (o *Indicator) SetValidFrom(t interface{}) error {
-	ts, _ := resources.TimeToString(t, "micro")
+	ts, _ := objects.TimeToString(t, "micro")
 	o.ValidFrom = ts
 	return nil
 }
@@ -84,7 +84,7 @@ SetValidUntilToCurrentTime - This method will set the valid_until time to the
 current time.
 */
 func (o *Indicator) SetValidUntilToCurrentTime() error {
-	o.ValidUntil = resources.GetCurrentTime("micro")
+	o.ValidUntil = objects.GetCurrentTime("micro")
 	return nil
 }
 
@@ -93,7 +93,7 @@ SetValidUntil - This method will take in a timestamp in either time.Time or
 string format and will set the valid_until property to that value.
 */
 func (o *Indicator) SetValidUntil(t interface{}) error {
-	ts, _ := resources.TimeToString(t, "micro")
+	ts, _ := objects.TimeToString(t, "micro")
 
 	// TODO check to make sure this is later than the vaild_from
 	o.ValidUntil = ts

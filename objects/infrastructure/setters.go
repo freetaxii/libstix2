@@ -5,7 +5,7 @@
 
 package infrastructure
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/objects"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -18,5 +18,5 @@ type and adds it to the infrastructure types property. The values SHOULD come
 from the infrastructure-type-ov open vocabulary.
 */
 func (o *Infrastructure) AddTypes(values interface{}) error {
-	return resources.AddValuesToList(&o.InfrastructureTypes, values)
+	return objects.AddValuesToList(&o.InfrastructureTypes, values)
 }

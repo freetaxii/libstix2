@@ -28,7 +28,7 @@ func main() {
 	count := 0
 	for _, v := range b.Objects {
 
-		fmt.Printf("Type: %s\t\tID: %s\n", v.GetObjectType(), v.GetID())
+		fmt.Printf("Type: %s\t\tID: %s\n", v.TypeProperty.ObjectType, v.IDProperty.ID)
 
 		switch obj := v.(type) {
 		case *indicator.Indicator:

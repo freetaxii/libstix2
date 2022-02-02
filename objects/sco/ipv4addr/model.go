@@ -7,7 +7,6 @@ package ipv4addr
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,9 +21,9 @@ individual properties.
 */
 type IPv4Addr struct {
 	objects.CommonObjectProperties
-	properties.ValueProperty
-	properties.ResolvesToRefsProperty
-	properties.BelongsToRefsProperty
+	objects.ValueProperty
+	objects.ResolvesToRefsProperty
+	objects.BelongsToRefsProperty
 }
 
 /*

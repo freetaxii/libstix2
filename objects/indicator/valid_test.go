@@ -25,7 +25,7 @@ func TestValid1(t *testing.T) {
 	i := New()
 	want := false
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Indicator Type Check 0")
 		t.Log(err)
 	}
@@ -40,7 +40,7 @@ func TestValid2(t *testing.T) {
 	// Set the Indicator Type value so we can move to next test.
 	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Pattern Check 0")
 		t.Log(err)
 	}
@@ -56,7 +56,7 @@ func TestValid3(t *testing.T) {
 	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
 	i.Pattern = "TestPattern"
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Pattern Type Check 0")
 		t.Log(err)
 	}
@@ -74,7 +74,7 @@ func TestValid4(t *testing.T) {
 	i.Pattern = "TestPattern"
 	i.PatternType = "stix"
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Valid From Check 0")
 		t.Log(err)
 	}
@@ -96,7 +96,7 @@ func TestValid5(t *testing.T) {
 	// We need the next test for Valid Until to fail so lets set a bad time.
 	i.ValidUntil = "2019-0924T20:49:12.123456Z"
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}
@@ -120,7 +120,7 @@ func TestValid6(t *testing.T) {
 	i.ValidFrom = "2019-09-24T20:49:13.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:12.123456Z"
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}
@@ -144,7 +144,7 @@ func TestValid7(t *testing.T) {
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:13.123456Z"
 
-	if got, err := i.Valid(); got != want {
+	if got, err := i.Valid(false); got != want {
 		t.Error("Fail Valid Until Check 0")
 		t.Log(err)
 	}

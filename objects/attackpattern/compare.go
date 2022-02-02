@@ -20,27 +20,27 @@ func (o *AttackPattern) Compare(obj2 *AttackPattern) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common properties
-	_, pBase, dBase := o.CommonObjectProperties.Compare(&obj2.CommonObjectProperties)
+	_, pBase, dBase := o.CommonObjectProperties.Compare(&obj2.CommonObjectProperties, false)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
 	// Check Name Property
-	_, pNames, dNames := o.NameProperty.Compare(&obj2.NameProperty)
+	_, pNames, dNames := o.NameProperty.Compare(&obj2.NameProperty, false)
 	problemsFound += pNames
 	resultDetails = append(resultDetails, dNames...)
 
 	// Check Description Property
-	_, pDescriptions, dDescriptions := o.DescriptionProperty.Compare(&obj2.DescriptionProperty)
+	_, pDescriptions, dDescriptions := o.DescriptionProperty.Compare(&obj2.DescriptionProperty, false)
 	problemsFound += pDescriptions
 	resultDetails = append(resultDetails, dDescriptions...)
 
 	// Check Aliases Property
-	_, pAliases, dAliases := o.AliasesProperty.Compare(&obj2.AliasesProperty)
+	_, pAliases, dAliases := o.AliasesProperty.Compare(&obj2.AliasesProperty, false)
 	problemsFound += pAliases
 	resultDetails = append(resultDetails, dAliases...)
 
 	// Check KillChainPhases Property
-	_, pKillChainPhases, dKillChainPhases := o.KillChainPhasesProperty.Compare(&obj2.KillChainPhasesProperty)
+	_, pKillChainPhases, dKillChainPhases := o.KillChainPhasesProperty.Compare(&obj2.KillChainPhasesProperty, false)
 	problemsFound += pKillChainPhases
 	resultDetails = append(resultDetails, dKillChainPhases...)
 

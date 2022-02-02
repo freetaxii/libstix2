@@ -7,7 +7,6 @@ package report
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,11 +21,11 @@ properties.
 */
 type Report struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	ReportTypes []string `json:"report_types,omitempty" bson:"report_types,omitempty"`
 	Published   string   `json:"published,omitempty" bson:"published,omitempty"`
-	properties.ObjectRefsProperty
+	objects.ObjectRefsProperty
 }
 
 /*

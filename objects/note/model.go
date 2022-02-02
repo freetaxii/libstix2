@@ -7,7 +7,6 @@ package note
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -24,8 +23,8 @@ type Note struct {
 	objects.CommonObjectProperties
 	Abstract string `json:"abstract,omitempty" bson:"abstract,omitempty"`
 	Content  string `json:"content,omitempty" bson:"content,omitempty"`
-	properties.AuthorsProperty
-	properties.ObjectRefsProperty
+	objects.AuthorsProperty
+	objects.ObjectRefsProperty
 }
 
 /*

@@ -7,7 +7,6 @@ package campaign
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,10 +21,10 @@ properties.
 */
 type Campaign struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
-	properties.AliasesProperty
-	properties.SeenProperties
+	objects.NameProperty
+	objects.DescriptionProperty
+	objects.AliasesProperty
+	objects.SeenProperties
 	Objective string `json:"objective,omitempty" bson:"objective,omitempty"`
 }
 

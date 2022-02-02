@@ -7,7 +7,6 @@ package location
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,8 +21,8 @@ individual properties.
 */
 type Location struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	Latitude           float64 `json:"latitude,omitempty" bson:"latitude,omitempty"`
 	Longitude          float64 `json:"longitude,omitempty" bson:"longitude,omitempty"`
 	Precision          float64 `json:"precision,omitempty" bson:"precision,omitempty"`

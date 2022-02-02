@@ -17,12 +17,12 @@ to make sure they are valid per the specification. It will return a boolean, an
 integer that tracks the number of problems found, and a slice of strings that
 contain the detailed results, whether good or bad.
 */
-func (o *Sighting) Valid() (bool, int, []string) {
+func (o *Sighting) Valid(debug bool) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 

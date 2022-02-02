@@ -6,7 +6,7 @@
 package collections
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 	"github.com/freetaxii/libstix2/objects/taxii/envelope"
 	"github.com/freetaxii/libstix2/objects/taxii/manifest"
 	"github.com/freetaxii/libstix2/objects/taxii/versions"
@@ -74,9 +74,9 @@ type Collection struct {
 	Enabled     bool   `json:"-"`
 	Hidden      bool   `json:"-"`
 	Size        int    `json:"-"`
-	properties.IDProperty
-	properties.TitleProperty
-	properties.DescriptionProperty
+	objects.IDProperty
+	objects.TitleProperty
+	objects.DescriptionProperty
 	CanRead    bool     `json:"can_read"`
 	CanWrite   bool     `json:"can_write"`
 	MediaTypes []string `json:"media_types,omitempty"`

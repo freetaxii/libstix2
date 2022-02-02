@@ -7,7 +7,6 @@ package grouping
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,10 +21,10 @@ properties.
 */
 type Grouping struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	Context string `json:"context,omitempty" bson:"context,omitempty"`
-	properties.ObjectRefsProperty
+	objects.ObjectRefsProperty
 }
 
 /*

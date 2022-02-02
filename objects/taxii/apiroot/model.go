@@ -6,7 +6,7 @@
 package apiroot
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -27,8 +27,8 @@ maximum size (max_content_length) of the content body it will accept in a PUT or
 POST request.
 */
 type APIRoot struct {
-	properties.TitleProperty
-	properties.DescriptionProperty
+	objects.TitleProperty
+	objects.DescriptionProperty
 	Versions         []string `json:"versions"`
 	MaxContentLength int      `json:"max_content_length"`
 }

@@ -5,7 +5,7 @@
 
 package relationship
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/objects"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -57,7 +57,7 @@ SetStartTime - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value.
 */
 func (o *Relationship) SetStartTime(t interface{}) error {
-	ts, _ := resources.TimeToString(t, "micro")
+	ts, _ := objects.TimeToString(t, "micro")
 	o.StartTime = ts
 	return nil
 }
@@ -67,7 +67,7 @@ SetStopTime - This method will take in a timestamp in either time.Time or
 string format and will set the valid_from property to that value.
 */
 func (o *Relationship) SetStopTime(t interface{}) error {
-	ts, _ := resources.TimeToString(t, "micro")
+	ts, _ := objects.TimeToString(t, "micro")
 	o.StopTime = ts
 	return nil
 }

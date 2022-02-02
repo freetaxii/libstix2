@@ -7,7 +7,6 @@ package courseofaction
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,8 +21,8 @@ individual properties.
 */
 type CourseOfAction struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 }
 
 // TODO Finish fleshing out this model to 2.1

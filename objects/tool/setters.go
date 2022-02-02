@@ -5,7 +5,7 @@
 
 package tool
 
-import "github.com/freetaxii/libstix2/resources"
+import "github.com/freetaxii/libstix2/objects"
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -18,7 +18,7 @@ adds it to the tool types property. The values SHOULD come from the
 tool-type-ov open vocabulary.
 */
 func (o *Tool) AddTypes(values interface{}) error {
-	return resources.AddValuesToList(&o.ToolTypes, values)
+	return objects.AddValuesToList(&o.ToolTypes, values)
 }
 
 /*

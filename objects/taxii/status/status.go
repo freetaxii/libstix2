@@ -6,8 +6,7 @@
 package status
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -28,7 +27,7 @@ objects within the request (i.e. whether they are still pending, completed and
 failed, or completed and succeeded).
 */
 type Status struct {
-	properties.IDProperty
+	objects.IDProperty
 	Status           string          `json:"status,omitempty"`
 	RequestTimestamp string          `json:"request_timestamp,omitempty"`
 	TotalCount       int             `json:"total_count,omitempty"`
@@ -105,7 +104,7 @@ SetRequestTimestampToCurrentTime - This method will set the Request time stamp
 to the current time with micro second precision.
 */
 func (o *Status) SetRequestTimestampToCurrentTime() error {
-	o.RequestTimestamp = timestamp.CurrentTime("micro")
+	o.RequestTimestamp = objects.GetCurrentTime("micro")
 	return nil
 }
 

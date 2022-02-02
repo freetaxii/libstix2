@@ -5,8 +5,6 @@
 
 package discovery
 
-import "github.com/freetaxii/libstix2/resources"
-
 // ----------------------------------------------------------------------
 // Public Methods
 // ----------------------------------------------------------------------
@@ -55,5 +53,5 @@ func (o *Discovery) AddAPIRoots(values interface{}) error {
 	// 	o.APIRoots = a
 	// }
 	// o.APIRoots = append(o.APIRoots, s)
-	return resources.AddValuesToList(&o.APIRoots, values)
+	return objects.AddValuesToList(&o.APIRoots, values)
 }

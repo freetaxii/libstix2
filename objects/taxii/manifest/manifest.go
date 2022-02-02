@@ -6,7 +6,7 @@
 package manifest
 
 import (
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -53,7 +53,7 @@ itself, and the media type that this specific version of the object is available
 in.
 */
 type ManifestRecord struct {
-	properties.IDProperty
+	objects.IDProperty
 	DateAdded string `json:"date_added,omitempty"`
 	Version   string `json:"version,omitempty"`
 	MediaType string `json:"media_type,omitempty"`

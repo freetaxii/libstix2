@@ -7,7 +7,6 @@ package threatactor
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,16 +21,16 @@ individual properties.
 */
 type ThreatActor struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
-	properties.DescriptionProperty
+	objects.NameProperty
+	objects.DescriptionProperty
 	ThreatActorTypes []string `json:"threat_actor_types,omitempty"`
-	properties.AliasesProperty
-	properties.SeenProperties
-	properties.RolesProperty
-	properties.GoalsProperty
+	objects.AliasesProperty
+	objects.SeenProperties
+	objects.RolesProperty
+	objects.GoalsProperty
 	Sophistication string `json:"sophistication,omitempty"`
-	properties.ResourceLevelProperty
-	properties.MotivationProperties
+	objects.ResourceLevelProperty
+	objects.MotivationProperties
 	PersonalMotivations []string `json:"personal_motivations,omitempty"`
 }
 

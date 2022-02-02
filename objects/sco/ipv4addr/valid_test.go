@@ -27,7 +27,7 @@ func TestValid1(t *testing.T) {
 	m := New()
 	want := false
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail IPv4AddrObject Object should be invalid when empty")
 		t.Log(err)
 	}
@@ -40,7 +40,7 @@ func TestValid2(t *testing.T) {
 
 	m.SetValue("127.0.0.1")
 
-	if got, err := m.Valid(); got != want {
+	if got, err := m.Valid(false); got != want {
 		t.Error("Fail IPv4AddrObject Object should be valid when required fields are not empty")
 		t.Log(err)
 	}

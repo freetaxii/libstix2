@@ -7,7 +7,6 @@ package domainname
 
 import (
 	"github.com/freetaxii/libstix2/objects"
-	"github.com/freetaxii/libstix2/objects/properties"
 )
 
 // ----------------------------------------------------------------------
@@ -22,8 +21,8 @@ individual properties.
 */
 type DomainName struct {
 	objects.CommonObjectProperties
-	properties.ValueProperty
-	properties.ResolvesToRefsProperty
+	objects.ValueProperty
+	objects.ResolvesToRefsProperty
 }
 
 /*
