@@ -27,16 +27,68 @@ import (
 	"github.com/freetaxii/libstix2/objects/vulnerability"
 )
 
+type DecodeFunc func([]byte) (objects.STIXObject, error)
+
 // ----------------------------------------------------------------------
 // Public Functions - JSON Decoder
 // ----------------------------------------------------------------------
 
 /*
-Decode - This function will decode a bundle and return the object as a pointer
+DecodeWithCustomObjects - This function will decode a bundle and return the object as a pointer
 along with any errors found.
 */
-func Decode(r io.Reader) (*Bundle, []error) {
+func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) (*Bundle, []error) {
 	allErrors := make([]error, 0)
+	decoders := map[string]DecodeFunc{
+		"attack-pattern": func(bytes []byte) (objects.STIXObject, error) {
+			return attackpattern.Decode(bytes)
+		},
+		"campaign": func(bytes []byte) (objects.STIXObject, error) {
+			return campaign.Decode(bytes)
+		},
+		"course-of-action": func(bytes []byte) (objects.STIXObject, error) {
+			return courseofaction.Decode(bytes)
+		},
+		"identity": func(bytes []byte) (objects.STIXObject, error) {
+			return identity.Decode(bytes)
+		},
+		"indicator": func(bytes []byte) (objects.STIXObject, error) {
+			return indicator.Decode(bytes)
+		},
+		"infrastructure": func(bytes []byte) (objects.STIXObject, error) {
+			return infrastructure.Decode(bytes)
+		},
+		"intrusion-set": func(bytes []byte) (objects.STIXObject, error) {
+			return intrusionset.Decode(bytes)
+		},
+		"malware": func(bytes []byte) (objects.STIXObject, error) {
+			return malware.Decode(bytes)
+		},
+		"observed-data": func(bytes []byte) (objects.STIXObject, error) {
+			return observeddata.Decode(bytes)
+		},
+		"relationship": func(bytes []byte) (objects.STIXObject, error) {
+			return relationship.Decode(bytes)
+		},
+		"sighting": func(bytes []byte) (objects.STIXObject, error) {
+			return sighting.Decode(bytes)
+		},
+		"threat-actor": func(bytes []byte) (objects.STIXObject, error) {
+			return threatactor.Decode(bytes)
+		},
+		"tool": func(bytes []byte) (objects.STIXObject, error) {
+			return tool.Decode(bytes)
+		},
+		"vulnerability": func(bytes []byte) (objects.STIXObject, error) {
+			return vulnerability.Decode(bytes)
+		},
+		"report": func(bytes []byte) (objects.STIXObject, error) {
+			return report.Decode(bytes)
+		},
+	}
+	for k, v := range customDecoders {
+		decoders[k] = v
+	}
 
 	var b Bundle
 	var rawBundle bundleRawDecode
@@ -64,113 +116,14 @@ func Decode(r io.Reader) (*Bundle, []error) {
 			return nil, allErrors
 		}
 
-		switch stixtype {
-		case "attack-pattern":
-			obj, err := attackpattern.Decode(v)
+		if function, ok := decoders[stixtype]; ok {
+			obj, err := function(v)
 			if err != nil {
 				allErrors = append(allErrors, err)
 				continue
 			}
 			b.AddObject(obj)
-		case "campaign":
-			obj, err := campaign.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "course-of-action":
-			obj, err := courseofaction.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "identity":
-			obj, err := identity.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "indicator":
-			obj, err := indicator.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "infrastructure":
-			obj, err := infrastructure.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "intrusion-set":
-			obj, err := intrusionset.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "malware":
-			obj, err := malware.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "observed-data":
-			obj, err := observeddata.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "relationship":
-			obj, err := relationship.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "report":
-			obj, err := report.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "sighting":
-			obj, err := sighting.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "threat-actor":
-			obj, err := threatactor.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "tool":
-			obj, err := tool.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		case "vulnerability":
-			obj, err := vulnerability.Decode(v)
-			if err != nil {
-				allErrors = append(allErrors, err)
-				continue
-			}
-			b.AddObject(obj)
-		default:
+		} else {
 			obj, err := objects.Decode(v)
 			if err != nil {
 				allErrors = append(allErrors, err)
@@ -181,6 +134,14 @@ func Decode(r io.Reader) (*Bundle, []error) {
 	}
 
 	return &b, allErrors
+}
+
+/*
+Decode - This function will decode a bundle and return the object as a pointer
+along with any errors found.
+*/
+func Decode(r io.Reader) (*Bundle, []error) {
+	return DecodeWithCustomObjects(r, map[string]DecodeFunc{})
 }
 
 // ----------------------------------------------------------------------

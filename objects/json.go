@@ -41,7 +41,7 @@ func DecodeType(data []byte) (string, error) {
 func Decode(data []byte) (*CommonObjectProperties, error) {
 	var o CommonObjectProperties
 
-	err := json.Unmarshal(data, o)
+	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return nil, err
 	}
@@ -77,4 +77,38 @@ func (o *CommonObjectProperties) FindCustomProperties(b []byte, p []string) erro
 		}
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Methods JSON Encoders
+// The encoding is done here at the individual object level instead of at
+// the STIX Object level so that individual pre/post processing rules can
+// be applied. Since some of the STIX Objects do not follow a universal
+// model, we need to cleanup some things that were inherited but not valid
+// for the object.
+// ----------------------------------------------------------------------
+
+/*
+Encode - This method is a simple wrapper for encoding an object into JSON
+*/
+func (o *CommonObjectProperties) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+
+	// Any needed preprocessing would be done here
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object into
+JSON
+*/
+func (o *CommonObjectProperties) EncodeToString() (string, error) {
+	data, err := o.Encode()
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
