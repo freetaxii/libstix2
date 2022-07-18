@@ -58,6 +58,15 @@ func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
 }
 
+/*
+GetPropertyList - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. As this is the base object, an empty list is returned
+*/
+func (o *CommonObjectProperties) GetPropertyList() []string {
+	return []string{}
+}
+
 // ----------------------------------------------------------------------
 // Helper Functions
 // ----------------------------------------------------------------------
