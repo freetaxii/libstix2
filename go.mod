@@ -1,6 +1,6 @@
 module github.com/freetaxii/libstix2
 
-go 1.13
+go 1.18
 
 require (
 	github.com/gologme/log v1.2.0
