@@ -44,6 +44,24 @@ func ValidObjectType(t string) bool {
 		"threat-actor":       1,
 		"tool":               1,
 		"vulnerability":      1,
+		// SCOs
+		"artifact":          1,
+		"autonomous-system": 1,
+		"directory":         1,
+		"domain-name":       1,
+		"email-addr":        1,
+		"email-message":     1,
+		"file":              1,
+		"ipv4-addr":         1,
+		"ipv6-addr":         1,
+		"mac-addr":          1,
+		"mutex":             1,
+		"network-traffic":   1,
+		"process":           1,
+		"software":          1,
+		"url":               1,
+		"user-account":      1,
+		"x509-certificate":  1,
 	}
 
 	if _, ok := m[t]; ok {

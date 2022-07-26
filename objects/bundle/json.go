@@ -7,6 +7,14 @@ package bundle
 
 import (
 	"encoding/json"
+	"github.com/freetaxii/libstix2/objects/sco/autonomoussystem"
+	"github.com/freetaxii/libstix2/objects/sco/domainname"
+	"github.com/freetaxii/libstix2/objects/sco/emailaddr"
+	"github.com/freetaxii/libstix2/objects/sco/emailmessage"
+	"github.com/freetaxii/libstix2/objects/sco/ipv4addr"
+	"github.com/freetaxii/libstix2/objects/sco/ipv6addr"
+	"github.com/freetaxii/libstix2/objects/sco/urlobject"
+	"github.com/freetaxii/libstix2/objects/sco/x509certificate"
 	"io"
 
 	"github.com/freetaxii/libstix2/objects"
@@ -84,6 +92,30 @@ func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) 
 		},
 		"report": func(bytes []byte) (objects.STIXObject, error) {
 			return report.Decode(bytes)
+		},
+		"ipv4-addr": func(bytes []byte) (objects.STIXObject, error) {
+			return ipv4addr.Decode(bytes)
+		},
+		"ipv6-addr": func(bytes []byte) (objects.STIXObject, error) {
+			return ipv6addr.Decode(bytes)
+		},
+		"domain-name": func(bytes []byte) (objects.STIXObject, error) {
+			return domainname.Decode(bytes)
+		},
+		"email-addr": func(bytes []byte) (objects.STIXObject, error) {
+			return emailaddr.Decode(bytes)
+		},
+		"email-message": func(bytes []byte) (objects.STIXObject, error) {
+			return emailmessage.Decode(bytes)
+		},
+		"url": func(bytes []byte) (objects.STIXObject, error) {
+			return urlobject.Decode(bytes)
+		},
+		"x509-certificate": func(bytes []byte) (objects.STIXObject, error) {
+			return x509certificate.Decode(bytes)
+		},
+		"autonomous-system": func(bytes []byte) (objects.STIXObject, error) {
+			return autonomoussystem.Decode(bytes)
 		},
 	}
 	for k, v := range customDecoders {

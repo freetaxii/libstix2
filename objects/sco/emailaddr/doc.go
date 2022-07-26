@@ -3,4 +3,10 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package ipv4addr
+/*
+Package emailaddr implements the STIX 2.1 Email Address SCO object.
+
+The following information comes directly from the STIX 2.1 specification.
+
+*/
+package emailaddr

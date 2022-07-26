@@ -556,3 +556,18 @@ func (o *ValueProperty) SetValue(val string) error {
 	o.Value = val
 	return nil
 }
+
+// ----------------------------------------------------------------------
+// Display Name Property
+// ----------------------------------------------------------------------
+
+// DisplayNameProperty -
+type DisplayNameProperty struct {
+	DisplayName string `json:"display_name,omitempty" bson:"display_name,omitempty"`
+}
+
+// SetDisplayName -
+func (o *DisplayNameProperty) SetDisplayName(val string) error {
+	o.DisplayName = val
+	return nil
+}
