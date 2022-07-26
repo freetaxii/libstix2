@@ -25,6 +25,7 @@ import (
 	"github.com/freetaxii/libstix2/objects/indicator"
 	"github.com/freetaxii/libstix2/objects/infrastructure"
 	"github.com/freetaxii/libstix2/objects/intrusionset"
+	"github.com/freetaxii/libstix2/objects/location"
 	"github.com/freetaxii/libstix2/objects/malware"
 	"github.com/freetaxii/libstix2/objects/observeddata"
 	"github.com/freetaxii/libstix2/objects/relationship"
@@ -80,6 +81,9 @@ func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) 
 		},
 		"sighting": func(bytes []byte) (objects.STIXObject, error) {
 			return sighting.Decode(bytes)
+		},
+		"location": func(bytes []byte) (objects.STIXObject, error) {
+			return location.Decode(bytes)
 		},
 		"threat-actor": func(bytes []byte) (objects.STIXObject, error) {
 			return threatactor.Decode(bytes)
