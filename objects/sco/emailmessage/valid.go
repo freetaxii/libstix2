@@ -26,12 +26,16 @@ func (o *EmailMessage) Valid(debug bool) (bool, int, []string) {
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	if !o.IsMultipart {
+	if o.IsMultipart && len(o.BodyMultipart) == 0 {
 		problemsFound++
-		str := fmt.Sprintf("-- The is_multipart property is required but missing")
+		str := fmt.Sprintf("-- is_multipart is set but body_multipart is empty")
+		resultDetails = append(resultDetails, str)
+	} else if !o.IsMultipart && len(o.BodyMultipart) > 0 {
+		problemsFound++
+		str := fmt.Sprintf("-- is_multipart is not set but body_multipart is not empty")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The is_multipart property is required and is present")
+		str := fmt.Sprintf("-- is_multipart is ok")
 		resultDetails = append(resultDetails, str)
 	}
 

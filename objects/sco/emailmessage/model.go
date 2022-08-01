@@ -14,7 +14,7 @@ import (
 // ----------------------------------------------------------------------
 
 /*
-IPv4Addr - This type implements the STIX 2 IPv4 Address SCO and defines
+EmailMessage - This type implements the STIX 2 Email Message SCO and defines
 all of the properties and methods needed to create and work with this object.
 All of the methods not defined local to this type are inherited from the
 individual properties.
@@ -34,8 +34,15 @@ type EmailMessage struct {
 	ReceivedLines          []string       `json:"received_lines,omitempty" bson:"received_lines,omitempty"`
 	AdditionalHeaderFields map[string]any `json:"additional_header_fields,omitempty" bson:"additional_header_fields,omitempty"`
 	Body                   string         `json:"body,omitempty" bson:"body,omitempty"`
-	BodyMultipart          []string       `json:"body_multipart,omitempty" bson:"body_multipart,omitempty"`
+	BodyMultipart          []MimePartType `json:"body_multipart,omitempty" bson:"body_multipart,omitempty"`
 	RawEmailRef            string         `json:"raw_email_ref,omitempty" bson:"raw_email_ref,omitempty"`
+}
+
+type MimePartType struct {
+	Body               string `json:"body,omitempty" bson:"body,omitempty"`
+	BodyRawRef         string `json:"body_raw_ref,omitempty" bson:"body_raw_ref,omitempty"`
+	ContentType        string `json:"content_type,omitempty" bson:"content_type,omitempty"`
+	ContentDisposition string `json:"content_disposition,omitempty" bson:"content_disposition,omitempty"`
 }
 
 /*
