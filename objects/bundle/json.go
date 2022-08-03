@@ -7,6 +7,7 @@ package bundle
 
 import (
 	"encoding/json"
+	"github.com/freetaxii/libstix2/objects/malwareanalysis"
 	"github.com/freetaxii/libstix2/objects/sco/autonomoussystem"
 	"github.com/freetaxii/libstix2/objects/sco/domainname"
 	"github.com/freetaxii/libstix2/objects/sco/emailaddr"
@@ -72,6 +73,9 @@ func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) 
 		},
 		"malware": func(bytes []byte) (objects.STIXObject, error) {
 			return malware.Decode(bytes)
+		},
+		"malware-analysis": func(bytes []byte) (objects.STIXObject, error) {
+			return malwareanalysis.Decode(bytes)
 		},
 		"observed-data": func(bytes []byte) (objects.STIXObject, error) {
 			return observeddata.Decode(bytes)
