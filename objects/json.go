@@ -81,11 +81,7 @@ func (o *CommonObjectProperties) FindCustomProperties(b []byte, p []string) erro
 
 // ----------------------------------------------------------------------
 // Public Methods JSON Encoders
-// The encoding is done here at the individual object level instead of at
-// the STIX Object level so that individual pre/post processing rules can
-// be applied. Since some of the STIX Objects do not follow a universal
-// model, we need to cleanup some things that were inherited but not valid
-// for the object.
+// These methods exist to allow for duck typing.
 // ----------------------------------------------------------------------
 
 /*

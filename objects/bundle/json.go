@@ -35,7 +35,7 @@ type DecodeFunc func([]byte) (objects.STIXObject, error)
 
 /*
 DecodeWithCustomObjects - This function will decode a bundle and return the object as a pointer
-along with any errors found.
+along with any errors found. Additionally, custom objects can be decoded by supplying custom decoders.
 */
 func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) (*Bundle, []error) {
 	allErrors := make([]error, 0)
