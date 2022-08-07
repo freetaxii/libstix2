@@ -41,7 +41,7 @@ func DecodeType(data []byte) (string, error) {
 func Decode(data []byte) (*CommonObjectProperties, error) {
 	var o CommonObjectProperties
 
-	err := json.Unmarshal(data, o)
+	err := json.Unmarshal(data, &o)
 	if err != nil {
 		return nil, err
 	}
@@ -77,4 +77,34 @@ func (o *CommonObjectProperties) FindCustomProperties(b []byte, p []string) erro
 		}
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------------
+// Public Methods JSON Encoders
+// These methods exist to allow for duck typing.
+// ----------------------------------------------------------------------
+
+/*
+Encode - This method is a simple wrapper for encoding an object into JSON
+*/
+func (o *CommonObjectProperties) Encode() ([]byte, error) {
+	data, err := json.MarshalIndent(o, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+
+	// Any needed preprocessing would be done here
+	return data, nil
+}
+
+/*
+EncodeToString - This method is a simple wrapper for encoding an object into
+JSON
+*/
+func (o *CommonObjectProperties) EncodeToString() (string, error) {
+	data, err := o.Encode()
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
