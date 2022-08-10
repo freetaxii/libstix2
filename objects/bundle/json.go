@@ -14,6 +14,7 @@ import (
 	"github.com/freetaxii/libstix2/objects/sco/emailmessage"
 	"github.com/freetaxii/libstix2/objects/sco/ipv4addr"
 	"github.com/freetaxii/libstix2/objects/sco/ipv6addr"
+	"github.com/freetaxii/libstix2/objects/sco/networktraffic"
 	"github.com/freetaxii/libstix2/objects/sco/urlobject"
 	"github.com/freetaxii/libstix2/objects/sco/x509certificate"
 	"io"
@@ -124,6 +125,9 @@ func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) 
 		},
 		"autonomous-system": func(bytes []byte) (objects.STIXObject, error) {
 			return autonomoussystem.Decode(bytes)
+		},
+		"network-traffic": func(bytes []byte) (objects.STIXObject, error) {
+			return networktraffic.Decode(bytes)
 		},
 	}
 	for k, v := range customDecoders {
