@@ -87,7 +87,7 @@ STIX Cyber-observable Objects
 - [ ] Mutex
 - [X] Network Traffic
 - [ ] Process
-- [ ] Software
+- [X] Software
 - [X] URL
 - [ ] User Account
 - [ ] Windows Registry Key

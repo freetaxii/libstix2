@@ -24,7 +24,7 @@ type Software struct {
 	objects.NameProperty
 	Cpe       string   `json:"cpe,omitempty" bson:"cpe,omitempty"`
 	Languages []string `json:"languages,omitempty" bson:"languages,omitempty"`
-	Vendor    string   `json:"vendor,omitempty" vendor,omitempty"`
+	Vendor    string   `json:"vendor,omitempty" bson:"vendor,omitempty"`
 	Version   string   `json:"version,omitempty" bson:"version,omitempty"`
 }
 
