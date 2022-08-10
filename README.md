@@ -73,6 +73,26 @@ STIX Relationship Objects
 - [x] Relationship
 - [x] Sighting
 
+STIX Cyber-observable Objects
+- [ ] Artifact
+- [X] Autonomous System
+- [ ] Directory
+- [X] Domain Name
+- [X] Email Address
+- [X] Email Message
+- [ ] File
+- [X] IPv4 Address
+- [X] IPv6 Address
+- [ ] MAC Address
+- [ ] Mutex
+- [X] Network Traffic
+- [ ] Process
+- [ ] Software
+- [X] URL
+- [ ] User Account
+- [ ] Windows Registry Key
+- [X] X.509 Certificate
+
 Other STIX Objects
 - [x] Bundle
 - [ ] Language Content
