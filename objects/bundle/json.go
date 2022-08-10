@@ -12,6 +12,7 @@ import (
 	"github.com/freetaxii/libstix2/objects/sco/domainname"
 	"github.com/freetaxii/libstix2/objects/sco/emailaddr"
 	"github.com/freetaxii/libstix2/objects/sco/emailmessage"
+	"github.com/freetaxii/libstix2/objects/sco/file"
 	"github.com/freetaxii/libstix2/objects/sco/ipv4addr"
 	"github.com/freetaxii/libstix2/objects/sco/ipv6addr"
 	"github.com/freetaxii/libstix2/objects/sco/networktraffic"
@@ -132,6 +133,9 @@ func DecodeWithCustomObjects(r io.Reader, customDecoders map[string]DecodeFunc) 
 		},
 		"software": func(bytes []byte) (objects.STIXObject, error) {
 			return software.Decode(bytes)
+		},
+		"file": func(bytes []byte) (objects.STIXObject, error) {
+			return file.Decode(bytes)
 		},
 	}
 	for k, v := range customDecoders {

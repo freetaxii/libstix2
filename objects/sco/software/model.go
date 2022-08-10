@@ -48,7 +48,7 @@ func (o *Software) GetPropertyList() []string {
 // ----------------------------------------------------------------------
 
 /*
-New - This function will create a new STIX Domain Name SCO and return it as a
+New - This function will create a new STIX Software SCO and return it as a
 pointer. It will also initialize the object by setting all of the basic
 properties.
 */

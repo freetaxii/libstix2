@@ -80,7 +80,7 @@ STIX Cyber-observable Objects
 - [X] Domain Name
 - [X] Email Address
 - [X] Email Message
-- [ ] File
+- [X] File
 - [X] IPv4 Address
 - [X] IPv6 Address
 - [ ] MAC Address
