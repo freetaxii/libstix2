@@ -44,6 +44,24 @@ func ValidObjectType(t string) bool {
 		"threat-actor":       1,
 		"tool":               1,
 		"vulnerability":      1,
+		// SCOs
+		"artifact":          1,
+		"autonomous-system": 1,
+		"directory":         1,
+		"domain-name":       1,
+		"email-addr":        1,
+		"email-message":     1,
+		"file":              1,
+		"ipv4-addr":         1,
+		"ipv6-addr":         1,
+		"mac-addr":          1,
+		"mutex":             1,
+		"network-traffic":   1,
+		"process":           1,
+		"software":          1,
+		"url":               1,
+		"user-account":      1,
+		"x509-certificate":  1,
 	}
 
 	if _, ok := m[t]; ok {
@@ -56,6 +74,15 @@ func ValidObjectType(t string) bool {
 // properties of this object.
 func (o *CommonObjectProperties) GetCommonProperties() *CommonObjectProperties {
 	return o
+}
+
+/*
+GetPropertyList - This method will return a list of all of the properties that
+are unique to this object. This is used by the custom UnmarshalJSON for this
+object. As this is the base object, an empty list is returned
+*/
+func (o *CommonObjectProperties) GetPropertyList() []string {
+	return []string{}
 }
 
 // ----------------------------------------------------------------------

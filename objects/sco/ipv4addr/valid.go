@@ -15,7 +15,7 @@ to make sure they are valid per the specification. It will return a boolean, an
 integer that tracks the number of problems found, and a slice of strings that
 contain the detailed results, whether good or bad.
 */
-func (o *DomainName) Valid(debug bool) (bool, int, []string) {
+func (o *IPv4Addr) Valid(debug bool) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
@@ -23,11 +23,6 @@ func (o *DomainName) Valid(debug bool) (bool, int, []string) {
 	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
-
-	// Verify object value property present
-	_, pValue, dValue := o.ValueProperty.VerifyExists()
-	problemsFound += pValue
-	resultDetails = append(resultDetails, dValue...)
 
 	if problemsFound > 0 {
 		return false, problemsFound, resultDetails

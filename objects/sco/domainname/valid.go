@@ -24,11 +24,6 @@ func (o *DomainName) Valid(debug bool) (bool, int, []string) {
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	// Verify object value property present
-	_, pValue, dValue := o.ValueProperty.VerifyExists()
-	problemsFound += pValue
-	resultDetails = append(resultDetails, dValue...)
-
 	if problemsFound > 0 {
 		return false, problemsFound, resultDetails
 	}
