@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
 )
 
 // ----------------------------------------------------------------------
@@ -119,7 +119,7 @@ func (ds *Store) addCollection(obj *collections.Collection) (int, error) {
 	sqlstmt.WriteString("values (?, ?, ?, ?, ?, ?)")
 	stmt1 := sqlstmt.String()
 
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	dateAdded := time.Now().UTC().Format(defs.TimeRFC3339Micro)
 
 	// Make SQL Call
 	val, err1 := ds.DB.Exec(stmt1,
@@ -328,9 +328,10 @@ getCollections - This method is called from either GetAllCollections(),
 GetAllEnabledCollections(), or GetCollections() and will return all of the
 collections that are asked for based on the method that called it.  The options
 that can be passed in are:
-    "all"
-    "allEnabled"
-    "enabledVisible"
+
+	"all"
+	"allEnabled"
+	"enabledVisible"
 
 The "all" option returns every collection, even those that are hidden or disabled.
 "allEnabled" will return all enabled collections, even those that are hidden.

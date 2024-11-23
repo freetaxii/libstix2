@@ -27,35 +27,35 @@ func TestValid1(t *testing.T) {
 	m := New()
 	want := false
 
-	if got, err := m.Valid(false); got != want {
+	if got, _, err := m.Valid(false); got != want {
 		t.Error("Fail DomainNameObject Object should be invalid when empty")
 		t.Log(err)
 	}
 }
 
-//TestValid2 -
+// TestValid2 -
 func TestValid2(t *testing.T) {
 	m := New()
 	want := true
 
 	m.SetValue("test.domain.name")
 
-	if got, err := m.Valid(false); got != want {
+	if got, _, err := m.Valid(false); got != want {
 		t.Error("Fail DomainNameObject Object should be valid when required fields are not empty")
 		t.Log(err)
 	}
 }
 
-//TestValid9 - should be valid
+// TestValid9 - should be valid
 func TestValid9(t *testing.T) {
 	m := New()
 	want := true
 
 	m.SetValue("test.domein.name")
 	m.AddResolvesToRefs([]string{"ipv4-addr--efcd5e80-570d-4131-b213-62cb18eaa6a8", "ipv4-addr--efcd5e80-570d-4131-b213-62cb18eaa6a9"})
-	m.AddResolvesToRef("ipv4-addr--efcd5e80-570d-4131-b213-62cb18eaa6a7")
+	m.AddResolvesToRefs("ipv4-addr--efcd5e80-570d-4131-b213-62cb18eaa6a7")
 
-	if got, err := m.Valid(false); got != want {
+	if got, _, err := m.Valid(false); got != want {
 		t.Error("Fail DomainNameObject Object should be valid")
 		t.Log(err)
 	}

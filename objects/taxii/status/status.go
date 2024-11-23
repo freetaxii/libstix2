@@ -199,7 +199,7 @@ CreateSuccessDetails - This method will create a SuccessDetails type based on th
 data provided and will add it to the Successes property.
 */
 func (o *Status) CreateSuccessDetails(id, ver, mesg string) error {
-	s, _ := r.NewSuccessDetails()
+	s, _ := o.NewSuccessDetails()
 	s.SetID(id)
 	s.SetVersion(ver)
 	s.SetMessage(mesg)
@@ -222,9 +222,9 @@ AddFailureDetails - This method will take in a SuccessDetails type as a pointer
 and add it to the Failures property. One would use this if they manually created
 their own SuccessDetails type and then wanted to add it to the Failures property.
 */
-func (o *Status) AddFailureDetails(o *StatusDetails) (int, error) {
+func (o *Status) AddFailureDetails(s *StatusDetails) (int, error) {
 	positionThatAppendWillUse := len(o.Failures)
-	o.Failures = append(o.Failures, *o)
+	o.Failures = append(o.Failures, *s)
 	return positionThatAppendWillUse, nil
 }
 
@@ -247,8 +247,8 @@ to the Pendings property, and return a pointer to that instance.
 func (o *Status) NewPendingDetails() (*StatusDetails, error) {
 	obj := NewStatusDetails()
 	positionThatAppendWillUse := len(o.Pendings)
-	o.Pendings = append(r.Pendings, *obj)
-	return &r.Pendings[positionThatAppendWillUse], nil
+	o.Pendings = append(o.Pendings, *obj)
+	return &o.Pendings[positionThatAppendWillUse], nil
 }
 
 /*
@@ -256,9 +256,9 @@ AddPendingDetails - This method will take in a SuccessDetails type as a pointer
 and add it to the Pendings property. One would use this if they manually created
 their own SuccessDetails type and then wanted to add it to the Pendings property.
 */
-func (o *Status) AddPendingDetails(o *StatusDetails) (int, error) {
+func (o *Status) AddPendingDetails(s *StatusDetails) (int, error) {
 	positionThatAppendWillUse := len(o.Pendings)
-	o.Pendings = append(o.Pendings, *o)
+	o.Pendings = append(o.Pendings, *s)
 	return positionThatAppendWillUse, nil
 }
 
@@ -267,7 +267,7 @@ CreatePendingDetails - This method will create a SuccessDetails type based on th
 data provided and will add it to the Pending property.
 */
 func (o *Status) CreatePendingDetails(id, ver, mesg string) error {
-	s, _ := r.NewPendingDetails()
+	s, _ := o.NewPendingDetails()
 	s.SetID(id)
 	s.SetVersion(ver)
 	s.SetMessage(mesg)

@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/freetaxii/libstix2/objects/envelope"
 	"github.com/freetaxii/libstix2/objects/indicator"
+	"github.com/freetaxii/libstix2/objects/taxii/envelope"
 )
 
 func main() {
@@ -22,8 +22,8 @@ func main() {
 	i := indicator.New()
 
 	i.SetName("Malware C2 Indicator 2016")
-	i.AddLabel("BadStuff")
-	i.AddType("compromised")
+	i.AddLabels("BadStuff")
+	i.AddTypes("compromised")
 	i.SetPattern("[ ipv4-addr:value = '192.168.100.100' ]")
 	i.SetValidFrom(time.Now())
 	i.CreateKillChainPhase("lockheed-martin-cyber-kill-chain", "delivery")

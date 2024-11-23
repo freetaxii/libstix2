@@ -84,9 +84,9 @@ func isObjectTypeValid(s string) bool {
 	return true
 }
 
-// isIDValid - This function will take in an ID and check to see if it is
+// IsIDValid - This function will take in an ID and check to see if it is
 // a valid identifier per the specification for a STIX object.
-func isIDValid(id string) bool {
+func IsIDValid(id string) bool {
 	idparts := strings.Split(id, "--")
 
 	if idparts == nil {
@@ -172,7 +172,7 @@ func (o *CommonObjectProperties) checkID(r *results) {
 	} else {
 		requiredAndFound(r, "id")
 
-		if valid := isIDValid(o.ID); valid == false {
+		if valid := IsIDValid(o.ID); valid == false {
 			logProblem(r, "-- the id property does not contain a valid identifier")
 		} else {
 			str := fmt.Sprintf("++ the id property contains a valid identifier value of \"%s\"", o.ID)

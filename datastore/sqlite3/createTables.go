@@ -88,17 +88,17 @@ PopulateVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
 func (ds *Store) PopulateVocabTables() {
-	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
-	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
-	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
-	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
-	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
-	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.GetKeys(vocabs.GetAttackMotivationVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.GetKeys(vocabs.GetAttackResourceLevelVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.GetKeys(vocabs.GetIdentityClassVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.GetKeys(vocabs.GetIndicatorTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.GetKeys(vocabs.GetIndustrySectorVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.GetKeys(vocabs.GetMalwareTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.GetKeys(vocabs.GetReportTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.GetKeys(vocabs.GetThreatActorTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.GetKeys(vocabs.GetThreatActorRoleVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.GetKeys(vocabs.GetThreatActorSophisticationVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.GetKeys(vocabs.GetToolTypeVocab()))
 }
 
 // ----------------------------------------------------------------------

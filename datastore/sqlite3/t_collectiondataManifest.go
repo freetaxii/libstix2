@@ -12,10 +12,9 @@ import (
 	"strconv"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
-	"github.com/freetaxii/libstix2/resources/manifest"
-	"github.com/freetaxii/libstix2/stixid"
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/manifest"
 )
 
 // ----------------------------------------------------------------------
@@ -154,12 +153,12 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 			specVersion = defs.MEDIA_TYPE_STIX20
 		case "2.1":
 			specVersion = defs.MEDIA_TYPE_STIX21
-		case "2.2":
-			specVersion = defs.MEDIA_TYPE_STIX22
-		case "2.3":
-			specVersion = defs.MEDIA_TYPE_STIX23
-		case "2.4":
-			specVersion = defs.MEDIA_TYPE_STIX24
+		// case "2.2":
+		// 	specVersion = defs.MEDIA_TYPE_STIX22
+		// case "2.3":
+		// 	specVersion = defs.MEDIA_TYPE_STIX23
+		// case "2.4":
+		// 	specVersion = defs.MEDIA_TYPE_STIX24
 		default:
 			specVersion = defs.MEDIA_TYPE_STIX
 		}
@@ -367,7 +366,7 @@ func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 	if date != nil {
 		// We are only allowing a single added after value, since having more does
 		// not make sense.
-		if timestamp.Valid(date[0]) {
+		if objects.IsTimestampValid(date[0]) {
 			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.date_added > "`)
@@ -400,7 +399,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	*/
 	if id != nil {
 		if len(id) == 1 {
-			if stixid.ValidSTIXID(id[0]) {
+			if objects.IsIDValid(id[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id = "`)
@@ -421,7 +420,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 				}
 				// Lets make sure the value that was passed in is actually a valid id
 
-				if stixid.ValidSTIXID(v) {
+				if objects.IsIDValid(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id = "`)
 					b.WriteString(v)
@@ -457,7 +456,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	*/
 	if t != nil {
 		if len(t) == 1 {
-			if stixid.ValidSTIXObjectType(t[0]) {
+			if objects.ValidObjectType(t[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id LIKE "`)
@@ -477,7 +476,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid object
-				if stixid.ValidSTIXObjectType(v) {
+				if objects.ValidObjectType(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id LIKE "`)
 					b.WriteString(v)
@@ -575,7 +574,7 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 		} else if vers[0] == "all" {
 			// Do nothing, since the default is to return all versions.
 		} else {
-			if timestamp.Valid(vers[0]) {
+			if objects.IsTimestampValid(vers[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.modified = "`)
@@ -618,7 +617,7 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 				b.WriteString(`.id)`)
 
 			} else {
-				if timestamp.Valid(v) {
+				if objects.IsTimestampValid(v) {
 					b.WriteString(tblBaseObj)
 					b.WriteString(`.modified = "`)
 					b.WriteString(v)

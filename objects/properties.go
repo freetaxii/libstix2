@@ -522,6 +522,28 @@ func (o *SeenProperties) SetLastSeen(t interface{}) error {
 }
 
 // ----------------------------------------------------------------------
+// ID Property
+// ----------------------------------------------------------------------
+
+// IDProperty - A property used by one or more STIX objects that captures the
+// unique identifier for the object.
+type IDProperty struct {
+	ID string `json:"id,omitempty" bson:"id,omitempty"`
+}
+
+// SetID - This method takes in a string value representing a unique identifier
+// and updates the id property.
+func (o *IDProperty) SetID(s string) error {
+	o.ID = s
+	return nil
+}
+
+// GetID - This method returns the id for an object as a string.
+func (o *IDProperty) GetID() string {
+	return o.ID
+}
+
+// ----------------------------------------------------------------------
 // Title Properties
 // ----------------------------------------------------------------------
 
@@ -555,4 +577,25 @@ type ValueProperty struct {
 func (o *ValueProperty) SetValue(val string) error {
 	o.Value = val
 	return nil
+}
+
+/*
+	VerifyExists - This method will verify that the value property on an object
+
+is present. It will return a boolean, an integer that tracks the number of
+problems found, and a slice of strings that contain the detailed results,
+whether good or bad.
+*/
+func (o *ValueProperty) VerifyExists() (bool, int, []string) {
+	problemsFound := 0
+	resultDetails := make([]string, 1)
+
+	if o.Value == "" {
+		problemsFound++
+		resultDetails[0] = fmt.Sprintf("-- The value property is required but missing")
+		return false, problemsFound, resultDetails
+	}
+
+	resultDetails[0] = fmt.Sprintf("++ The value property is required and is present")
+	return true, problemsFound, resultDetails
 }

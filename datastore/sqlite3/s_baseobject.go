@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/objects/baseobject"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -157,9 +157,9 @@ addBaseObject - This method will add the base properties of an object to the
 database and return an integer that tracks the record number for parent child
 relationships.
 */
-func (ds *Store) addBaseObject(obj *baseobject.CommonObjectProperties) (int, error) {
+func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error) {
 	ds.Logger.Levelln("Function", "FUNC: addBaseObject start")
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	dateAdded := time.Now().UTC().Format(defs.TimeRFC3339Micro)
 
 	datastoreID := ds.Cache.BaseObjectIDIndex
 
@@ -263,10 +263,10 @@ getbaseObject - This method will get a specific base object based on the STIX ID
 and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
-func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObjectProperties, error) {
+func (ds *Store) getBaseObject(stixid, version string) (*objects.CommonObjectProperties, error) {
 	ds.Logger.Levelln("Function", "FUNC: getBaseObject start")
 
-	var baseObj baseobject.CommonObjectProperties
+	var baseObj objects.CommonObjectProperties
 	var datastoreID int
 	var dateAdded, objectType, specVersion, id, created, modified string
 	var createdByRef, lang sql.NullString
@@ -377,7 +377,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 	}
 
 	if label.Valid {
-		baseObj.AddLabel(label.String)
+		baseObj.AddLabels(label.String)
 	}
 
 	externalRefData, err1 := ds.getExternalReferences(datastoreID)
@@ -385,7 +385,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*baseobject.CommonObject
 		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err1)
 		return nil, err1
 	}
-	baseObj.ExternalReferencesProperty = *externalRefData
+	baseObj.ExternalReferences = []objects.ExternalReference{*externalRefData}
 
 	ds.Logger.Levelln("Function", "FUNC: getBaseObject end")
 	return &baseObj, nil
@@ -443,7 +443,7 @@ func (ds *Store) addLabel(datastoreID int, label string) error {
 addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
-func (ds *Store) addExternalReference(datastoreID int, extref baseobject.ExternalReference) error {
+func (ds *Store) addExternalReference(datastoreID int, extref objects.ExternalReference) error {
 	ds.Logger.Levelln("Function", "FUNC: addExternalReference start")
 
 	// Create SQL Statement
@@ -485,9 +485,9 @@ func (ds *Store) addExternalReference(datastoreID int, extref baseobject.Externa
 getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
-func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalReferencesProperty, error) {
+func (ds *Store) getExternalReferences(datastoreID int) (*objects.ExternalReference, error) {
 	ds.Logger.Levelln("Function", "FUNC: getExternalReferences start")
-	var extrefs baseobject.ExternalReferencesProperty
+	var extrefs objects.ExternalReference
 
 	// Create SQL Statement
 	/*
@@ -518,24 +518,23 @@ func (ds *Store) getExternalReferences(datastoreID int) (*baseobject.ExternalRef
 	for rows.Next() {
 		var sourceName string
 		var description, url, externalID sql.NullString
-		e, _ := extrefs.NewExternalReference()
 
 		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
 			rows.Close()
 			ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting external references: ", err)
 		}
-		e.SetSourceName(sourceName)
+		extrefs.SetSourceName(sourceName)
 		if description.Valid {
-			e.SetDescription(description.String)
+			extrefs.SetDescription(description.String)
 		}
 
 		if url.Valid {
-			e.SetURL(url.String)
+			extrefs.SetURL(url.String)
 		}
 
 		if externalID.Valid {
-			e.SetExternalID(externalID.String)
+			extrefs.SetExternalID(externalID.String)
 		}
 
 	}

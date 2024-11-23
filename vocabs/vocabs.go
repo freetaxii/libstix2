@@ -5,6 +5,15 @@
 
 package vocabs
 
+// GetKeys - This function will return a list of all the keys in the vocabulary map
+func GetKeys(vocab map[string]bool) []string {
+	keys := make([]string, 0, len(vocab))
+	for k := range vocab {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 // GetAccountVocab - This function will return the STIX account vocabulary.
 func GetAccountVocab() map[string]bool {
 	return (map[string]bool{

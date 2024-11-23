@@ -20,3 +20,12 @@ from the infrastructure-type-ov open vocabulary.
 func (o *Infrastructure) AddTypes(values interface{}) error {
 	return objects.AddValuesToList(&o.InfrastructureTypes, values)
 }
+
+/*
+AddAliases - This method takes in a string value, a comma separated list of
+string values, or a slice of string values that represents an alias and adds
+it to the aliases property.
+*/
+func (o *Infrastructure) AddAliases(values interface{}) error {
+	return objects.AddValuesToList(&o.Aliases, values)
+}

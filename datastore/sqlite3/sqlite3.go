@@ -11,8 +11,9 @@ import (
 	"os"
 
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/freetaxii/libstix2/resources/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
 	"github.com/gologme/log"
+
 	// Need to import just the symbols from the sqlite3 package
 	_ "github.com/mattn/go-sqlite3"
 )

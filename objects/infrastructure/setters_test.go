@@ -18,7 +18,7 @@ TestAddInfrastructureType -
 func TestAddInfrastructureType(t *testing.T) {
 	m := New()
 	want := "botnet"
-	m.AddInfrastructureType(want)
+	m.AddTypes(want)
 
 	if got := m.InfrastructureTypes[0]; got != want {
 		t.Error("Fail Infrastructure Add Infrastructure Type Check")
@@ -36,8 +36,8 @@ func TestAddInfrastructureTypes(t *testing.T) {
 	wantRes := []string{"command-and-control", "botnet"}
 	wantRes2 := []string{"botnet", "command-and-control"}
 
-	m.AddInfrastructureTypes(want)
-	m2.AddInfrastructureTypes(want2)
+	m.AddTypes(want)
+	m2.AddTypes(want2)
 
 	if got := len(m.InfrastructureTypes); got != 2 {
 		t.Error("Fail Infrastructure Add Infrastructure Types Check. List contains less items")
@@ -101,7 +101,7 @@ TestAddAliase -
 func TestAddAlias(t *testing.T) {
 	m := New()
 	want := "botnet"
-	m.AddAlias(want)
+	m.AddAliases(want)
 
 	if got := m.Aliases[0]; got != want {
 		t.Error("Fail Infrastructure Add Aliase Check")
@@ -114,7 +114,7 @@ TestSetFirstSeen -
 func TestSetFirstSeen(t *testing.T) {
 	m := New()
 	wantStr := "2019-10-04T00:00:00Z"
-	want, _ := time.Parse(defs.TIME_RFC_3339_MILLI, wantStr)
+	want, _ := time.Parse(defs.TimeRFC3339Milli, wantStr)
 
 	m.SetFirstSeen(want)
 
@@ -129,7 +129,7 @@ TestSetLastSeen -
 func TestSetLastSeen(t *testing.T) {
 	m := New()
 	wantStr := "2019-10-04T00:00:00Z"
-	want, _ := time.Parse(defs.TIME_RFC_3339_MILLI, wantStr)
+	want, _ := time.Parse(defs.TimeRFC3339Milli, wantStr)
 
 	m.SetLastSeen(want)
 

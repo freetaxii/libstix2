@@ -221,7 +221,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	}
 
 	if indTypes.Valid {
-		i.AddType(indTypes.String)
+		i.AddTypes(indTypes.String)
 	}
 
 	if pattern.Valid {

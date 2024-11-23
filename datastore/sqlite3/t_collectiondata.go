@@ -14,10 +14,10 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
-	"github.com/freetaxii/libstix2/resources/envelope"
-	"github.com/freetaxii/libstix2/resources/versions"
-	"github.com/freetaxii/libstix2/stixid"
+	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/envelope"
+	"github.com/freetaxii/libstix2/objects/taxii/versions"
 )
 
 // ----------------------------------------------------------------------
@@ -34,10 +34,11 @@ the collection content table
 date_added    = The date that this object was added to the collection
 collection_id = The collection ID that this object is tied to
 stix_id       = The STIX ID for the object that is being mapped to a collection.
-  We do not use the datastore_id here or the row_id as that would point to a
-  specific version and we need to be able to find all versions of an object.
-  and if we used row_id for example, it would require two queries, the first
-  to get the SITX ID and then the second to get all objects with that STIX ID.
+
+	We do not use the datastore_id here or the row_id as that would point to a
+	specific version and we need to be able to find all versions of an object.
+	and if we used row_id for example, it would require two queries, the first
+	to get the SITX ID and then the second to get all objects with that STIX ID.
 */
 func collectionDataProperties() string {
 	return `
@@ -148,7 +149,7 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 	// to a secondary table and then have a second process go through and merge
 	// them. This way the end client would not be held up by the transaction.
 
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	dateAdded := time.Now().UTC().Format(defs.TimeRFC3339Micro)
 
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, dateAdded, collectionDatastoreID, stixid)
@@ -210,19 +211,20 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 
 		// Is the UUIDv4 portion of the ID valid?
 		if ds.Strict.IDs == true {
-			if !stixid.ValidUUID(idparts[1]) {
+			if !objects.IsUUIDValid(idparts[1]) {
 				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX UUID", idparts[1])
 				continue
 			}
 		}
 
-		// Is the STIX type part of the ID valid?
-		if ds.Strict.Types == true {
-			if !stixid.ValidSTIXObjectType(idparts[0]) {
-				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX type", idparts[0])
-				continue
-			}
-		}
+		// TODO: FIX
+		// // Is the STIX type part of the ID valid?
+		// if ds.Strict.Types == true {
+		// 	if !stixid.ValidSTIXObjectType(idparts[0]) {
+		// 		ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX type", idparts[0])
+		// 		continue
+		// 	}
+		// }
 
 		// ------------------------------------------------------------
 		// Get object by type

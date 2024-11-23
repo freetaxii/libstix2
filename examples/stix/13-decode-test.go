@@ -17,7 +17,7 @@ import (
 func main() {
 	data := getdata()
 
-	b, err := bundle.DecodeRaw(strings.NewReader(data))
+	b, err := bundle.Decode(strings.NewReader(data))
 	if err != nil {
 		log.Fatalln(err)
 	}
