@@ -109,7 +109,7 @@ getBaseObjectIndex - This method will return the last object index value from th
 database base object table.
 */
 func (ds *Store) getBaseObjectIndex() (int, error) {
-	ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex start")
+	ds.Logger.Info("Function", "FUNC: getBaseObjectIndex start")
 	var index int
 
 	// Create SQL Statement
@@ -132,15 +132,15 @@ func (ds *Store) getBaseObjectIndex() (int, error) {
 	err := ds.DB.QueryRow(stmt).Scan(&index)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
 			return 0, errors.New("no base object record found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getBaseObjectIndex exited with an error,", err)
 		return 0, fmt.Errorf("database execution error getting base index: ", err)
 	}
 
-	ds.Logger.Debugln("DEBUG: The last record has an index value of", index)
-	ds.Logger.Levelln("Function", "FUNC: getBaseObjectIndex end")
+	ds.Logger.Debug("DEBUG: The last record has an index value of", index)
+	ds.Logger.Info("Function", "FUNC: getBaseObjectIndex end")
 	return index, nil
 }
 
@@ -158,12 +158,12 @@ database and return an integer that tracks the record number for parent child
 relationships.
 */
 func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error) {
-	ds.Logger.Levelln("Function", "FUNC: addBaseObject start")
+	ds.Logger.Info("Function", "FUNC: addBaseObject start")
 	dateAdded := time.Now().UTC().Format(defs.TimeRFC3339Micro)
 
 	datastoreID := ds.Cache.BaseObjectIDIndex
 
-	ds.Logger.Debugln("DEBUG: Adding Base Object to datastore with object ID", datastoreID, "and STIX ID", obj.ID)
+	ds.Logger.Debug("DEBUG: Adding Base Object to datastore with object ID", datastoreID, "and STIX ID", obj.ID)
 
 	// Create SQL Statement
 	/*
@@ -206,7 +206,7 @@ func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error)
 		obj.Lang)
 
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err1)
+		ds.Logger.Info("Function", "FUNC: addBaseObject exited with an error,", err1)
 		return 0, fmt.Errorf("database execution error inserting base object: ", err1)
 	}
 
@@ -221,7 +221,7 @@ func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error)
 		for _, label := range obj.Labels {
 			err2 := ds.addLabel(datastoreID, label)
 			if err2 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err2)
+				ds.Logger.Info("Function", "FUNC: addBaseObject exited with an error,", err2)
 				return 0, err2
 			}
 		}
@@ -234,7 +234,7 @@ func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error)
 		for _, reference := range obj.ExternalReferences {
 			err3 := ds.addExternalReference(datastoreID, reference)
 			if err3 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err3)
+				ds.Logger.Info("Function", "FUNC: addBaseObject exited with an error,", err3)
 				return 0, err3
 			}
 		}
@@ -248,13 +248,13 @@ func (ds *Store) addBaseObject(obj *objects.CommonObjectProperties) (int, error)
 			err4 := ds.addObjectMarkingRef(datastoreID, marking)
 
 			if err4 != nil {
-				ds.Logger.Levelln("Function", "FUNC: addBaseObject exited with an error,", err4)
+				ds.Logger.Info("Function", "FUNC: addBaseObject exited with an error,", err4)
 				return 0, err4
 			}
 		}
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: addBaseObject end")
+	ds.Logger.Info("Function", "FUNC: addBaseObject end")
 	return datastoreID, nil
 }
 
@@ -264,7 +264,7 @@ and the version (modified timestamp).  This method is most often called from
 a get method on a STIX object (for example: getIndicator).
 */
 func (ds *Store) getBaseObject(stixid, version string) (*objects.CommonObjectProperties, error) {
-	ds.Logger.Levelln("Function", "FUNC: getBaseObject start")
+	ds.Logger.Info("Function", "FUNC: getBaseObject start")
 
 	var baseObj objects.CommonObjectProperties
 	var datastoreID int
@@ -350,10 +350,10 @@ func (ds *Store) getBaseObject(stixid, version string) (*objects.CommonObjectPro
 	err := ds.DB.QueryRow(stmt, stixid, version).Scan(&datastoreID, &dateAdded, &objectType, &specVersion, &id, &createdByRef, &created, &modified, &revoked, &confidence, &lang, &label)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getBaseObject exited with an error,", err)
 			return nil, errors.New("no base object record found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getBaseObject exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting base object: ", err)
 	}
 	baseObj.SetDatastoreID(datastoreID)
@@ -382,12 +382,12 @@ func (ds *Store) getBaseObject(stixid, version string) (*objects.CommonObjectPro
 
 	externalRefData, err1 := ds.getExternalReferences(datastoreID)
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: getBaseObject exited with an error,", err1)
+		ds.Logger.Info("Function", "FUNC: getBaseObject exited with an error,", err1)
 		return nil, err1
 	}
 	baseObj.ExternalReferences = []objects.ExternalReference{*externalRefData}
 
-	ds.Logger.Levelln("Function", "FUNC: getBaseObject end")
+	ds.Logger.Info("Function", "FUNC: getBaseObject end")
 	return &baseObj, nil
 }
 
@@ -402,7 +402,7 @@ func (ds *Store) getBaseObject(stixid, version string) (*objects.CommonObjectPro
 addLabel - This method will add a label to the database for a specific object ID.
 */
 func (ds *Store) addLabel(datastoreID int, label string) error {
-	ds.Logger.Levelln("Function", "FUNC: addLabel start")
+	ds.Logger.Info("Function", "FUNC: addLabel start")
 
 	// Create SQL Statement
 	/*
@@ -424,10 +424,10 @@ func (ds *Store) addLabel(datastoreID int, label string) error {
 	_, err := ds.DB.Exec(stmt, datastoreID, label)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addLabel exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: addLabel exited with an error,", err)
 		return fmt.Errorf("database execution error inserting object label: ", err)
 	}
-	ds.Logger.Levelln("Function", "FUNC: addLabel end")
+	ds.Logger.Info("Function", "FUNC: addLabel end")
 	return nil
 }
 
@@ -444,7 +444,7 @@ addExternalReference - This method will add an external reference to the
 database for a specific object ID.
 */
 func (ds *Store) addExternalReference(datastoreID int, extref objects.ExternalReference) error {
-	ds.Logger.Levelln("Function", "FUNC: addExternalReference start")
+	ds.Logger.Info("Function", "FUNC: addExternalReference start")
 
 	// Create SQL Statement
 	/*
@@ -474,10 +474,10 @@ func (ds *Store) addExternalReference(datastoreID int, extref objects.ExternalRe
 		extref.ExternalID)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addExternalReference exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: addExternalReference exited with an error,", err)
 		return fmt.Errorf("database execution error inserting external reference: ", err)
 	}
-	ds.Logger.Levelln("Function", "FUNC: addExternalReference end")
+	ds.Logger.Info("Function", "FUNC: addExternalReference end")
 	return nil
 }
 
@@ -486,7 +486,7 @@ getExternalReferences - This method will return all external references that are
 part of a specific object ID.
 */
 func (ds *Store) getExternalReferences(datastoreID int) (*objects.ExternalReference, error) {
-	ds.Logger.Levelln("Function", "FUNC: getExternalReferences start")
+	ds.Logger.Info("Function", "FUNC: getExternalReferences start")
 	var extrefs objects.ExternalReference
 
 	// Create SQL Statement
@@ -521,7 +521,7 @@ func (ds *Store) getExternalReferences(datastoreID int) (*objects.ExternalRefere
 
 		if err := rows.Scan(&sourceName, &description, &url, &externalID); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getExternalReferences exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting external references: ", err)
 		}
 		extrefs.SetSourceName(sourceName)
@@ -543,10 +543,10 @@ func (ds *Store) getExternalReferences(datastoreID int) (*objects.ExternalRefere
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getExternalReferences exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getExternalReferences exited with an error,", err)
 		return nil, fmt.Errorf("database rows error getting external references: ", err)
 	}
-	ds.Logger.Levelln("Function", "FUNC: getExternalReferences end")
+	ds.Logger.Info("Function", "FUNC: getExternalReferences end")
 	return &extrefs, nil
 }
 
@@ -562,7 +562,7 @@ addObjectMarkingRef - This method will add an object marking ref to the
 database for a specific object ID.
 */
 func (ds *Store) addObjectMarkingRef(datastoreID int, marking string) error {
-	ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef start")
+	ds.Logger.Info("Function", "FUNC: addObjectMarkingRef start")
 
 	// Create SQL Statement
 	/*
@@ -584,9 +584,9 @@ func (ds *Store) addObjectMarkingRef(datastoreID int, marking string) error {
 	_, err := ds.DB.Exec(stmt, datastoreID, marking)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: addObjectMarkingRef exited with an error,", err)
 		return fmt.Errorf("database execution error inserting object marking ref: ", err)
 	}
-	ds.Logger.Levelln("Function", "FUNC: addObjectMarkingRef end")
+	ds.Logger.Info("Function", "FUNC: addObjectMarkingRef end")
 	return nil
 }

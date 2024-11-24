@@ -35,11 +35,11 @@ instead of sting concatenation as it is the most efficient way to do string
 concatenation in Go.
 */
 func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getManifestData start")
+	ds.Logger.Info("Function", "FUNC: getManifestData start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
@@ -71,7 +71,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, err
 	}
 
@@ -125,7 +125,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	rows, err := ds.DB.Query(stmt)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
@@ -136,7 +136,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
 
@@ -170,19 +170,19 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
 	if len(manifestData.Objects) == 0 {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
 
 	resultData.Size = ds.Cache.Collections[query.CollectionUUID].Size
 
-	ds.Logger.Debugln("DEBUG: Query Collection ID", query.CollectionUUID)
-	ds.Logger.Debugln("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
+	ds.Logger.Debug("DEBUG: Query Collection ID", query.CollectionUUID)
+	ds.Logger.Debug("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
 
 	resultData.ManifestData.More = manifestData.More
 	resultData.ManifestData.Objects = manifestData.Objects
@@ -201,7 +201,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-	ds.Logger.Levelln("Function", "FUNC: getManifestData end")
+	ds.Logger.Info("Function", "FUNC: getManifestData end")
 	return &resultData, nil
 }
 
@@ -231,24 +231,24 @@ func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 		client, err = strconv.Atoi(query.Limit[0])
 	}
 	if err != nil {
-		ds.Logger.Debugln("DEBUG: Client limit value is not valid: ", err)
+		ds.Logger.Debug("DEBUG: Client limit value is not valid: ", err)
 		return srv
 	}
 
 	if client > srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
 		return srv
 	} else if client < 0 {
-		ds.Logger.Debugln("DEBUG: Client limit value is less than zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is less than zero, using server limit of", srv)
 		return srv
 	} else if client == 0 {
-		ds.Logger.Debugln("DEBUG: Client limit value is equal to zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to zero, using server limit of", srv)
 		return srv
 	} else if client == srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
 		return srv
 	} else if client < srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is less than server limit, using client limit of", client)
+		ds.Logger.Debug("DEBUG: Client limit value is less than server limit, using client limit of", client)
 		return client
 	}
 

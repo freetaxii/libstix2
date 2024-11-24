@@ -7,11 +7,11 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/freetaxii/libstix2/objects/bundle"
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/gologme/log"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 	b, err := bundle.Decode(strings.NewReader(data))
 	if err != nil {
 		for _, v := range err {
-			log.Println(v)
+			slog.Info(v.Error())
 		}
 		//log.Fatalln("ERROR in Decode")
 	}
