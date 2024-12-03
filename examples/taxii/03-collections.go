@@ -9,14 +9,16 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
+	"github.com/google/uuid"
 )
 
 func main() {
 	o := collections.New()
 
 	c, _ := o.NewCollection()
-	c.SetNewTAXIIID()
+	// create a new UUID for the collection
+	c.ID = uuid.New().String()
 	c.SetCanRead()
 
 	// You can do this manually by creating your own Collection object

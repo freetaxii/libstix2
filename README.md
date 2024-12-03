@@ -32,7 +32,7 @@ Oleksii Morozov
 This software uses the following external libraries:
 ```
 uuid
-	go get github.com/pborman/uuid
+	go get github.com/google/uuid
 	Copyright (c) 2014 Google Inc. All rights reserved. (Google License)
 
 qo-sqlite3

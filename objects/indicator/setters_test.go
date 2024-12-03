@@ -11,7 +11,7 @@ import "testing"
 func TestAddType(t *testing.T) {
 	i := New()
 	want := "testData"
-	i.AddType(want)
+	i.AddTypes(want)
 
 	if got := i.IndicatorTypes[0]; got != want {
 		t.Error("Fail Indicator Add Type Check")

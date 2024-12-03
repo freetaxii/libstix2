@@ -12,10 +12,9 @@ import (
 	"strconv"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
-	"github.com/freetaxii/libstix2/resources/manifest"
-	"github.com/freetaxii/libstix2/stixid"
-	"github.com/freetaxii/libstix2/timestamp"
+	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/manifest"
 )
 
 // ----------------------------------------------------------------------
@@ -36,11 +35,11 @@ instead of sting concatenation as it is the most efficient way to do string
 concatenation in Go.
 */
 func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getManifestData start")
+	ds.Logger.Info("Function", "FUNC: getManifestData start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
@@ -72,7 +71,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	whereQuery, err := ds.sqlCollectionDataQueryOptions(query)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, err
 	}
 
@@ -126,7 +125,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	rows, err := ds.DB.Query(stmt)
 
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database execution error getting collection data: ", err)
 	}
 	defer rows.Close()
@@ -137,7 +136,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		var stixid, dateAdded, modified, specVersion string
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 			return nil, fmt.Errorf("database scan error getting collection data: ", err)
 		}
 
@@ -154,12 +153,12 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 			specVersion = defs.MEDIA_TYPE_STIX20
 		case "2.1":
 			specVersion = defs.MEDIA_TYPE_STIX21
-		case "2.2":
-			specVersion = defs.MEDIA_TYPE_STIX22
-		case "2.3":
-			specVersion = defs.MEDIA_TYPE_STIX23
-		case "2.4":
-			specVersion = defs.MEDIA_TYPE_STIX24
+		// case "2.2":
+		// 	specVersion = defs.MEDIA_TYPE_STIX22
+		// case "2.3":
+		// 	specVersion = defs.MEDIA_TYPE_STIX23
+		// case "2.4":
+		// 	specVersion = defs.MEDIA_TYPE_STIX24
 		default:
 			specVersion = defs.MEDIA_TYPE_STIX
 		}
@@ -171,19 +170,19 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
 		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
 	}
 
 	if len(manifestData.Objects) == 0 {
-		ds.Logger.Levelln("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
 
 	resultData.Size = ds.Cache.Collections[query.CollectionUUID].Size
 
-	ds.Logger.Debugln("DEBUG: Query Collection ID", query.CollectionUUID)
-	ds.Logger.Debugln("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
+	ds.Logger.Debug("DEBUG: Query Collection ID", query.CollectionUUID)
+	ds.Logger.Debug("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
 
 	resultData.ManifestData.More = manifestData.More
 	resultData.ManifestData.Objects = manifestData.Objects
@@ -202,7 +201,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-	ds.Logger.Levelln("Function", "FUNC: getManifestData end")
+	ds.Logger.Info("Function", "FUNC: getManifestData end")
 	return &resultData, nil
 }
 
@@ -232,24 +231,24 @@ func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 		client, err = strconv.Atoi(query.Limit[0])
 	}
 	if err != nil {
-		ds.Logger.Debugln("DEBUG: Client limit value is not valid: ", err)
+		ds.Logger.Debug("DEBUG: Client limit value is not valid: ", err)
 		return srv
 	}
 
 	if client > srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
 		return srv
 	} else if client < 0 {
-		ds.Logger.Debugln("DEBUG: Client limit value is less than zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is less than zero, using server limit of", srv)
 		return srv
 	} else if client == 0 {
-		ds.Logger.Debugln("DEBUG: Client limit value is equal to zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to zero, using server limit of", srv)
 		return srv
 	} else if client == srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
 		return srv
 	} else if client < srv {
-		ds.Logger.Debugln("DEBUG: Client limit value is less than server limit, using client limit of", client)
+		ds.Logger.Debug("DEBUG: Client limit value is less than server limit, using client limit of", client)
 		return client
 	}
 
@@ -367,7 +366,7 @@ func sqlCollectionDataWhereAddedAfter(date []string, b *bytes.Buffer) error {
 	if date != nil {
 		// We are only allowing a single added after value, since having more does
 		// not make sense.
-		if timestamp.Valid(date[0]) {
+		if objects.IsTimestampValid(date[0]) {
 			b.WriteString(" AND ")
 			b.WriteString(tblBaseObj)
 			b.WriteString(`.date_added > "`)
@@ -400,7 +399,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 	*/
 	if id != nil {
 		if len(id) == 1 {
-			if stixid.ValidSTIXID(id[0]) {
+			if objects.IsIDValid(id[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id = "`)
@@ -421,7 +420,7 @@ func sqlCollectionDataWhereSTIXID(id []string, b *bytes.Buffer) error {
 				}
 				// Lets make sure the value that was passed in is actually a valid id
 
-				if stixid.ValidSTIXID(v) {
+				if objects.IsIDValid(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id = "`)
 					b.WriteString(v)
@@ -457,7 +456,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 	*/
 	if t != nil {
 		if len(t) == 1 {
-			if stixid.ValidSTIXObjectType(t[0]) {
+			if objects.ValidObjectType(t[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblColData)
 				b.WriteString(`.stix_id LIKE "`)
@@ -477,7 +476,7 @@ func sqlCollectionDataWhereSTIXType(t []string, b *bytes.Buffer) error {
 					addOR = false
 				}
 				// Lets make sure the value that was passed in is actually a valid object
-				if stixid.ValidSTIXObjectType(v) {
+				if objects.ValidObjectType(v) {
 					b.WriteString(tblColData)
 					b.WriteString(`.stix_id LIKE "`)
 					b.WriteString(v)
@@ -575,7 +574,7 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 		} else if vers[0] == "all" {
 			// Do nothing, since the default is to return all versions.
 		} else {
-			if timestamp.Valid(vers[0]) {
+			if objects.IsTimestampValid(vers[0]) {
 				b.WriteString(" AND ")
 				b.WriteString(tblBaseObj)
 				b.WriteString(`.modified = "`)
@@ -618,7 +617,7 @@ func sqlCollectionDataWhereSTIXVersion(vers []string, b *bytes.Buffer) error {
 				b.WriteString(`.id)`)
 
 			} else {
-				if timestamp.Valid(v) {
+				if objects.IsTimestampValid(v) {
 					b.WriteString(tblBaseObj)
 					b.WriteString(`.modified = "`)
 					b.WriteString(v)

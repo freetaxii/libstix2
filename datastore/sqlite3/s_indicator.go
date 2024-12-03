@@ -60,14 +60,14 @@ func indicatorTypesProperties() string {
 addIndicator - This method will add an indicator to the database.
 */
 func (ds *Store) addIndicator(obj *indicator.Indicator) error {
-	ds.Logger.Levelln("Function", "FUNC: addIndicator start")
+	ds.Logger.Info("Function", "FUNC: addIndicator start")
 
 	datastoreID, err := ds.addBaseObject(&obj.CommonObjectProperties)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addIndicator exited with an error")
+		ds.Logger.Info("Function", "FUNC: addIndicator exited with an error")
 		return err
 	}
-	ds.Logger.Debugln("DEBUG: Adding Indicator to datastore with database ID", datastoreID)
+	ds.Logger.Debug("DEBUG: Adding Indicator to datastore with database ID", datastoreID)
 
 	// Create SQL Statement
 	/*
@@ -101,7 +101,7 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 
 	// TODO if there is an error, we probably need to back out all of the INSERTS
 	if err1 != nil {
-		ds.Logger.Levelln("Function", "FUNC: addIndicator exited with an error")
+		ds.Logger.Info("Function", "FUNC: addIndicator exited with an error")
 		return fmt.Errorf("database execution error inserting indicator: ", err)
 	}
 
@@ -112,7 +112,7 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 		for _, itype := range obj.IndicatorTypes {
 			err := ds.addIndicatorType(datastoreID, itype)
 			if err != nil {
-				ds.Logger.Levelln("Function", "FUNC: addIndicator exited with an error")
+				ds.Logger.Info("Function", "FUNC: addIndicator exited with an error")
 				return err
 			}
 		}
@@ -125,12 +125,12 @@ func (ds *Store) addIndicator(obj *indicator.Indicator) error {
 		for _, v := range obj.KillChainPhases {
 			err := ds.addKillChainPhase(datastoreID, &v)
 			if err != nil {
-				ds.Logger.Levelln("Function", "FUNC: addIndicator exited with an error")
+				ds.Logger.Info("Function", "FUNC: addIndicator exited with an error")
 				return err
 			}
 		}
 	}
-	ds.Logger.Levelln("Function", "FUNC: addIndicator end")
+	ds.Logger.Info("Function", "FUNC: addIndicator end")
 	return nil
 }
 
@@ -139,14 +139,14 @@ getIndicator - This method will get a specific indicator from the database based
 on the STIX ID and version.
 */
 func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, error) {
-	ds.Logger.Levelln("Function", "FUNC: getIndicator start")
+	ds.Logger.Info("Function", "FUNC: getIndicator start")
 	var i indicator.Indicator
 
 	// Get Base Object - this will give us the datastoreID
 	// Then copy base object data in to Indicator object
 	baseObject, errBase := ds.getBaseObject(stixid, version)
 	if errBase != nil {
-		ds.Logger.Levelln("Function", "FUNC: getIndicator exited with an error")
+		ds.Logger.Info("Function", "FUNC: getIndicator exited with an error")
 		return nil, errBase
 	}
 	i.CommonObjectProperties = *baseObject
@@ -205,10 +205,10 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	err := ds.DB.QueryRow(stmt, i.DatastoreID).Scan(&name, &description, &pattern, &validFrom, &validUntil, &indTypes)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getIndicator exited with an error")
+			ds.Logger.Info("Function", "FUNC: getIndicator exited with an error")
 			return nil, errors.New("no indicator record found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getIndicator exited with an error")
+		ds.Logger.Info("Function", "FUNC: getIndicator exited with an error")
 		return nil, fmt.Errorf("database execution error getting indicator: ", err)
 	}
 
@@ -221,7 +221,7 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 	}
 
 	if indTypes.Valid {
-		i.AddType(indTypes.String)
+		i.AddTypes(indTypes.String)
 	}
 
 	if pattern.Valid {
@@ -238,12 +238,12 @@ func (ds *Store) getIndicator(stixid, version string) (*indicator.Indicator, err
 
 	killChainPhases, errkc := ds.getKillChainPhases(i.DatastoreID)
 	if errkc != nil {
-		ds.Logger.Levelln("Function", "FUNC: getIndicator exited with an error")
+		ds.Logger.Info("Function", "FUNC: getIndicator exited with an error")
 		return nil, errkc
 	}
 	i.KillChainPhasesProperty = *killChainPhases
 
-	ds.Logger.Levelln("Function", "FUNC: getIndicator end")
+	ds.Logger.Info("Function", "FUNC: getIndicator end")
 	return &i, nil
 }
 
@@ -252,7 +252,7 @@ addIndicatorType - This method will add all of the indicator types to the
 database for a specific indicator based on its database ID.
 */
 func (ds *Store) addIndicatorType(datastoreID int, itype string) error {
-	ds.Logger.Levelln("Function", "FUNC: addIndicatorType start")
+	ds.Logger.Info("Function", "FUNC: addIndicatorType start")
 
 	// Create SQL Statement
 	/*
@@ -273,10 +273,10 @@ func (ds *Store) addIndicatorType(datastoreID int, itype string) error {
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, datastoreID, itype)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addIndicatorType exited with an error")
+		ds.Logger.Info("Function", "FUNC: addIndicatorType exited with an error")
 		return fmt.Errorf("database execution error inserting indicator type: ", err)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: addIndicatorType end")
+	ds.Logger.Info("Function", "FUNC: addIndicatorType end")
 	return nil
 }

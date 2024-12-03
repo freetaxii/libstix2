@@ -14,10 +14,10 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/defs"
-	"github.com/freetaxii/libstix2/resources/collections"
-	"github.com/freetaxii/libstix2/resources/envelope"
-	"github.com/freetaxii/libstix2/resources/versions"
-	"github.com/freetaxii/libstix2/stixid"
+	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects/taxii/collections"
+	"github.com/freetaxii/libstix2/objects/taxii/envelope"
+	"github.com/freetaxii/libstix2/objects/taxii/versions"
 )
 
 // ----------------------------------------------------------------------
@@ -34,10 +34,11 @@ the collection content table
 date_added    = The date that this object was added to the collection
 collection_id = The collection ID that this object is tied to
 stix_id       = The STIX ID for the object that is being mapped to a collection.
-  We do not use the datastore_id here or the row_id as that would point to a
-  specific version and we need to be able to find all versions of an object.
-  and if we used row_id for example, it would require two queries, the first
-  to get the SITX ID and then the second to get all objects with that STIX ID.
+
+	We do not use the datastore_id here or the row_id as that would point to a
+	specific version and we need to be able to find all versions of an object.
+	and if we used row_id for example, it would require two queries, the first
+	to get the SITX ID and then the second to get all objects with that STIX ID.
 */
 func collectionDataProperties() string {
 	return `
@@ -60,8 +61,8 @@ getCollectionSize - This method takes in a collection datastore ID and will
 return the size of a given collection.
 */
 func (ds *Store) getCollectionSize(collectionDatastoreID int) (int, error) {
-	ds.Logger.Levelln("Function", "FUNC: getCollectionSize start")
-	ds.Logger.Debugln("DEBUG: Getting collection size for collection ID", collectionDatastoreID)
+	ds.Logger.Info("Function", "FUNC: getCollectionSize start")
+	ds.Logger.Debug("DEBUG: Getting collection size for collection ID", collectionDatastoreID)
 	var size int
 
 	// Create SQL Statement
@@ -84,16 +85,16 @@ func (ds *Store) getCollectionSize(collectionDatastoreID int) (int, error) {
 	err := ds.DB.QueryRow(stmt, collectionDatastoreID).Scan(&size)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error,", err)
+			ds.Logger.Info("Function", "FUNC: getCollectionSize exited with an error,", err)
 			return 0, errors.New("no collection data found")
 		}
-		ds.Logger.Levelln("Function", "FUNC: getCollectionSize exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getCollectionSize exited with an error,", err)
 		return 0, fmt.Errorf("getCollectionSize database execution error: ", err)
 	}
 
-	ds.Logger.Debugln("DEBUG: Collection ID", collectionDatastoreID, "has a size of", size)
+	ds.Logger.Debug("DEBUG: Collection ID", collectionDatastoreID, "has a size of", size)
 
-	ds.Logger.Levelln("Function", "FUNC: getCollectionSize end")
+	ds.Logger.Info("Function", "FUNC: getCollectionSize end")
 	return size, nil
 }
 
@@ -111,11 +112,11 @@ not the Object ID because we need to make sure we include all versions of an
 object. So we need to store just the STIX ID.
 */
 func (ds *Store) addToCollection(collectionUUID, stixid string) error {
-	ds.Logger.Levelln("Function", "FUNC: addToCollection start")
+	ds.Logger.Info("Function", "FUNC: addToCollection start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(collectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: addToCollection exited with an error")
+		ds.Logger.Info("Function", "FUNC: addToCollection exited with an error")
 		return fmt.Errorf("the following collection id was not found in the cache", collectionUUID)
 	}
 
@@ -123,8 +124,8 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 	// of the long collection ID string (UUID). So lets get the DatastoreID from
 	// the cache.
 	collectionDatastoreID := ds.Cache.Collections[collectionUUID].DatastoreID
-	ds.Logger.Debugln("DEBUG: Collection Datastore ID", collectionDatastoreID)
-	ds.Logger.Debugln("DEBUG: Object ID", stixid)
+	ds.Logger.Debug("DEBUG: Collection Datastore ID", collectionDatastoreID)
+	ds.Logger.Debug("DEBUG: Object ID", stixid)
 
 	// Create SQL Statement
 	/*
@@ -148,19 +149,19 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 	// to a secondary table and then have a second process go through and merge
 	// them. This way the end client would not be held up by the transaction.
 
-	dateAdded := time.Now().UTC().Format(defs.TIME_RFC_3339_MICRO)
+	dateAdded := time.Now().UTC().Format(defs.TimeRFC3339Micro)
 
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, dateAdded, collectionDatastoreID, stixid)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addToCollection exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: addToCollection exited with an error,", err)
 		return fmt.Errorf("database execution error inserting collection data: ", err)
 	}
 
 	// If the operation was successful, lets increment the collection cache size
 	ds.Cache.Collections[collectionUUID].Size++
-	ds.Logger.Debugln("DEBUG: Collection ID", collectionUUID, "now has a size of", ds.Cache.Collections[collectionUUID].Size)
-	ds.Logger.Levelln("Function", "FUNC: addToCollection end")
+	ds.Logger.Debug("DEBUG: Collection ID", collectionUUID, "now has a size of", ds.Cache.Collections[collectionUUID].Size)
+	ds.Logger.Info("Function", "FUNC: addToCollection end")
 	return nil
 }
 
@@ -176,11 +177,11 @@ func (ds *Store) addToCollection(collectionUUID, stixid string) error {
 getObjects - This method will return a TAXII Envelope resource based on the query provided.
 */
 func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getObjects start")
+	ds.Logger.Info("Function", "FUNC: getObjects start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error")
+		ds.Logger.Info("Function", "FUNC: getObjects exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 
@@ -190,7 +191,7 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 	// meet the query requirements. This is done with the manifest records.
 	resultData, err := ds.getManifestData(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getObjects exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getObjects exited with an error,", err)
 		return nil, err
 	}
 
@@ -210,19 +211,20 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 
 		// Is the UUIDv4 portion of the ID valid?
 		if ds.Strict.IDs == true {
-			if !stixid.ValidUUID(idparts[1]) {
-				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX UUID", idparts[1])
+			if !objects.IsUUIDValid(idparts[1]) {
+				ds.Logger.Debug("DEBUG: Get STIX object error, invalid STIX UUID", idparts[1])
 				continue
 			}
 		}
 
-		// Is the STIX type part of the ID valid?
-		if ds.Strict.Types == true {
-			if !stixid.ValidSTIXObjectType(idparts[0]) {
-				ds.Logger.Debugln("DEBUG: Get STIX object error, invalid STIX type", idparts[0])
-				continue
-			}
-		}
+		// TODO: FIX
+		// // Is the STIX type part of the ID valid?
+		// if ds.Strict.Types == true {
+		// 	if !stixid.ValidSTIXObjectType(idparts[0]) {
+		// 		ds.Logger.Debug("DEBUG: Get STIX object error, invalid STIX type", idparts[0])
+		// 		continue
+		// 	}
+		// }
 
 		// ------------------------------------------------------------
 		// Get object by type
@@ -232,11 +234,11 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 		case "indicator":
 			obj, err = ds.getIndicator(v.ID, v.Version)
 			if err != nil {
-				ds.Logger.Debugln("DEBUG: Get object error,", err)
+				ds.Logger.Debug("DEBUG: Get object error,", err)
 				continue
 			}
 		default:
-			ds.Logger.Debugln("DEBUG: Get object error, the following STIX type is not currently supported: ", idparts[0])
+			ds.Logger.Debug("DEBUG: Get object error, the following STIX type is not currently supported: ", idparts[0])
 			continue
 		}
 
@@ -244,7 +246,7 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 	}
 
 	resultData.ObjectData = *taxiiEnvelope
-	ds.Logger.Levelln("Function", "FUNC: getObjects end")
+	ds.Logger.Info("Function", "FUNC: getObjects end")
 	return resultData, nil
 }
 
@@ -252,11 +254,11 @@ func (ds *Store) getObjects(query collections.CollectionQuery) (*collections.Col
 getVersions - This method will return a TAXII Versions resource based on the query provided.
 */
 func (ds *Store) getVersions(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Levelln("Function", "FUNC: getVersions start")
+	ds.Logger.Info("Function", "FUNC: getVersions start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Levelln("Function", "FUNC: getVersions exited with an error")
+		ds.Logger.Info("Function", "FUNC: getVersions exited with an error")
 		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
 	}
 
@@ -266,7 +268,7 @@ func (ds *Store) getVersions(query collections.CollectionQuery) (*collections.Co
 	// meet the query requirements. This is done with the manifest records.
 	resultData, err := ds.getManifestData(query)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getVersions exited with an error,", err)
+		ds.Logger.Info("Function", "FUNC: getVersions exited with an error,", err)
 		return nil, err
 	}
 
@@ -280,7 +282,7 @@ func (ds *Store) getVersions(query collections.CollectionQuery) (*collections.Co
 	}
 
 	resultData.VersionsData = *taxiiVersions
-	ds.Logger.Levelln("Function", "FUNC: getVersions end")
+	ds.Logger.Info("Function", "FUNC: getVersions end")
 	return resultData, nil
 }
 
@@ -295,20 +297,20 @@ processRangeValues - This method will take in the various range parameters and s
 of the dataset and will return the correct first and last index values to be used.
 */
 func (ds *Store) processRangeValues(first, last, max, size int) (int, int, error) {
-	ds.Logger.Levelln("Function", "FUNC: processRangeValues start")
+	ds.Logger.Info("Function", "FUNC: processRangeValues start")
 
 	if first < 0 {
-		ds.Logger.Levelln("Function", "FUNC: processRangeValues exited with an error")
+		ds.Logger.Info("Function", "FUNC: processRangeValues exited with an error")
 		return 0, 0, errors.New("the starting value can not be negative")
 	}
 
 	if first > last {
-		ds.Logger.Levelln("Function", "FUNC: processRangeValues exited with an error")
+		ds.Logger.Info("Function", "FUNC: processRangeValues exited with an error")
 		return 0, 0, errors.New("the starting range value is larger than the ending range value")
 	}
 
 	if first >= size {
-		ds.Logger.Levelln("Function", "FUNC: processRangeValues exited with an error")
+		ds.Logger.Info("Function", "FUNC: processRangeValues exited with an error")
 		return 0, 0, errors.New("the starting range value is out of scope")
 	}
 
@@ -333,6 +335,6 @@ func (ds *Store) processRangeValues(first, last, max, size int) (int, int, error
 		last = first + max
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: processRangeValues end")
+	ds.Logger.Info("Function", "FUNC: processRangeValues end")
 	return first, last, nil
 }

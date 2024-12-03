@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/freetaxii/libstix2/objects/properties"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -27,9 +27,10 @@ import (
 /*
 commonAliasesProperties - This method will return the properties for aliases
 Used by:
-  campaign
-  intrusion set
-  threat actor
+
+	campaign
+	intrusion set
+	threat actor
 */
 func commonAliasesProperties() string {
 	return baseDBProperties() + `
@@ -46,8 +47,9 @@ func commonAliasesProperties() string {
 /*
 commonAuthorsProperties - This method will return the properties for common authors
 Used by:
-  note
-  opinion
+
+	note
+	opinion
 */
 func commonAuthorsProperties() string {
 	return baseDBProperties() + `
@@ -64,8 +66,9 @@ func commonAuthorsProperties() string {
 /*
 commonGoalsProperties  - This method will return the properties for goals
 Used by:
-  intrusion set
-  threat actor
+
+	intrusion set
+	threat actor
 */
 func commonGoalsProperties() string {
 	return baseDBProperties() + `
@@ -82,7 +85,9 @@ func commonGoalsProperties() string {
 /*
 commonHashesProperties - This method will return the properties for hashes
 Used by:
-  external references
+
+	external references
+
 TODO need find a way to link this back to an actual external reference instance
 maybe this should be called external references hashes.  Otherwise  how will you
 know which object in the database it is tied to.
@@ -103,10 +108,11 @@ func commonHashesProperties() string {
 /*
 commonKillChainPhasesProperties - This method will return the properties for kill chain phases
 Used by:
-  attack pattern
-  indicator
-  malware
-  tool
+
+	attack pattern
+	indicator
+	malware
+	tool
 */
 func commonKillChainPhasesProperties() string {
 	return baseDBProperties() + `
@@ -119,8 +125,8 @@ func commonKillChainPhasesProperties() string {
 addKillChainPhase - This method will add a kill chain phase for a given object
 to the database.
 */
-func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase) error {
-	ds.Logger.Levelln("Function", "FUNC: addKillChainPhase start")
+func (ds *Store) addKillChainPhase(objectID int, obj *objects.KillChainPhase) error {
+	ds.Logger.Info("Function", "FUNC: addKillChainPhase start")
 
 	// Create SQL Statement
 	/*
@@ -142,11 +148,11 @@ func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase)
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, objectID, obj.KillChainName, obj.PhaseName)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: addKillChainPhase exited with an error")
+		ds.Logger.Info("Function", "FUNC: addKillChainPhase exited with an error")
 		return fmt.Errorf("database execution error inserting kill chain phase: ", err)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: addKillChainPhase end")
+	ds.Logger.Info("Function", "FUNC: addKillChainPhase end")
 	return nil
 }
 
@@ -154,9 +160,9 @@ func (ds *Store) addKillChainPhase(objectID int, obj *properties.KillChainPhase)
 getKillChainPhases - This method will get the kill chain phases for a given
 object ID.
 */
-func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesProperty, error) {
-	ds.Logger.Levelln("Function", "FUNC: getKillChainPhases start")
-	var kcPhases properties.KillChainPhasesProperty
+func (ds *Store) getKillChainPhases(objectID int) (*objects.KillChainPhasesProperty, error) {
+	ds.Logger.Info("Function", "FUNC: getKillChainPhases start")
+	var kcPhases objects.KillChainPhasesProperty
 
 	// Create SQL Statement
 	/*
@@ -180,33 +186,36 @@ func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesPr
 	// Make SQL Call
 	rows, err := ds.DB.Query(stmt, objectID)
 	if err != nil {
-		ds.Logger.Levelln("Function", "FUNC: getKillChainPhases exited with an error")
+		ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
 		return nil, fmt.Errorf("database execution error getting kill chain phases: ", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var name, phase string
-		p, _ := kcPhases.NewKillChainPhase()
 
 		if err := rows.Scan(&name, &phase); err != nil {
 			rows.Close()
-			ds.Logger.Levelln("Function", "FUNC: getKillChainPhases exited with an error")
+			ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
 			return nil, fmt.Errorf("database scan error getting kill chain phases: ", err)
 		}
-		p.SetName(name)
-		p.SetPhase(phase)
+		err = kcPhases.CreateKillChainPhase(name, phase)
+		if err != nil {
+			rows.Close()
+			ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
+			return nil, fmt.Errorf("error creating kill chain phase: ", err)
+		}
 	}
 
 	// Errors can cause the rows.Next() to exit prematurely, if this happens lets
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Levelln("Function", "FUNC: getKillChainPhases exited with an error")
+		ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
 		return nil, fmt.Errorf("database rows error getting kill chain phases: ", err)
 	}
 
-	ds.Logger.Levelln("Function", "FUNC: getKillChainPhases end")
+	ds.Logger.Info("Function", "FUNC: getKillChainPhases end")
 	return &kcPhases, nil
 }
 
@@ -219,9 +228,10 @@ func (ds *Store) getKillChainPhases(objectID int) (*properties.KillChainPhasesPr
 /*
 commonObjectRefsProperties - This method will return the properties for object refs
 Used by:
-  note
-  opinion
-  report
+
+	note
+	opinion
+	report
 */
 func commonObjectRefsProperties() string {
 	return baseDBProperties() + `
@@ -238,7 +248,8 @@ func commonObjectRefsProperties() string {
 /*
 commonPersonalMotivationsProperties - This method will return the properties for personal motivations
 Used by:
-  threat actor
+
+	threat actor
 */
 func commonPersonalMotivationsProperties() string {
 	return baseDBProperties() + `
@@ -255,8 +266,9 @@ func commonPersonalMotivationsProperties() string {
 /*
 commonSecondaryMotivationsProperties - This method will return the properties for secondary motivations
 Used by:
-  intrusion set
-  threat actor
+
+	intrusion set
+	threat actor
 */
 func commonSecondaryMotivationsProperties() string {
 	return baseDBProperties() + `

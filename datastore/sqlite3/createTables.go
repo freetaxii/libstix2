@@ -88,17 +88,17 @@ PopulateVocabTables - This method will insert all of the vocabulary data
 into the right database tables.
 */
 func (ds *Store) PopulateVocabTables() {
-	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.AttackMotivation)
-	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.AttackResourceLevel)
-	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.IdentityClass)
-	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.IndicatorLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.IndustrySector)
-	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.MalwareLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.ReportLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.ThreatActorLabel)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.ThreatActorRole)
-	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.ThreatActorSophistication)
-	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.ToolLabel)
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_MOTIVATIONS, vocabs.GetKeys(vocabs.GetAttackMotivationVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_ATTACK_RESOURCE_LEVEL, vocabs.GetKeys(vocabs.GetAttackResourceLevelVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_IDENTITY_CLASS, vocabs.GetKeys(vocabs.GetIdentityClassVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_INDICATOR_LABEL, vocabs.GetKeys(vocabs.GetIndicatorTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_INDUSTRY_SECTOR, vocabs.GetKeys(vocabs.GetIndustrySectorVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_MALWARE_LABEL, vocabs.GetKeys(vocabs.GetMalwareTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_REPORT_LABEL, vocabs.GetKeys(vocabs.GetReportTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_LABEL, vocabs.GetKeys(vocabs.GetThreatActorTypeVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_ROLE, vocabs.GetKeys(vocabs.GetThreatActorRoleVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_THREAT_ACTOR_SOPHISTICATION, vocabs.GetKeys(vocabs.GetThreatActorSophisticationVocab()))
+	ds.insertVocabData(DB_TABLE_VOCAB_TOOL_LABEL, vocabs.GetKeys(vocabs.GetToolTypeVocab()))
 }
 
 // ----------------------------------------------------------------------
@@ -112,7 +112,7 @@ func (ds *Store) createTAXIITable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
 	}
 }
 
@@ -127,7 +127,7 @@ func (ds *Store) createTAXIIIndexes(name string) {
 		_, err := ds.DB.Exec(stmt)
 
 		if err != nil {
-			ds.Logger.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+			ds.Logger.Info("ERROR: The indexes for table", name, "could not be created due to error:", err)
 		}
 	}
 }
@@ -141,7 +141,7 @@ func (ds *Store) insertMediaTypes(name string) {
 		_, err = ds.DB.Exec(stmt, value)
 
 		if err != nil {
-			ds.Logger.Println("ERROR: The media type item could not be inserted in to the", name, "table")
+			ds.Logger.Info("ERROR: The media type item could not be inserted in to the", name, "table")
 		}
 	}
 }
@@ -151,7 +151,7 @@ func (ds *Store) createSTIXTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
 	}
 	ds.createSTIXIndexes(name)
 }
@@ -168,7 +168,7 @@ func (ds *Store) createSTIXIndexes(name string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Println("ERROR: The indexes for table", name, "could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The indexes for table", name, "could not be created due to error:", err)
 	}
 }
 
@@ -177,7 +177,7 @@ func (ds *Store) createVocabTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Println("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
 	}
 }
 
@@ -191,6 +191,6 @@ func (ds *Store) insertVocabData(name string, data []string) {
 	}
 
 	if err != nil {
-		ds.Logger.Println("ERROR: The vocabulary item could not be inserted in to the", name, "table")
+		ds.Logger.Info("ERROR: The vocabulary item could not be inserted in to the", name, "table")
 	}
 }

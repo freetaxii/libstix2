@@ -6,15 +6,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"time"
 
 	"github.com/freetaxii/libstix2/datastore"
 	"github.com/freetaxii/libstix2/datastore/sqlite3"
 	"github.com/freetaxii/libstix2/objects/indicator"
-	"github.com/gologme/log"
-	"github.com/pborman/getopt"
 )
 
 // These global variables hold build information. The Build variable will be
@@ -27,27 +27,24 @@ var (
 
 // These global variables are for dealing with command line options
 var (
-	defaultDatabaseFilename = "freetaxii.db"
-	sOptDatabaseFilename    = getopt.StringLong("filename", 'f', defaultDatabaseFilename, "Database Filename", "string")
-	bOptHelp                = getopt.BoolLong("help", 0, "Help")
-	bOptVer                 = getopt.BoolLong("version", 0, "Version")
+	sOptDatabaseFilename = flag.String("filename", "Database Filename. uses freetaxii.db if empty", "string")
+	bOptHelp             = flag.Bool("help", false, "Help")
+	bOptVer              = flag.Bool("version", false, "Version")
 )
 
 func main() {
 	processCommandLineFlags()
 
-	logger := log.New(os.Stderr, "", log.LstdFlags)
-	logger.EnableLevel("debug")
-	logger.EnableLevel("trace")
+	logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
 
 	var ds datastore.Datastorer
-	ds = sqlite3.New(logger, *sOptDatabaseFilename)
+	ds = sqlite3.New(logger, *sOptDatabaseFilename, nil)
 	defer ds.Close()
 
 	i := indicator.New()
 	i.SetName("Malware C2 Indicator 2016")
-	i.AddLabel("BadStuff")
-	i.AddType("compromised")
+	i.AddLabels("BadStuff")
+	i.AddTypes("compromised")
 
 	// Set modified time to be one hour from now
 	//modifiedTime := time.Now().Add(time.Hour)
@@ -73,10 +70,9 @@ func main() {
 // processCommandLineFlags - This function will process the command line flags
 // and will print the version or help information as needed.
 func processCommandLineFlags() {
-	getopt.HelpColumn = 35
-	getopt.DisplayWidth = 120
-	getopt.SetParameters("")
-	getopt.Parse()
+	if sOptDatabaseFilename == nil {
+		*sOptDatabaseFilename = "freetaxii.db"
+	}
 
 	// Lets check to see if the version command line flag was given. If it is
 	// lets print out the version infomration and exit.
@@ -89,7 +85,6 @@ func processCommandLineFlags() {
 	// print out the help information and exit.
 	if *bOptHelp {
 		printOutputHeader()
-		getopt.Usage()
 		os.Exit(0)
 	}
 }
