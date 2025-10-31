@@ -126,7 +126,7 @@ addKillChainPhase - This method will add a kill chain phase for a given object
 to the database.
 */
 func (ds *Store) addKillChainPhase(objectID int, obj *objects.KillChainPhase) error {
-	ds.Logger.Info("Function", "FUNC: addKillChainPhase start")
+	ds.Logger.Info("Function", "func", "addKillChainPhase", "status", "start")
 
 	// Create SQL Statement
 	/*
@@ -148,11 +148,11 @@ func (ds *Store) addKillChainPhase(objectID int, obj *objects.KillChainPhase) er
 	// Make SQL Call
 	_, err := ds.DB.Exec(stmt, objectID, obj.KillChainName, obj.PhaseName)
 	if err != nil {
-		ds.Logger.Info("Function", "FUNC: addKillChainPhase exited with an error")
-		return fmt.Errorf("database execution error inserting kill chain phase: ", err)
+		ds.Logger.Info("Function", "func", "addKillChainPhase", "status", "error", "error", "database error")
+		return fmt.Errorf("database execution error inserting kill chain phase: %v", err)
 	}
 
-	ds.Logger.Info("Function", "FUNC: addKillChainPhase end")
+	ds.Logger.Info("Function", "func", "addKillChainPhase", "status", "end")
 	return nil
 }
 
@@ -161,7 +161,7 @@ getKillChainPhases - This method will get the kill chain phases for a given
 object ID.
 */
 func (ds *Store) getKillChainPhases(objectID int) (*objects.KillChainPhasesProperty, error) {
-	ds.Logger.Info("Function", "FUNC: getKillChainPhases start")
+	ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "start")
 	var kcPhases objects.KillChainPhasesProperty
 
 	// Create SQL Statement
@@ -186,8 +186,8 @@ func (ds *Store) getKillChainPhases(objectID int) (*objects.KillChainPhasesPrope
 	// Make SQL Call
 	rows, err := ds.DB.Query(stmt, objectID)
 	if err != nil {
-		ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
-		return nil, fmt.Errorf("database execution error getting kill chain phases: ", err)
+		ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "error", "error", "database error")
+		return nil, fmt.Errorf("database execution error getting kill chain phases: %v", err)
 	}
 	defer rows.Close()
 
@@ -196,14 +196,14 @@ func (ds *Store) getKillChainPhases(objectID int) (*objects.KillChainPhasesPrope
 
 		if err := rows.Scan(&name, &phase); err != nil {
 			rows.Close()
-			ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
-			return nil, fmt.Errorf("database scan error getting kill chain phases: ", err)
+			ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "error", "error", "database error")
+			return nil, fmt.Errorf("database scan error getting kill chain phases: %v", err)
 		}
 		err = kcPhases.CreateKillChainPhase(name, phase)
 		if err != nil {
 			rows.Close()
-			ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
-			return nil, fmt.Errorf("error creating kill chain phase: ", err)
+			ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "error", "error", "database error")
+			return nil, fmt.Errorf("error creating kill chain phase: %v", err)
 		}
 	}
 
@@ -211,11 +211,11 @@ func (ds *Store) getKillChainPhases(objectID int) (*objects.KillChainPhasesPrope
 	// check for the error and handle it.
 	if err := rows.Err(); err != nil {
 		rows.Close()
-		ds.Logger.Info("Function", "FUNC: getKillChainPhases exited with an error")
-		return nil, fmt.Errorf("database rows error getting kill chain phases: ", err)
+		ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "error", "error", "database error")
+		return nil, fmt.Errorf("database rows error getting kill chain phases: %v", err)
 	}
 
-	ds.Logger.Info("Function", "FUNC: getKillChainPhases end")
+	ds.Logger.Info("Function", "func", "getKillChainPhases", "status", "end")
 	return &kcPhases, nil
 }
 

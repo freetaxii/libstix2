@@ -112,7 +112,7 @@ func (ds *Store) createTAXIITable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The table could not be created", "table", name, "error", err.Error())
 	}
 }
 
@@ -127,7 +127,7 @@ func (ds *Store) createTAXIIIndexes(name string) {
 		_, err := ds.DB.Exec(stmt)
 
 		if err != nil {
-			ds.Logger.Info("ERROR: The indexes for table", name, "could not be created due to error:", err)
+			ds.Logger.Info("ERROR: The indexes for table could not be created", "table", name, "error", err.Error())
 		}
 	}
 }
@@ -151,7 +151,7 @@ func (ds *Store) createSTIXTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The STIX table could not be created", "table", name, "error", err.Error())
 	}
 	ds.createSTIXIndexes(name)
 }
@@ -168,7 +168,7 @@ func (ds *Store) createSTIXIndexes(name string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Info("ERROR: The indexes for table", name, "could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The STIX indexes for table could not be created", "table", name, "error", err.Error())
 	}
 }
 
@@ -177,7 +177,7 @@ func (ds *Store) createVocabTable(name, properties string) {
 	_, err := ds.DB.Exec(stmt)
 
 	if err != nil {
-		ds.Logger.Info("ERROR: The", name, "table could not be created due to error:", err)
+		ds.Logger.Info("ERROR: The vocab table could not be created", "table", name, "error", err.Error())
 	}
 }
 
