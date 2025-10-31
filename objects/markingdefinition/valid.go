@@ -6,7 +6,6 @@
 package markingdefinition
 
 import (
-	"fmt"
 	"github.com/freetaxii/libstix2/objects/properties"
 )
 
@@ -16,24 +15,26 @@ to make sure they are valid per the specification. It will return a boolean, an
 integer that tracks the number of problems found, and a slice of strings that
 contain the detailed results, whether good or bad.
 */
-func (o *MarkingDefinition) Valid() (bool, int, []string) {
+func (o *MarkingDefinition) Valid(debug bool) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.ValidSDO()
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
 	// Verify object Name property is present
-	_, pName, dName := o.NameProperty.VerifyExists()
-	problemsFound += pName
-	resultDetails = append(resultDetails, dName...)
+	if o.GetName() == "" {
+		problemsFound++
+		str := "-- The markingDefinition name property is required but missing"
+		resultDetails = append(resultDetails, str)
+	}
 
 	// Verify object DefinitionType property is present
 	if o.DefinitionType != "tlp" && o.DefinitionType != "statement" {
 		problemsFound++
-		str := fmt.Sprintf("-- The markingDefinition definition type property is neither tlp nor statement")
+		str := "-- The markingDefinition definition type property is neither tlp nor statement"
 		resultDetails = append(resultDetails, str)
 	}
 
@@ -41,13 +42,13 @@ func (o *MarkingDefinition) Valid() (bool, int, []string) {
 	if t, ok := o.Definition.(properties.TlpDefinition); ok {
 		if t.Tlp == "" {
 			problemsFound++
-			str := fmt.Sprintf("-- The markingDefinition definition tlp property is required but missing")
+			str := "-- The markingDefinition definition tlp property is required but missing"
 			resultDetails = append(resultDetails, str)
 		}
 	} else if t, ok := o.Definition.(properties.StatementDefinition); ok {
 		if t.Statement == "" {
 			problemsFound++
-			str := fmt.Sprintf("-- The markingDefinition definition statement property is required but missing")
+			str := "-- The markingDefinition definition statement property is required but missing"
 			resultDetails = append(resultDetails, str)
 		}
 	}

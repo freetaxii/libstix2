@@ -22,7 +22,7 @@ properties.
 */
 type MarkingDefinition struct {
 	objects.CommonObjectProperties
-	properties.NameProperty
+	objects.NameProperty
 	properties.DefinitionProperty
 	DefinitionType string `json:"definition_type"`
 }

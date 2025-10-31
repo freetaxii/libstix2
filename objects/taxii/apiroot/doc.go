@@ -21,17 +21,20 @@ Root for Collections and Channels used by Sharing Group B.
 Each API Root contains a set of Endpoints that a TAXII Client contacts in order
 to interact with the TAXII Server. This interaction can take several forms:
 
- * Server Discovery, as described above, can be used to learn about the API Roots
+  - Server Discovery, as described above, can be used to learn about the API Roots
+
 hosted by a TAXII Server.
 
- * Each API Root might support zero or more Collections. Interactions with
+  - Each API Root might support zero or more Collections. Interactions with
+
 Collections include discovering the type of CTI contained in that Collection,
 pushing new CTI to that Collection, and/or retrieving CTI from that Collection.
 Each piece of CTI content in a Collection is referred to as an Object.
 
- * Each API Root might host zero or more Channels.
+  - Each API Root might host zero or more Channels.
 
- * Each API Root also allows TAXII Clients to check on the Status of certain types
+  - Each API Root also allows TAXII Clients to check on the Status of certain types
+
 of requests to the TAXII Server. For example, if a TAXII Client submitted new
 CTI, a Status request can allow the Client to check on whether the new CTI was
 accepted.
@@ -41,8 +44,8 @@ to help users and clients decide whether and how they want to interact with it.
 Multiple API Roots MAY be hosted on a single TAXII Server. Often, an API Root
 represents a single trust group.
 
- * Each API Root MUST have a unique URL.
+  - Each API Root MUST have a unique URL.
 
- * Each API Root MAY have different authentication and authorization schemes.
+  - Each API Root MAY have different authentication and authorization schemes.
 */
 package apiroot

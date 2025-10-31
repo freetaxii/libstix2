@@ -5,6 +5,5 @@
 
 /*
 Package sqlite3 implements the SQLite 3 datastore for TAXII 2.
-
 */
 package sqlite3
