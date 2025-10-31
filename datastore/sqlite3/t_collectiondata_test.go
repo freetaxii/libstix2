@@ -359,7 +359,7 @@ Test_processRangeValues - This function will test the following method:
 processRangeValues(first, last, max, size) (first, last, error)
 */
 func Test_processRangeValues(t *testing.T) {
-	var ds Sqlite3DatastoreType
+	var ds Store
 
 	// Test 1: This test should throw an error
 	t.Log("Test 1: get an error if the first value is negative")

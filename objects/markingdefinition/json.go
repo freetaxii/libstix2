@@ -20,7 +20,6 @@ func Decode(data []byte) (*MarkingDefinition, error) {
 	return &o, nil
 }
 
-
 /*
 UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom properties that this library does not know about. It will store
@@ -64,7 +63,6 @@ func (o *MarkingDefinition) UnmarshalJSON(b []byte) error {
 // model, we need to cleanup some things that were inherited but not valid
 // for the object.
 // ----------------------------------------------------------------------
-
 
 /*
 Encode - This method is a simple wrapper for encoding an object into JSON

@@ -69,7 +69,7 @@ func New(logger *slog.Logger, filename string, collections map[string]collection
 
 	err = ds.connect()
 	if err != nil {
-		logger.Error(err.Error())
+		ds.Logger.Error(err.Error())
 		os.Exit(1)
 	}
 
@@ -77,7 +77,7 @@ func New(logger *slog.Logger, filename string, collections map[string]collection
 	// and the collections data.
 	err = ds.initCache(collections)
 	if err != nil {
-		logger.Error(err.Error())
+		ds.Logger.Error(err.Error())
 		os.Exit(1)
 	}
 
@@ -106,7 +106,7 @@ AddObject - This method will take in a STIX object and add it to the
 database.
 */
 func (ds *Store) AddObject(obj interface{}) error {
-	ds.Logger.Info("Function", "FUNC: AddObject start")
+	ds.Logger.Info("Function", "func", "AddObject", "status", "start")
 
 	switch o := obj.(type) {
 	case *indicator.Indicator:
@@ -117,11 +117,11 @@ func (ds *Store) AddObject(obj interface{}) error {
 			return err
 		}
 	default:
-		ds.Logger.Info("Function", "FUNC: AddObject exited with an error")
-		return fmt.Errorf("add object error, the following STIX type is not currently supported: ", o)
+		ds.Logger.Info("FUNC: AddObject exited with an error")
+		return fmt.Errorf("add object error, the following STIX type is not currently supported: %v", o)
 	}
 
-	ds.Logger.Info("Function", "FUNC: AddObject end")
+	ds.Logger.Info("Function", "func", "AddObject", "status", "end")
 	return nil
 }
 
@@ -130,7 +130,7 @@ AddTAXIIObject - This method will take in a TAXII object and add it to the
 database.
 */
 func (ds *Store) AddTAXIIObject(obj interface{}) error {
-	ds.Logger.Info("Function", "FUNC: AddTAXIIObject start")
+	ds.Logger.Info("Function", "func", "AddTAXIIObject", "status", "start")
 	var err error
 	var datastoreID int
 
@@ -148,14 +148,14 @@ func (ds *Store) AddTAXIIObject(obj interface{}) error {
 			}
 		}
 	default:
-		err = fmt.Errorf("does not match any known types ", o)
+		err = fmt.Errorf("does not match any known types: %v", o)
 	}
 	if err != nil {
 		ds.Logger.Info("Function", "FUNC: AddTAXIIObject exited with an error,", err)
 		return err
 	}
 
-	ds.Logger.Info("Function", "FUNC: AddTAXIIObject end")
+	ds.Logger.Info("Function", "func", "AddTAXIIObject", "status", "end")
 	return nil
 }
 
@@ -286,7 +286,7 @@ func (ds *Store) verifyFileExists() error {
 initCache - This method will populate the datastore cache.
 */
 func (ds *Store) initCache(cols map[string]collections.Collection) error {
-	ds.Logger.Info("Function", "FUNC: initCache start")
+	ds.Logger.Info("Function", "func", "initCache", "status", "start")
 
 	// Get current index value of the s_base_object table so new records being
 	// added can use it as their datastore_id. By using an integer here instead
@@ -298,7 +298,7 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 		return err
 	}
 	ds.Cache.BaseObjectIDIndex = baseObjectIndex + 1
-	ds.Logger.Debug("DEBUG: The next base object index ID is", ds.Cache.BaseObjectIDIndex)
+	ds.Logger.Debug("DEBUG: The next base object index ID", "index", ds.Cache.BaseObjectIDIndex)
 
 	// Initialize the collections cache in the datastore
 	ds.Cache.Collections = make(map[string]*collections.Collection)
@@ -352,10 +352,10 @@ func (ds *Store) initCache(cols map[string]collections.Collection) error {
 	} // End loop through collections from configuration file
 
 	for k, v := range ds.Cache.Collections {
-		ds.Logger.Debug("DEBUG: Current collection cache: index key", k, "datastore ID", v.DatastoreID, "size", v.Size)
+		ds.Logger.Debug("DEBUG: Current collection cache", "key", k, "datastoreID", v.DatastoreID, "size", v.Size)
 	}
 	// ------------------------------------------------------------
 
-	ds.Logger.Info("Function", "FUNC: initCache end")
+	ds.Logger.Info("Function", "func", "initCache", "status", "end")
 	return nil
 }

@@ -35,12 +35,12 @@ instead of sting concatenation as it is the most efficient way to do string
 concatenation in Go.
 */
 func (ds *Store) getManifestData(query collections.CollectionQuery) (*collections.CollectionQueryResult, error) {
-	ds.Logger.Info("Function", "FUNC: getManifestData start")
+	ds.Logger.Info("Function", "func", "getManifestData", "status", "start")
 
 	// Lets first make sure the collection exists in the cache
 	if found := ds.doesCollectionExistInTheCache(query.CollectionUUID); !found {
-		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
-		return nil, fmt.Errorf("the following collection id was not found in the cache", query.CollectionUUID)
+		ds.Logger.Info("Function", "func", "getManifestData", "status", "error", "error", "collection not found in cache")
+		return nil, fmt.Errorf("the following collection id was not found in the cache: %s", query.CollectionUUID)
 	}
 	query.CollectionDatastoreID = ds.Cache.Collections[query.CollectionUUID].DatastoreID
 
@@ -126,7 +126,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	if err != nil {
 		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
-		return nil, fmt.Errorf("database execution error getting collection data: ", err)
+		return nil, fmt.Errorf("database execution error getting collection data: %v", err)
 	}
 	defer rows.Close()
 
@@ -137,7 +137,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 		if err := rows.Scan(&stixid, &dateAdded, &modified, &specVersion); err != nil {
 			rows.Close()
 			ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
-			return nil, fmt.Errorf("database scan error getting collection data: ", err)
+			return nil, fmt.Errorf("database scan error getting collection data: %v", err)
 		}
 
 		if counter == limitQuery {
@@ -171,18 +171,18 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 	if err := rows.Err(); err != nil {
 		rows.Close()
 		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error,", err)
-		return nil, fmt.Errorf("database rows error getting manifest data: ", err)
+		return nil, fmt.Errorf("database rows error getting manifest data: %v", err)
 	}
 
 	if len(manifestData.Objects) == 0 {
-		ds.Logger.Info("Function", "FUNC: getManifestData exited with an error")
+		ds.Logger.Info("Function", "func", "getManifestData", "status", "error", "error", "collection not found in cache")
 		return nil, fmt.Errorf("no records returned getting manifest data")
 	}
 
 	resultData.Size = ds.Cache.Collections[query.CollectionUUID].Size
 
-	ds.Logger.Debug("DEBUG: Query Collection ID", query.CollectionUUID)
-	ds.Logger.Debug("DEBUG: Cache ID", ds.Cache.Collections[query.CollectionUUID].ID, "Cache Datastore ID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "Size in Cache", ds.Cache.Collections[query.CollectionUUID].Size)
+	ds.Logger.Debug("DEBUG: Query Collection ID", "collectionID", query.CollectionUUID)
+	ds.Logger.Debug("DEBUG: Cache info", "cacheID", ds.Cache.Collections[query.CollectionUUID].ID, "datastoreID", ds.Cache.Collections[query.CollectionUUID].DatastoreID, "size", ds.Cache.Collections[query.CollectionUUID].Size)
 
 	resultData.ManifestData.More = manifestData.More
 	resultData.ManifestData.Objects = manifestData.Objects
@@ -201,7 +201,7 @@ func (ds *Store) getManifestData(query collections.CollectionQuery) (*collection
 
 	resultData.DateAddedFirst = resultData.ManifestData.Objects[0].DateAdded
 	resultData.DateAddedLast = resultData.ManifestData.Objects[len(resultData.ManifestData.Objects)-1].DateAdded
-	ds.Logger.Info("Function", "FUNC: getManifestData end")
+	ds.Logger.Info("Function", "func", "getManifestData", "status", "end")
 	return &resultData, nil
 }
 
@@ -231,24 +231,24 @@ func (ds *Store) sqlQueryLimit(query collections.CollectionQuery) int {
 		client, err = strconv.Atoi(query.Limit[0])
 	}
 	if err != nil {
-		ds.Logger.Debug("DEBUG: Client limit value is not valid: ", err)
+		ds.Logger.Debug("DEBUG: Client limit value is not valid", "err", err)
 		return srv
 	}
 
 	if client > srv {
-		ds.Logger.Debug("DEBUG: Client limit value is greater than the server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is greater than the server limit, using server limit of", "srv", srv)
 		return srv
 	} else if client < 0 {
-		ds.Logger.Debug("DEBUG: Client limit value is less than zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is less than zero, using server limit of", "srv", srv)
 		return srv
 	} else if client == 0 {
-		ds.Logger.Debug("DEBUG: Client limit value is equal to zero, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to zero, using server limit of", "srv", srv)
 		return srv
 	} else if client == srv {
-		ds.Logger.Debug("DEBUG: Client limit value is equal to server limit, using server limit of", srv)
+		ds.Logger.Debug("DEBUG: Client limit value is equal to server limit, using server limit of", "srv", srv)
 		return srv
 	} else if client < srv {
-		ds.Logger.Debug("DEBUG: Client limit value is less than server limit, using client limit of", client)
+		ds.Logger.Debug("DEBUG: Client limit value is less than server limit, using client limit of", "client", client)
 		return client
 	}
 

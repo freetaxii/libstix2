@@ -78,10 +78,10 @@ func Compare(correct, toTest *Collection) (bool, int, []string) {
 	// Check Media Type Property Length
 	if len(toTest.MediaTypes) != len(correct.MediaTypes) {
 		problemsFound++
-		str := fmt.Sprintf("-- Media Type Lengths Do Not Match: %d | %d", correct.MediaTypes, toTest.MediaTypes)
+		str := fmt.Sprintf("-- Media Type Lengths Do Not Match: %v | %v", correct.MediaTypes, toTest.MediaTypes)
 		details = append(details, str)
 	} else {
-		str := fmt.Sprintf("++ Media Type Lengths Match: %d | %d", correct.MediaTypes, toTest.MediaTypes)
+		str := fmt.Sprintf("++ Media Type Lengths Match: %v | %v", correct.MediaTypes, toTest.MediaTypes)
 		details = append(details, str)
 
 		// If lengths are the same, then check each value
