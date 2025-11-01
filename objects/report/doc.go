@@ -8,6 +8,9 @@ Package report implements the STIX 2.1 Report object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.15.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070647
+
 Reports are collections of threat intelligence focused on one or more topics,
 such as a description of a threat actor, malware, or attack technique, including
 context and related details. They are used to group related threat intelligence

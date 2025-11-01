@@ -8,6 +8,9 @@ Package campaign implements the STIX 2.1 Campaign object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.2.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070634
+
 A Campaign is a grouping of adversarial behaviors that describes a set of
 malicious activities or attacks (sometimes called waves) that occur over a
 period of time against a specific set of targets. Campaigns usually have well

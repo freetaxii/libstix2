@@ -22,6 +22,7 @@ import (
 func ValidObjectType(t string) bool {
 
 	var m = map[string]int{
+		// SDOs
 		"attack-pattern":     1,
 		"campaign":           1,
 		"course-of-action":   1,
@@ -30,20 +31,43 @@ func ValidObjectType(t string) bool {
 		"indicator":          1,
 		"infrastructure":     1,
 		"intrusion-set":      1,
-		"language-content":   1,
 		"location":           1,
 		"malware":            1,
 		"malware-analysis":   1,
-		"marking-definition": 1,
 		"note":               1,
 		"observed-data":      1,
 		"opinion":            1,
-		"relationship":       1,
 		"report":             1,
-		"sighting":           1,
 		"threat-actor":       1,
 		"tool":               1,
 		"vulnerability":      1,
+		// SROs
+		"relationship":       1,
+		"sighting":           1,
+		// SCOs
+		"artifact":           1,
+		"autonomous-system":  1,
+		"directory":          1,
+		"domain-name":        1,
+		"email-addr":         1,
+		"email-message":      1,
+		"file":               1,
+		"ipv4-addr":          1,
+		"ipv6-addr":          1,
+		"mac-addr":           1,
+		"mutex":              1,
+		"network-traffic":    1,
+		"process":            1,
+		"software":           1,
+		"url":                1,
+		"user-account":       1,
+		"windows-registry-key": 1,
+		"x509-certificate":   1,
+		// Meta Objects
+		"language-content":   1,
+		"marking-definition": 1,
+		// Bundle
+		"bundle":             1,
 	}
 
 	if _, ok := m[t]; ok {

@@ -8,6 +8,9 @@ Package intrusionset implements the STIX 2.1 Intrusion Set object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.8.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070640
+
 An Intrusion Set is a grouped set of adversarial behaviors and resources with
 common properties that is believed to be orchestrated by a single organization.
 An Intrusion Set may capture multiple Campaigns or other activities that are all

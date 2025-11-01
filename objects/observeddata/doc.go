@@ -8,6 +8,9 @@ Package observeddata implements the STIX 2.1 Observed Data object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.13.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070645
+
 Observed Data conveys information about cyber security related entities such as
 files, systems, and networks using the STIX Cyber-observable Objects (SCOs). For
 example, Observed Data can capture information about an IP address, a network

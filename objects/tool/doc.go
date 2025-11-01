@@ -8,6 +8,9 @@ Package tool implements the STIX 2.1 Tool object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.17.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070649
+
 Tools are legitimate software that can be used by threat actors to perform
 attacks. Knowing how and when threat actors use such tools can be important for
 understanding how campaigns are executed. Unlike malware, these tools or

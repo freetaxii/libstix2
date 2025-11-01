@@ -8,6 +8,9 @@ Package location implements the STIX 2.1 Attack Pattern object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.9.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070641
+
 A Location represents a geographic location. The location may be described as
 any, some or all of the following: region (e.g., North America), civic address
 (e.g. New York, US), latitude and longitude.

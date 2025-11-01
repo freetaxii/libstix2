@@ -8,6 +8,9 @@ Package indicator implements the STIX 2.1 Indicator object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.6.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070638
+
 Indicators contain a pattern that can be used to detect suspicious or malicious
 cyber activity. For example, an Indicator may be used to represent a set of
 malicious domains and use the STIX Patterning Language (see section 9) to

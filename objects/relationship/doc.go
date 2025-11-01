@@ -8,6 +8,9 @@ Package relationship implements the STIX 2.1 Relationship object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 5.1.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070651
+
 The Relationship object is used to link together two SDOs or SCOs in order to
 describe how they are related to each other. If SDOs and SCOs are considered
 "nodes" or "vertices" in the graph, the Relationship Objects (SROs) represent

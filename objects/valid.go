@@ -182,13 +182,15 @@ func (o *CommonObjectProperties) checkID(r *results) {
 }
 
 func (o *CommonObjectProperties) checkCreatedByRef(r *results) {
-	if valid := isCreatedByIDValid(o.CreatedByRef); valid == false {
-		logProblem(r, "-- the created_by_ref property does not contain a valid identifier")
-	} else {
-		str := fmt.Sprintf("++ the created_by_ref property contains a valid identifier value of \"%s\"", o.CreatedByRef)
-		logValid(r, str)
+	// created_by_ref is optional, so only validate if it's present
+	if o.CreatedByRef != "" {
+		if valid := isCreatedByIDValid(o.CreatedByRef); valid == false {
+			logProblem(r, "-- the created_by_ref property does not contain a valid identifier")
+		} else {
+			str := fmt.Sprintf("++ the created_by_ref property contains a valid identifier value of \"%s\"", o.CreatedByRef)
+			logValid(r, str)
+		}
 	}
-
 }
 
 func (o *CommonObjectProperties) checkCreated(r *results) {
