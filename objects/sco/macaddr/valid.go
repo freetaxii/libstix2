@@ -25,20 +25,20 @@ func (o *MACAddr) Valid(debug bool) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common SCO properties (type, spec_version, id)
-if o.ObjectType == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the type property is required but missing")
-}
+	if o.ObjectType == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the type property is required but missing")
+	}
 
-if o.SpecVersion == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
-}
+	if o.SpecVersion == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
+	}
 
-if o.ID == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the id property is required but missing")
-}
+	if o.ID == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the id property is required but missing")
+	}
 
 	// Verify value property is present
 	_, p, d := o.ValueProperty.VerifyExists()
@@ -68,7 +68,7 @@ resultDetails = append(resultDetails, "-- the id property is required but missin
 
 // isValidMAC validates a MAC address format
 func isValidMAC(value string) bool {
-	// MAC address patterns: 
+	// MAC address patterns:
 	// - 00:00:00:00:00:00 (colon-separated)
 	// - 00-00-00-00-00-00 (dash-separated)
 	// - 0000.0000.0000 (dot-separated, Cisco style)

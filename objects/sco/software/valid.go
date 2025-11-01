@@ -18,30 +18,30 @@ contain the detailed results, whether good or bad.
 TODO: Implement full validation per STIX 2.1 specification section 6.13
 */
 func (o *Software) Valid(debug bool) (bool, int, []string) {
-problemsFound := 0
-resultDetails := make([]string, 0)
+	problemsFound := 0
+	resultDetails := make([]string, 0)
 
-// Check common SCO properties (type, spec_version, id)
-if o.ObjectType == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the type property is required but missing")
-}
+	// Check common SCO properties (type, spec_version, id)
+	if o.ObjectType == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the type property is required but missing")
+	}
 
-if o.SpecVersion == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
-}
+	if o.SpecVersion == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
+	}
 
-if o.ID == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the id property is required but missing")
-}
+	if o.ID == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the id property is required but missing")
+	}
 
-// TODO: Add specific validation rules for Software
+	// TODO: Add specific validation rules for Software
 
-if problemsFound > 0 {
-return false, problemsFound, resultDetails
-}
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
 
-return true, 0, resultDetails
+	return true, 0, resultDetails
 }

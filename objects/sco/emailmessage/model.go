@@ -6,7 +6,7 @@
 package emailmessage
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,9 +24,9 @@ Reference: STIX 2.1 specification section 6.5
 TODO: Complete implementation of all properties per specification
 */
 type EmailMessage struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for EmailMessage based on STIX 2.1 spec section 6.5
-// TODO: Add is_multipart, date, content_type, from_ref, sender_ref, to_refs, cc_refs, bcc_refs, message_id, subject, received_lines, additional_header_fields, body, body_multipart, raw_email_ref
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for EmailMessage based on STIX 2.1 spec section 6.5
+	// TODO: Add is_multipart, date, content_type, from_ref, sender_ref, to_refs, cc_refs, bcc_refs, message_id, subject, received_lines, additional_header_fields, body, body_multipart, raw_email_ref
 }
 
 /*
@@ -35,8 +35,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *EmailMessage) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *EmailMessage {
-var obj EmailMessage
-obj.InitSCO("emailmessage")
-return &obj
+	var obj EmailMessage
+	obj.InitSCO("emailmessage")
+	return &obj
 }

@@ -23,12 +23,12 @@ Reference: STIX 2.1 specification section 6.1
 */
 type Artifact struct {
 	objects.CommonObjectProperties
-	MimeType          string            `json:"mime_type,omitempty" bson:"mime_type,omitempty"`
-	PayloadBin        string            `json:"payload_bin,omitempty" bson:"payload_bin,omitempty"`
-	URL               string            `json:"url,omitempty" bson:"url,omitempty"`
-	Hashes            map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
-	EncryptionAlgo    string            `json:"encryption_algorithm,omitempty" bson:"encryption_algorithm,omitempty"`
-	DecryptionKey     string            `json:"decryption_key,omitempty" bson:"decryption_key,omitempty"`
+	MimeType       string            `json:"mime_type,omitempty" bson:"mime_type,omitempty"`
+	PayloadBin     string            `json:"payload_bin,omitempty" bson:"payload_bin,omitempty"`
+	URL            string            `json:"url,omitempty" bson:"url,omitempty"`
+	Hashes         map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
+	EncryptionAlgo string            `json:"encryption_algorithm,omitempty" bson:"encryption_algorithm,omitempty"`
+	DecryptionKey  string            `json:"decryption_key,omitempty" bson:"decryption_key,omitempty"`
 }
 
 /*

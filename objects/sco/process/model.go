@@ -6,7 +6,7 @@
 package process
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,9 +24,9 @@ Reference: STIX 2.1 specification section 6.11
 TODO: Complete implementation of all properties per specification
 */
 type Process struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for Process based on STIX 2.1 spec section 6.11
-// TODO: Add pid, created_time, cwd, command_line, environment_variables, opened_connection_refs, creator_user_ref, image_ref, parent_ref, child_refs
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for Process based on STIX 2.1 spec section 6.11
+	// TODO: Add pid, created_time, cwd, command_line, environment_variables, opened_connection_refs, creator_user_ref, image_ref, parent_ref, child_refs
 }
 
 /*
@@ -35,8 +35,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *Process) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *Process {
-var obj Process
-obj.InitSCO("process")
-return &obj
+	var obj Process
+	obj.InitSCO("process")
+	return &obj
 }

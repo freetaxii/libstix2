@@ -6,7 +6,7 @@
 package software
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,14 +24,14 @@ Reference: STIX 2.1 specification section 6.13
 TODO: Complete implementation of all properties per specification
 */
 type Software struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for Software based on STIX 2.1 spec section 6.13
-objects.NameProperty
-CPE       string   `json:"cpe,omitempty" bson:"cpe,omitempty"`
-SWID      string   `json:"swid,omitempty" bson:"swid,omitempty"`
-Languages []string `json:"languages,omitempty" bson:"languages,omitempty"`
-Vendor    string   `json:"vendor,omitempty" bson:"vendor,omitempty"`
-Version   string   `json:"version,omitempty" bson:"version,omitempty"`
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for Software based on STIX 2.1 spec section 6.13
+	objects.NameProperty
+	CPE       string   `json:"cpe,omitempty" bson:"cpe,omitempty"`
+	SWID      string   `json:"swid,omitempty" bson:"swid,omitempty"`
+	Languages []string `json:"languages,omitempty" bson:"languages,omitempty"`
+	Vendor    string   `json:"vendor,omitempty" bson:"vendor,omitempty"`
+	Version   string   `json:"version,omitempty" bson:"version,omitempty"`
 }
 
 /*
@@ -40,8 +40,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *Software) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -54,7 +54,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *Software {
-var obj Software
-obj.InitSCO("software")
-return &obj
+	var obj Software
+	obj.InitSCO("software")
+	return &obj
 }

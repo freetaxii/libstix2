@@ -7,7 +7,6 @@ package languagecontent
 
 import (
 	"encoding/json"
-
 )
 
 // ----------------------------------------------------------------------

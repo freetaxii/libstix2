@@ -61,11 +61,11 @@ TestNew - Ensure New() creates proper object
 */
 func TestNew(t *testing.T) {
 	m := New()
-	
+
 	if m.ObjectType != "mutex" {
 		t.Error("Fail: Object type not set correctly")
 	}
-	
+
 	if m.SpecVersion == "" {
 		t.Error("Fail: Spec version not set")
 	}

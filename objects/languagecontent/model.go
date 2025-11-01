@@ -26,9 +26,9 @@ in languages other than that of the original object.
 */
 type LanguageContent struct {
 	objects.CommonObjectProperties
-	ObjectRef     string                       `json:"object_ref" bson:"object_ref"`
-	ObjectModified string                      `json:"object_modified,omitempty" bson:"object_modified,omitempty"`
-	Contents      map[string]map[string]string `json:"contents" bson:"contents"`
+	ObjectRef      string                       `json:"object_ref" bson:"object_ref"`
+	ObjectModified string                       `json:"object_modified,omitempty" bson:"object_modified,omitempty"`
+	Contents       map[string]map[string]string `json:"contents" bson:"contents"`
 }
 
 /*

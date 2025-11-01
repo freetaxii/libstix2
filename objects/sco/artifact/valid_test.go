@@ -96,11 +96,11 @@ TestNew - Ensure New() creates proper object
 */
 func TestNew(t *testing.T) {
 	m := New()
-	
+
 	if m.ObjectType != "artifact" {
 		t.Error("Fail: Object type not set correctly")
 	}
-	
+
 	if m.SpecVersion == "" {
 		t.Error("Fail: Spec version not set")
 	}
@@ -111,14 +111,14 @@ TestHashManagement - Test hash map operations
 */
 func TestHashManagement(t *testing.T) {
 	m := New()
-	
+
 	m.AddHash("MD5", "test-md5")
 	m.AddHash("SHA-256", "test-sha256")
-	
+
 	if len(m.Hashes) != 2 {
 		t.Error("Fail: Should have 2 hashes")
 	}
-	
+
 	if m.Hashes["MD5"] != "test-md5" {
 		t.Error("Fail: MD5 hash not set correctly")
 	}

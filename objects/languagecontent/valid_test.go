@@ -98,11 +98,11 @@ TestNew - Ensure New() creates proper object
 */
 func TestNew(t *testing.T) {
 	m := New()
-	
+
 	if m.ObjectType != "language-content" {
 		t.Error("Fail: Object type not set correctly")
 	}
-	
+
 	if m.SpecVersion == "" {
 		t.Error("Fail: Spec version not set")
 	}
@@ -113,23 +113,23 @@ TestContentManagement - Test content operations
 */
 func TestContentManagement(t *testing.T) {
 	m := New()
-	
+
 	m.AddContent("es", "name", "Nombre en español")
 	m.AddContent("es", "description", "Descripción en español")
 	m.AddContent("fr", "name", "Nom en français")
-	
+
 	if len(m.Contents) != 2 {
 		t.Error("Fail: Should have 2 languages")
 	}
-	
+
 	if len(m.Contents["es"]) != 2 {
 		t.Error("Fail: Spanish should have 2 selectors")
 	}
-	
+
 	if len(m.Contents["fr"]) != 1 {
 		t.Error("Fail: French should have 1 selector")
 	}
-	
+
 	if m.Contents["es"]["name"] != "Nombre en español" {
 		t.Error("Fail: Spanish name not set correctly")
 	}

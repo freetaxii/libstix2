@@ -6,7 +6,7 @@
 package directory
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,9 +24,9 @@ Reference: STIX 2.1 specification section 6.3
 TODO: Complete implementation of all properties per specification
 */
 type Directory struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for Directory based on STIX 2.1 spec section 6.3
-// TODO: Add path, path_enc, ctime, mtime, atime, contains_refs
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for Directory based on STIX 2.1 spec section 6.3
+	// TODO: Add path, path_enc, ctime, mtime, atime, contains_refs
 }
 
 /*
@@ -35,8 +35,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *Directory) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *Directory {
-var obj Directory
-obj.InitSCO("directory")
-return &obj
+	var obj Directory
+	obj.InitSCO("directory")
+	return &obj
 }

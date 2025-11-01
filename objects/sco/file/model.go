@@ -24,17 +24,17 @@ Reference: STIX 2.1 specification section 6.6
 type File struct {
 	objects.CommonObjectProperties
 	objects.NameProperty
-	Hashes                map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
-	Size                  int64             `json:"size,omitempty" bson:"size,omitempty"`
-	NameEnc               string            `json:"name_enc,omitempty" bson:"name_enc,omitempty"`
-	MagicNumberHex        string            `json:"magic_number_hex,omitempty" bson:"magic_number_hex,omitempty"`
-	MimeType              string            `json:"mime_type,omitempty" bson:"mime_type,omitempty"`
-	Ctime                 string            `json:"ctime,omitempty" bson:"ctime,omitempty"`
-	Mtime                 string            `json:"mtime,omitempty" bson:"mtime,omitempty"`
-	Atime                 string            `json:"atime,omitempty" bson:"atime,omitempty"`
-	ParentDirectoryRef    string            `json:"parent_directory_ref,omitempty" bson:"parent_directory_ref,omitempty"`
-	ContainsRefs          []string          `json:"contains_refs,omitempty" bson:"contains_refs,omitempty"`
-	ContentRef            string            `json:"content_ref,omitempty" bson:"content_ref,omitempty"`
+	Hashes             map[string]string `json:"hashes,omitempty" bson:"hashes,omitempty"`
+	Size               int64             `json:"size,omitempty" bson:"size,omitempty"`
+	NameEnc            string            `json:"name_enc,omitempty" bson:"name_enc,omitempty"`
+	MagicNumberHex     string            `json:"magic_number_hex,omitempty" bson:"magic_number_hex,omitempty"`
+	MimeType           string            `json:"mime_type,omitempty" bson:"mime_type,omitempty"`
+	Ctime              string            `json:"ctime,omitempty" bson:"ctime,omitempty"`
+	Mtime              string            `json:"mtime,omitempty" bson:"mtime,omitempty"`
+	Atime              string            `json:"atime,omitempty" bson:"atime,omitempty"`
+	ParentDirectoryRef string            `json:"parent_directory_ref,omitempty" bson:"parent_directory_ref,omitempty"`
+	ContainsRefs       []string          `json:"contains_refs,omitempty" bson:"contains_refs,omitempty"`
+	ContentRef         string            `json:"content_ref,omitempty" bson:"content_ref,omitempty"`
 }
 
 /*

@@ -6,7 +6,7 @@
 package emailaddr
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,11 +24,11 @@ Reference: STIX 2.1 specification section 6.4
 TODO: Complete implementation of all properties per specification
 */
 type EmailAddress struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for EmailAddress based on STIX 2.1 spec section 6.4
-objects.ValueProperty
-DisplayName string `json:"display_name,omitempty" bson:"display_name,omitempty"`
-objects.BelongsToRefsProperty
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for EmailAddress based on STIX 2.1 spec section 6.4
+	objects.ValueProperty
+	DisplayName string `json:"display_name,omitempty" bson:"display_name,omitempty"`
+	objects.BelongsToRefsProperty
 }
 
 /*
@@ -37,8 +37,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *EmailAddress) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -51,7 +51,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *EmailAddress {
-var obj EmailAddress
-obj.InitSCO("emailaddr")
-return &obj
+	var obj EmailAddress
+	obj.InitSCO("emailaddr")
+	return &obj
 }

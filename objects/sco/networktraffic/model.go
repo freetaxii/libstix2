@@ -6,7 +6,7 @@
 package networktraffic
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,9 +24,9 @@ Reference: STIX 2.1 specification section 6.10
 TODO: Complete implementation of all properties per specification
 */
 type NetworkTraffic struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for NetworkTraffic based on STIX 2.1 spec section 6.10
-// TODO: Add start, end, is_active, src_ref, dst_ref, src_port, dst_port, protocols, src_byte_count, dst_byte_count, src_packets, dst_packets, ipfix, src_payload_ref, dst_payload_ref, encapsulates_refs, encapsulated_by_ref
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for NetworkTraffic based on STIX 2.1 spec section 6.10
+	// TODO: Add start, end, is_active, src_ref, dst_ref, src_port, dst_port, protocols, src_byte_count, dst_byte_count, src_packets, dst_packets, ipfix, src_payload_ref, dst_payload_ref, encapsulates_refs, encapsulated_by_ref
 }
 
 /*
@@ -35,8 +35,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *NetworkTraffic) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *NetworkTraffic {
-var obj NetworkTraffic
-obj.InitSCO("networktraffic")
-return &obj
+	var obj NetworkTraffic
+	obj.InitSCO("networktraffic")
+	return &obj
 }

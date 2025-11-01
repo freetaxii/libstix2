@@ -24,20 +24,20 @@ func (o *File) Valid(debug bool) (bool, int, []string) {
 	resultDetails := make([]string, 0)
 
 	// Check common SCO properties (type, spec_version, id)
-if o.ObjectType == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the type property is required but missing")
-}
+	if o.ObjectType == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the type property is required but missing")
+	}
 
-if o.SpecVersion == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
-}
+	if o.SpecVersion == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
+	}
 
-if o.ID == "" {
-problemsFound++
-resultDetails = append(resultDetails, "-- the id property is required but missing")
-}
+	if o.ID == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the id property is required but missing")
+	}
 
 	// File object MUST contain at least one of hashes or name
 	if (o.Hashes == nil || len(o.Hashes) == 0) && o.Name == "" {

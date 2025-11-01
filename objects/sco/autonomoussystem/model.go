@@ -6,7 +6,7 @@
 package autonomoussystem
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,11 +24,11 @@ Reference: STIX 2.1 specification section 6.2
 TODO: Complete implementation of all properties per specification
 */
 type AutonomousSystem struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for AutonomousSystem based on STIX 2.1 spec section 6.2
-Number int `json:"number" bson:"number"`
-objects.NameProperty
-RIR string `json:"rir,omitempty" bson:"rir,omitempty"`
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for AutonomousSystem based on STIX 2.1 spec section 6.2
+	Number int `json:"number" bson:"number"`
+	objects.NameProperty
+	RIR string `json:"rir,omitempty" bson:"rir,omitempty"`
 }
 
 /*
@@ -37,8 +37,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *AutonomousSystem) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -51,7 +51,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *AutonomousSystem {
-var obj AutonomousSystem
-obj.InitSCO("autonomoussystem")
-return &obj
+	var obj AutonomousSystem
+	obj.InitSCO("autonomoussystem")
+	return &obj
 }

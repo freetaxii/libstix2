@@ -6,8 +6,7 @@
 package autonomoussystem
 
 import (
-"encoding/json"
-
+	"encoding/json"
 )
 
 // ----------------------------------------------------------------------
@@ -20,12 +19,12 @@ decode a slice of bytes into an actual struct and return a pointer to that
 object along with any errors.
 */
 func Decode(data []byte) (*AutonomousSystem, error) {
-var o AutonomousSystem
-err := json.Unmarshal(data, &o)
-if err != nil {
-return nil, err
-}
-return &o, nil
+	var o AutonomousSystem
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, err
+	}
+	return &o, nil
 }
 
 /*
@@ -33,14 +32,14 @@ UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom property support.
 */
 func (o *AutonomousSystem) UnmarshalJSON(b []byte) error {
-type alias AutonomousSystem
-temp := &struct {
-*alias
-}{
-alias: (*alias)(o),
-}
-if err := json.Unmarshal(b, &temp); err != nil {
-return err
-}
-return o.FindCustomProperties(b, o.GetPropertyList())
+	type alias AutonomousSystem
+	temp := &struct {
+		*alias
+	}{
+		alias: (*alias)(o),
+	}
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+	return o.FindCustomProperties(b, o.GetPropertyList())
 }

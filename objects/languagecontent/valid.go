@@ -42,7 +42,7 @@ func (o *LanguageContent) Valid(debug bool) (bool, int, []string) {
 		resultDetails = append(resultDetails, "-- The contents property is required but missing or empty")
 	} else {
 		resultDetails = append(resultDetails, fmt.Sprintf("++ The contents property contains %d language(s)", len(o.Contents)))
-		
+
 		// Validate each language entry has at least one selector
 		for lang, selectors := range o.Contents {
 			if len(selectors) == 0 {

@@ -43,11 +43,11 @@ func (o *LanguageContent) AddContent(language, selector, value string) error {
 	if o.Contents == nil {
 		o.Contents = make(map[string]map[string]string)
 	}
-	
+
 	if o.Contents[language] == nil {
 		o.Contents[language] = make(map[string]string)
 	}
-	
+
 	o.Contents[language][selector] = value
 	return nil
 }

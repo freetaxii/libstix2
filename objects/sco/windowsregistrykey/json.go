@@ -6,8 +6,7 @@
 package windowsregistrykey
 
 import (
-"encoding/json"
-
+	"encoding/json"
 )
 
 // ----------------------------------------------------------------------
@@ -20,12 +19,12 @@ decode a slice of bytes into an actual struct and return a pointer to that
 object along with any errors.
 */
 func Decode(data []byte) (*WindowsRegistryKey, error) {
-var o WindowsRegistryKey
-err := json.Unmarshal(data, &o)
-if err != nil {
-return nil, err
-}
-return &o, nil
+	var o WindowsRegistryKey
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, err
+	}
+	return &o, nil
 }
 
 /*
@@ -33,14 +32,14 @@ UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom property support.
 */
 func (o *WindowsRegistryKey) UnmarshalJSON(b []byte) error {
-type alias WindowsRegistryKey
-temp := &struct {
-*alias
-}{
-alias: (*alias)(o),
-}
-if err := json.Unmarshal(b, &temp); err != nil {
-return err
-}
-return o.FindCustomProperties(b, o.GetPropertyList())
+	type alias WindowsRegistryKey
+	temp := &struct {
+		*alias
+	}{
+		alias: (*alias)(o),
+	}
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+	return o.FindCustomProperties(b, o.GetPropertyList())
 }

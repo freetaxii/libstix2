@@ -6,7 +6,7 @@
 package x509certificate
 
 import (
-"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/objects"
 )
 
 // ----------------------------------------------------------------------
@@ -24,9 +24,9 @@ Reference: STIX 2.1 specification section 6.17
 TODO: Complete implementation of all properties per specification
 */
 type X509Certificate struct {
-objects.CommonObjectProperties
-// TODO: Add specific properties for X509Certificate based on STIX 2.1 spec section 6.17
-// TODO: Add is_self_signed, hashes, version, serial_number, signature_algorithm, issuer, validity_not_before, validity_not_after, subject, subject_public_key_algorithm, subject_public_key_modulus, subject_public_key_exponent, x509_v3_extensions
+	objects.CommonObjectProperties
+	// TODO: Add specific properties for X509Certificate based on STIX 2.1 spec section 6.17
+	// TODO: Add is_self_signed, hashes, version, serial_number, signature_algorithm, issuer, validity_not_before, validity_not_after, subject, subject_public_key_algorithm, subject_public_key_modulus, subject_public_key_exponent, x509_v3_extensions
 }
 
 /*
@@ -35,8 +35,8 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *X509Certificate) GetPropertyList() []string {
-// TODO: Update with actual property names
-return []string{}
+	// TODO: Update with actual property names
+	return []string{}
 }
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ pointer. It will also initialize the object by setting all of the basic
 properties.
 */
 func New() *X509Certificate {
-var obj X509Certificate
-obj.InitSCO("x509certificate")
-return &obj
+	var obj X509Certificate
+	obj.InitSCO("x509certificate")
+	return &obj
 }

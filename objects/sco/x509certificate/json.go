@@ -6,8 +6,7 @@
 package x509certificate
 
 import (
-"encoding/json"
-
+	"encoding/json"
 )
 
 // ----------------------------------------------------------------------
@@ -20,12 +19,12 @@ decode a slice of bytes into an actual struct and return a pointer to that
 object along with any errors.
 */
 func Decode(data []byte) (*X509Certificate, error) {
-var o X509Certificate
-err := json.Unmarshal(data, &o)
-if err != nil {
-return nil, err
-}
-return &o, nil
+	var o X509Certificate
+	err := json.Unmarshal(data, &o)
+	if err != nil {
+		return nil, err
+	}
+	return &o, nil
 }
 
 /*
@@ -33,14 +32,14 @@ UnmarshalJSON - This method will over write the default UnmarshalJSON method
 to enable custom property support.
 */
 func (o *X509Certificate) UnmarshalJSON(b []byte) error {
-type alias X509Certificate
-temp := &struct {
-*alias
-}{
-alias: (*alias)(o),
-}
-if err := json.Unmarshal(b, &temp); err != nil {
-return err
-}
-return o.FindCustomProperties(b, o.GetPropertyList())
+	type alias X509Certificate
+	temp := &struct {
+		*alias
+	}{
+		alias: (*alias)(o),
+	}
+	if err := json.Unmarshal(b, &temp); err != nil {
+		return err
+	}
+	return o.FindCustomProperties(b, o.GetPropertyList())
 }
