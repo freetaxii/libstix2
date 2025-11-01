@@ -5,7 +5,10 @@
 
 package infrastructure
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/freetaxii/libstix2/vocabs"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -38,10 +41,17 @@ func (o *Infrastructure) Valid(debug bool) (bool, int, []string) {
 	} else {
 		str := fmt.Sprintf("++ The infrastructure types property is required and is present")
 		resultDetails = append(resultDetails, str)
-	}
 
-	// TODO add check to make sure values are from vocabulary. Something like
-	// helpers.ValidSlice("InfrastructureTypes", o.InfrastructureTypes, vocabs.InfrastructureType)
+		// Validate that all infrastructure types are from the vocabulary
+		validVocab := vocabs.GetInfrastructureTypeVocab()
+		for _, infraType := range o.InfrastructureTypes {
+			if !validVocab[infraType] {
+				problemsFound++
+				str := fmt.Sprintf("-- The infrastructure type '%s' is not in the allowed vocabulary", infraType)
+				resultDetails = append(resultDetails, str)
+			}
+		}
+	}
 
 	if problemsFound > 0 {
 		return false, problemsFound, resultDetails

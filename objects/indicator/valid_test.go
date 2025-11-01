@@ -169,12 +169,12 @@ func TestValidIndicatorType1(t *testing.T) {
 }
 
 /*
-TestValidIndicatorType2 - Make sure we get a value of true when the Indicator
-Type is populated.
+TestValidIndicatorType2 - Make sure we get a value of false when the Indicator
+Type is populated but other required fields are missing.
 */
 func TestValidIndicatorType2(t *testing.T) {
 	i := New()
-	want := true
+	want := false
 	i.IndicatorTypes = append(i.IndicatorTypes, "TestValue")
 	if got, _, err := i.Valid(false); got != want {
 		t.Error("Fail Indicator Type Check 2")
@@ -197,12 +197,12 @@ func TestValidPattern1(t *testing.T) {
 }
 
 /*
-TestValidPattern2 - Make sure we get a value of true when the Pattern is
-populated.
+TestValidPattern2 - Make sure we get a value of false when the Pattern is
+populated but other required fields are missing.
 */
 func TestValidPattern2(t *testing.T) {
 	i := New()
-	want := true
+	want := false
 	i.Pattern = "TestPattern"
 	if got, _, err := i.Valid(false); got != want {
 		t.Error("Fail Pattern Check 2")
@@ -225,12 +225,12 @@ func TestValidPatternType1(t *testing.T) {
 }
 
 /*
-TestValidPatternType2 - Make sure we get a value of true when the Pattern Type
-is populated correctly.
+TestValidPatternType2 - Make sure we get a value of false when the Pattern Type
+is populated correctly but other required fields are missing.
 */
 func TestValidPatternType2(t *testing.T) {
 	i := New()
-	want := true
+	want := false
 	values := []string{"stix", "snort", "yara"}
 	for index := range values {
 		i.PatternType = values[index]
@@ -270,12 +270,12 @@ func TestValidValidFrom1(t *testing.T) {
 }
 
 /*
-TestValidValidFrom2 - Make sure we get a value of true when the Valid From
-timestamp is populated correctly.
+TestValidValidFrom2 - Make sure we get a value of false when the Valid From
+timestamp is populated correctly but other required fields are missing.
 */
 func TestValidValidFrom2(t *testing.T) {
 	i := New()
-	want := true
+	want := false
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
 	if got, _, err := i.Valid(false); got != want {
 		t.Error("Fail Valid From Check 2")
@@ -298,12 +298,12 @@ func TestValidValidFrom3(t *testing.T) {
 }
 
 /*
-TestValidValidUntil2 - Make sure we get a value of true when the Valid From and
-Valid Until timestamps are populated correctly.
+TestValidValidUntil2 - Make sure we get a value of false when the Valid From and
+Valid Until timestamps are populated correctly but other required fields are missing.
 */
 func TestValidValidUntil2(t *testing.T) {
 	i := New()
-	want := true
+	want := false
 	i.ValidFrom = "2019-09-24T20:49:12.123456Z"
 	i.ValidUntil = "2019-09-24T20:49:13.123456Z"
 	if got, _, err := i.Valid(false); got != want {

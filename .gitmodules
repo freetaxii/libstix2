@@ -1,0 +1,3 @@
+[submodule "tests/data/misp-stix-tests"]
+	path = tests/data/misp-stix-tests
+	url = https://github.com/MISP/misp-stix-tests.git
