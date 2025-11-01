@@ -3,12 +3,11 @@
 // Use of this source code is governed by an Apache 2.0 license that can be
 // found in the LICENSE file in the root of the source tree.
 
-package tests
+package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -29,8 +28,8 @@ import (
 	"github.com/freetaxii/libstix2/objects/note"
 	"github.com/freetaxii/libstix2/objects/observeddata"
 	"github.com/freetaxii/libstix2/objects/opinion"
-	"github.com/freetaxii/libstix2/objects/report"
 	"github.com/freetaxii/libstix2/objects/relationship"
+	"github.com/freetaxii/libstix2/objects/report"
 	"github.com/freetaxii/libstix2/objects/sighting"
 	"github.com/freetaxii/libstix2/objects/threatactor"
 	"github.com/freetaxii/libstix2/objects/tool"
@@ -43,7 +42,7 @@ import (
 // ----------------------------------------------------------------------
 
 const (
-	MispTestDataDir = "./data/misp-stix-tests/files"
+	MispTestDataDir = "../data/misp-stix-tests/files"
 )
 
 // ----------------------------------------------------------------------
@@ -196,7 +195,7 @@ func TestMISPSTIXRoundTrip(t *testing.T) {
 // testSTIXFileRoundTrip tests a single STIX file for round-trip compatibility
 func testSTIXFileRoundTrip(t *testing.T, filePath string) {
 	// Read original file
-	originalData, err := ioutil.ReadFile(filePath)
+	originalData, err := os.ReadFile(filePath)
 	if err != nil {
 		t.Fatalf("Failed to read file %s: %v", filePath, err)
 	}
@@ -500,7 +499,7 @@ func TestMISPSTIXValidation(t *testing.T) {
 // testSTIXFileValidation tests that all STIX objects in a file pass validation
 func testSTIXFileValidation(t *testing.T, filePath string) (int, int) {
 	// Read file
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		t.Fatalf("Failed to read file %s: %v", filePath, err)
 		return 0, 0
@@ -825,4 +824,313 @@ func testSTIXFileValidation(t *testing.T, filePath string) (int, int) {
 
 	t.Logf("Validation results for %s: %d valid, %d invalid", filePath, validCount, invalidCount)
 	return validCount, invalidCount
+}
+
+func main() {
+	fmt.Println("STIX File Validation Tool")
+	fmt.Println("=========================")
+
+	// Check if the MISP test data directory exists
+	if _, err := os.Stat(MispTestDataDir); os.IsNotExist(err) {
+		fmt.Printf("Error: MISP test data directory not found at %s\n", MispTestDataDir)
+		fmt.Println("Run 'git submodule update --init' to fetch test data.")
+		os.Exit(1)
+	}
+
+	// Find all JSON files
+	jsonFiles, err := findJSONFiles(MispTestDataDir)
+	if err != nil {
+		fmt.Printf("Error: Failed to find JSON files: %v\n", err)
+		os.Exit(1)
+	}
+
+	if len(jsonFiles) == 0 {
+		fmt.Println("No JSON files found in MISP test data directory")
+		os.Exit(0)
+	}
+
+	fmt.Printf("Found %d JSON files to validate\n\n", len(jsonFiles))
+
+	// Track validation statistics
+	totalFiles := 0
+	totalObjects := 0
+	validObjects := 0
+	invalidObjects := 0
+	failedFiles := 0
+
+	// Process each file
+	for _, filePath := range jsonFiles {
+		totalFiles++
+		relPath, _ := filepath.Rel(MispTestDataDir, filePath)
+		fmt.Printf("Processing: %s\n", relPath)
+
+		// Read file
+		data, err := os.ReadFile(filePath)
+		if err != nil {
+			fmt.Printf("  ❌ Failed to read file: %v\n", err)
+			failedFiles++
+			continue
+		}
+
+		// Parse JSON
+		stixObjects, err := parseSTIXData(data)
+		if err != nil {
+			fmt.Printf("  ❌ Failed to parse JSON: %v\n", err)
+			failedFiles++
+			continue
+		}
+
+		if len(stixObjects) == 0 {
+			fmt.Printf("  ⚠️  No STIX objects found\n")
+			continue
+		}
+
+		fileValidCount := 0
+		fileInvalidCount := 0
+
+		// Validate each object in the file
+		for i, obj := range stixObjects {
+			objType, ok := obj["type"].(string)
+			if !ok {
+				fmt.Printf("  ❌ Object %d: missing 'type' field\n", i+1)
+				fileInvalidCount++
+				continue
+			}
+
+			// Convert object to JSON for decoding
+			objJSON, err := json.Marshal(obj)
+			if err != nil {
+				fmt.Printf("  ❌ Object %d (%s): failed to marshal: %v\n", i+1, objType, err)
+				fileInvalidCount++
+				continue
+			}
+
+			// Validate based on object type
+			isValid := validateSTIXObject(objType, objJSON)
+			if isValid {
+				fileValidCount++
+			} else {
+				fileInvalidCount++
+				fmt.Printf("  ❌ Object %d (%s): validation failed\n", i+1, objType)
+			}
+		}
+
+		totalObjects += fileValidCount + fileInvalidCount
+		validObjects += fileValidCount
+		invalidObjects += fileInvalidCount
+
+		if fileInvalidCount == 0 {
+			fmt.Printf("  ✅ All %d objects valid\n", fileValidCount)
+		} else {
+			fmt.Printf("  ⚠️  %d valid, %d invalid objects\n", fileValidCount, fileInvalidCount)
+		}
+		fmt.Println()
+	}
+
+	// Print summary
+	fmt.Println("Validation Summary:")
+	fmt.Println("==================")
+	fmt.Printf("Files processed: %d\n", totalFiles)
+	fmt.Printf("Files failed to process: %d\n", failedFiles)
+	fmt.Printf("Total STIX objects: %d\n", totalObjects)
+	fmt.Printf("Valid objects: %d\n", validObjects)
+	fmt.Printf("Invalid objects: %d\n", invalidObjects)
+
+	if totalObjects > 0 {
+		successRate := float64(validObjects) / float64(totalObjects) * 100
+		fmt.Printf("Success rate: %.2f%%\n", successRate)
+	}
+
+	if invalidObjects > 0 || failedFiles > 0 {
+		fmt.Printf("\n❌ Validation completed with %d invalid objects and %d failed files\n", invalidObjects, failedFiles)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\n✅ All STIX files validated successfully!\n")
+}
+
+// validateSTIXObject validates a single STIX object based on its type
+func validateSTIXObject(objType string, objJSON []byte) bool {
+	switch objType {
+	case "indicator":
+		var ind indicator.Indicator
+		if err := json.Unmarshal(objJSON, &ind); err != nil {
+			return false
+		}
+		valid, _, _ := ind.Valid(false)
+		return valid
+
+	case "malware":
+		var mal malware.Malware
+		if err := json.Unmarshal(objJSON, &mal); err != nil {
+			return false
+		}
+		valid, _, _ := mal.Valid(false)
+		return valid
+
+	case "infrastructure":
+		var inf infrastructure.Infrastructure
+		if err := json.Unmarshal(objJSON, &inf); err != nil {
+			return false
+		}
+		valid, _, _ := inf.Valid(false)
+		return valid
+
+	case "threat-actor":
+		var ta threatactor.ThreatActor
+		if err := json.Unmarshal(objJSON, &ta); err != nil {
+			return false
+		}
+		valid, _, _ := ta.Valid(false)
+		return valid
+
+	case "tool":
+		var toolObj tool.Tool
+		if err := json.Unmarshal(objJSON, &toolObj); err != nil {
+			return false
+		}
+		valid, _, _ := toolObj.Valid(false)
+		return valid
+
+	case "attack-pattern":
+		var ap attackpattern.AttackPattern
+		if err := json.Unmarshal(objJSON, &ap); err != nil {
+			return false
+		}
+		valid, _, _ := ap.Valid(false)
+		return valid
+
+	case "campaign":
+		var camp campaign.Campaign
+		if err := json.Unmarshal(objJSON, &camp); err != nil {
+			return false
+		}
+		valid, _, _ := camp.Valid(false)
+		return valid
+
+	case "course-of-action":
+		var coa courseofaction.CourseOfAction
+		if err := json.Unmarshal(objJSON, &coa); err != nil {
+			return false
+		}
+		valid, _, _ := coa.Valid(false)
+		return valid
+
+	case "grouping":
+		var grp grouping.Grouping
+		if err := json.Unmarshal(objJSON, &grp); err != nil {
+			return false
+		}
+		valid, _, _ := grp.Valid(false)
+		return valid
+
+	case "identity":
+		var id identity.Identity
+		if err := json.Unmarshal(objJSON, &id); err != nil {
+			return false
+		}
+		valid, _, _ := id.Valid(false)
+		return valid
+
+	case "intrusion-set":
+		var is intrusionset.IntrusionSet
+		if err := json.Unmarshal(objJSON, &is); err != nil {
+			return false
+		}
+		valid, _, _ := is.Valid(false)
+		return valid
+
+	case "location":
+		var loc location.Location
+		if err := json.Unmarshal(objJSON, &loc); err != nil {
+			return false
+		}
+		valid, _, _ := loc.Valid(false)
+		return valid
+
+	case "malware-analysis":
+		var ma malwareanalysis.MalwareAnalysis
+		if err := json.Unmarshal(objJSON, &ma); err != nil {
+			return false
+		}
+		valid, _, _ := ma.Valid(false)
+		return valid
+
+	case "note":
+		var noteObj note.Note
+		if err := json.Unmarshal(objJSON, &noteObj); err != nil {
+			return false
+		}
+		valid, _, _ := noteObj.Valid(false)
+		return valid
+
+	case "observed-data":
+		var od observeddata.ObservedData
+		if err := json.Unmarshal(objJSON, &od); err != nil {
+			return false
+		}
+		valid, _, _ := od.Valid(false)
+		return valid
+
+	case "opinion":
+		var op opinion.Opinion
+		if err := json.Unmarshal(objJSON, &op); err != nil {
+			return false
+		}
+		valid, _, _ := op.Valid(false)
+		return valid
+
+	case "report":
+		var reportObj report.Report
+		if err := json.Unmarshal(objJSON, &reportObj); err != nil {
+			return false
+		}
+		valid, _, _ := reportObj.Valid(false)
+		return valid
+
+	case "relationship":
+		var rel relationship.Relationship
+		if err := json.Unmarshal(objJSON, &rel); err != nil {
+			return false
+		}
+		valid, _, _ := rel.Valid(false)
+		return valid
+
+	case "sighting":
+		var sight sighting.Sighting
+		if err := json.Unmarshal(objJSON, &sight); err != nil {
+			return false
+		}
+		valid, _, _ := sight.Valid(false)
+		return valid
+
+	case "vulnerability":
+		var vuln vulnerability.Vulnerability
+		if err := json.Unmarshal(objJSON, &vuln); err != nil {
+			return false
+		}
+		valid, _, _ := vuln.Valid(false)
+		return valid
+
+	case "bundle":
+		var bundleObj bundle.Bundle
+		if err := json.Unmarshal(objJSON, &bundleObj); err != nil {
+			return false
+		}
+		// Bundle doesn't have a Valid method, consider it valid if it decodes correctly
+		return true
+
+	case "marking-definition":
+		var md markingdefinition.MarkingDefinition
+		if err := json.Unmarshal(objJSON, &md); err != nil {
+			return false
+		}
+		valid, _, _ := md.Valid(false)
+		return valid
+
+	default:
+		// For unsupported types, consider them valid if they can be decoded as JSON
+		var generic map[string]interface{}
+		return json.Unmarshal(objJSON, &generic) == nil
+	}
 }
