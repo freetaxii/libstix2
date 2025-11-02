@@ -6,6 +6,8 @@
 package observeddata
 
 import (
+	"encoding/json"
+
 	"github.com/freetaxii/libstix2/objects"
 )
 
@@ -21,10 +23,10 @@ individual properties.
 */
 type ObservedData struct {
 	objects.CommonObjectProperties
-	FirstObserved  string `json:"first_observed,omitempty" bson:"first_observed,omitempty"`
-	LastObserved   string `json:"last_observed,omitempty" bson:"last_observed,omitempty"`
-	NumberObserved int    `json:"number_observed,omitempty" bson:"number_observed,omitempty"`
-	Objects        string `json:"objects,omitempty" bson:"objects,omitempty"`
+	FirstObserved  string          `json:"first_observed,omitempty" bson:"first_observed,omitempty"`
+	LastObserved   string          `json:"last_observed,omitempty" bson:"last_observed,omitempty"`
+	NumberObserved int             `json:"number_observed,omitempty" bson:"number_observed,omitempty"`
+	Objects        json.RawMessage `json:"objects,omitempty" bson:"objects,omitempty"`
 	objects.ObjectRefsProperty
 }
 

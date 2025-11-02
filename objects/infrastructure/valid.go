@@ -7,6 +7,7 @@ package infrastructure
 
 import (
 	"fmt"
+
 	"github.com/freetaxii/libstix2/vocabs"
 )
 
@@ -35,18 +36,21 @@ func (o *Infrastructure) Valid(debug bool) (bool, int, []string) {
 	// resultDetails = append(resultDetails, dName...)
 
 	if len(o.InfrastructureTypes) == 0 {
-		problemsFound++
-		str := fmt.Sprintf("-- The infrastructure types property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The infrastructure_types property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The infrastructure types property is required and is present")
+		str := fmt.Sprintf("++ The infrastructure_types property is required and is present")
 		resultDetails = append(resultDetails, str)
 
 		// Validate that all infrastructure types are from the vocabulary
 		validVocab := vocabs.GetInfrastructureTypeVocab()
 		for _, infraType := range o.InfrastructureTypes {
 			if !validVocab[infraType] {
-				problemsFound++
+				// this is a SHOULD not a MUST so we won't add it as a problem
+				// problemsFound++
 				str := fmt.Sprintf("-- The infrastructure type '%s' is not in the allowed vocabulary", infraType)
 				resultDetails = append(resultDetails, str)
 			}

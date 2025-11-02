@@ -5,7 +5,11 @@
 
 package observeddata
 
-import "github.com/freetaxii/libstix2/objects"
+import (
+	"encoding/json"
+
+	"github.com/freetaxii/libstix2/objects"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -63,6 +67,6 @@ SetObjects - This takes in a string value that represents represents a cyber
 observable JSON object and updates the objects property.
 */
 func (o *ObservedData) SetObjects(s string) error {
-	o.Objects = s
+	o.Objects = json.RawMessage(s)
 	return nil
 }

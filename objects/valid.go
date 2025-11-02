@@ -20,22 +20,45 @@ import (
 // return a boolean, an integer that tracks the number of problems found, and a
 // slice of strings that contain the detailed results, whether good or bad.
 func (o *CommonObjectProperties) ValidSDO(debug bool) (bool, int, []string) {
+	return o.ValidSDOWithExclusions(debug, nil)
+}
+
+// ValidSDOWithExclusions - This method will verify and test all of the properties on a STIX
+// Domain Object to make sure they are valid per the specification, with the ability to
+// exclude certain required fields from validation. It will return a boolean, an integer 
+// that tracks the number of problems found, and a slice of strings that contain the 
+// detailed results, whether good or bad.
+func (o *CommonObjectProperties) ValidSDOWithExclusions(debug bool, excludedFields []string) (bool, int, []string) {
 	r := new(results)
 	r.debug = debug
 
 	// Check each property in the model
-	o.checkObjectType(r)
-	o.checkSpecVersion(r)
-	o.checkID(r)
-	o.checkCreatedByRef(r)
-	o.checkCreated(r)
-	o.checkModified(r)
+	o.checkObjectTypeWithExclusions(r, excludedFields)
+	o.checkSpecVersionWithExclusions(r, excludedFields)
+	o.checkIDWithExclusions(r, excludedFields)
+	o.checkCreatedByRefWithExclusions(r, excludedFields)
+	o.checkCreatedWithExclusions(r, excludedFields)
+	o.checkModifiedWithExclusions(r, excludedFields)
 
 	// Return real values not pointers
 	if r.problemsFound > 0 {
 		return false, r.problemsFound, r.resultDetails
 	}
 	return true, r.problemsFound, r.resultDetails
+}
+
+// isFieldExcluded - This function checks if a field is in the excluded fields list
+func isFieldExcluded(fieldName string, excludedFields []string) bool {
+	if excludedFields == nil {
+		return false
+	}
+	
+	for _, field := range excludedFields {
+		if field == fieldName {
+			return true
+		}
+	}
+	return false
 }
 
 // ----------------------------------------------------------------------
@@ -137,6 +160,17 @@ func isCreatedByIDValid(id string) bool {
 // checks for each property are self contained in their own function.
 
 func (o *CommonObjectProperties) checkObjectType(r *results) {
+	o.checkObjectTypeWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkObjectTypeWithExclusions(r *results, excludedFields []string) {
+	if isFieldExcluded("type", excludedFields) {
+		if o.ObjectType != "" {
+			requiredAndFound(r, "type")
+		}
+		return
+	}
+	
 	if o.ObjectType == "" {
 		requiredButMissing(r, "type")
 	} else {
@@ -152,6 +186,17 @@ func (o *CommonObjectProperties) checkObjectType(r *results) {
 }
 
 func (o *CommonObjectProperties) checkSpecVersion(r *results) {
+	o.checkSpecVersionWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkSpecVersionWithExclusions(r *results, excludedFields []string) {
+	if isFieldExcluded("spec_version", excludedFields) {
+		if o.SpecVersion != "" {
+			requiredAndFound(r, "spec_version")
+		}
+		return
+	}
+	
 	if o.SpecVersion == "" {
 		requiredButMissing(r, "spec_version")
 	} else {
@@ -167,6 +212,17 @@ func (o *CommonObjectProperties) checkSpecVersion(r *results) {
 }
 
 func (o *CommonObjectProperties) checkID(r *results) {
+	o.checkIDWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkIDWithExclusions(r *results, excludedFields []string) {
+	if isFieldExcluded("id", excludedFields) {
+		if o.ID != "" {
+			requiredAndFound(r, "id")
+		}
+		return
+	}
+	
 	if o.ID == "" {
 		requiredButMissing(r, "id")
 	} else {
@@ -182,6 +238,10 @@ func (o *CommonObjectProperties) checkID(r *results) {
 }
 
 func (o *CommonObjectProperties) checkCreatedByRef(r *results) {
+	o.checkCreatedByRefWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkCreatedByRefWithExclusions(r *results, excludedFields []string) {
 	// created_by_ref is optional, so only validate if it's present
 	if o.CreatedByRef != "" {
 		if valid := isCreatedByIDValid(o.CreatedByRef); valid == false {
@@ -194,6 +254,17 @@ func (o *CommonObjectProperties) checkCreatedByRef(r *results) {
 }
 
 func (o *CommonObjectProperties) checkCreated(r *results) {
+	o.checkCreatedWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkCreatedWithExclusions(r *results, excludedFields []string) {
+	if isFieldExcluded("created", excludedFields) {
+		if o.Created != "" {
+			requiredAndFound(r, "created")
+		}
+		return
+	}
+	
 	if o.Created == "" {
 		requiredButMissing(r, "created")
 	} else {
@@ -209,6 +280,17 @@ func (o *CommonObjectProperties) checkCreated(r *results) {
 }
 
 func (o *CommonObjectProperties) checkModified(r *results) {
+	o.checkModifiedWithExclusions(r, nil)
+}
+
+func (o *CommonObjectProperties) checkModifiedWithExclusions(r *results, excludedFields []string) {
+	if isFieldExcluded("modified", excludedFields) {
+		if o.Modified != "" {
+			requiredAndFound(r, "modified")
+		}
+		return
+	}
+	
 	if o.Modified == "" {
 		requiredButMissing(r, "modified")
 	} else {

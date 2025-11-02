@@ -5,7 +5,11 @@
 
 package identity
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/freetaxii/libstix2/vocabs"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -32,12 +36,36 @@ func (o *Identity) Valid(debug bool) (bool, int, []string) {
 	// resultDetails = append(resultDetails, dName...)
 
 	if o.IdentityClass == "" {
-		problemsFound++
-		str := fmt.Sprintf("-- The identity class property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The identity_class property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The identity class property is required and is present")
-		resultDetails = append(resultDetails, str)
+		// Validate that identity_class is from the vocabulary
+		validVocab := vocabs.GetIdentityClassVocab()
+		if !validVocab[o.IdentityClass] {
+			// this is a SHOULD not a MUST so we won't add it as a problem
+			// problemsFound++
+			str := fmt.Sprintf("** The identity_class '%s' is not in the allowed vocabulary", o.IdentityClass)
+			resultDetails = append(resultDetails, str)
+		} else {
+			str := fmt.Sprintf("++ The identity_class property is required and is present")
+			resultDetails = append(resultDetails, str)
+		}
+	}
+
+	// Validate sectors if present
+	if len(o.Sectors) > 0 {
+		validVocab := vocabs.GetIndustrySectorVocab()
+		for _, sector := range o.Sectors {
+			if !validVocab[sector] {
+				// this is a SHOULD not a MUST so we won't add it as a problem
+				// problemsFound++
+				str := fmt.Sprintf("** The sector '%s' is not in the allowed vocabulary", sector)
+				resultDetails = append(resultDetails, str)
+			}
+		}
 	}
 
 	if problemsFound > 0 {

@@ -33,11 +33,13 @@ func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 	resultDetails = append(resultDetails, dBase...)
 
 	if len(o.IndicatorTypes) == 0 {
-		problemsFound++
-		str := fmt.Sprintf("-- The indicator types property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The indicator_types property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The indicator types property is required and is present")
+		str := fmt.Sprintf("++ The indicator_types property is required and is present")
 		resultDetails = append(resultDetails, str)
 	}
 
@@ -62,8 +64,9 @@ func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 		// Validate that pattern type is from the vocabulary
 		validVocab := vocabs.GetPatternTypeVocab()
 		if !validVocab[o.PatternType] {
-			problemsFound++
-			str := fmt.Sprintf("-- The pattern type '%s' is not in the allowed vocabulary", o.PatternType)
+			// this is a SHOULD not a MUST so we won't add it as a problem
+			// problemsFound++
+			str := fmt.Sprintf("** The pattern type '%s' is not in the allowed vocabulary", o.PatternType)
 			resultDetails = append(resultDetails, str)
 		}
 	}

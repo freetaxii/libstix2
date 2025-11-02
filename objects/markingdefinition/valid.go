@@ -16,40 +16,50 @@ integer that tracks the number of problems found, and a slice of strings that
 contain the detailed results, whether good or bad.
 */
 func (o *MarkingDefinition) Valid(debug bool) (bool, int, []string) {
+	// For marking definitions, the "modified" field is not required
+	excludedFields := []string{"modified"}
+	
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
 	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
+	_, pBase, dBase := o.CommonObjectProperties.ValidSDOWithExclusions(debug, excludedFields)
 	problemsFound += pBase
 	resultDetails = append(resultDetails, dBase...)
 
-	// Verify object Name property is present
-	if o.GetName() == "" {
-		problemsFound++
-		str := "-- The markingDefinition name property is required but missing"
+	// Check if extensions are present - if so, this is an extended marking definition
+	if len(o.Extensions) > 0 {
+		str := "++ The marking definition uses extensions"
 		resultDetails = append(resultDetails, str)
-	}
-
-	// Verify object DefinitionType property is present
-	if o.DefinitionType != "tlp" && o.DefinitionType != "statement" {
-		problemsFound++
-		str := "-- The markingDefinition definition type property is neither tlp nor statement"
-		resultDetails = append(resultDetails, str)
-	}
-
-	// Verify object Definition property is present
-	if t, ok := o.Definition.(properties.TlpDefinition); ok {
-		if t.Tlp == "" {
+	} else {
+		// Traditional marking definitions without extensions must have name, definition_type, and definition
+		// Verify object Name property is present
+		if o.GetName() == "" {
 			problemsFound++
-			str := "-- The markingDefinition definition tlp property is required but missing"
+			str := "-- The markingDefinition name property is required but missing"
 			resultDetails = append(resultDetails, str)
 		}
-	} else if t, ok := o.Definition.(properties.StatementDefinition); ok {
-		if t.Statement == "" {
+
+		// Verify object DefinitionType property is present
+		if o.DefinitionType != "tlp" && o.DefinitionType != "statement" {
 			problemsFound++
-			str := "-- The markingDefinition definition statement property is required but missing"
+			str := "-- The markingDefinition definition type property is neither tlp nor statement"
 			resultDetails = append(resultDetails, str)
+		}
+
+		// Verify object Definition property is present
+		if t, ok := o.Definition.(properties.TlpDefinition); ok {
+			if t.Tlp == "" {
+				problemsFound++
+				str := "-- The markingDefinition definition tlp property is required but missing"
+				resultDetails = append(resultDetails, str)
+			}
+		} else if t, ok := o.Definition.(properties.StatementDefinition); ok {
+			if t.Statement == "" {
+				problemsFound++
+				str := "-- The markingDefinition definition statement property is required but missing"
+				resultDetails = append(resultDetails, str)
+			}
 		}
 	}
 
