@@ -31,6 +31,23 @@ import (
 	"github.com/freetaxii/libstix2/objects/opinion"
 	"github.com/freetaxii/libstix2/objects/relationship"
 	"github.com/freetaxii/libstix2/objects/report"
+	"github.com/freetaxii/libstix2/objects/sco/artifact"
+	"github.com/freetaxii/libstix2/objects/sco/directory"
+	"github.com/freetaxii/libstix2/objects/sco/domainname"
+	"github.com/freetaxii/libstix2/objects/sco/emailaddr"
+	"github.com/freetaxii/libstix2/objects/sco/emailmessage"
+	"github.com/freetaxii/libstix2/objects/sco/file"
+	"github.com/freetaxii/libstix2/objects/sco/ipv4addr"
+	"github.com/freetaxii/libstix2/objects/sco/ipv6addr"
+	"github.com/freetaxii/libstix2/objects/sco/macaddr"
+	"github.com/freetaxii/libstix2/objects/sco/mutex"
+	"github.com/freetaxii/libstix2/objects/sco/networktraffic"
+	"github.com/freetaxii/libstix2/objects/sco/process"
+	"github.com/freetaxii/libstix2/objects/sco/software"
+	"github.com/freetaxii/libstix2/objects/sco/urlobject"
+	"github.com/freetaxii/libstix2/objects/sco/useraccount"
+	"github.com/freetaxii/libstix2/objects/sco/windowsregistrykey"
+	"github.com/freetaxii/libstix2/objects/sco/x509certificate"
 	"github.com/freetaxii/libstix2/objects/sighting"
 	"github.com/freetaxii/libstix2/objects/threatactor"
 	"github.com/freetaxii/libstix2/objects/tool"
@@ -53,7 +70,50 @@ var (
 	singleFile    = flag.String("file", "", "Path to a single JSON file to test (instead of all files)")
 	debugMode     = flag.Bool("debug", false, "Enable debug mode for detailed validation output")
 	showAllErrors = flag.Bool("all-errors", false, "Show all validation errors instead of just summaries")
+	showMissing   = flag.Bool("show-missing", false, "Show missing object types that are not implemented")
 )
+
+// ----------------------------------------------------------------------
+// Missing Types Tracking
+// ----------------------------------------------------------------------
+
+// MissingTypeStats tracks statistics about missing object types
+type MissingTypeStats struct {
+	TypeCounts  map[string]int      // Count of each missing type
+	FilesByType map[string][]string // Files containing each missing type
+}
+
+// NewMissingTypeStats creates a new MissingTypeStats instance
+func NewMissingTypeStats() *MissingTypeStats {
+	return &MissingTypeStats{
+		TypeCounts:  make(map[string]int),
+		FilesByType: make(map[string][]string),
+	}
+}
+
+// AddMissingType records a missing object type
+func (m *MissingTypeStats) AddMissingType(objType, filePath string) {
+	m.TypeCounts[objType]++
+
+	// Only add file if not already present for this type
+	files := m.FilesByType[objType]
+	for _, f := range files {
+		if f == filePath {
+			return
+		}
+	}
+	m.FilesByType[objType] = append(files, filePath)
+}
+
+// GetSummary returns a summary of missing types
+func (m *MissingTypeStats) GetSummary() (int, int, map[string]int) {
+	totalMissingTypes := len(m.TypeCounts)
+	totalMissingObjects := 0
+	for _, count := range m.TypeCounts {
+		totalMissingObjects += count
+	}
+	return totalMissingTypes, totalMissingObjects, m.TypeCounts
+}
 
 // ----------------------------------------------------------------------
 // Helper Functions
@@ -419,6 +479,142 @@ func testSTIXFileRoundTrip(t *testing.T, filePath string) {
 			}
 			decodedObj = md
 
+		case "artifact":
+			var art artifact.Artifact
+			if err := json.Unmarshal(objJSON, &art); err != nil {
+				t.Errorf("Failed to decode artifact in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = art
+
+		case "directory":
+			var dir directory.Directory
+			if err := json.Unmarshal(objJSON, &dir); err != nil {
+				t.Errorf("Failed to decode directory in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = dir
+
+		case "domain-name":
+			var dn domainname.DomainName
+			if err := json.Unmarshal(objJSON, &dn); err != nil {
+				t.Errorf("Failed to decode domain-name in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = dn
+
+		case "email-addr":
+			var eaddr emailaddr.EmailAddress
+			if err := json.Unmarshal(objJSON, &eaddr); err != nil {
+				t.Errorf("Failed to decode email-addr in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = eaddr
+
+		case "email-message":
+			var emsg emailmessage.EmailMessage
+			if err := json.Unmarshal(objJSON, &emsg); err != nil {
+				t.Errorf("Failed to decode email-message in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = emsg
+
+		case "file":
+			var f file.File
+			if err := json.Unmarshal(objJSON, &f); err != nil {
+				t.Errorf("Failed to decode file in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = f
+
+		case "ipv4-addr":
+			var ip4 ipv4addr.IPv4Addr
+			if err := json.Unmarshal(objJSON, &ip4); err != nil {
+				t.Errorf("Failed to decode ipv4-addr in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = ip4
+
+		case "ipv6-addr":
+			var ip6 ipv6addr.IPv6Addr
+			if err := json.Unmarshal(objJSON, &ip6); err != nil {
+				t.Errorf("Failed to decode ipv6-addr in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = ip6
+
+		case "mac-addr":
+			var mac macaddr.MACAddr
+			if err := json.Unmarshal(objJSON, &mac); err != nil {
+				t.Errorf("Failed to decode mac-addr in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = mac
+
+		case "mutex":
+			var m mutex.Mutex
+			if err := json.Unmarshal(objJSON, &m); err != nil {
+				t.Errorf("Failed to decode mutex in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = m
+
+		case "network-traffic":
+			var nt networktraffic.NetworkTraffic
+			if err := json.Unmarshal(objJSON, &nt); err != nil {
+				t.Errorf("Failed to decode network-traffic in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = nt
+
+		case "process":
+			var p process.Process
+			if err := json.Unmarshal(objJSON, &p); err != nil {
+				t.Errorf("Failed to decode process in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = p
+
+		case "software":
+			var s software.Software
+			if err := json.Unmarshal(objJSON, &s); err != nil {
+				t.Errorf("Failed to decode software in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = s
+
+		case "url":
+			var url urlobject.URLObject
+			if err := json.Unmarshal(objJSON, &url); err != nil {
+				t.Errorf("Failed to decode url in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = url
+
+		case "user-account":
+			var ua useraccount.UserAccount
+			if err := json.Unmarshal(objJSON, &ua); err != nil {
+				t.Errorf("Failed to decode user-account in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = ua
+
+		case "windows-registry-key":
+			var wrk windowsregistrykey.WindowsRegistryKey
+			if err := json.Unmarshal(objJSON, &wrk); err != nil {
+				t.Errorf("Failed to decode windows-registry-key in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = wrk
+
+		case "x509-certificate":
+			var cert x509certificate.X509Certificate
+			if err := json.Unmarshal(objJSON, &cert); err != nil {
+				t.Errorf("Failed to decode x509-certificate in %s: %v", filePath, err)
+				continue
+			}
+			decodedObj = cert
+
 		default:
 			t.Logf("Unsupported object type '%s' in %s, skipping", objType, filePath)
 			// For unsupported types, keep the original object
@@ -493,14 +689,24 @@ func TestMISPSTIXValidation(t *testing.T) {
 	totalObjects := 0
 	validObjects := 0
 	invalidObjects := 0
+	missingStats := NewMissingTypeStats()
 
 	for _, filePath := range jsonFiles {
 		t.Run(filepath.Base(filePath), func(t *testing.T) {
-			valid, invalid := testSTIXFileValidation(t, filePath)
+			valid, invalid := testSTIXFileValidationWithMissing(t, filePath, missingStats)
 			totalObjects += valid + invalid
 			validObjects += valid
 			invalidObjects += invalid
 		})
+	}
+
+	// Report missing types
+	totalMissingTypes, totalMissingObjects, typeCounts := missingStats.GetSummary()
+	if totalMissingTypes > 0 {
+		t.Logf("Missing object types found: %d types, %d objects", totalMissingTypes, totalMissingObjects)
+		for objType, count := range typeCounts {
+			t.Logf("  - %s: %d objects", objType, count)
+		}
 	}
 
 	t.Logf("Validation summary: %d total objects, %d valid, %d invalid", totalObjects, validObjects, invalidObjects)
@@ -508,6 +714,12 @@ func TestMISPSTIXValidation(t *testing.T) {
 
 // testSTIXFileValidation tests that all STIX objects in a file pass validation
 func testSTIXFileValidation(t *testing.T, filePath string) (int, int) {
+	missingStats := NewMissingTypeStats()
+	return testSTIXFileValidationWithMissing(t, filePath, missingStats)
+}
+
+// testSTIXFileValidationWithMissing tests that all STIX objects in a file pass validation and tracks missing types
+func testSTIXFileValidationWithMissing(t *testing.T, filePath string, missingStats *MissingTypeStats) (int, int) {
 	// Read file
 	data, err := os.ReadFile(filePath)
 	if err != nil {
@@ -541,294 +753,16 @@ func testSTIXFileValidation(t *testing.T, filePath string) (int, int) {
 			continue
 		}
 
-		// Validate based on object type
-		switch objType {
-		case "indicator":
-			var ind indicator.Indicator
-			if err := json.Unmarshal(objJSON, &ind); err != nil {
-				t.Errorf("Failed to decode indicator in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := ind.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
+		// Validate based on object type and track missing types
+		isValid, _, isMissing := validateSTIXObjectWithMissing(objType, objJSON)
+		if isMissing {
+			missingStats.AddMissingType(objType, filepath.Base(filePath))
+		}
 
-		case "malware":
-			var mal malware.Malware
-			if err := json.Unmarshal(objJSON, &mal); err != nil {
-				t.Errorf("Failed to decode malware in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := mal.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "infrastructure":
-			var inf infrastructure.Infrastructure
-			if err := json.Unmarshal(objJSON, &inf); err != nil {
-				t.Errorf("Failed to decode infrastructure in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := inf.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "threat-actor":
-			var ta threatactor.ThreatActor
-			if err := json.Unmarshal(objJSON, &ta); err != nil {
-				t.Errorf("Failed to decode threat-actor in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := ta.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "tool":
-			var toolObj tool.Tool
-			if err := json.Unmarshal(objJSON, &toolObj); err != nil {
-				t.Errorf("Failed to decode tool in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := toolObj.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "attack-pattern":
-			var ap attackpattern.AttackPattern
-			if err := json.Unmarshal(objJSON, &ap); err != nil {
-				t.Errorf("Failed to decode attack-pattern in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := ap.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "campaign":
-			var camp campaign.Campaign
-			if err := json.Unmarshal(objJSON, &camp); err != nil {
-				t.Errorf("Failed to decode campaign in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := camp.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "course-of-action":
-			var coa courseofaction.CourseOfAction
-			if err := json.Unmarshal(objJSON, &coa); err != nil {
-				t.Errorf("Failed to decode course-of-action in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := coa.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "grouping":
-			var grp grouping.Grouping
-			if err := json.Unmarshal(objJSON, &grp); err != nil {
-				t.Errorf("Failed to decode grouping in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := grp.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "identity":
-			var id identity.Identity
-			if err := json.Unmarshal(objJSON, &id); err != nil {
-				t.Errorf("Failed to decode identity in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := id.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "intrusion-set":
-			var is intrusionset.IntrusionSet
-			if err := json.Unmarshal(objJSON, &is); err != nil {
-				t.Errorf("Failed to decode intrusion-set in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := is.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "location":
-			var loc location.Location
-			if err := json.Unmarshal(objJSON, &loc); err != nil {
-				t.Errorf("Failed to decode location in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := loc.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "malware-analysis":
-			var ma malwareanalysis.MalwareAnalysis
-			if err := json.Unmarshal(objJSON, &ma); err != nil {
-				t.Errorf("Failed to decode malware-analysis in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := ma.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "note":
-			var noteObj note.Note
-			if err := json.Unmarshal(objJSON, &noteObj); err != nil {
-				t.Errorf("Failed to decode note in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := noteObj.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "observed-data":
-			var od observeddata.ObservedData
-			if err := json.Unmarshal(objJSON, &od); err != nil {
-				t.Errorf("Failed to decode observed-data in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := od.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "opinion":
-			var op opinion.Opinion
-			if err := json.Unmarshal(objJSON, &op); err != nil {
-				t.Errorf("Failed to decode opinion in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := op.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "report":
-			var reportObj report.Report
-			if err := json.Unmarshal(objJSON, &reportObj); err != nil {
-				t.Errorf("Failed to decode report in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := reportObj.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "relationship":
-			var rel relationship.Relationship
-			if err := json.Unmarshal(objJSON, &rel); err != nil {
-				t.Errorf("Failed to decode relationship in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := rel.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "sighting":
-			var sight sighting.Sighting
-			if err := json.Unmarshal(objJSON, &sight); err != nil {
-				t.Errorf("Failed to decode sighting in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := sight.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "vulnerability":
-			var vuln vulnerability.Vulnerability
-			if err := json.Unmarshal(objJSON, &vuln); err != nil {
-				t.Errorf("Failed to decode vulnerability in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := vuln.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		case "bundle":
-			var bundleObj bundle.Bundle
-			if err := json.Unmarshal(objJSON, &bundleObj); err != nil {
-				t.Errorf("Failed to decode bundle in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			// Bundle doesn't have a Valid method, consider it valid if it decodes correctly
+		if isValid {
 			validCount++
-
-		case "marking-definition":
-			var md markingdefinition.MarkingDefinition
-			if err := json.Unmarshal(objJSON, &md); err != nil {
-				t.Errorf("Failed to decode marking-definition in %s: %v", filePath, err)
-				invalidCount++
-				continue
-			}
-			if valid, _, _ := md.Valid(false); valid {
-				validCount++
-			} else {
-				invalidCount++
-			}
-
-		default:
-			// For unsupported types, count as valid
-			validCount++
+		} else {
+			invalidCount++
 		}
 	}
 
@@ -847,10 +781,14 @@ func main() {
 	if *showAllErrors {
 		fmt.Println("Show all errors: ENABLED")
 	}
+	if *showMissing {
+		fmt.Println("Show missing types: ENABLED")
+	}
 	fmt.Println()
 
 	var jsonFiles []string
 	var err error
+	missingStats := NewMissingTypeStats()
 
 	// Determine which files to process
 	if *singleFile != "" {
@@ -957,11 +895,19 @@ func main() {
 			}
 
 			// Validate based on object type
-			isValid, validationErrors := validateSTIXObject(objType, objJSON)
+			isValid, validationErrors, isMissing := validateSTIXObjectWithMissing(objType, objJSON)
+			if isMissing {
+				missingStats.AddMissingType(objType, displayName)
+			}
+
 			if isValid {
 				fileValidCount++
 				if *debugMode {
-					fmt.Printf("  ✅ Object %d (%s): validation passed\n", i+1, objType)
+					if isMissing {
+						fmt.Printf("  ⚠️  Object %d (%s): validation passed (unsupported type)\n", i+1, objType)
+					} else {
+						fmt.Printf("  ✅ Object %d (%s): validation passed\n", i+1, objType)
+					}
 				}
 			} else {
 				fileInvalidCount++
@@ -1010,6 +956,34 @@ func main() {
 		fmt.Printf("Success rate: %.2f%%\n", successRate)
 	}
 
+	// Print missing types summary
+	totalMissingTypes, totalMissingObjects, typeCounts := missingStats.GetSummary()
+	if totalMissingTypes > 0 {
+		fmt.Printf("\nMissing Object Types: %d types, %d objects\n", totalMissingTypes, totalMissingObjects)
+
+		if *showMissing {
+			fmt.Println("\nMissing Types Details:")
+			fmt.Println("======================")
+			for objType, count := range typeCounts {
+				files := missingStats.FilesByType[objType]
+				fmt.Printf("Type: %s (Count: %d)\n", objType, count)
+				if len(files) <= 5 {
+					for _, file := range files {
+						fmt.Printf("  - %s\n", file)
+					}
+				} else {
+					for i := 0; i < 3; i++ {
+						fmt.Printf("  - %s\n", files[i])
+					}
+					fmt.Printf("  ... and %d more files\n", len(files)-3)
+				}
+				fmt.Println()
+			}
+		} else {
+			fmt.Println("Use --show-missing flag to see detailed breakdown of missing types")
+		}
+	}
+
 	// Print all errors if requested
 	if *showAllErrors && len(allErrors) > 0 {
 		fmt.Println("\nAll Errors:")
@@ -1029,6 +1003,12 @@ func main() {
 
 // validateSTIXObject validates a single STIX object based on its type
 func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
+	isValid, errors, _ := validateSTIXObjectWithMissing(objType, objJSON)
+	return isValid, errors
+}
+
+// validateSTIXObjectWithMissing validates a single STIX object and tracks if the type is missing
+func validateSTIXObjectWithMissing(objType string, objJSON []byte) (bool, []string, bool) {
 	var errors []string
 
 	switch objType {
@@ -1036,7 +1016,7 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 		var ind indicator.Indicator
 		if err := json.Unmarshal(objJSON, &ind); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := ind.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1044,13 +1024,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("Validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "malware":
 		var mal malware.Malware
 		if err := json.Unmarshal(objJSON, &mal); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := mal.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1058,13 +1038,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("Validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "infrastructure":
 		var inf infrastructure.Infrastructure
 		if err := json.Unmarshal(objJSON, &inf); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := inf.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1072,13 +1052,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("Validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "threat-actor":
 		var ta threatactor.ThreatActor
 		if err := json.Unmarshal(objJSON, &ta); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := ta.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1086,13 +1066,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "tool":
 		var toolObj tool.Tool
 		if err := json.Unmarshal(objJSON, &toolObj); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := toolObj.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1100,13 +1080,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "attack-pattern":
 		var ap attackpattern.AttackPattern
 		if err := json.Unmarshal(objJSON, &ap); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := ap.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1114,13 +1094,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "campaign":
 		var camp campaign.Campaign
 		if err := json.Unmarshal(objJSON, &camp); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := camp.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1128,13 +1108,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "course-of-action":
 		var coa courseofaction.CourseOfAction
 		if err := json.Unmarshal(objJSON, &coa); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := coa.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1142,13 +1122,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "grouping":
 		var grp grouping.Grouping
 		if err := json.Unmarshal(objJSON, &grp); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := grp.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1156,13 +1136,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "identity":
 		var id identity.Identity
 		if err := json.Unmarshal(objJSON, &id); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := id.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1170,13 +1150,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "intrusion-set":
 		var is intrusionset.IntrusionSet
 		if err := json.Unmarshal(objJSON, &is); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := is.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1184,13 +1164,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "location":
 		var loc location.Location
 		if err := json.Unmarshal(objJSON, &loc); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := loc.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1198,13 +1178,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "malware-analysis":
 		var ma malwareanalysis.MalwareAnalysis
 		if err := json.Unmarshal(objJSON, &ma); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := ma.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1212,13 +1192,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "note":
 		var noteObj note.Note
 		if err := json.Unmarshal(objJSON, &noteObj); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := noteObj.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1226,13 +1206,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "observed-data":
 		var od observeddata.ObservedData
 		if err := json.Unmarshal(objJSON, &od); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := od.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1240,13 +1220,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "opinion":
 		var op opinion.Opinion
 		if err := json.Unmarshal(objJSON, &op); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := op.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1254,13 +1234,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "report":
 		var reportObj report.Report
 		if err := json.Unmarshal(objJSON, &reportObj); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := reportObj.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1268,13 +1248,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "relationship":
 		var rel relationship.Relationship
 		if err := json.Unmarshal(objJSON, &rel); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := rel.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1282,13 +1262,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "sighting":
 		var sight sighting.Sighting
 		if err := json.Unmarshal(objJSON, &sight); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := sight.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1296,13 +1276,13 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "vulnerability":
 		var vuln vulnerability.Vulnerability
 		if err := json.Unmarshal(objJSON, &vuln); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := vuln.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1310,22 +1290,22 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
 
 	case "bundle":
 		var bundleObj bundle.Bundle
 		if err := json.Unmarshal(objJSON, &bundleObj); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		// Bundle doesn't have a Valid method, consider it valid if it decodes correctly
-		return true, errors
+		return true, errors, false
 
 	case "marking-definition":
 		var md markingdefinition.MarkingDefinition
 		if err := json.Unmarshal(objJSON, &md); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, false
 		}
 		valid, _, validationErrors := md.Valid(*debugMode)
 		if !valid && *debugMode {
@@ -1333,19 +1313,257 @@ func validateSTIXObject(objType string, objJSON []byte) (bool, []string) {
 				errors = append(errors, fmt.Sprintf("validation note: %v", err))
 			}
 		}
-		return valid, errors
+		return valid, errors, false
+
+	case "artifact":
+		var art artifact.Artifact
+		if err := json.Unmarshal(objJSON, &art); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := art.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "directory":
+		var dir directory.Directory
+		if err := json.Unmarshal(objJSON, &dir); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := dir.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "domain-name":
+		var dn domainname.DomainName
+		if err := json.Unmarshal(objJSON, &dn); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := dn.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "email-addr":
+		var eaddr emailaddr.EmailAddress
+		if err := json.Unmarshal(objJSON, &eaddr); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := eaddr.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "email-message":
+		var emsg emailmessage.EmailMessage
+		if err := json.Unmarshal(objJSON, &emsg); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := emsg.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "file":
+		var f file.File
+		if err := json.Unmarshal(objJSON, &f); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := f.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "ipv4-addr":
+		var ip4 ipv4addr.IPv4Addr
+		if err := json.Unmarshal(objJSON, &ip4); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := ip4.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "ipv6-addr":
+		var ip6 ipv6addr.IPv6Addr
+		if err := json.Unmarshal(objJSON, &ip6); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := ip6.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "mac-addr":
+		var mac macaddr.MACAddr
+		if err := json.Unmarshal(objJSON, &mac); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := mac.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "mutex":
+		var m mutex.Mutex
+		if err := json.Unmarshal(objJSON, &m); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := m.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "network-traffic":
+		var nt networktraffic.NetworkTraffic
+		if err := json.Unmarshal(objJSON, &nt); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := nt.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "process":
+		var p process.Process
+		if err := json.Unmarshal(objJSON, &p); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := p.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "software":
+		var s software.Software
+		if err := json.Unmarshal(objJSON, &s); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := s.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "url":
+		var url urlobject.URLObject
+		if err := json.Unmarshal(objJSON, &url); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := url.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "user-account":
+		var ua useraccount.UserAccount
+		if err := json.Unmarshal(objJSON, &ua); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := ua.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "windows-registry-key":
+		var wrk windowsregistrykey.WindowsRegistryKey
+		if err := json.Unmarshal(objJSON, &wrk); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := wrk.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
+
+	case "x509-certificate":
+		var cert x509certificate.X509Certificate
+		if err := json.Unmarshal(objJSON, &cert); err != nil {
+			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
+			return false, errors, false
+		}
+		valid, _, validationErrors := cert.Valid(*debugMode)
+		if !valid && *debugMode {
+			for _, err := range validationErrors {
+				errors = append(errors, fmt.Sprintf("validation note: %v", err))
+			}
+		}
+		return valid, errors, false
 
 	default:
 		// For unsupported types, consider them valid if they can be decoded as JSON
-		// TODO: log these as coverage gaps
+		// Mark this as a missing type for tracking
 		var generic map[string]interface{}
 		if err := json.Unmarshal(objJSON, &generic); err != nil {
 			errors = append(errors, fmt.Sprintf("JSON decode error: %v", err))
-			return false, errors
+			return false, errors, true
 		}
 		if *debugMode {
 			errors = append(errors, fmt.Sprintf("Info: Object type '%s' is not explicitly supported", objType))
 		}
-		return true, errors
+		return true, errors, true
 	}
 }

@@ -19,14 +19,16 @@ properties and methods needed to create and work with this object. All of the
 methods not defined local to this type are inherited from the individual
 properties.
 
-Reference: STIX 2.1 specification section 6.3
-
-TODO: Complete implementation of all properties per specification
+Reference: STIX 2.1 specification section 4.3
 */
 type Directory struct {
 	objects.CommonObjectProperties
-	// TODO: Add specific properties for Directory based on STIX 2.1 spec section 6.3
-	// TODO: Add path, path_enc, ctime, mtime, atime, contains_refs
+	Path         string   `json:"path" bson:"path"` // Required
+	PathEnc      string   `json:"path_enc,omitempty" bson:"path_enc,omitempty"`
+	Ctime        string   `json:"ctime,omitempty" bson:"ctime,omitempty"`
+	Mtime        string   `json:"mtime,omitempty" bson:"mtime,omitempty"`
+	Atime        string   `json:"atime,omitempty" bson:"atime,omitempty"`
+	ContainsRefs []string `json:"contains_refs,omitempty" bson:"contains_refs,omitempty"`
 }
 
 /*
@@ -35,8 +37,7 @@ are unique to this object. This is used by the custom UnmarshalJSON for this
 object. It is defined here in this file to make it easy to keep in sync.
 */
 func (o *Directory) GetPropertyList() []string {
-	// TODO: Update with actual property names
-	return []string{}
+	return []string{"path", "path_enc", "ctime", "mtime", "atime", "contains_refs"}
 }
 
 // ----------------------------------------------------------------------

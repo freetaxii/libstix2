@@ -25,8 +25,8 @@ func (o *CommonObjectProperties) ValidSDO(debug bool) (bool, int, []string) {
 
 // ValidSDOWithExclusions - This method will verify and test all of the properties on a STIX
 // Domain Object to make sure they are valid per the specification, with the ability to
-// exclude certain required fields from validation. It will return a boolean, an integer 
-// that tracks the number of problems found, and a slice of strings that contain the 
+// exclude certain required fields from validation. It will return a boolean, an integer
+// that tracks the number of problems found, and a slice of strings that contain the
 // detailed results, whether good or bad.
 func (o *CommonObjectProperties) ValidSDOWithExclusions(debug bool, excludedFields []string) (bool, int, []string) {
 	r := new(results)
@@ -52,7 +52,7 @@ func isFieldExcluded(fieldName string, excludedFields []string) bool {
 	if excludedFields == nil {
 		return false
 	}
-	
+
 	for _, field := range excludedFields {
 		if field == fieldName {
 			return true
@@ -170,7 +170,7 @@ func (o *CommonObjectProperties) checkObjectTypeWithExclusions(r *results, exclu
 		}
 		return
 	}
-	
+
 	if o.ObjectType == "" {
 		requiredButMissing(r, "type")
 	} else {
@@ -196,7 +196,7 @@ func (o *CommonObjectProperties) checkSpecVersionWithExclusions(r *results, excl
 		}
 		return
 	}
-	
+
 	if o.SpecVersion == "" {
 		requiredButMissing(r, "spec_version")
 	} else {
@@ -222,7 +222,7 @@ func (o *CommonObjectProperties) checkIDWithExclusions(r *results, excludedField
 		}
 		return
 	}
-	
+
 	if o.ID == "" {
 		requiredButMissing(r, "id")
 	} else {
@@ -264,7 +264,7 @@ func (o *CommonObjectProperties) checkCreatedWithExclusions(r *results, excluded
 		}
 		return
 	}
-	
+
 	if o.Created == "" {
 		requiredButMissing(r, "created")
 	} else {
@@ -290,7 +290,7 @@ func (o *CommonObjectProperties) checkModifiedWithExclusions(r *results, exclude
 		}
 		return
 	}
-	
+
 	if o.Modified == "" {
 		requiredButMissing(r, "modified")
 	} else {

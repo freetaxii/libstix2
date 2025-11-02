@@ -18,7 +18,7 @@ contain the detailed results, whether good or bad.
 func (o *MarkingDefinition) Valid(debug bool) (bool, int, []string) {
 	// For marking definitions, the "modified" field is not required
 	excludedFields := []string{"modified"}
-	
+
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
