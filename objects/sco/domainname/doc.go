@@ -8,6 +8,9 @@ Package domainname implements the STIX 2.1 Domain Name SCO object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 6.3.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070654
+
 The Domain Name object represents the properties of a network domain name.
 */
 package domainname

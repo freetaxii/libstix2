@@ -33,11 +33,13 @@ func (o *ThreatActor) Valid(debug bool) (bool, int, []string) {
 
 	// Verify threat actor types is present
 	if len(o.ThreatActorTypes) == 0 {
-		problemsFound++
-		str := fmt.Sprintf("-- The threat actor types property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The threat_actor_types property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The threat actor types property is required and is present")
+		str := fmt.Sprintf("++ The threat_actor_types property is required and is present")
 		resultDetails = append(resultDetails, str)
 	}
 

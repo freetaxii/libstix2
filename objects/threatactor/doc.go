@@ -8,6 +8,9 @@ Package threatactor implements the STIX 2.1 Threat Actor object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.16.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070648
+
 Threat Actors are actual individuals, groups, or organizations believed to be
 operating with malicious intent. A Threat Actor is not an Intrusion Set but may
 support or be affiliated with various Intrusion Sets, groups, or organizations

@@ -8,6 +8,9 @@ Package grouping implements the STIX 2.1 Grouping object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.4.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070636
+
 A Grouping object explicitly asserts that the referenced STIX Objects have a
 shared context, unlike a STIX Bundle (which explicitly conveys no context). A
 Grouping object should not be confused with an intelligence product, which

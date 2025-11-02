@@ -8,6 +8,9 @@ Package bundle implements the STIX 2.1 Bundle object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 8.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070669
+
 A Bundle is a collection of arbitrary STIX Objects grouped together in a single
 container. A Bundle does not have any semantic meaning and the objects contained
 within the Bundle are not considered related by virtue of being in the same

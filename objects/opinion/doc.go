@@ -8,6 +8,9 @@ Package opinion implements the STIX 2.1 Relationship object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.14.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070646
+
 An Opinion is an assessment of the correctness of the information in a STIX
 Object produced by a different entity. The primary property is the opinion
 property, which captures the level of agreement or disagreement using a fixed

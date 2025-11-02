@@ -8,6 +8,9 @@ Package infrastructure implements the STIX 2.1 Infrastructure object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.7.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070639
+
 The Infrastructure SDO represents a type of TTP and describes any systems,
 software services and any associated physical or virtual resources intended to
 support some purpose (e.g., C2 servers used as part of an attack, device or

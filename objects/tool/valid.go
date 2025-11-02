@@ -5,7 +5,11 @@
 
 package tool
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/freetaxii/libstix2/vocabs"
+)
 
 // ----------------------------------------------------------------------
 // Public Methods
@@ -33,12 +37,25 @@ func (o *Tool) Valid(debug bool) (bool, int, []string) {
 
 	// Verify tool types is present
 	if len(o.ToolTypes) == 0 {
-		problemsFound++
-		str := fmt.Sprintf("-- The tool types property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The tool_types property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The tool types property is required and is present")
+		str := fmt.Sprintf("++ The tool_types property is required and is present")
 		resultDetails = append(resultDetails, str)
+
+		// Validate that all tool types are from the vocabulary
+		validVocab := vocabs.GetToolTypeVocab()
+		for _, toolType := range o.ToolTypes {
+			if !validVocab[toolType] {
+				// this is a SHOULD not a MUST so we won't add it as a problem
+				// problemsFound++
+				str := fmt.Sprintf("-- The tool type '%s' is not in the allowed vocabulary", toolType)
+				resultDetails = append(resultDetails, str)
+			}
+		}
 	}
 
 	if problemsFound > 0 {

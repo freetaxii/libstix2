@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/freetaxii/libstix2/objects"
+	"github.com/freetaxii/libstix2/vocabs"
 )
 
 // ----------------------------------------------------------------------
@@ -32,11 +33,13 @@ func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 	resultDetails = append(resultDetails, dBase...)
 
 	if len(o.IndicatorTypes) == 0 {
-		problemsFound++
-		str := fmt.Sprintf("-- The indicator types property is required but missing")
+		// in the STIX 2.1 definition, these are required, but many real-world objects do not contain these fields.
+		// TODO: can make this into a "strict" validation mechanism
+		// problemsFound++
+		str := fmt.Sprintf("-- The indicator_types property is required but missing")
 		resultDetails = append(resultDetails, str)
 	} else {
-		str := fmt.Sprintf("++ The indicator types property is required and is present")
+		str := fmt.Sprintf("++ The indicator_types property is required and is present")
 		resultDetails = append(resultDetails, str)
 	}
 
@@ -57,6 +60,15 @@ func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 	} else {
 		str := fmt.Sprintf("++ The pattern type property is required and is present")
 		resultDetails = append(resultDetails, str)
+
+		// Validate that pattern type is from the vocabulary
+		validVocab := vocabs.GetPatternTypeVocab()
+		if !validVocab[o.PatternType] {
+			// this is a SHOULD not a MUST so we won't add it as a problem
+			// problemsFound++
+			str := fmt.Sprintf("** The pattern type '%s' is not in the allowed vocabulary", o.PatternType)
+			resultDetails = append(resultDetails, str)
+		}
 	}
 
 	if o.ValidFrom == "" {
@@ -68,34 +80,46 @@ func (o *Indicator) Valid(debug bool) (bool, int, []string) {
 		resultDetails = append(resultDetails, str)
 	}
 
-	if valid := objects.IsTimestampValid(o.ValidFrom); valid == false {
-		problemsFound++
-		str := fmt.Sprintf("-- the valid from property does not contain a valid STIX timestamp")
-		resultDetails = append(resultDetails, str)
-	} else {
-		str := fmt.Sprintf("++ the valid from property does contain a valid STIX timestamp")
-		resultDetails = append(resultDetails, str)
+	// Only validate timestamp if ValidFrom is set
+	if o.ValidFrom != "" {
+		if valid := objects.IsTimestampValid(o.ValidFrom); valid == false {
+			problemsFound++
+			str := fmt.Sprintf("-- the valid from property does not contain a valid STIX timestamp")
+			resultDetails = append(resultDetails, str)
+		} else {
+			str := fmt.Sprintf("++ the valid from property does contain a valid STIX timestamp")
+			resultDetails = append(resultDetails, str)
+		}
 	}
 
-	if valid := objects.IsTimestampValid(o.ValidUntil); valid == false {
-		problemsFound++
-		str := fmt.Sprintf("-- the valid until property does not contain a valid STIX timestamp")
-		resultDetails = append(resultDetails, str)
-	} else {
-		str := fmt.Sprintf("++ the valid until property does contain a valid STIX timestamp")
-		resultDetails = append(resultDetails, str)
+	// Only validate timestamp if ValidUntil is set
+	if o.ValidUntil != "" {
+		if valid := objects.IsTimestampValid(o.ValidUntil); valid == false {
+			problemsFound++
+			str := fmt.Sprintf("-- the valid until property does not contain a valid STIX timestamp")
+			resultDetails = append(resultDetails, str)
+		} else {
+			str := fmt.Sprintf("++ the valid until property does contain a valid STIX timestamp")
+			resultDetails = append(resultDetails, str)
+		}
 	}
 
-	validFrom, _ := time.Parse(time.RFC3339, o.ValidFrom)
-	validUntil, _ := time.Parse(time.RFC3339, o.ValidUntil)
-	if yes := validUntil.After(validFrom); yes != true {
-		problemsFound++
-		str := fmt.Sprintf("-- the valid until timestamp is not later than the valid from timestamp")
-		resultDetails = append(resultDetails, str)
-	} else {
-		str := fmt.Sprintf("++ the valid until timestamp is later than the valid from timestamp")
-		resultDetails = append(resultDetails, str)
+	// Only compare timestamps if both are set
+	if o.ValidFrom != "" && o.ValidUntil != "" {
+		validFrom, _ := time.Parse(time.RFC3339, o.ValidFrom)
+		validUntil, _ := time.Parse(time.RFC3339, o.ValidUntil)
+		if yes := validUntil.After(validFrom); yes != true {
+			problemsFound++
+			str := fmt.Sprintf("-- the valid until timestamp is not later than the valid from timestamp")
+			resultDetails = append(resultDetails, str)
+		} else {
+			str := fmt.Sprintf("++ the valid until timestamp is later than the valid from timestamp")
+			resultDetails = append(resultDetails, str)
+		}
 	}
 
-	return true, 0, resultDetails
+	if problemsFound > 0 {
+		return false, problemsFound, resultDetails
+	}
+	return true, problemsFound, resultDetails
 }

@@ -8,6 +8,9 @@ Package sighting implements the STIX 2.1 Sighting object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 5.2.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070652
+
 A Sighting denotes the belief that something in CTI (e.g., an indicator,
 malware, tool, threat actor, etc.) was seen. Sightings are used to track who and
 what are being targeted, how attacks are carried out, and to track trends in

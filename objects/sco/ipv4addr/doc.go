@@ -8,6 +8,9 @@ Package ipv4addr implements the STIX 2.1 IPv4 Address SCO object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 6.7.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070658
+
 The IPv4 Address object represents one or more IPv4 addresses expressed using
 CIDR notation.
 */

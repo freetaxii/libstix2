@@ -7,6 +7,7 @@ package markingdefinition
 
 import (
 	"encoding/json"
+
 	"github.com/freetaxii/libstix2/defs"
 )
 
@@ -75,6 +76,68 @@ func (o *MarkingDefinition) Encode() ([]byte, error) {
 
 	// Any needed preprocessing would be done here
 	return data, nil
+}
+
+/*
+MarshalJSON - This method creates a custom JSON marshaling for MarkingDefinition
+to handle extensions properly. When extensions are present, we don't include
+definition and definition_type fields in the output.
+*/
+func (o *MarkingDefinition) MarshalJSON() ([]byte, error) {
+	// If extensions are present, create a version without definition and definition_type
+	if len(o.Extensions) > 0 {
+		// Create a custom struct that includes only the fields we want
+		temp := struct {
+			Type               string                 `json:"type"`
+			SpecVersion        string                 `json:"spec_version,omitempty"`
+			ID                 string                 `json:"id,omitempty"`
+			Created            string                 `json:"created,omitempty"`
+			Modified           string                 `json:"modified,omitempty"`
+			CreatedByRef       string                 `json:"created_by_ref,omitempty"`
+			Revoked            bool                   `json:"revoked,omitempty"`
+			Labels             []string               `json:"labels,omitempty"`
+			Confidence         int                    `json:"confidence,omitempty"`
+			Lang               string                 `json:"lang,omitempty"`
+			ExternalReferences []interface{}          `json:"external_references,omitempty"`
+			ObjectMarkingRefs  []string               `json:"object_marking_refs,omitempty"`
+			GranularMarkings   []interface{}          `json:"granular_markings,omitempty"`
+			Extensions         map[string]interface{} `json:"extensions,omitempty"`
+		}{
+			Type:         o.ObjectType,
+			SpecVersion:  o.SpecVersion,
+			ID:           o.ID,
+			Created:      o.Created,
+			Modified:     o.Modified,
+			CreatedByRef: o.CreatedByRef,
+			Revoked:      o.Revoked,
+			Labels:       o.Labels,
+			Confidence:   o.Confidence,
+			Lang:         o.Lang,
+			Extensions:   o.Extensions,
+		}
+
+		// Handle external references
+		if len(o.ExternalReferences) > 0 {
+			temp.ExternalReferences = make([]interface{}, len(o.ExternalReferences))
+			for i, er := range o.ExternalReferences {
+				temp.ExternalReferences[i] = er
+			}
+		}
+
+		// Handle granular markings
+		if len(o.GranularMarkings) > 0 {
+			temp.GranularMarkings = make([]interface{}, len(o.GranularMarkings))
+			for i, gm := range o.GranularMarkings {
+				temp.GranularMarkings[i] = gm
+			}
+		}
+
+		return json.MarshalIndent(&temp, "", "    ")
+	}
+
+	// For traditional marking definitions, include definition and definition_type
+	type Alias MarkingDefinition
+	return json.MarshalIndent((*Alias)(o), "", "    ")
 }
 
 /*

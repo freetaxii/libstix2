@@ -8,6 +8,9 @@ Package note implements the STIX 2.1 Attack Pattern object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.12.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070644
+
 A Note is intended to convey informative text to provide further context and/or
 to provide additional analysis not contained in the STIX Objects, Marking
 Definition objects, or Language Content objects which the Note relates to. Notes

@@ -19,10 +19,21 @@ func (o *IPv4Addr) Valid(debug bool) (bool, int, []string) {
 	problemsFound := 0
 	resultDetails := make([]string, 0)
 
-	// Check common base properties first
-	_, pBase, dBase := o.CommonObjectProperties.ValidSDO(debug)
-	problemsFound += pBase
-	resultDetails = append(resultDetails, dBase...)
+	// Check common SCO properties (type, spec_version, id)
+	if o.ObjectType == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the type property is required but missing")
+	}
+
+	if o.SpecVersion == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the spec_version property is required but missing")
+	}
+
+	if o.ID == "" {
+		problemsFound++
+		resultDetails = append(resultDetails, "-- the id property is required but missing")
+	}
 
 	// Verify object value property present
 	_, pValue, dValue := o.ValueProperty.VerifyExists()

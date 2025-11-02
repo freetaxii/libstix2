@@ -32,22 +32,23 @@ type STIXObject interface {
 // properties for that type of object. This was done so that we would only need
 // one type that could be used by all objects, to simplify the code.
 type CommonObjectProperties struct {
-	DatastoreID        int                 `json:"-" bson:"-"`
-	ObjectType         string              `json:"type,omitempty" bson:"type,omitempty"`
-	SpecVersion        string              `json:"spec_version,omitempty" bson:"spec_version,omitempty"`
-	ID                 string              `json:"id,omitempty" bson:"id,omitempty"`
-	CreatedByRef       string              `json:"created_by_ref,omitempty" bson:"created_by_ref,omitempty"`
-	Created            string              `json:"created,omitempty" bson:"created,omitempty"`
-	Modified           string              `json:"modified,omitempty" bson:"modified,omitempty"`
-	Revoked            bool                `json:"revoked,omitempty" bson:"revoked,omitempty"`
-	Labels             []string            `json:"labels,omitempty" bson:"labels,omitempty"`
-	Confidence         int                 `json:"confidence,omitempty" bson:"confidence,omitempty"`
-	Lang               string              `json:"lang,omitempty" bson:"lang,omitempty"`
-	ExternalReferences []ExternalReference `json:"external_references,omitempty" bson:"external_references,omitempty"`
-	ObjectMarkingRefs  []string            `json:"object_marking_refs,omitempty" bson:"object_marking_refs,omitempty"`
-	GranularMarkings   []GranularMarking   `json:"granular_markings,omitempty" bson:"granular_markings,omitempty"`
-	Custom             map[string][]byte   `json:"custom,omitempty" bson:"custom,omitempty"`
-	Raw                []byte              `json:"-" bson:"-"`
+	DatastoreID        int                    `json:"-" bson:"-"`
+	ObjectType         string                 `json:"type,omitempty" bson:"type,omitempty"`
+	SpecVersion        string                 `json:"spec_version,omitempty" bson:"spec_version,omitempty"`
+	ID                 string                 `json:"id,omitempty" bson:"id,omitempty"`
+	CreatedByRef       string                 `json:"created_by_ref,omitempty" bson:"created_by_ref,omitempty"`
+	Created            string                 `json:"created,omitempty" bson:"created,omitempty"`
+	Modified           string                 `json:"modified,omitempty" bson:"modified,omitempty"`
+	Revoked            bool                   `json:"revoked,omitempty" bson:"revoked,omitempty"`
+	Labels             []string               `json:"labels,omitempty" bson:"labels,omitempty"`
+	Confidence         int                    `json:"confidence,omitempty" bson:"confidence,omitempty"`
+	Lang               string                 `json:"lang,omitempty" bson:"lang,omitempty"`
+	ExternalReferences []ExternalReference    `json:"external_references,omitempty" bson:"external_references,omitempty"`
+	ObjectMarkingRefs  []string               `json:"object_marking_refs,omitempty" bson:"object_marking_refs,omitempty"`
+	GranularMarkings   []GranularMarking      `json:"granular_markings,omitempty" bson:"granular_markings,omitempty"`
+	Extensions         map[string]interface{} `json:"extensions,omitempty" bson:"extensions,omitempty"`
+	Custom             map[string][]byte      `json:"custom,omitempty" bson:"custom,omitempty"`
+	Raw                []byte                 `json:"-" bson:"-"`
 }
 
 // ExternalReference - This type defines all of the properties associated with
@@ -89,6 +90,7 @@ func (o *CommonObjectProperties) GetCommonPropertyList() []string {
 		"external_references",
 		"object_marking_refs",
 		"granular_markings",
+		"extensions",
 	}
 }
 

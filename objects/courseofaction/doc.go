@@ -8,6 +8,9 @@ Package courseofaction implements the STIX 2.1 Course of Action object.
 
 The following information comes directly from the STIX 2.1 specification.
 
+This implements STIX 2.1 specification section 4.3.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070635
+
 A Course of Action (CoA) is a recommendation from a producer of intelligence to
 a consumer on the actions that they might take in response to that intelligence.
 The CoA may be preventative to deter exploitation or corrective to counter its

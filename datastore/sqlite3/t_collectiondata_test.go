@@ -7,6 +7,7 @@ package sqlite3
 
 import (
 	"bytes"
+	"log/slog"
 	"testing"
 
 	"github.com/freetaxii/libstix2/objects/taxii/collections"
@@ -360,6 +361,7 @@ processRangeValues(first, last, max, size) (first, last, error)
 */
 func Test_processRangeValues(t *testing.T) {
 	var ds Store
+	ds.Logger = slog.Default()
 
 	// Test 1: This test should throw an error
 	t.Log("Test 1: get an error if the first value is negative")

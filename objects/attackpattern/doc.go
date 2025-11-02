@@ -4,9 +4,12 @@
 // found in the LICENSE file in the root of the source tree.
 
 /*
-Package attackpattern implements the STIX 2.1 Attack Pattern object.
+Package attackpattern implements the STIX 2.1 Attack Pattern SDO.
 
 The following information comes directly from the STIX 2.1 specification.
+
+This implements STIX 2.1 specification section 4.1 - Attack Pattern.
+Reference: https://docs.oasis-open.org/cti/stix/v2.1/csprd01/stix-v2.1-csprd01.html#_Toc16070633
 
 Attack Patterns are a type of TTP that describe ways that adversaries attempt to
 compromise targets. Attack Patterns are used to help categorize attacks,
