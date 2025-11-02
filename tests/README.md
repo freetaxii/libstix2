@@ -5,9 +5,11 @@ This directory contains comprehensive test suites for the libstix2 library to en
 ## Test Files
 
 ### `stix_roundtrip_test.go`
+
 A comprehensive test suite that validates the library's ability to decode and re-encode STIX objects without data loss.
 
 **Features:**
+
 - Tests against 8,000+ real STIX objects from the MISP STIX test suite
 - Validates all supported STIX object types (SDO, SRO, SCO, and meta objects)
 - Performs round-trip encoding/decoding tests
@@ -15,13 +17,16 @@ A comprehensive test suite that validates the library's ability to decode and re
 - Provides detailed reporting of test results
 
 **Test Functions:**
+
 - `TestMISPSTIXRoundTrip` - Tests that STIX data can be decoded and re-encoded without losing information
 - `TestMISPSTIXValidation` - Tests that all STIX objects pass validation when decoded using libstix2
 
 ### `stix_simple_test.go`
+
 A simple test that demonstrates basic round-trip functionality with a single STIX indicator object.
 
 **Features:**
+
 - Tests basic JSON decoding and encoding
 - Validates that all key fields are preserved
 - Provides clear logging of before/after JSON structures
@@ -36,12 +41,14 @@ git submodule update --init --recursive
 
 ## Running Tests
 
-### Run all tests:
+### Run all tests
+
 ```bash
 go test ./tests/ -v
 ```
 
-### Run specific test suites:
+### Run specific test suites
+
 ```bash
 # Run the comprehensive round-trip test
 go test ./tests/ -v -run TestMISPSTIXRoundTrip
@@ -53,14 +60,10 @@ go test ./tests/ -v -run TestMISPSTIXValidation
 go test ./tests/ -v -run TestSimpleSTIXRoundTrip
 ```
 
-### Run tests excluding SQLite (main library tests):
-```bash
-./run_tests_no_sqlite.sh
-```
-
 ## Test Data
 
 The tests use real-world STIX data from:
+
 - **MISP STIX Test Suite**: Located in `tests/data/misp-stix-tests/files/`
   - Contains 8,000+ STIX objects covering all object types
   - Includes various TLP levels and consent configurations
@@ -71,6 +74,7 @@ The tests use real-world STIX data from:
 The test suite validates all STIX 2.1 object types supported by libstix2:
 
 ### STIX Domain Objects (SDOs)
+
 - `attack-pattern`
 - `campaign`
 - `course-of-action`
@@ -91,10 +95,12 @@ The test suite validates all STIX 2.1 object types supported by libstix2:
 - `vulnerability`
 
 ### STIX Relationship Objects (SROs)
+
 - `relationship`
 - `sighting`
 
 ### STIX Cyber Observable Objects (SCOs)
+
 - `artifact`
 - `autonomous-system`
 - `directory`
@@ -115,15 +121,18 @@ The test suite validates all STIX 2.1 object types supported by libstix2:
 - `x509-certificate`
 
 ### Meta Objects
+
 - `language-content`
 - `marking-definition`
 
 ### Container Objects
+
 - `bundle`
 
 ## Test Results
 
 The comprehensive test suite provides detailed statistics including:
+
 - Total files processed
 - Number of objects successfully processed
 - Validation pass/fail counts
