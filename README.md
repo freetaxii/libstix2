@@ -35,17 +35,12 @@ This software uses the following external libraries:
 uuid
  go get github.com/google/uuid
  Copyright (c) 2014 Google Inc. All rights reserved. (Google License)
-
-qo-sqlite3
- go get github.com/mattn/go-sqlite3
- go install github.com/mattn/go-sqlite3
- Copyright (c) 2014 Yasuhiro Matsumoto (MIT License)
 ```
 
 This software uses the following builtin libraries:
 
 ```
-crypto/sha1, database/sql, encoding/base64, errors, fmt, log, os, regexp, strings, testing, time
+crypto/sha1, encoding/base64, errors, fmt, log, os, regexp, strings, testing, time
  Copyright 2009 The Go Authors
 ```
 
@@ -135,9 +130,6 @@ All STIX 2.1 Cyber-observable Objects are implemented:
 - [x] Status
 - [x] Error
 
-### Datastore
-
-- [ ] SQLite 3 (In Progress)
 
 ## Implementation Notes
 

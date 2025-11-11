@@ -1,0 +1,6 @@
+# datastore backup - moved to separate repository
+datastore_backup/
+
+# Database files
+*.sqlite3
+*.db
